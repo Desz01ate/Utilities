@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Utilities</name>
+    </assembly>
+    <members>
+        <member name="M:Utilities.Diagnostics.RuntimeEstimation(System.Action)">
+            <summary>
+            Execute given function and return an execution time in milliseconds
+            </summary>
+            <param name="action">Any given function to execute</param>
+            <returns>An execution time in milliseconds</returns>
+        </member>
+        <member name="M:Utilities.Diagnostics.RuntimeEstimationAsync(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Execute given function and return an execution time in milliseconds
+            </summary>
+            <param name="action">Any given function to execute</param>
+            <returns>An execution time in milliseconds</returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsPhoneNumber(System.String,System.String)">
+            <summary>
+            Check if the given input is matching the phone number (Thailand phone number is default)
+            </summary>
+            <param name="input">Input string</param>
+            <param name="pattern">Regex pattern to check whether the input is matched or not</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsEmail(System.String,System.String)">
+            <summary>
+            Check if the given input is matching the email
+            </summary>
+            <param name="input">Input string</param>
+            <param name="pattern">Regex pattern to check whether the input is matched or not</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyDigit(System.String)">
+            <summary>
+            Check if the given input is matching the number-only
+            </summary>
+            <param name="input">Input string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyText(System.String)">
+            <summary>
+            Check if the given input is matching the string-only (English and Thailand alphabetics are default)
+            </summary>
+            <param name="input">Input string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReader(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object
+            </summary>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns>IEnumerable of dynamic object</returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteScalar``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return a scalar object
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteNonQuery(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute any non-DML SQL Query
+            </summary>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object
+            </summary>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns>IEnumerable of dynamic object</returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteScalarAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return a scalar object
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.ExecuteNonQueryAsync(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+            <summary>
+            Execute any non-DML SQL Query
+            </summary>
+            <param name="connectionString">Connection string to database</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
+            <param name="parameters">SQL parameters according to the sql parameter</param>
+            <param name="commandType">Type of SQL Command</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

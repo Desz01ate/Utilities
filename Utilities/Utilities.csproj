@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Chanvut Booneid</Authors>
+    <Company>Deszolate_C</Company>
+    <Copyright>Copyright © Chanvut Booneid 2019</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="microsoft.csharp" Version="4.5.0" />
+    <PackageReference Include="newtonsoft.json" Version="12.0.1" />
+    <PackageReference Include="system.data.sqlclient" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>
