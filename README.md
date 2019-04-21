@@ -4,3 +4,6 @@ Some heavily repetitive code block packed together as utilities tools including
 - HTTP Request execution
 - Basic Regular Expression pattern matching
 - Basic Machine Learning wrapper on Microsoft.ML
+
+# How do I get it
+NUGET : https://www.nuget.org/packages/Deszolate.Utilities/
