@@ -320,9 +320,5 @@ namespace Utilities
                 return result;
             }
         }
-        public static class Oracle
-        {
-
-        }
     }
 }

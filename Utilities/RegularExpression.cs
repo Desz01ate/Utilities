@@ -33,10 +33,11 @@ namespace Utilities
         public static bool IsOnlyDigit(string input) => RegexMatch(input, @"^\d+$").Success;
         //\u0E00-\u0E7F isa unicode for Thai language
         /// <summary>
-        /// Check if the given input is matching the string-only (English and Thailand alphabetics are default)
+        /// Check if the given input is matching the string-only (English and Thai alphabetics only)
         /// </summary>
         /// <param name="input">Input string</param>
         /// <returns></returns>
-        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-z]+").Success;
+        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+").Success;
+
     }
 }

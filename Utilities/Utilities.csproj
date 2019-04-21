@@ -8,6 +8,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
+    <Version>0.0.1</Version>
+    <PackageId>Deszolate.Utilities</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.ML" Version="0.11.0" />
     <PackageReference Include="newtonsoft.json" Version="12.0.1" />
     <PackageReference Include="system.data.sqlclient" Version="4.6.0" />
   </ItemGroup>
