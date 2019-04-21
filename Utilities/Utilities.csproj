@@ -18,6 +18,10 @@
     <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.ML" Version="0.11.0" />

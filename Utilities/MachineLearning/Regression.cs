@@ -28,7 +28,7 @@ namespace Utilities.MachineLearning
                 oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(outputColumnName: encoded, inputColumnName: feature));
                 encodedFeaturesName.Add(encoded);
             }
-            var completedFeatures = Shared.LINQ.Combine(features, encodedFeaturesName);
+            var completedFeatures = Shared.LINQ.CombineEnumerator(features, encodedFeaturesName);
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: inputColumnName)
                 .Append(oneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", completedFeatures))
