@@ -34,6 +34,10 @@ namespace Utilities.Shared
                 {
                     property.SetValue(instance, Convert.ToSingle(value));
                 }
+                else if (propertyType == typeof(double) || propertyType == typeof(double?))
+                {
+                    property.SetValue(instance, Convert.ToDouble(value));
+                }
                 else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
                 {
                     property.SetValue(instance, Convert.ToBoolean(value));
