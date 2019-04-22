@@ -8,10 +8,10 @@ namespace Utilities.MachineLearning
 {
     public static class Global
     {
-        public static void SaveModel(FileStream fs, ITransformer model)
+        public static void SaveModel(this ITransformer model, Stream stream)
         {
             var context = new MLContext();
-            context.Model.Save(model,fs);
+            context.Model.Save(model, stream);
         }
     }
 }
