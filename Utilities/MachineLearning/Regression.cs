@@ -10,32 +10,40 @@ namespace Utilities.MachineLearning
 {
     public static class Regression
     {
-        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string inputColumnName)
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string exampleWeightColumnName = null, int numLeaves = 20, int numTrees = 100, int minDatapointsInLeaves = 10, double learningRate = 0.2)
     where TIn : class, new()
     where TOut : class, new()
         {
             var context = new MLContext();
             var properties = typeof(TIn).GetProperties();
-            var features = properties.Where(property => property.PropertyType != typeof(string)).Select(property => property.Name).Where(property => property != inputColumnName).ToArray();
-            var needToEncodeFeatures = properties.Where(property => property.PropertyType == typeof(string)).Select(property => property.Name);
+
+            var features = Global.FeaturesCleaning(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
 
             EstimatorChain<OneHotEncodingTransformer> oneHotEncodingEstimator = new EstimatorChain<OneHotEncodingTransformer>();
-            List<string> encodedFeaturesName = new List<string>();
-            foreach (var feature in needToEncodeFeatures)
+            foreach (var feature in features.Features)
             {
-                var encoded = $@"{feature}_encoded";
-                oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(outputColumnName: encoded, inputColumnName: feature));
-                encodedFeaturesName.Add(encoded);
+                oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(inputColumnName: feature.Feature, outputColumnName: feature.EncodedFeature));
             }
-            var completedFeatures = Shared.LINQ.CombineEnumerator(features, encodedFeaturesName);
-            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: inputColumnName)
+
+            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(oneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", completedFeatures))
-                .Append(context.Regression.Trainers.FastTree());
+                .Append(context.Transforms.Concatenate("Features", features.CombinedFeatures.ToArray()))
+                .Append(context.Regression.Trainers.FastTree(
+                    labelColumnName: "Label",
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    numLeaves: numLeaves,
+                    numTrees: numTrees,
+                    minDatapointsInLeaves: minDatapointsInLeaves,
+                    learningRate: learningRate
+                ));
+
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             return predictEngine;
         }
+
+
     }
 }
