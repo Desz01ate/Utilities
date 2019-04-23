@@ -24,10 +24,29 @@ namespace Utilities.MachineLearning
             public IEnumerable<CombinedFeature> Features { get; set; }
             public IEnumerable<string> CombinedFeatures { get; set; }
         }
-        public static void SaveModel(this ITransformer model, Stream stream)
+        public static void SaveModel(this ITransformer model, string path)
         {
             var context = new MLContext();
-            context.Model.Save(model, stream);
+            using (var fs = File.Create(path))
+            {
+                context.Model.Save(model, fs);
+            }
+        }
+        public static ITransformer LoadModel(string path)
+        {
+            var context = new MLContext();
+            using (var fs = File.Open(path, FileMode.Open))
+            {
+                var model = context.Model.Load(fs);
+                return model;
+            }
+        }
+        public static PredictionEngine<TIn, TOut> CreatePredictionEngine<TIn, TOut>(this ITransformer model)
+where TIn : class, new()
+where TOut : class, new()
+        {
+            var context = new MLContext();
+            return context.Model.CreatePredictionEngine<TIn, TOut>(model);
         }
         public static RegressionMetrics EvaluateRegressionModel(ITransformer model, IDataView testDataframe)
         {

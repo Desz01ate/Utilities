@@ -25,7 +25,7 @@ namespace Utilities.MachineLearning
         /// <param name="memorySize">Memory size for Microsoft.ML.Trainers.MulticlassLogisticRegression. Low=faster, less accurate.</param>
         /// <param name="enforceNoNegative">Enforce non-negative weights.</param>
         /// <returns></returns>
-        public static PredictionEngine<TIn, TOut> LogisticRegression<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, string exampleWeightColumnName = null, float l1Weight = 1, float l2Weight = 1, double optimizationTolerance = 1e-07, int memorySize = 20, bool enforceNoNegative = false)
+        public static PredictionEngine<TIn, TOut> LogisticRegression<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, string exampleWeightColumnName = null, float l1Weight = 1, float l2Weight = 1, double optimizationTolerance = 1e-07, int memorySize = 20, bool enforceNoNegative = false, Action<ITransformer> additionModelAction = null)
             where TIn : class, new()
             where TOut : class, new()
         {
@@ -59,6 +59,7 @@ namespace Utilities.MachineLearning
                 .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
             return predictEngine;
         }
         /// <summary>
@@ -75,7 +76,7 @@ namespace Utilities.MachineLearning
         /// <param name="l1Threshold">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
         /// <param name="maxIterations">The maximum number of passes to perform over the data.</param>
         /// <returns></returns>
-        public static PredictionEngine<TIn, TOut> StochasticDualCoordinateAscent<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, string exampleWeightColumnName = null, ISupportSdcaClassificationLoss loss = null, float? l2Const = null, float? l1Threshold = null, int? maxIterations = null)
+        public static PredictionEngine<TIn, TOut> StochasticDualCoordinateAscent<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, string exampleWeightColumnName = null, ISupportSdcaClassificationLoss loss = null, float? l2Const = null, float? l1Threshold = null, int? maxIterations = null, Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
@@ -106,9 +107,10 @@ namespace Utilities.MachineLearning
                 .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
             return predictEngine;
         }
-        public static PredictionEngine<TIn, TOut> NaiveBayes<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName)
+        public static PredictionEngine<TIn, TOut> NaiveBayes<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
@@ -134,6 +136,7 @@ namespace Utilities.MachineLearning
                 .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
             return predictEngine;
         }
     }

@@ -11,7 +11,7 @@ namespace Utilities.MachineLearning
 {
     public static class Recommendation
     {
-        public static PredictionEngine<TIn, TOut> MatrixFactorization<TIn, TOut>(IEnumerable<TIn> trainDataset, string rowIndexColumnName, string columnIndexColumnName, int iteration = 20, int approximationRank = 100, params string[] excludedColumns)
+        public static PredictionEngine<TIn, TOut> MatrixFactorization<TIn, TOut>(IEnumerable<TIn> trainDataset, string rowIndexColumnName, string columnIndexColumnName, int iteration = 20, int approximationRank = 100, double learningRate = 0.2, MatrixFactorizationTrainer.LossFunctionType lossFunctionType = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass, bool suppressDetail = true, bool forceNonNegative = true, params string[] excludedColumns)
 where TIn : class, new()
 where TOut : class, new()
         {
@@ -34,7 +34,11 @@ where TOut : class, new()
                 MatrixRowIndexColumnName = $@"{rowIndexColumnName}_encoded",
                 LabelColumnName = "Label",
                 NumberOfIterations = iteration,
-                ApproximationRank = approximationRank
+                ApproximationRank = approximationRank,
+                LearningRate = learningRate,
+                LossFunction = lossFunctionType,
+                Quiet = suppressDetail,
+                NonNegative = forceNonNegative
             };
 
             //var pipeline = estimator.Append(context.Recommendation().Trainers.MatrixFactorization(matrixColumnIndexColumnName: $@"", matrixRowIndexColumnName: $@"", labelColumn: "Label", settings));

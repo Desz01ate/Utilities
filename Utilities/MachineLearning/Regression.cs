@@ -10,7 +10,7 @@ namespace Utilities.MachineLearning
 {
     public static class Regression
     {
-        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string exampleWeightColumnName = null, int numLeaves = 20, int numTrees = 100, int minDatapointsInLeaves = 10, double learningRate = 0.2)
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string exampleWeightColumnName = null, int numLeaves = 20, int numTrees = 100, int minDatapointsInLeaves = 10, double learningRate = 0.2, Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
@@ -41,6 +41,7 @@ namespace Utilities.MachineLearning
 
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
             return predictEngine;
         }
 
