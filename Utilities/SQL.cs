@@ -112,9 +112,9 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
-            public static T ExecuteScalar<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            public static T ExecuteScalar<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
-                T result = new T();
+                T result = default;
                 using (var connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -265,9 +265,9 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
-            public static async Task<T> ExecuteScalarAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            public static async Task<T> ExecuteScalarAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
-                T result = new T();
+                T result = default;
                 using (var connection = new SqlConnection(connectionString))
                 {
                     await connection.OpenAsync();
