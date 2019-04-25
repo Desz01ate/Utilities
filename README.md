@@ -6,4 +6,5 @@ Some heavily repetitive code block packed together as utilities tools including
 - Basic Machine Learning wrapper on Microsoft.ML
 
 # How do I get it
-NUGET : https://www.nuget.org/packages/Deszolate.Utilities/
+Machine Learning : https://www.nuget.org/packages/Deszolate.MachineLearning/
+Utilities : https://www.nuget.org/packages/Deszolate.Utilities/
