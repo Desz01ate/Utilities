@@ -10,22 +10,18 @@ namespace Utilities
     //taking the implementation based-on https://stackoverflow.com/questions/10168240/encrypting-decrypting-a-string-in-c-sharp with some different tuning parameter
     public static class Cryptography
     {
-        private const int Keysize = 128; //256 bit seem to be a problem with .NET core
-
-        private const int DerivationIterations = 2000;
-
         #region Simple Encryption - Decryption Method
-        public static string Encrypt(string plainText, string salt)
+        public static string Encrypt(string plainText, string salt, int blockSize = 128, int iterations = 2000)
         {
-            var saltStringBytes = Generate128BitsOfRandomEntropy();
-            var ivStringBytes = Generate128BitsOfRandomEntropy();
+            var saltStringBytes = Generate128BitsOfRandomEntropy(blockSize);
+            var ivStringBytes = Generate128BitsOfRandomEntropy(blockSize);
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-            using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, DerivationIterations))
+            using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, iterations))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
+                var keyBytes = password.GetBytes(blockSize / 8);
                 using (var symmetricKey = new RijndaelManaged())
                 {
-                    symmetricKey.BlockSize = Keysize;
+                    symmetricKey.BlockSize = blockSize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
@@ -48,19 +44,20 @@ namespace Utilities
                 }
             }
         }
-        public static string Decrypt(string hash, string salt)
+        public static string Decrypt(string hash, string salt, int blockSize = 128, int iterations = 2000)
         {
+            var blockSizeByte = 128 / 8;
             var cipherTextBytesWithSaltAndIv = Convert.FromBase64String(hash);
-            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(Keysize / 8).ToArray();
-            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(Keysize / 8).Take(Keysize / 8).ToArray();
-            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((Keysize / 8) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((Keysize / 8) * 2)).ToArray();
+            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(blockSizeByte).ToArray();
+            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(blockSizeByte).Take(blockSizeByte).ToArray();
+            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((blockSizeByte) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((blockSizeByte) * 2)).ToArray();
 
-            using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, DerivationIterations))
+            using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, iterations))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
+                var keyBytes = password.GetBytes(blockSizeByte);
                 using (var symmetricKey = new RijndaelManaged())
                 {
-                    symmetricKey.BlockSize = Keysize;
+                    symmetricKey.BlockSize = blockSize;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivStringBytes))
@@ -118,9 +115,9 @@ namespace Utilities
                 return salt;
             }
         }
-        private static byte[] Generate128BitsOfRandomEntropy()
+        private static byte[] Generate128BitsOfRandomEntropy(int blockSize)
         {
-            var randomBytes = new byte[Keysize / 8];
+            var randomBytes = new byte[blockSize / 8];
             using (var rngCsp = new RNGCryptoServiceProvider())
             {
                 rngCsp.GetBytes(randomBytes);

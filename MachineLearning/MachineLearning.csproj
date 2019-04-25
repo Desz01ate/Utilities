@@ -5,13 +5,14 @@
     <RootNamespace>MachineLearning</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Authors>Chanvut Booneid</Authors>
     <Company>Deszolate_C</Company>
     <Product>Utilities.MachineLearning</Product>
     <Description>Simple machine learning wrapper for Microsoft.ML</Description>
     <Copyright>Copyright © Chanvut Booneid 2019</Copyright>
     <PackageId>Deszolate.MachineLearning</PackageId>
+    <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
