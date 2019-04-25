@@ -109,7 +109,7 @@ namespace Utilities
         }
         #endregion
 
-        private static byte[] GenerateSalt()
+        public static byte[] GenerateSalt()
         {
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
             {

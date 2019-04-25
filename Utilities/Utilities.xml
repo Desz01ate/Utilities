@@ -18,39 +18,6 @@
             <param name="action">Any given function to execute</param>
             <returns>An execution time in milliseconds</returns>
         </member>
-        <member name="M:Utilities.MachineLearning.Classification.LogisticRegression``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Single,System.Single,System.Double,System.Int32,System.Boolean,System.Action{Microsoft.ML.ITransformer})">
-            <summary>
-            Create engine of Logistic Regression algorithm using training dataset and hyperparameters
-            </summary>
-            <typeparam name="TIn"></typeparam>
-            <typeparam name="TOut"></typeparam>
-            <param name="trainDataset">Enumerable of TIn type.</param>
-            <param name="labelColumnName">The name of the label column.</param>
-            <param name="outputColumnName">The name of the feature column.</param>
-            <param name="exampleWeightColumnName">The name of the example weight column.</param>
-            <param name="l1Weight">Weight of L1 regularization term.</param>
-            <param name="l2Weight">Weight of L2 regularization term.</param>
-            <param name="optimizationTolerance">Threshold for optimizer convergence.</param>
-            <param name="memorySize">Memory size for Microsoft.ML.Trainers.MulticlassLogisticRegression. Low=faster, less accurate.</param>
-            <param name="enforceNoNegative">Enforce non-negative weights.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.MachineLearning.Classification.StochasticDualCoordinateAscent``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,Microsoft.ML.ISupportSdcaClassificationLoss,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Int32},System.Action{Microsoft.ML.ITransformer})">
-            <summary>
-            Create engine of Stochastic Dual Coordination Ascent (optimization as such Stochastic Gradient Descent) algorithm using training dataset and hyperparameters
-            </summary>
-            <typeparam name="TIn"></typeparam>
-            <typeparam name="TOut"></typeparam>
-            <param name="trainDataset">Enumerable of TIn type.</param>
-            <param name="labelColumnName">The name of the label column.</param>
-            <param name="outputColumnName">The name of the feature column.</param>
-            <param name="exampleWeightColumnName">The name of the example weight column.</param>
-            <param name="loss">The optional custom loss.</param>
-            <param name="l2Const">The L2 regularization hyperparameter.</param>
-            <param name="l1Threshold">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
-            <param name="maxIterations">The maximum number of passes to perform over the data.</param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.RegularExpression.IsPhoneNumber(System.String,System.String)">
             <summary>
             Check if the given input is matching the phone number (Thailand phone number is default)

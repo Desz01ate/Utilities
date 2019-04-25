@@ -49,21 +49,20 @@ namespace Utilities
             var request = await httpClient.PutAsync(url, bodyContent);
             return request;
         }
-        //currently broken as .NET Standard 2.0 and below doesn't contain the definition for the Patch.
-        //public static HttpResponseMessage Patch(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
-        //{
-        //    var httpClient = new HttpClient();
-        //    var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
-        //    var request = httpClient.PatchAsync(url, body).Result;
-        //    return request;
-        //}
-        //public static async Task<HttpResponseMessage> PatchAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
-        //{
-        //    var httpClient = new HttpClient();
-        //    var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
-        //    var request = await httpClient.PatchAsync(url, body);
-        //    return request;
-        //}
+        public static HttpResponseMessage Patch(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
+        {
+            var httpClient = new HttpClient();
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
+            var request = httpClient.PatchAsync(url, body).Result;
+            return request;
+        }
+        public static async Task<HttpResponseMessage> PatchAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
+        {
+            var httpClient = new HttpClient();
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
+            var request = await httpClient.PatchAsync(url, body);
+            return request;
+        }
         public static HttpResponseMessage Delete(string url)
         {
             var httpClient = new HttpClient();
