@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>MachineLearning</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Version>0.0.1</Version>
+    <Authors>Chanvut Booneid</Authors>
+    <Company>Deszolate_C</Company>
+    <Product>Utilities.MachineLearning</Product>
+    <Description>Simple machine learning wrapper for Microsoft.ML</Description>
+    <Copyright>Copyright © Chanvut Booneid 2019</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="0.11.0" />
+    <PackageReference Include="Microsoft.ML.Recommender" Version="0.11.0" />
+  </ItemGroup>
+
+</Project>
