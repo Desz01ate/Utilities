@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Utilities.Shared;
+using Oracle.ManagedDataAccess.Client;
+using System.Data.Common;
 
 namespace Utilities
 {
@@ -24,7 +26,7 @@ namespace Utilities
             /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
-            public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<SqlDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 //List<T> result = new List<T>();
                 using (var connection = new SqlConnection(connectionString))
@@ -176,7 +178,7 @@ namespace Utilities
             /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
-            public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<SqlDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 List<T> result = new List<T>();
                 using (var connection = new SqlConnection(connectionString))
@@ -320,5 +322,224 @@ namespace Utilities
                 return result;
             }
         }
+        public static class Oracle
+        {
+            public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            {
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        using (var cursor = command.ExecuteReader())
+                        {
+                            while (cursor.Read())
+                            {
+                                yield return objectBuilder(cursor);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            {
+                return ExecuteReader<T>(connectionString, sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
+            }
+            public static IEnumerable<dynamic> ExecuteReader(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            {
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        using (var cursor = command.ExecuteReader())
+                        {
+                            var columns = Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
+                            while (cursor.Read())
+                            {
+                                yield return Data.RowBuilder(cursor, columns);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            public static T ExecuteScalar<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            {
+                T result = default;
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        result = (T)command.ExecuteScalar();
+                    }
+                    connection.Close();
+                }
+                return result;
+            }
+            public static int ExecuteNonQuery(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            {
+                int result = -1;
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        result = command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+                return result;
+            }
+            public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            {
+                List<T> result = new List<T>();
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        using (var cursor = await command.ExecuteReaderAsync())
+                        {
+                            while (await cursor.ReadAsync())
+                            {
+                                result.Add(objectBuilder(cursor));
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return result;
+            }
+            public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
+            {
+                return await ExecuteReaderAsync(connectionString, sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
+            }
+            public static async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            {
+                List<dynamic> result = new List<dynamic>();
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        using (var cursor = await command.ExecuteReaderAsync())
+                        {
+                            var columns = Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
+                            while (await cursor.ReadAsync())
+                            {
+                                result.Add(Data.RowBuilder(cursor, columns));
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return result;
+            }
+            public static async Task<T> ExecuteScalarAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            {
+                T result = default;
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        result = (T)(await command.ExecuteScalarAsync());
+                    }
+                    connection.Close();
+                }
+                return result;
+            }
+            public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            {
+                int result = -1;
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandType = commandType;
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        result = await command.ExecuteNonQueryAsync();
+                    }
+                    connection.Close();
+                }
+                return result;
+            }
+
+        }
+
     }
 }

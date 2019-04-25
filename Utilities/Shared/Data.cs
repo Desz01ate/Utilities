@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Utilities.Shared
 {
     public static class Data
     {
-        public static T RowBuilder<T>(this SqlDataReader row) where T : new()
+        public static T RowBuilder<T>(this DbDataReader row) where T : new()
         {
             object instance = new T();
             var type = typeof(T);
@@ -64,7 +65,7 @@ namespace Utilities.Shared
             }
             return (T)instance;
         }
-        public static dynamic RowBuilder(this SqlDataReader row, IEnumerable<string> columns)
+        public static dynamic RowBuilder(this DbDataReader row, IEnumerable<string> columns)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             foreach (var column in columns)
