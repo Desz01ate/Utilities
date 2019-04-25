@@ -298,7 +298,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
-            public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 int result = -1;
                 using (var connection = new SqlConnection(connectionString))
@@ -515,7 +515,7 @@ namespace Utilities
                 }
                 return result;
             }
-            public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters, System.Data.CommandType commandType = System.Data.CommandType.Text)
+            public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 int result = -1;
                 using (var connection = new OracleConnection(connectionString))

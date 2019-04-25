@@ -25,28 +25,28 @@ namespace Utilities
         {
             var httpClient = new HttpClient();
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
-            var request = httpClient.PostAsync(url, body).Result;
+            var request = httpClient.PostAsync(url, bodyContent).Result;
             return request;
         }
         public static async Task<HttpResponseMessage> PostAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
-            var request = await httpClient.PostAsync(url, body);
+            var request = await httpClient.PostAsync(url, bodyContent);
             return request;
         }
         public static HttpResponseMessage Put(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
-            var request = httpClient.PutAsync(url, body).Result;
+            var request = httpClient.PutAsync(url, bodyContent).Result;
             return request;
         }
         public static async Task<HttpResponseMessage> PutAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
-            var request = await httpClient.PutAsync(url, body);
+            var request = await httpClient.PutAsync(url, bodyContent);
             return request;
         }
         //currently broken as .NET Standard 2.0 and below doesn't contain the definition for the Patch.

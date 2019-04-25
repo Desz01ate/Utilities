@@ -18,7 +18,7 @@
             <param name="action">Any given function to execute</param>
             <returns>An execution time in milliseconds</returns>
         </member>
-        <member name="M:Utilities.MachineLearning.Classification.LogisticRegression``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Single,System.Single,System.Double,System.Int32,System.Boolean)">
+        <member name="M:Utilities.MachineLearning.Classification.LogisticRegression``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Single,System.Single,System.Double,System.Int32,System.Boolean,System.Action{Microsoft.ML.ITransformer})">
             <summary>
             Create engine of Logistic Regression algorithm using training dataset and hyperparameters
             </summary>
@@ -35,26 +35,7 @@
             <param name="enforceNoNegative">Enforce non-negative weights.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.MachineLearning.Classification.LogisticRegression``2(System.String,System.String,System.String,System.Char,System.Boolean,System.String,System.Single,System.Single,System.Double,System.Int32,System.Boolean)">
-            <summary>
-            Create engine of Logistic Regression algorithm using training dataset and hyperparameters (recommend to use IEnumerable overload instead for explicit data cleaning)
-            </summary>
-            <typeparam name="TIn"></typeparam>
-            <typeparam name="TOut"></typeparam>
-            <param name="dataPath">Path to data.</param>
-            <param name="labelColumnName">The name of the label column.</param>
-            <param name="outputColumnName">The name of the feature column.</param>
-            <param name="seperator">Data seperator.</param>
-            <param name="hasHeader">Is data contain header row.</param>
-            <param name="exampleWeightColumnName">The name of the example weight column.</param>
-            <param name="l1Weight">Weight of L1 regularization term.</param>
-            <param name="l2Weight">Weight of L2 regularization term.</param>
-            <param name="optimizationTolerance">Threshold for optimizer convergence.</param>
-            <param name="memorySize">Memory size for Microsoft.ML.Trainers.MulticlassLogisticRegression. Low=faster, less accurate.</param>
-            <param name="enforceNoNegative">Enforce non-negative weights.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.MachineLearning.Classification.StochasticDualCoordinateAscent``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,Microsoft.ML.ISupportSdcaClassificationLoss,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Int32})">
+        <member name="M:Utilities.MachineLearning.Classification.StochasticDualCoordinateAscent``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,Microsoft.ML.ISupportSdcaClassificationLoss,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Int32},System.Action{Microsoft.ML.ITransformer})">
             <summary>
             Create engine of Stochastic Dual Coordination Ascent (optimization as such Stochastic Gradient Descent) algorithm using training dataset and hyperparameters
             </summary>
@@ -63,24 +44,6 @@
             <param name="trainDataset">Enumerable of TIn type.</param>
             <param name="labelColumnName">The name of the label column.</param>
             <param name="outputColumnName">The name of the feature column.</param>
-            <param name="exampleWeightColumnName">The name of the example weight column.</param>
-            <param name="loss">The optional custom loss.</param>
-            <param name="l2Const">The L2 regularization hyperparameter.</param>
-            <param name="l1Threshold">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
-            <param name="maxIterations">The maximum number of passes to perform over the data.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.MachineLearning.Classification.StochasticDualCoordinateAscent``2(System.String,System.String,System.String,System.Char,System.Boolean,System.String,Microsoft.ML.ISupportSdcaClassificationLoss,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Int32})">
-            <summary>
-            Create engine of Stochastic Dual Coordination Ascent (optimization as such Stochastic Gradient Descent) algorithm using training dataset and hyperparameters (recommend to use IEnumerable overload instead for explicit data cleaning)
-            </summary>
-            <typeparam name="TIn"></typeparam>
-            <typeparam name="TOut"></typeparam>
-            <param name="dataPath">Path to data.</param>
-            <param name="labelColumnName">The name of the label column.</param>
-            <param name="outputColumnName">The name of the feature column.</param>
-            <param name="seperator">Data seperator.</param>
-            <param name="hasHeader">Is data contain header row.</param>
             <param name="exampleWeightColumnName">The name of the example weight column.</param>
             <param name="loss">The optional custom loss.</param>
             <param name="l2Const">The L2 regularization hyperparameter.</param>
@@ -118,7 +81,7 @@
             <param name="input">Input string</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -172,7 +135,7 @@
             <param name="commandType">Type of SQL Command</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.SqlClient.SqlDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>

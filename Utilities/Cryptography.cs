@@ -14,12 +14,13 @@ namespace Utilities
 
         private const int DerivationIterations = 2000;
 
-        public static string Encrypt(string plainText, string passPhrase)
+        #region Simple Encryption - Decryption Method
+        public static string Encrypt(string plainText, string salt)
         {
             var saltStringBytes = Generate128BitsOfRandomEntropy();
             var ivStringBytes = Generate128BitsOfRandomEntropy();
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-            using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
+            using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
                 using (var symmetricKey = new RijndaelManaged())
@@ -47,15 +48,14 @@ namespace Utilities
                 }
             }
         }
-
-        public static string Decrypt(string cipherText, string passPhrase)
+        public static string Decrypt(string hash, string salt)
         {
-            var cipherTextBytesWithSaltAndIv = Convert.FromBase64String(cipherText);
+            var cipherTextBytesWithSaltAndIv = Convert.FromBase64String(hash);
             var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(Keysize / 8).ToArray();
             var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(Keysize / 8).Take(Keysize / 8).ToArray();
             var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((Keysize / 8) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((Keysize / 8) * 2)).ToArray();
 
-            using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
+            using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
                 using (var symmetricKey = new RijndaelManaged())
@@ -80,17 +80,45 @@ namespace Utilities
                 }
             }
         }
+        #endregion
 
-        private static byte[] Generate128BitsOfRandomEntropy()
+        #region Simple Hash/Salt Generator and Verification
+
+        public static (string hash, string salt) GenerateHash(string plainText, byte[] salt, int byteSize = 128, int iterations = 2000)
         {
-            var randomBytes = new byte[Keysize / 8]; 
-            using (var rngCsp = new RNGCryptoServiceProvider())
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            using (var rfc2898 = new Rfc2898DeriveBytes(plainTextBytes, salt, iterations))
             {
-                rngCsp.GetBytes(randomBytes);
+                var hash = rfc2898.GetBytes(byteSize);
+                return (Convert.ToBase64String(hash), Convert.ToBase64String(salt));
             }
-            return randomBytes;
         }
-        private static byte[] Generate256BitsOfRandomEntropy()
+        public static (string hash, string salt) GenerateHash(string plainText, int byteSize = 128, int iterations = 2000)
+        {
+            return GenerateHash(plainText, GenerateSalt(), byteSize, iterations);
+        }
+        public static (string hash, string salt) GenerateHash(string plainText, string salt, int byteSize = 128, int iterations = 2000)
+        {
+            var saltBytes = Convert.FromBase64String(salt);
+            return GenerateHash(plainText, saltBytes, byteSize, iterations);
+        }
+        public static bool Verify(string plainText, string hash, string salt, int iterations = 2000)
+        {
+            var inputHash = GenerateHash(plainText, salt, iterations);
+            return inputHash.hash == hash;
+        }
+        #endregion
+
+        private static byte[] GenerateSalt()
+        {
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
+            {
+                var salt = new byte[32];
+                randomNumberGenerator.GetBytes(salt);
+                return salt;
+            }
+        }
+        private static byte[] Generate128BitsOfRandomEntropy()
         {
             var randomBytes = new byte[Keysize / 8];
             using (var rngCsp = new RNGCryptoServiceProvider())
