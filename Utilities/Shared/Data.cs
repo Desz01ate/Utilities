@@ -29,9 +29,17 @@ namespace Utilities.Shared
                     {
                         property.SetValue(instance, value);
                     }
+                    else if (propertyType == typeof(short) || propertyType == typeof(short?))
+                    {
+                        property.SetValue(instance, Convert.ToInt16(value));
+                    }
                     else if (propertyType == typeof(int) || propertyType == typeof(int?))
                     {
                         property.SetValue(instance, Convert.ToInt32(value));
+                    }
+                    else if (propertyType == typeof(long) || propertyType == typeof(long?))
+                    {
+                        property.SetValue(instance, Convert.ToInt64(value));
                     }
                     else if (propertyType == typeof(float) || propertyType == typeof(float?))
                     {
@@ -56,6 +64,14 @@ namespace Utilities.Shared
                     else if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
                     {
                         property.SetValue(instance, Guid.Parse(value));
+                    }
+                    else if (propertyType == typeof(byte) || propertyType == typeof(byte?))
+                    {
+                        property.SetValue(instance, Convert.ToByte(value));
+                    }
+                    else if (propertyType == typeof(sbyte) || propertyType == typeof(sbyte))
+                    {
+                        property.SetValue(instance, Convert.ToSByte(value));
                     }
                 }
                 catch
