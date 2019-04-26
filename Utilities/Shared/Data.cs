@@ -10,24 +10,32 @@ namespace Utilities.Shared
 {
     public static class Data
     {
+        /// <summary>
+        /// Convert DbDataReader into POCO using reflecting
+        /// </summary>
+        /// <typeparam name="T">typeof specific PO</typeparam>
+        /// <param name="row">data reader to convert to POCO</param>
+        /// <returns></returns>
         public static T RowBuilder<T>(this DbDataReader row) where T : new()
         {
             object instance = new T();
             var type = typeof(T);
             var properties = type.GetProperties();
-            //if (excludeBaseclass)
-            //{
-            //    properties = properties.Where(x => x.DeclaringType == type).ToArray();
-            //}
             foreach (var property in properties)
             {
                 try
                 {
                     var propertyType = property.PropertyType;
+                    //this one generally slow down the overall performance compare to dynamic method but can
+                    //safely sure that all value is going the right way
                     var value = Convert.ToString(row[property.Name]);
                     if (propertyType == typeof(string))
                     {
                         property.SetValue(instance, value);
+                    }
+                    else if (propertyType == typeof(char) || propertyType == typeof(char?))
+                    {
+                        property.SetValue(instance, Convert.ToChar(value));
                     }
                     else if (propertyType == typeof(short) || propertyType == typeof(short?))
                     {
@@ -48,6 +56,18 @@ namespace Utilities.Shared
                     else if (propertyType == typeof(double) || propertyType == typeof(double?))
                     {
                         property.SetValue(instance, Convert.ToDouble(value));
+                    }
+                    else if (propertyType == typeof(ushort) || propertyType == typeof(ushort?))
+                    {
+                        property.SetValue(instance, Convert.ToUInt16(value));
+                    }
+                    else if (propertyType == typeof(uint) || propertyType == typeof(uint?))
+                    {
+                        property.SetValue(instance, Convert.ToUInt32(value));
+                    }
+                    else if (propertyType == typeof(ulong) || propertyType == typeof(ulong))
+                    {
+                        property.SetValue(instance, Convert.ToUInt64(value));
                     }
                     else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
                     {
