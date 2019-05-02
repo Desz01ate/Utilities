@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Dynamic;
-using System.Linq;
-using System.Text;
 
 namespace Utilities.Shared
 {
     public static class Data
     {
         /// <summary>
-        /// Convert DbDataReader into POCO using reflecting
+        /// Convert DbDataReader into POCO object using reflecting
         /// </summary>
         /// <typeparam name="T">typeof specific PO</typeparam>
-        /// <param name="row">data reader to convert to POCO</param>
+        /// <param name="row">data reader to convert to POCO object</param>
         /// <returns></returns>
         public static T RowBuilder<T>(this DbDataReader row) where T : new()
         {
@@ -101,6 +98,12 @@ namespace Utilities.Shared
             }
             return (T)instance;
         }
+        /// <summary>
+        /// Convert DbDataReader into dynamic object with specified column name
+        /// </summary>
+        /// <param name="row">data reader to convert to dynamic object</param>
+        /// <param name="columns">column name container</param>
+        /// <returns></returns>
         public static dynamic RowBuilder(this DbDataReader row, IEnumerable<string> columns)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
