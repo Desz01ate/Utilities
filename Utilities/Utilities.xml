@@ -48,6 +48,14 @@
             <param name="input">Input string</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
+            <summary>
+            Convert DbDataReader into POCO using reflecting
+            </summary>
+            <typeparam name="T">typeof specific PO</typeparam>
+            <param name="row">data reader to convert to POCO</param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns

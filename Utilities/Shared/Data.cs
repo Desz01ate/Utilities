@@ -65,7 +65,7 @@ namespace Utilities.Shared
                     {
                         property.SetValue(instance, Convert.ToUInt32(value));
                     }
-                    else if (propertyType == typeof(ulong) || propertyType == typeof(ulong))
+                    else if (propertyType == typeof(ulong) || propertyType == typeof(ulong?))
                     {
                         property.SetValue(instance, Convert.ToUInt64(value));
                     }
@@ -89,7 +89,7 @@ namespace Utilities.Shared
                     {
                         property.SetValue(instance, Convert.ToByte(value));
                     }
-                    else if (propertyType == typeof(sbyte) || propertyType == typeof(sbyte))
+                    else if (propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
                     {
                         property.SetValue(instance, Convert.ToSByte(value));
                     }
