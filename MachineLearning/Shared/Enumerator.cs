@@ -7,7 +7,7 @@ namespace MachineLearning.Shared
 {
     public static class Enumerator
     {
-        public static IEnumerable<T> CombineEnumerator<T>(params IEnumerable<T>[] items) => items.SelectMany(i => i);
+        public static IEnumerable<T> CombineEnumerable<T>(params IEnumerable<T>[] items) => items.SelectMany(i => i);
         public static IEnumerable<T> SubEnumerable<T>(this IEnumerable<T> baseArray, int startIndex, int count)
         {
             T[] result = new T[count];

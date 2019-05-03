@@ -83,7 +83,7 @@ where TOut : class, new()
                 });
             }
             featurization.Features = combinedFeatures;
-            featurization.CombinedFeatures = Shared.Enumerator.CombineEnumerator(features, combinedFeatures.Select(x => x.EncodedFeature));
+            featurization.CombinedFeatures = Shared.Enumerator.CombineEnumerable(features, combinedFeatures.Select(x => x.EncodedFeature));
             return featurization;
         }
     }
