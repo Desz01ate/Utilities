@@ -47,6 +47,7 @@ namespace Tests
             Assert.IsFalse(emailFalse);
             Assert.IsFalse(emailFalse2);
             Assert.IsFalse(emailFalse3);
+            Assert.Pass();
         }
         [Test]
         public void Digit()
@@ -58,6 +59,7 @@ namespace Tests
                 var asc = (char)i;
                 Assert.IsFalse(Utilities.RegularExpression.IsOnlyDigit(asc.ToString()));
             }
+            Assert.Pass();
         }
         [Test]
         public void Text()
@@ -70,6 +72,7 @@ namespace Tests
                 Assert.IsFalse(Utilities.RegularExpression.IsOnlyText($@"{asc}{i}"));
             }
             Assert.IsTrue(Utilities.RegularExpression.IsOnlyText("สวัสดี"));
+            Assert.Pass();
         }
     }
 }

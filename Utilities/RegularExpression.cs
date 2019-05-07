@@ -38,6 +38,5 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <returns></returns>
         public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+$").Success;
-
     }
 }

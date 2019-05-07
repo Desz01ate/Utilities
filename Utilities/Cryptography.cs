@@ -13,8 +13,8 @@ namespace Utilities
         #region Simple Encryption - Decryption Method
         public static string Encrypt(string plainText, string salt, int blockSize = 128, int iterations = 2000)
         {
-            var saltStringBytes = Generate128BitsOfRandomEntropy(blockSize);
-            var ivStringBytes = Generate128BitsOfRandomEntropy(blockSize);
+            var saltStringBytes = GenerateRandomEntropy(blockSize);
+            var ivStringBytes = GenerateRandomEntropy(blockSize);
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(salt, saltStringBytes, iterations))
             {
@@ -101,7 +101,7 @@ namespace Utilities
         }
         public static bool Verify(string plainText, string hash, string salt, int iterations = 2000)
         {
-            var inputHash = GenerateHash(plainText, salt, iterations);
+            var inputHash = GenerateHash(plainText, salt, iterations: iterations);
             return inputHash.hash == hash;
         }
         #endregion
@@ -115,7 +115,7 @@ namespace Utilities
                 return salt;
             }
         }
-        private static byte[] Generate128BitsOfRandomEntropy(int blockSize)
+        private static byte[] GenerateRandomEntropy(int blockSize)
         {
             var randomBytes = new byte[blockSize / 8];
             using (var rngCsp = new RNGCryptoServiceProvider())
