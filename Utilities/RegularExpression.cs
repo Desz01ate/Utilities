@@ -17,7 +17,7 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <param name="pattern">Regex pattern to check whether the input is matched or not</param>
         /// <returns></returns>
-        public static bool IsPhoneNumber(string input, string pattern = @"^(08|\+66)\d{8}") => RegexMatch(input, pattern).Success;
+        public static bool IsPhoneNumber(string input, string pattern = @"^(08|\+66)\d{8,9}$") => RegexMatch(input, pattern).Success;
         /// <summary>
         /// Check if the given input is matching the email
         /// </summary>
@@ -37,7 +37,7 @@ namespace Utilities
         /// </summary>
         /// <param name="input">Input string</param>
         /// <returns></returns>
-        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+").Success;
+        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+$").Success;
 
     }
 }
