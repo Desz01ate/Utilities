@@ -224,7 +224,7 @@
         </member>
         <member name="T:Utilities.SQL">
             <summary>
-            Collections of 
+            Collections of SQL Connection for SQL Server and Oracle Database
             </summary>
         </member>
         <member name="T:Utilities.SQL.SQLServer">

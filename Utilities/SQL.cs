@@ -12,7 +12,7 @@ using System.Data.Common;
 namespace Utilities
 {
     /// <summary>
-    /// Collections of 
+    /// Collections of SQL Connection for SQL Server and Oracle Database
     /// </summary>
     public static class SQL
     {

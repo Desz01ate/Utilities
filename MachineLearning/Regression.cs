@@ -1,5 +1,6 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,15 @@ namespace MachineLearning
 {
     public static class Regression
     {
-        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string exampleWeightColumnName = null, int numLeaves = 20, int numTrees = 100, int minDatapointsInLeaves = 10, double learningRate = 0.2, Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> StochasticDoubleCoordinateAscent<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string labelColumnName,
+            string exampleWeightColumnName = null,
+            ISupportSdcaRegressionLoss lossFunction = null,
+            float? l1Regularization = null,
+            float? l2Regularization = null,
+            int? maximumNumberOfIterations = null,
+            Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
@@ -28,16 +37,15 @@ namespace MachineLearning
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(oneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", features.CombinedFeatures.ToArray()))
-                .Append(context.Regression.Trainers.FastTree(
+                .Append(context.Regression.Trainers.Sdca(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
-                    numLeaves: numLeaves,
-                    numTrees: numTrees,
-                    minDatapointsInLeaves: minDatapointsInLeaves,
-                    learningRate: learningRate
+                    lossFunction: lossFunction,
+                    l1Regularization: l1Regularization,
+                    l2Regularization: l2Regularization,
+                    maximumNumberOfIterations: maximumNumberOfIterations
                 ));
-
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);

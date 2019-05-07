@@ -1,13 +1,9 @@
-﻿using Microsoft.Data.DataView;
-using Microsoft.ML;
+﻿using Microsoft.ML;
 using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 
 namespace MachineLearning
@@ -29,7 +25,7 @@ namespace MachineLearning
             var context = new MLContext();
             using (var fs = File.Create(path))
             {
-                context.Model.Save(model, fs);
+                context.Model.Save(model, null, fs);
             }
         }
         public static ITransformer LoadModel(string path)
@@ -37,7 +33,7 @@ namespace MachineLearning
             var context = new MLContext();
             using (var fs = File.Open(path, FileMode.Open))
             {
-                var model = context.Model.Load(fs);
+                var model = context.Model.Load(fs, out var schema);
                 return model;
             }
         }
@@ -48,22 +44,16 @@ where TOut : class, new()
             var context = new MLContext();
             return context.Model.CreatePredictionEngine<TIn, TOut>(model);
         }
-        public static RegressionMetrics EvaluateRegressionModel(ITransformer model, IDataView testDataframe)
+        public static RegressionMetrics EvaluateRegressionModel(ITransformer model, IDataView testDataframe, string labelColumnName = "Label", string scoreColumnName = "Score")
         {
             var prediction = model.Transform(testDataframe);
-            var metrics = new MLContext().Regression.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+            var metrics = new MLContext().Regression.Evaluate(prediction, labelColumnName, scoreColumnName);
             return metrics;
         }
-        public static MultiClassClassifierMetrics EvaluateMulticlassClassifierMetrics(ITransformer model, IDataView testDataframe)
+        public static BinaryClassificationMetrics EvaluateBinaryClassificationMetrics(ITransformer model, IDataView testDataframe, string labelColumnName = "Label", string scoreColumnName = "Score", string probabilityColumnName = "Probability", string predictedLabelColumnName = "PredictedLabel")
         {
             var prediction = model.Transform(testDataframe);
-            var metrics = new MLContext().MulticlassClassification.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
-            return metrics;
-        }
-        public static BinaryClassificationMetrics EvaluateBinaryClassificationMetrics(ITransformer model, IDataView testDataframe)
-        {
-            var prediction = model.Transform(testDataframe);
-            var metrics = new MLContext().BinaryClassification.Evaluate(prediction, label: DefaultColumnNames.Label, score: DefaultColumnNames.Score);
+            var metrics = new MLContext().BinaryClassification.Evaluate(prediction, labelColumnName, scoreColumnName, probabilityColumnName, predictedLabelColumnName);
             return metrics;
         }
         public static Featurization FeaturesCleaning(IEnumerable<PropertyInfo> properties, string encodedFormat = "{0}_encoded")
