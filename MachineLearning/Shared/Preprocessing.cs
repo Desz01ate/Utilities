@@ -22,7 +22,7 @@ namespace MachineLearning.Shared
             List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();
             foreach (var feature in needToEncodeFeatures)
             {
-                var encoded = string.Format(encodedFormat, features);
+                var encoded = string.Format(encodedFormat, feature);
                 oheEstimator = oheEstimator.Append(context.Transforms.Categorical.OneHotEncoding(inputColumnName: feature, outputColumnName: encoded));
                 combinedFeatures.Add(new CombinedFeature
                 {
@@ -44,7 +44,7 @@ namespace MachineLearning.Shared
             List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();
             foreach (var feature in needToEncodeFeatures)
             {
-                var encoded = string.Format(encodedFormat, features);
+                var encoded = string.Format(encodedFormat, feature);
                 vtkEstimator = vtkEstimator.Append(context.Transforms.Conversion.MapKeyToValue(inputColumnName: feature, outputColumnName: encoded));
                 combinedFeatures.Add(new CombinedFeature
                 {
@@ -66,7 +66,7 @@ namespace MachineLearning.Shared
             List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();
             foreach (var feature in needToEncodeFeatures)
             {
-                var encoded = string.Format(encodedFormat, features);
+                var encoded = string.Format(encodedFormat, feature);
                 vtkEstimator = vtkEstimator.Append(context.Transforms.Conversion.MapValueToKey(inputColumnName: feature, outputColumnName: encoded));
                 combinedFeatures.Add(new CombinedFeature
                 {
