@@ -5,7 +5,7 @@ using Microsoft.ML.Transforms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using MachineLearning.Shared;
 
 namespace MachineLearning
 {
@@ -16,18 +16,15 @@ where TIn : class, new()
 where TOut : class, new()
         {
             var context = new MLContext();
-            var features = typeof(TIn).GetProperties().Select(property => property.Name).ToArray();
+            var features = typeof(TIn).GetProperties().ToArray();
             if (excludedColumns != null)
             {
-                features = features.Where(property => !excludedColumns.Contains(property)).ToArray();
+                features = features.Where(property => !excludedColumns.Contains(property.Name)).ToArray();
             }
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            IEstimator<ITransformer> estimator = new EstimatorChain<ValueToKeyMappingTransformer>();
-            foreach (var feature in features)
-            {
-                var outputColumn = $@"{feature}_encoded";
-                estimator = estimator.Append(context.Transforms.Conversion.MapValueToKey(outputColumnName: outputColumn, inputColumnName: feature));
-            }
+            var preprocessor = context.ValueToKeyMapping(features);
+
+            var estimator = preprocessor.ValueToKeyMappingEstimator;
             var options = new MatrixFactorizationTrainer.Options
             {
                 MatrixColumnIndexColumnName = $@"{columnIndexColumnName}_encoded",

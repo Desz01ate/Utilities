@@ -12,7 +12,7 @@ using System.Data.Common;
 namespace Utilities
 {
     /// <summary>
-    /// Collections of SQL Connection
+    /// Collections of SQL Connection for SQL Server and Oracle Database
     /// </summary>
     public static class SQL
     {
@@ -31,6 +31,7 @@ namespace Utilities
             /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 try
@@ -76,6 +77,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 return ExecuteReader<T>(connectionString, sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
@@ -88,6 +90,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of dynamic object</returns>
+            /// <exception cref="Exception"/>
             public static IEnumerable<dynamic> ExecuteReader(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -134,6 +137,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static T ExecuteScalar<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -172,6 +176,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static int ExecuteNonQuery(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -212,6 +217,7 @@ namespace Utilities
             /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 try
@@ -257,6 +263,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 return await ExecuteReaderAsync(connectionString, sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
@@ -269,6 +276,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of dynamic object</returns>
+            /// <exception cref="Exception"/>
             public static async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -315,6 +323,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static async Task<T> ExecuteScalarAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -353,6 +362,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -399,6 +409,7 @@ namespace Utilities
             /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 try
@@ -444,6 +455,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static IEnumerable<T> ExecuteReader<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 return ExecuteReader<T>(connectionString, sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
@@ -456,6 +468,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of dynamic object</returns>
+            /// <exception cref="Exception"/>
             public static IEnumerable<dynamic> ExecuteReader(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -502,6 +515,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static T ExecuteScalar<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -540,6 +554,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static int ExecuteNonQuery(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -580,6 +595,7 @@ namespace Utilities
             /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 try
@@ -625,6 +641,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of POCO</returns>
+            /// <exception cref="Exception"/>
             public static async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             {
                 return await ExecuteReaderAsync(connectionString, sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
@@ -637,6 +654,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns>IEnumerable of dynamic object</returns>
+            /// <exception cref="Exception"/>
             public static async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -683,6 +701,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static async Task<T> ExecuteScalarAsync<T>(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -707,7 +726,8 @@ namespace Utilities
                         connection.Close();
                     }
                     return result;
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     throw e;
                 }
@@ -720,6 +740,7 @@ namespace Utilities
             /// <param name="parameters">SQL parameters according to the sql parameter</param>
             /// <param name="commandType">Type of SQL Command</param>
             /// <returns></returns>
+            /// <exception cref="Exception"/>
             public static async Task<int> ExecuteNonQueryAsync(string connectionString, string sql, IEnumerable<SqlParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             {
                 try
@@ -744,7 +765,8 @@ namespace Utilities
                         connection.Close();
                     }
                     return result;
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     throw e;
                 }

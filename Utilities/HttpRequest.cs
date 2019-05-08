@@ -9,6 +9,11 @@ namespace Utilities
 {
     public static class HttpRequest
     {
+        /// <summary>
+        /// Send a GET request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <returns></returns>
         public static HttpResponseMessage Get(string url)
         {
             var httpClient = new HttpClient();
@@ -16,6 +21,11 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a GET request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">Target endpoint</param>
+        /// <returns></returns>
         public static async Task<HttpResponseMessage> GetAsync(string url)
         {
             var httpClient = new HttpClient();
@@ -23,6 +33,14 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a POST request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
         public static HttpResponseMessage Post(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
@@ -31,6 +49,14 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a POST request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
         public static async Task<HttpResponseMessage> PostAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
@@ -39,6 +65,14 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a PUT request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
         public static HttpResponseMessage Put(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
@@ -47,6 +81,14 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a PUT request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
         public static async Task<HttpResponseMessage> PutAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
@@ -69,6 +111,11 @@ namespace Utilities
         //    var request = await httpClient.PatchAsync(url, bodyContent);
         //    return request;
         //}
+        /// <summary>
+        /// Send a DELETE request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <returns></returns>
         public static HttpResponseMessage Delete(string url)
         {
             var httpClient = new HttpClient();
@@ -76,6 +123,11 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a DELETE request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <returns></returns>
         public static async Task<HttpResponseMessage> DeleteAsync(string url)
         {
             var httpClient = new HttpClient();
@@ -83,6 +135,14 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a DELETE request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
         public static HttpResponseMessage Delete(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();
@@ -94,6 +154,14 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a DELETE request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
         public static async Task<HttpResponseMessage> DeleteAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
         {
             var httpClient = new HttpClient();

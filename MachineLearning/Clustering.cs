@@ -16,7 +16,7 @@ namespace MachineLearning
             var features = typeof(TIn).GetProperties().Select(property => property.Name).Where(property => !excludedColumns.Contains(property)).ToArray();
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
             var pipeline = context.Transforms.Concatenate("Features", features).
-                           Append(context.Clustering.Trainers.KMeans("Features", clustersCount: numberOfClusters, exampleWeightColumnName: exampleWeightColumnName));
+                           Append(context.Clustering.Trainers.KMeans("Features", numberOfClusters: numberOfClusters, exampleWeightColumnName: exampleWeightColumnName));
             var model = pipeline.Fit(trainDataframe);
             var engine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             return engine;

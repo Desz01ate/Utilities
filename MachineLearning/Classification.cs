@@ -1,17 +1,16 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
+using Microsoft.ML.Trainers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using MachineLearning.Shared;
 
 namespace MachineLearning
 {
-    public static class Classification
+    public static class MulticlassClassfication
     {
         /// <summary>
-        /// Create engine of Logistic Regression algorithm using training dataset and hyperparameters
+        /// Create engine of Limited-Memory Broyden–Fletcher–Goldfarb–Shanno algorithm using training dataset and hyperparameters
         /// </summary>
         /// <typeparam name="TIn"></typeparam>
         /// <typeparam name="TOut"></typeparam>
@@ -19,44 +18,39 @@ namespace MachineLearning
         /// <param name="labelColumnName">The name of the label column.</param>
         /// <param name="outputColumnName">The name of the feature column.</param>
         /// <param name="exampleWeightColumnName">The name of the example weight column.</param>
-        /// <param name="l1Weight">Weight of L1 regularization term.</param>
-        /// <param name="l2Weight">Weight of L2 regularization term.</param>
+        /// <param name="l1Regularization">Weight of L1 regularization term.</param>
+        /// <param name="l2Regularization">Weight of L2 regularization term.</param>
         /// <param name="optimizationTolerance">Threshold for optimizer convergence.</param>
-        /// <param name="memorySize">Memory size for Microsoft.ML.Trainers.MulticlassLogisticRegression. Low=faster, less accurate.</param>
-        /// <param name="enforceNoNegative">Enforce non-negative weights.</param>
+        /// <param name="historySize">Memory size. Low=faster, less accurate.</param>
+        /// <param name="enforceNonNegativity">Enforce non-negative weights.</param>
         /// <returns></returns>
-        public static PredictionEngine<TIn, TOut> LogisticRegression<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, string exampleWeightColumnName = null, float l1Weight = 1, float l2Weight = 1, double optimizationTolerance = 1e-07, int memorySize = 20, bool enforceNoNegative = false, Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> LbfgsMaximumEntropy<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", string exampleWeightColumnName = null, float l1Regularization = 1, float l2Regularization = 1, double optimizationTolerance = 1e-07, int historySize = 20, bool enforceNonNegativity = false, Action<ITransformer> additionModelAction = null)
             where TIn : class, new()
             where TOut : class, new()
         {
             var context = new MLContext();
             var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
-            var features = Global.FeaturesCleaning(properties);
+            var preprocessor = context.OneHotEncoding(properties);
 
-            EstimatorChain<OneHotEncodingTransformer> oneHotEncodingEstimator = new EstimatorChain<OneHotEncodingTransformer>();
-            foreach (var feature in features.Features)
-            {
-                oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(inputColumnName: feature.Feature, outputColumnName: feature.EncodedFeature));
-            }
-
-            //var features = typeof(TIn).GetProperties().Select(property => property.Name).Where(property => property != labelColumnName).ToArray();
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
-                .Append(oneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", features.CombinedFeatures.ToArray()))
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .AppendCacheCheckpoint(context)
-                .Append(context.MulticlassClassification.Trainers.LogisticRegression(
+                .Append(context.MulticlassClassification.Trainers.LbfgsMaximumEntropy(
                     labelColumnName: labelColumnName,
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
-                    l1Weight: l1Weight,
-                    l2Weight: l2Weight,
+                    l1Regularization: l1Regularization,
+                    l2Regularization: l2Regularization,
                     optimizationTolerance: (float)optimizationTolerance,
-                    memorySize: memorySize,
-                    enforceNoNegativity: enforceNoNegative
+                    historySize: historySize,
+                    enforceNonNegativity: enforceNonNegativity
                     )
                  )
                 .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+
+
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
@@ -71,38 +65,31 @@ namespace MachineLearning
         /// <param name="labelColumnName">The name of the label column.</param>
         /// <param name="outputColumnName">The name of the feature column.</param>
         /// <param name="exampleWeightColumnName">The name of the example weight column.</param>
-        /// <param name="loss">The optional custom loss.</param>
-        /// <param name="l2Const">The L2 regularization hyperparameter.</param>
-        /// <param name="l1Threshold">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
-        /// <param name="maxIterations">The maximum number of passes to perform over the data.</param>
+        /// <param name="l2Regularization">The L2 regularization hyperparameter.</param>
+        /// <param name="l1Regularization">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
+        /// <param name="maximumNumberOfIterations">The maximum number of passes to perform over the data.</param>
         /// <returns></returns>
-        public static PredictionEngine<TIn, TOut> StochasticDualCoordinateAscent<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, string exampleWeightColumnName = null, ISupportSdcaClassificationLoss loss = null, float? l2Const = null, float? l1Threshold = null, int? maxIterations = null, Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> SdcaMaximumEntropy<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", string exampleWeightColumnName = null, ISupportSdcaClassificationLoss loss = null, float? l2Regularization = null, float? l1Regularization = null, int? maximumNumberOfIterations = null, Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
             var context = new MLContext();
             var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
-            var features = Global.FeaturesCleaning(properties);
+            var preprocessor = context.OneHotEncoding(properties);
 
-            EstimatorChain<OneHotEncodingTransformer> oneHotEncodingEstimator = new EstimatorChain<OneHotEncodingTransformer>();
-            foreach (var feature in features.Features)
-            {
-                oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(inputColumnName: feature.Feature, outputColumnName: feature.EncodedFeature));
-            }
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
-                .Append(oneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", features.CombinedFeatures.ToArray()))
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .AppendCacheCheckpoint(context)
-                .Append(context.MulticlassClassification.Trainers.StochasticDualCoordinateAscent(
+                .Append(context.MulticlassClassification.Trainers.SdcaMaximumEntropy(
                     labelColumnName: labelColumnName,
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
-                    l2Const: l2Const,
-                    l1Threshold: l1Threshold,
-                    maxIterations: maxIterations,
-                    loss: loss
+                    l2Regularization: l2Regularization,
+                    l1Regularization: l1Regularization,
+                    maximumNumberOfIterations: maximumNumberOfIterations
                 ))
                 .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
             var model = pipeline.Fit(trainDataframe);
@@ -110,24 +97,18 @@ namespace MachineLearning
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
-        public static PredictionEngine<TIn, TOut> NaiveBayes<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName, Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> NaiveBayes<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
             var context = new MLContext();
             var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
-            var features = Global.FeaturesCleaning(properties);
-
-            EstimatorChain<OneHotEncodingTransformer> oneHotEncodingEstimator = new EstimatorChain<OneHotEncodingTransformer>();
-            foreach (var feature in features.Features)
-            {
-                oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(inputColumnName: feature.Feature, outputColumnName: feature.EncodedFeature));
-            }
+            var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
-                .Append(oneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", features.CombinedFeatures.ToArray()))
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .AppendCacheCheckpoint(context)
                 .Append(context.MulticlassClassification.Trainers.NaiveBayes(
                     labelColumnName: labelColumnName,
@@ -139,5 +120,91 @@ namespace MachineLearning
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
+
+    }
+    public static class BinaryClassification
+    {
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+where TIn : class, new()
+where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.FastTree(
+                    labelColumnName: labelColumnName,
+                    featureColumnName: "Features"
+                 ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+where TIn : class, new()
+where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.FastForest(
+                    labelColumnName: labelColumnName,
+                    featureColumnName: "Features"
+                 ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+        public static PredictionEngine<TIn, TOut> SdcaLogisticRegression<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string labelColumnName,
+            string outputColumnName = "PredictedLabel",
+            string exampleWeightColumnName = null,
+            float? l1Regularization = null,
+            float? l2Regularization = null,
+            int? maximumNumberOfIterations = null,
+            Action<ITransformer> additionModelAction = null)
+        where TIn : class, new()
+        where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.SdcaLogisticRegression(
+                    labelColumnName: labelColumnName,
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    l1Regularization: l1Regularization,
+                    l2Regularization: l2Regularization,
+                    maximumNumberOfIterations: maximumNumberOfIterations
+                 ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+
     }
 }

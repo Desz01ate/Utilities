@@ -9,11 +9,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.5.4</Version>
+    <Version>0.0.5.5</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>7.3</LangVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <Description>Some heavily repetitive code block packed together as utilities tools including</Description>
+    <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
