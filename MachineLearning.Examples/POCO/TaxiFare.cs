@@ -1,4 +1,5 @@
 ﻿using Microsoft.ML.Data;
+using System;
 
 namespace MachineLearning.Examples.POCO
 {
@@ -20,9 +21,13 @@ namespace MachineLearning.Examples.POCO
         public float fare_amount { get; set; }
 
     }
-    public class TaxiTripFarePrediction
+    public class TaxiFarePrediction
     {
         [ColumnName("Score")]
         public float FareAmount;
+        public float CalculateVariance(TaxiFare taxiFare)
+        {
+            return (float)Math.Round(Math.Abs(FareAmount / taxiFare.fare_amount) * 100);
+        }
     }
 }

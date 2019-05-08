@@ -5,6 +5,7 @@ using Microsoft.ML.Transforms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MachineLearning.Shared;
 
 namespace MachineLearning
 {
@@ -25,18 +26,13 @@ namespace MachineLearning
             var context = new MLContext();
             var properties = typeof(TIn).GetProperties();
 
-            var features = Global.FeaturesCleaning(properties);
+            var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
 
-            EstimatorChain<OneHotEncodingTransformer> oneHotEncodingEstimator = new EstimatorChain<OneHotEncodingTransformer>();
-            foreach (var feature in features.Features)
-            {
-                oneHotEncodingEstimator = oneHotEncodingEstimator.Append(context.Transforms.Categorical.OneHotEncoding(inputColumnName: feature.Feature, outputColumnName: feature.EncodedFeature));
-            }
 
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
-                .Append(oneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", features.CombinedFeatures.ToArray()))
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .Append(context.Regression.Trainers.Sdca(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
@@ -51,7 +47,41 @@ namespace MachineLearning
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
+        public static PredictionEngine<TIn, TOut> LbfgsPoisson<TIn, TOut>(
+            IEnumerable<TIn> trainDataset, 
+            string labelColumnName,
+            string exampleWeightColumnName = null,
+            float l1Regularization = 1,
+            float l2Regularization = 1,
+            float optimizationTolerance = (float)1E-07,
+            int historySize = 20,
+            bool enforceNonNegativity = false,
+            Action<ITransformer> additionModelAction = null
+            ) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties();
 
+            var preprocessor = context.OneHotEncoding(properties);
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
 
+            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Regression.Trainers.LbfgsPoissonRegression(
+                    labelColumnName : "Label",
+                    featureColumnName : "Features",
+                    exampleWeightColumnName : exampleWeightColumnName,
+                    l1Regularization : l1Regularization,
+                    l2Regularization : l2Regularization,
+                    optimizationTolerance : optimizationTolerance,
+                    historySize : historySize,
+                    enforceNonNegativity : enforceNonNegativity
+                    ));
+            var model = pipeline.Fit(trainDataframe);
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
     }
 }

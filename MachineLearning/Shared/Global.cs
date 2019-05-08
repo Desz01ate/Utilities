@@ -1,25 +1,18 @@
-﻿using Microsoft.ML;
+﻿using MachineLearning.Shared.DataStructures;
+using Microsoft.ML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Transforms;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using System.Text;
 
 namespace MachineLearning
 {
     public static class Global
     {
-        public class CombinedFeature
-        {
-            public string Feature { get; set; }
-            public string EncodedFeature { get; set; }
-        }
-        public class Featurization
-        {
-            public IEnumerable<CombinedFeature> Features { get; set; }
-            public IEnumerable<string> CombinedFeatures { get; set; }
-        }
         public static void SaveModel(this ITransformer model, string path)
         {
             var context = new MLContext();
@@ -56,25 +49,37 @@ where TOut : class, new()
             var metrics = new MLContext().BinaryClassification.Evaluate(prediction, labelColumnName, scoreColumnName, probabilityColumnName, predictedLabelColumnName);
             return metrics;
         }
-        public static Featurization FeaturesCleaning(IEnumerable<PropertyInfo> properties, string encodedFormat = "{0}_encoded")
+        public static void PeekOnDataView(ITransformer model, IDataView dataView, int numberOfRows = 10)
         {
-            var featurization = new Featurization();
-            var features = properties.Where(property => property.PropertyType != typeof(string)).Select(property => property.Name);
-            var needToEncodeFeatures = properties.Where(property => property.PropertyType == typeof(string)).Select(property => property.Name);
-
-            List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();
-            foreach (var feature in needToEncodeFeatures)
+            ConsoleHelper.ConsoleWriteHeader($"Peek data in DataView : Show {numberOfRows} rows.");
+            var transformedData = model.Transform(dataView);
+            var rows = transformedData.Preview(numberOfRows);
+            foreach (var row in rows.RowView)
             {
-                var encoded = string.Format(encodedFormat, feature);
-                combinedFeatures.Add(new CombinedFeature
+                var columnCollection = row.Values;
+                var sb = new StringBuilder();
+                foreach (var column in columnCollection)
                 {
-                    Feature = feature,
-                    EncodedFeature = encoded
-                });
+                    sb.Append($" | {column.Key}:{column.Value}");
+                }
+                Console.WriteLine(sb);
             }
-            featurization.Features = combinedFeatures;
-            featurization.CombinedFeatures = Shared.Enumerator.CombineEnumerable(features, combinedFeatures.Select(x => x.EncodedFeature));
-            return featurization;
+        }
+    }
+    public static class ConsoleHelper
+    {
+        public static void ConsoleWriteHeader(params string[] lines)
+        {
+            var defaultColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(" ");
+            foreach (var line in lines)
+            {
+                Console.WriteLine(line);
+            }
+            var maxLength = lines.Select(x => x.Length).Max();
+            Console.WriteLine(new string('#', maxLength));
+            Console.ForegroundColor = defaultColor;
         }
     }
 }

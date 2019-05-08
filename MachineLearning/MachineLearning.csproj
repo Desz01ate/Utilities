@@ -5,7 +5,7 @@
     <RootNamespace>MachineLearning</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>0.0.3.1</Version>
+    <Version>0.0.3.2</Version>
     <Authors>Chanvut Booneid</Authors>
     <Company>Deszolate_C</Company>
     <Product>Utilities.MachineLearning</Product>
