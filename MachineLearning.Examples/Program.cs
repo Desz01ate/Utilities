@@ -67,49 +67,16 @@ namespace MachineLearning.Examples
         }
         static async Task Main(string[] args)
         {
-            //var sqlConnection = $@"Server = localhost;database = test;user = sa;password = sa";
-            //var train = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Sales>(sqlConnection, "SELECT * FROM [Sales]");
-            //var testdata = new Sales()
-            //{
-            //    productId = "263",
-            //    month = 10,
-            //    year = 2017,
-            //    avg = 91,
-            //    max = 370,
-            //    min = 1,
-            //    count = 10,
-            //    prev = 1675,
-            //    units = 910
-            //};
-
-            //var context = new MLContext();
-            //var dataframe = context.Data.LoadFromEnumerable(train);
-            //var pipeline = context.Transforms.Concatenate(outputColumnName: "numerical_features",
-            //                        nameof(Sales.year), nameof(Sales.month), nameof(Sales.units), nameof(Sales.avg), nameof(Sales.count),
-            //                        nameof(Sales.max), nameof(Sales.min), nameof(Sales.prev))
-            //                .Append(context.Transforms.Categorical.OneHotEncoding(outputColumnName: "country_encoded", nameof(Sales.productId)))
-            //                .Append(context.Transforms.Concatenate("Features", "numerical_features", "country_encoded"))
-            //                .Append(context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: nameof(Sales.next)))
-            //                .Append(context.Regression.Trainers.FastTreeTweedie(labelColumnName: "Label", featureColumnName: "Features"));
-
-            //var crossValidation = context.Regression.CrossValidate(data: dataframe, estimator: pipeline, numberOfFolds: 6, labelColumnName: "Label");
-            //var model = pipeline.Fit(dataframe);
-            //var engine = context.Model.CreatePredictionEngine<Sales, SalesPrediction>(model);
-            //var engine2 = MachineLearning.Regression.FastTree<Sales, SalesPrediction>(train, nameof(Sales.next), learningRate: 0.2, numberOfLeaves: 40,numberOfTrees:200);
-
-            //Console.WriteLine(engine.Predict(testdata).Score);
-            //Console.WriteLine(engine2.Predict(testdata).Score);
-
-            //Console.ReadLine();
-            await MulticlassClassificationExample();
-            await RegressionExample();
+            //await MulticlassClassificationExample();
+            //await RegressionExample();
+            await ClusteringExample();
         }
         static async Task MulticlassClassificationExample()
         {
             var bestAlg = string.Empty;
             double logLoss = double.MaxValue;
             var mlContext = new MLContext();
-            var sqlConnection = $@"Server = localhost;database = test;user = sa;password = sa";
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Wine>(sqlConnection, "SELECT * FROM [wine]");
             var trainSize = (int)(traindata.Count() * 0.8);
             var testdata = traindata.Skip(trainSize);
@@ -141,7 +108,7 @@ namespace MachineLearning.Examples
                 {
                     var predict = engine.Predict(t);
                     Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5}", t.type, predict.type));
-                } 
+                }
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($@"Best algorithm based-on Log Loss : {bestAlg}");
@@ -152,9 +119,9 @@ namespace MachineLearning.Examples
             var bestAlg = string.Empty;
             double mse = double.MaxValue;
             var mlContext = new MLContext();
-            var sqlConnection = $@"Server = localhost;database = test;user = sa;password = sa";
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             var testdata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]");
-            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train]");
+            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()");
             var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, string, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFarePrediction>>>() {
                 { "SDCA", (data,label,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
                 { "LBFGS", (data,label,action) => Regression.LbfgsPoisson<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
@@ -186,6 +153,50 @@ namespace MachineLearning.Examples
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($@"Best algorithm based-on Mean Squared Error : {bestAlg}");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        static async Task ClusteringExample()
+        {
+            var bestAlg = string.Empty;
+            double avgdist = double.MaxValue;
+            var mlContext = new MLContext();
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Iris>(sqlConnection, "SELECT * FROM [iris] ORDER BY NEWID()");
+            var trainSize = (int)(traindata.Count() * 0.8);
+            var testdata = traindata.Skip(trainSize);
+            traindata = traindata.Take(trainSize);
+
+
+            var algorithms = new Dictionary<string, Func<IEnumerable<Iris>, string, Action<ITransformer>, PredictionEngine<Iris, IrisClustering>>>() {
+                { "KMeans", (data,label,action) => Clustering.KMeans<Iris,IrisClustering>(data,3,additionModelAction:action,excludedColumns:new []{ nameof(Iris.Label)}) },
+            };
+            foreach (var algorithm in algorithms)
+            {
+                var engine = algorithm.Value(traindata, nameof(Iris.Label), (model) =>
+                {
+                    MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
+                    var dataframe = new MLContext().Data.LoadFromEnumerable(testdata);
+                    var metrics = Global.EvaluateClusteringMetrics(model, dataframe);
+                    foreach (var prop in metrics.GetType().GetProperties())
+                    {
+                        Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
+                    }
+                    if (metrics.AverageDistance < avgdist)
+                    {
+                        avgdist = metrics.AverageDistance;
+                        bestAlg = algorithm.Key;
+                    }
+                });
+                foreach (var t in testdata.Take(20))
+                {
+                    var temp = t.Label;
+                    var predict = engine.Predict(t);
+                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5}", temp, predict.Label));
+                }
+                
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($@"Best algorithm based-on Average Distance : {bestAlg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
     }

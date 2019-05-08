@@ -1,4 +1,5 @@
 ﻿using Microsoft.ML.Data;
+using System;
 
 namespace MachineLearning.Examples.POCO
 {
@@ -39,5 +40,10 @@ namespace MachineLearning.Examples.POCO
         public string type { get; set; }
         [ColumnName("Score")]
         public float[] score { get; set; }
+    }
+    public class WineClustering
+    {
+        [ColumnName("PredictedLabel")]
+        public uint type { get; set; }
     }
 }

@@ -26,4 +26,9 @@ namespace MachineLearning.Examples.POCO
         [ColumnName("PredictedLabel")]
         public string Label { get; set; }
     }
+    public class IrisClustering
+    {
+        [ColumnName("PredictedLabel")]
+        public uint Label { get; set; }
+    }
 }

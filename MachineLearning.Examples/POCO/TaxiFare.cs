@@ -27,7 +27,7 @@ namespace MachineLearning.Examples.POCO
         public float FareAmount;
         public float CalculateVariance(TaxiFare taxiFare)
         {
-            return (float)Math.Round(Math.Abs(FareAmount / taxiFare.fare_amount) * 100);
+            return (float)Math.Round(FareAmount / taxiFare.fare_amount * 100);
         }
     }
 }

@@ -473,5 +473,19 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
+        <member name="T:Utilities.String">
+            <summary>
+            Collection of extension method for string datatype
+            </summary>
+        </member>
+        <member name="M:Utilities.String.ToLeadingUpper(System.String,System.Boolean,System.Char)">
+            <summary>
+            Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="splitter"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

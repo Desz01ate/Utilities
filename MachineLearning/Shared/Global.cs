@@ -55,6 +55,12 @@ where TOut : class, new()
             var metrics = new MLContext().MulticlassClassification.Evaluate(prediction, labelColumnName, scoreColumnName, predictedLabelColumnName);
             return metrics;
         }
+        public static ClusteringMetrics EvaluateClusteringMetrics(ITransformer model, IDataView testDataframe, string labelColumnName = null, string scoreColumnName = "Score", string featureColumnName = null)
+        {
+            var prediction = model.Transform(testDataframe);
+            var metrics = new MLContext().Clustering.Evaluate(prediction, labelColumnName: labelColumnName, scoreColumnName: scoreColumnName, featureColumnName: featureColumnName);
+            return metrics;
+        }
         public static void PeekOnDataView(ITransformer model, IDataView dataView, int numberOfRows = 10)
         {
             ConsoleHelper.ConsoleWriteHeader($"Peek data in DataView : Show {numberOfRows} rows.");
