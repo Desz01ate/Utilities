@@ -7,7 +7,7 @@ using MachineLearning.Shared;
 
 namespace MachineLearning
 {
-    public static class Classification
+    public static class MulticlassClassfication
     {
         /// <summary>
         /// Create engine of Limited-Memory Broyden–Fletcher–Goldfarb–Shanno algorithm using training dataset and hyperparameters
@@ -87,9 +87,9 @@ namespace MachineLearning
                     labelColumnName: labelColumnName,
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
-                    l2Regularization : l2Regularization,
-                    l1Regularization : l1Regularization,
-                    maximumNumberOfIterations : maximumNumberOfIterations
+                    l2Regularization: l2Regularization,
+                    l1Regularization: l1Regularization,
+                    maximumNumberOfIterations: maximumNumberOfIterations
                 ))
                 .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
             var model = pipeline.Fit(trainDataframe);
@@ -120,5 +120,91 @@ namespace MachineLearning
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
+
+    }
+    public static class BinaryClassification
+    {
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+where TIn : class, new()
+where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.FastTree(
+                    labelColumnName: labelColumnName,
+                    featureColumnName: "Features"
+                 ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+where TIn : class, new()
+where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.FastForest(
+                    labelColumnName: labelColumnName,
+                    featureColumnName: "Features"
+                 ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+        public static PredictionEngine<TIn, TOut> SdcaLogisticRegression<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string labelColumnName,
+            string outputColumnName = "PredictedLabel",
+            string exampleWeightColumnName = null,
+            float? l1Regularization = null,
+            float? l2Regularization = null,
+            int? maximumNumberOfIterations = null,
+            Action<ITransformer> additionModelAction = null)
+        where TIn : class, new()
+        where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.SdcaLogisticRegression(
+                    labelColumnName: labelColumnName,
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    l1Regularization: l1Regularization,
+                    l2Regularization: l2Regularization,
+                    maximumNumberOfIterations: maximumNumberOfIterations
+                 ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+
     }
 }

@@ -49,6 +49,12 @@ where TOut : class, new()
             var metrics = new MLContext().BinaryClassification.Evaluate(prediction, labelColumnName, scoreColumnName, probabilityColumnName, predictedLabelColumnName);
             return metrics;
         }
+        public static MulticlassClassificationMetrics EvaluateMulticlassClassificationMetrics(ITransformer model, IDataView testDataframe, string labelColumnName = "Label", string scoreColumnName = "Score", string predictedLabelColumnName = "PredictedLabel")
+        {
+            var prediction = model.Transform(testDataframe);
+            var metrics = new MLContext().MulticlassClassification.Evaluate(prediction, labelColumnName, scoreColumnName, predictedLabelColumnName);
+            return metrics;
+        }
         public static void PeekOnDataView(ITransformer model, IDataView dataView, int numberOfRows = 10)
         {
             ConsoleHelper.ConsoleWriteHeader($"Peek data in DataView : Show {numberOfRows} rows.");

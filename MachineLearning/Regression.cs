@@ -24,7 +24,7 @@ namespace MachineLearning
     where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties();
+            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -48,7 +48,7 @@ namespace MachineLearning
             return predictEngine;
         }
         public static PredictionEngine<TIn, TOut> LbfgsPoisson<TIn, TOut>(
-            IEnumerable<TIn> trainDataset, 
+            IEnumerable<TIn> trainDataset,
             string labelColumnName,
             string exampleWeightColumnName = null,
             float l1Regularization = 1,
@@ -60,7 +60,7 @@ namespace MachineLearning
             ) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties();
+            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -69,14 +69,111 @@ namespace MachineLearning
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .Append(context.Regression.Trainers.LbfgsPoissonRegression(
-                    labelColumnName : "Label",
-                    featureColumnName : "Features",
-                    exampleWeightColumnName : exampleWeightColumnName,
-                    l1Regularization : l1Regularization,
-                    l2Regularization : l2Regularization,
-                    optimizationTolerance : optimizationTolerance,
-                    historySize : historySize,
-                    enforceNonNegativity : enforceNonNegativity
+                    labelColumnName: "Label",
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    l1Regularization: l1Regularization,
+                    l2Regularization: l2Regularization,
+                    optimizationTolerance: optimizationTolerance,
+                    historySize: historySize,
+                    enforceNonNegativity: enforceNonNegativity
+                    ));
+            var model = pipeline.Fit(trainDataframe);
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> FastTreeTweedie<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string labelColumnName,
+            string exampleWeightColumnName = null,
+            int numberOfLeaves = 20,
+            int numberOfTrees = 100,
+            int minimumExampleCountPerLeaft = 10,
+            double learningRate = 0.2,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+
+            var preprocessor = context.OneHotEncoding(properties);
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+
+            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Regression.Trainers.FastTreeTweedie(
+                    labelColumnName: "Label",
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: minimumExampleCountPerLeaft,
+                    learningRate: learningRate
+                    ));
+            var model = pipeline.Fit(trainDataframe);
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string labelColumnName,
+            string exampleWeightColumnName = null,
+            int numberOfLeaves = 20,
+            int numberOfTrees = 100,
+            int minimumExampleCountPerLeaft = 10,
+            double learningRate = 0.2,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+
+            var preprocessor = context.OneHotEncoding(properties);
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+
+            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Regression.Trainers.FastTree(
+                    labelColumnName: "Label",
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: minimumExampleCountPerLeaft,
+                    learningRate: learningRate
+                    ));
+            var model = pipeline.Fit(trainDataframe);
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string labelColumnName,
+            string exampleWeightColumnName = null,
+            int numberOfLeaves = 20,
+            int numberOfTrees = 100,
+            int minimumExampleCountPerLeaft = 10,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+
+            var preprocessor = context.OneHotEncoding(properties);
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+
+            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Regression.Trainers.FastForest(
+                    labelColumnName: "Label",
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: minimumExampleCountPerLeaft
                     ));
             var model = pipeline.Fit(trainDataframe);
             var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
