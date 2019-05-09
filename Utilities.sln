@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning", "MachineL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighPerformance", "HighPerformance\HighPerformance.csproj", "{7AB281E8-E2D3-4542-BF40-4EEF1464B27B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities-Testing", "Utilities-Testing\Utilities-Testing.csproj", "{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities-Testing", "Utilities-Testing\Utilities-Testing.csproj", "{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineLearning.Examples", "MachineLearning.Examples\MachineLearning.Examples.csproj", "{375432CC-C34D-49ED-A1FF-D79919F71DC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning.Examples", "MachineLearning.Examples\MachineLearning.Examples.csproj", "{375432CC-C34D-49ED-A1FF-D79919F71DC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

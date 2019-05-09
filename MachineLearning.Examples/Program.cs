@@ -1,8 +1,11 @@
 ﻿using MachineLearning.Examples.POCO;
+using MachineLearning.Shared;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
+using OxyPlot;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,95 +70,131 @@ namespace MachineLearning.Examples
         }
         static async Task Main(string[] args)
         {
-            //await MulticlassClassificationExample();
-            //await RegressionExample();
-            await ClusteringExample();
+            bool train = false;
+            await MulticlassClassificationExample(train);
+            await RegressionExample(train);
+            await ClusteringExample(train);
+
         }
-        static async Task MulticlassClassificationExample()
+        static async Task MulticlassClassificationExample(bool train = true)
         {
             var bestAlg = string.Empty;
             double logLoss = double.MaxValue;
             var mlContext = new MLContext();
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Wine>(sqlConnection, "SELECT * FROM [wine]");
-            var trainSize = (int)(traindata.Count() * 0.8);
-            var testdata = traindata.Skip(trainSize);
-            traindata = traindata.Take(trainSize);
+            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Wine>(sqlConnection, "SELECT * FROM [Wine] ORDER BY NEWID()");
+            var testdata = traindata.Take(20);
 
 
-            var algorithms = new Dictionary<string, Func<IEnumerable<Wine>, string, Action<ITransformer>, PredictionEngine<Wine, WinePrediction>>>() {
-                { "SdcaMaximumEntropy", (data,label,action) => MulticlassClassfication.SdcaMaximumEntropy<Wine,WinePrediction>(data,label,additionModelAction:action) },
-                { "LbfgsMaximumEntropy", (data,label,action) => MulticlassClassfication.LbfgsMaximumEntropy<Wine,WinePrediction>(data,label,additionModelAction:action) },
-                { "NaiveBayes", (data,label,action) => MulticlassClassfication.NaiveBayes<Wine,WinePrediction>(data,label,additionModelAction:action) },
+
+            var algorithms = new Dictionary<string, Func<IEnumerable<Wine>, string, Action<ITransformer>, PredictionEngine<Wine, WineClassfication>>>() {
+                { "SdcaMaximumEntropy", (data,label,action) => MulticlassClassfication.SdcaMaximumEntropy<Wine,WineClassfication>(data,label,additionModelAction:action) },
+                { "LbfgsMaximumEntropy", (data,label,action) => MulticlassClassfication.LbfgsMaximumEntropy<Wine,WineClassfication>(data,label,additionModelAction:action) },
+                { "NaiveBayes", (data,label,action) => MulticlassClassfication.NaiveBayes<Wine,WineClassfication>(data,label,additionModelAction:action) },
             };
             foreach (var algorithm in algorithms)
             {
-                var engine = algorithm.Value(traindata, nameof(Wine.type), (model) =>
+                PredictionEngine<Wine, WineClassfication> engine = default;
+                ITransformer model = default;
+                var path = $@"MClassification_{algorithm.Key}.zip";
+                if (File.Exists(path) && !train)
                 {
-                    MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
-                    var metrics = Global.EvaluateMulticlassClassificationMetrics(model, mlContext.Data.LoadFromEnumerable(testdata), labelColumnName: nameof(Wine.type));
-                    foreach (var prop in metrics.GetType().GetProperties())
+                    model = MachineLearning.Global.LoadModel(path);
+                    engine = mlContext.Model.CreatePredictionEngine<Wine, WineClassfication>(model);
+
+                }
+                else
+                {
+                    engine = algorithm.Value(traindata, nameof(Wine.type), (mdl) =>
                     {
-                        Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
-                    }
-                    if (metrics.LogLoss < logLoss)
-                    {
-                        logLoss = metrics.LogLoss;
-                        bestAlg = algorithm.Key;
-                    }
-                });
-                foreach (var t in testdata.Take(20))
+                        model = mdl;
+                    });
+                }
+                MachineLearning.Global.SaveModel(model, $@"Multiclass_{algorithm.Key}.zip");
+                MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
+                var metrics = Metrics.EvaluateMulticlassClassificationMetrics(model, mlContext.Data.LoadFromEnumerable(testdata), labelColumnName: nameof(Wine.type));
+                foreach (var prop in metrics.GetType().GetProperties())
+                {
+                    Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
+                }
+                if (metrics.LogLoss < logLoss)
+                {
+                    logLoss = metrics.LogLoss;
+                    bestAlg = algorithm.Key;
+                }
+                List<WineClassfication> irisClassifications = new List<WineClassfication>();
+                foreach (var t in testdata)
                 {
                     var predict = engine.Predict(t);
-                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5}", t.type, predict.type));
+                    irisClassifications.Add(predict);
+                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5} {2}", t.type, predict.Predicted_result, predict.ComparePrediction(t)));
                 }
+                VisualizeMulticlassClassification(algorithm.Key, testdata, irisClassifications, $"{algorithm.Key}_clsf.svg");
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($@"Best algorithm based-on Log Loss : {bestAlg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
-        static async Task RegressionExample()
+        static async Task RegressionExample(bool train = true)
         {
             var bestAlg = string.Empty;
             double mse = double.MaxValue;
             var mlContext = new MLContext();
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            var testdata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]");
+            var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]")).Take(20);
             var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()");
-            var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, string, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFarePrediction>>>() {
-                { "SDCA", (data,label,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
-                { "LBFGS", (data,label,action) => Regression.LbfgsPoisson<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
-                { "FastTree", (data,label,action) => Regression.FastTree<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
-                { "FastTreeTweedie", (data,label,action) => Regression.FastTreeTweedie<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
-                { "FastForest", (data,label,action) => Regression.FastForest<TaxiFare,TaxiFarePrediction>(data,label,additionModelAction : action) },
+
+            var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, string, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFareRegression>>>() {
+                { "SDCA", (data,label,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFareRegression>(data,label,additionModelAction : action) },
+                { "LBFGS", (data,label,action) => Regression.LbfgsPoisson<TaxiFare,TaxiFareRegression>(data,label,additionModelAction : action) },
+                { "FastTree", (data,label,action) => Regression.FastTree<TaxiFare,TaxiFareRegression>(data,label,additionModelAction : action) },
+                { "FastTreeTweedie", (data,label,action) => Regression.FastTreeTweedie<TaxiFare,TaxiFareRegression>(data,label,additionModelAction : action) },
+                { "FastForest", (data,label,action) => Regression.FastForest<TaxiFare,TaxiFareRegression>(data,label,additionModelAction : action) },
             };
             foreach (var algorithm in algorithms)
             {
-                var engine = algorithm.Value(traindata, nameof(TaxiFare.fare_amount), (model) =>
+                PredictionEngine<TaxiFare, TaxiFareRegression> engine = default;
+                ITransformer model = default;
+                var path = $@"Regression_{algorithm.Key}.zip";
+                if (File.Exists(path) && !train)
                 {
-                    var metrics = Global.EvaluateRegressionModel(model, mlContext.Data.LoadFromEnumerable(testdata));
-                    MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
-                    foreach (var prop in metrics.GetType().GetProperties())
+                    model = MachineLearning.Global.LoadModel(path);
+                    engine = mlContext.Model.CreatePredictionEngine<TaxiFare, TaxiFareRegression>(model);
+
+                }
+                else
+                {
+                    engine = algorithm.Value(traindata, nameof(TaxiFare.fare_amount), (mdl) =>
                     {
-                        Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
-                    }
-                    if (metrics.MeanSquaredError < mse)
-                    {
-                        mse = metrics.MeanSquaredError;
-                        bestAlg = algorithm.Key;
-                    }
-                });
-                foreach (var t in testdata.Take(20))
+                        model = mdl;
+                    });
+                }
+                MachineLearning.Global.SaveModel(model, $@"Regression_{algorithm.Key}.zip");
+                var metrics = Metrics.EvaluateRegressionModel(model, mlContext.Data.LoadFromEnumerable(testdata));
+                MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
+                foreach (var prop in metrics.GetType().GetProperties())
+                {
+                    Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
+                }
+                if (metrics.MeanSquaredError < mse)
+                {
+                    mse = metrics.MeanSquaredError;
+                    bestAlg = algorithm.Key;
+                }
+                var predictedList = new List<TaxiFareRegression>();
+                foreach (var t in testdata)
                 {
                     var predict = engine.Predict(t);
-                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5} ({2,0}%)", Math.Round(t.fare_amount, 2), Math.Round(predict.FareAmount, 2), predict.CalculateVariance(t)));
+                    predictedList.Add(predict);
+                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5} ({2,0}%)", Math.Round(t.fare_amount, 2), Math.Round(predict.Predicted_Score, 2), predict.CalculateVariance(t)));
                 }
+                VisualizeRegression(algorithm.Key, testdata, predictedList, $"{algorithm.Key}_reg.svg");
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($@"Best algorithm based-on Mean Squared Error : {bestAlg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
-        static async Task ClusteringExample()
+        static async Task ClusteringExample(bool train = true)
         {
             var bestAlg = string.Empty;
             double avgdist = double.MaxValue;
@@ -163,8 +202,8 @@ namespace MachineLearning.Examples
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Iris>(sqlConnection, "SELECT * FROM [iris] ORDER BY NEWID()");
             var trainSize = (int)(traindata.Count() * 0.8);
-            var testdata = traindata.Skip(trainSize);
-            traindata = traindata.Take(trainSize);
+            var testdata = traindata.Skip(trainSize).ToList();
+            traindata = traindata.Take(trainSize).ToList();
 
 
             var algorithms = new Dictionary<string, Func<IEnumerable<Iris>, string, Action<ITransformer>, PredictionEngine<Iris, IrisClustering>>>() {
@@ -172,32 +211,127 @@ namespace MachineLearning.Examples
             };
             foreach (var algorithm in algorithms)
             {
-                var engine = algorithm.Value(traindata, nameof(Iris.Label), (model) =>
+                PredictionEngine<Iris, IrisClustering> engine = default;
+                ITransformer model = default;
+                var path = $@"Clustering_{algorithm.Key}.zip";
+                if (File.Exists(path) && !train)
                 {
-                    MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
-                    var dataframe = new MLContext().Data.LoadFromEnumerable(testdata);
-                    var metrics = Global.EvaluateClusteringMetrics(model, dataframe);
-                    foreach (var prop in metrics.GetType().GetProperties())
+                    model = MachineLearning.Global.LoadModel(path);
+                    engine = mlContext.Model.CreatePredictionEngine<Iris, IrisClustering>(model);
+
+                }
+                else
+                {
+                    engine = algorithm.Value(traindata, nameof(Iris.Label), (mdl) =>
                     {
-                        Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
-                    }
-                    if (metrics.AverageDistance < avgdist)
-                    {
-                        avgdist = metrics.AverageDistance;
-                        bestAlg = algorithm.Key;
-                    }
-                });
-                foreach (var t in testdata.Take(20))
+                        model = mdl;
+                    });
+                }
+                MachineLearning.Global.SaveModel(model, path);
+                MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
+                var dataframe = new MLContext().Data.LoadFromEnumerable(testdata);
+                var metrics = Metrics.EvaluateClusteringMetrics(model, dataframe);
+                foreach (var prop in metrics.GetType().GetProperties())
+                {
+                    Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
+                }
+                if (metrics.AverageDistance < avgdist)
+                {
+                    avgdist = metrics.AverageDistance;
+                    bestAlg = algorithm.Key;
+                }
+                var predictedData = new List<IrisClustering>();
+                foreach (var t in testdata)
                 {
                     var temp = t.Label;
                     var predict = engine.Predict(t);
-                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5}", temp, predict.Label));
+                    predictedData.Add(predict);
+                    Console.WriteLine(string.Format(@"Cluster ID : {0,5}", predict.Predicted_cluster));
                 }
-                
+                VisualizeClustering(predictedData, "clustering.svg");
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($@"Best algorithm based-on Average Distance : {bestAlg}");
             Console.ForegroundColor = ConsoleColor.White;
+        }
+        static void VisualizeMulticlassClassification(string algorithmName, IEnumerable<Wine> testData, IEnumerable<WineClassfication> predictedData, string savePath)
+        {
+            try
+            {
+                var plot = new PlotModel { Title = "Iris Type Prediction", IsLegendVisible = true };
+                var types = predictedData.Select(x => x.Predicted_result).Distinct().OrderBy(x => x);
+                foreach (var type in types)
+                {
+                    var scatter = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerStrokeThickness = 2, Title = $"type : {type}" };
+                    var series = predictedData.Where(x => x.Predicted_result == type).Select(p => new ScatterPoint(p.Location[0], p.Location[1]));
+                    scatter.Points.AddRange(series);
+                    plot.Series.Add(scatter);
+                }
+                plot.DefaultColors = OxyPalettes.HueDistinct(plot.Series.Count).Colors;
+                var exporter = new SvgExporter { Width = 600, Height = 400 };
+                using (var fs = new FileStream(savePath, FileMode.Create))
+                {
+                    exporter.Export(plot, fs);
+                }
+                Console.WriteLine($"Classification svg generated at {savePath}.");
+            }
+            catch
+            {
+                Console.WriteLine($"Unable to generate visualization for {algorithmName}");
+            }
+        }
+        static void VisualizeClustering(IEnumerable<IrisClustering> predictedData, string savePath)
+        {
+            var plot = new PlotModel { Title = "Iris Cluster", IsLegendVisible = true };
+            var clusters = predictedData.Select(x => x.Predicted_cluster).Distinct().OrderBy(x => x);
+            foreach (var cluster in clusters)
+            {
+                var scatter = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerStrokeThickness = 2, Title = $"Cluster : {cluster}" };
+                var series = predictedData.Where(x => x.Predicted_cluster == cluster).Select(p => new ScatterPoint(p.Location[0], p.Location[1]));
+                scatter.Points.AddRange(series);
+                plot.Series.Add(scatter);
+            }
+            plot.DefaultColors = OxyPalettes.HueDistinct(plot.Series.Count).Colors;
+            var exporter = new SvgExporter { Width = 600, Height = 400 };
+            using (var fs = new FileStream(savePath, FileMode.Create))
+            {
+                exporter.Export(plot, fs);
+            }
+            Console.WriteLine($"Clustering svg generated at {savePath}.");
+        }
+        static void VisualizeRegression(string algorithmName, IEnumerable<TaxiFare> testData, IEnumerable<TaxiFareRegression> predictedData, string savePath)
+        {
+            var plot = new PlotModel { Title = $"{algorithmName} - Taxi Fare Regression", IsLegendVisible = true };
+            var lineActual = new LineSeries()
+            {
+                Title = "Actual Price",
+                Color = OxyColors.Green
+            };
+            var linePredict = new LineSeries
+            {
+                Title = "Predicted Price",
+                Color = OxyColors.Red
+            };
+            var testArray = testData.ToArray();
+            for (var x = 0; x < testArray.Length; x++)
+            {
+                var test = testArray[x];
+                lineActual.Points.Add(new DataPoint(x, test.fare_amount));
+            }
+            var predictArray = predictedData.ToArray();
+            for (var x = 0; x < predictArray.Length; x++)
+            {
+                var predict = predictArray[x];
+                linePredict.Points.Add(new DataPoint(x, predict.Predicted_Score));
+            }
+            plot.Series.Add(lineActual);
+            plot.Series.Add(linePredict);
+            var exporter = new SvgExporter { Width = 600, Height = 400 };
+            using (var fs = new FileStream(savePath, FileMode.Create))
+            {
+                exporter.Export(plot, fs);
+            }
+            Console.WriteLine($"Regression svg generated at {savePath}.");
         }
     }
 }

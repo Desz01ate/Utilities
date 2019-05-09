@@ -33,6 +33,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .Append(context.Regression.Trainers.Sdca(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
@@ -68,6 +69,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .Append(context.Regression.Trainers.LbfgsPoissonRegression(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
@@ -102,6 +104,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .Append(context.Regression.Trainers.FastTreeTweedie(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
@@ -135,6 +138,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .Append(context.Regression.Trainers.FastTree(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
@@ -167,6 +171,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .Append(context.Regression.Trainers.FastForest(
                     labelColumnName: "Label",
                     featureColumnName: "Features",

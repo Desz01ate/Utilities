@@ -36,6 +36,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.MulticlassClassification.Trainers.LbfgsMaximumEntropy(
                     labelColumnName: labelColumnName,
@@ -82,6 +83,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.MulticlassClassification.Trainers.SdcaMaximumEntropy(
                     labelColumnName: labelColumnName,
@@ -109,6 +111,7 @@ namespace MachineLearning
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.MulticlassClassification.Trainers.NaiveBayes(
                     labelColumnName: labelColumnName,
@@ -136,6 +139,7 @@ where TOut : class, new()
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastTree(
                     labelColumnName: labelColumnName,
@@ -159,6 +163,7 @@ where TOut : class, new()
             var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
                 .Append(preprocessor.OneHotEncodingEstimator)
                 .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastForest(
                     labelColumnName: labelColumnName,
