@@ -1,5 +1,6 @@
 ﻿using MachineLearning.Examples.Classes;
 using MachineLearning.Examples.Interfaces;
+using MachineLearning.Shared.Attributes;
 using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace MachineLearning.Examples.POCO
         public float SepalWidth { get; set; }
         public float PetalLength { get; set; }
         public float PetalWidth { get; set; }
+        [LabelColumn]
         public string Label { get; set; }
         public float actual_float_result()
         {

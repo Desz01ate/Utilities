@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
 
 namespace MachineLearning
 {
@@ -24,12 +25,31 @@ namespace MachineLearning
         /// <param name="historySize">Memory size. Low=faster, less accurate.</param>
         /// <param name="enforceNonNegativity">Enforce non-negative weights.</param>
         /// <returns></returns>
-        public static PredictionEngine<TIn, TOut> LbfgsMaximumEntropy<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", string exampleWeightColumnName = null, float l1Regularization = 1, float l2Regularization = 1, double optimizationTolerance = 1e-07, int historySize = 20, bool enforceNonNegativity = false, Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> LbfgsMaximumEntropy<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", string exampleWeightColumnName = null, float l1Regularization = 1, float l2Regularization = 1, double optimizationTolerance = 1e-07, int historySize = 20, bool enforceNonNegativity = false, Action<ITransformer> additionModelAction = null)
             where TIn : class, new()
             where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -70,12 +90,31 @@ namespace MachineLearning
         /// <param name="l1Regularization">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
         /// <param name="maximumNumberOfIterations">The maximum number of passes to perform over the data.</param>
         /// <returns></returns>
-        public static PredictionEngine<TIn, TOut> SdcaMaximumEntropy<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", string exampleWeightColumnName = null, ISupportSdcaClassificationLoss loss = null, float? l2Regularization = null, float? l1Regularization = null, int? maximumNumberOfIterations = null, Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> SdcaMaximumEntropy<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", string exampleWeightColumnName = null, ISupportSdcaClassificationLoss loss = null, float? l2Regularization = null, float? l1Regularization = null, int? maximumNumberOfIterations = null, Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
             var preprocessor = context.OneHotEncoding(properties);
 
 
@@ -99,12 +138,31 @@ namespace MachineLearning
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
-        public static PredictionEngine<TIn, TOut> NaiveBayes<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> NaiveBayes<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
     where TIn : class, new()
     where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -127,12 +185,31 @@ namespace MachineLearning
     }
     public static class BinaryClassification
     {
-        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
 where TIn : class, new()
 where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -151,12 +228,31 @@ where TOut : class, new()
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
-        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(IEnumerable<TIn> trainDataset, string labelColumnName, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
 where TIn : class, new()
 where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -177,7 +273,6 @@ where TOut : class, new()
         }
         public static PredictionEngine<TIn, TOut> SdcaLogisticRegression<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string labelColumnName,
             string outputColumnName = "PredictedLabel",
             string exampleWeightColumnName = null,
             float? l1Regularization = null,
@@ -188,7 +283,26 @@ where TOut : class, new()
         where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(property => property.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);

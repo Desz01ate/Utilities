@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
 
 namespace MachineLearning
 {
@@ -16,13 +17,20 @@ where TIn : class, new()
 where TOut : class, new()
         {
             var context = new MLContext();
-            var features = typeof(TIn).GetProperties().ToArray();
-            if (excludedColumns != null)
+            var type = typeof(TIn);
+            var properties = type.GetProperties().Where(property =>
             {
-                features = features.Where(property => !excludedColumns.Contains(property.Name)).ToArray();
-            }
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                }
+                return true;
+            });
+
+
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            var preprocessor = context.ValueToKeyMapping(features);
+            var preprocessor = context.ValueToKeyMapping(properties);
 
             var estimator = preprocessor.ValueToKeyMappingEstimator;
             var options = new MatrixFactorizationTrainer.Options
@@ -38,7 +46,6 @@ where TOut : class, new()
                 NonNegative = forceNonNegative
             };
 
-            //var pipeline = estimator.Append(context.Recommendation().Trainers.MatrixFactorization(matrixColumnIndexColumnName: $@"", matrixRowIndexColumnName: $@"", labelColumn: "Label", settings));
             var pipeline = estimator.Append(context.Recommendation().Trainers.MatrixFactorization(options));
 
             var model = pipeline.Fit(trainDataframe);

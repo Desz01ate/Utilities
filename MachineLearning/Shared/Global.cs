@@ -54,6 +54,15 @@ where TOut : class, new()
                 Console.WriteLine(sb);
             }
         }
+        public static IEnumerable<TPredict> Predict<TBase, TPredict>(this PredictionEngineBase<TBase, TPredict> engine, IEnumerable<TBase> testData) where TBase : class, new() where TPredict : class, new()
+        {
+            List<TPredict> predicts = new List<TPredict>();
+            foreach (var data in testData)
+            {
+                predicts.Add(engine.Predict(data));
+            }
+            return predicts;
+        }
     }
     public static class ConsoleHelper
     {

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
 
 namespace MachineLearning
 {
@@ -13,7 +14,6 @@ namespace MachineLearning
     {
         public static PredictionEngine<TIn, TOut> StochasticDoubleCoordinateAscent<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string labelColumnName,
             string exampleWeightColumnName = null,
             ISupportSdcaRegressionLoss lossFunction = null,
             float? l1Regularization = null,
@@ -24,7 +24,27 @@ namespace MachineLearning
     where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+            //var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -50,7 +70,6 @@ namespace MachineLearning
         }
         public static PredictionEngine<TIn, TOut> LbfgsPoisson<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string labelColumnName,
             string exampleWeightColumnName = null,
             float l1Regularization = 1,
             float l2Regularization = 1,
@@ -61,7 +80,26 @@ namespace MachineLearning
             ) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -87,7 +125,6 @@ namespace MachineLearning
         }
         public static PredictionEngine<TIn, TOut> FastTreeTweedie<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string labelColumnName,
             string exampleWeightColumnName = null,
             int numberOfLeaves = 20,
             int numberOfTrees = 100,
@@ -96,7 +133,26 @@ namespace MachineLearning
             Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -121,7 +177,6 @@ namespace MachineLearning
         }
         public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string labelColumnName,
             string exampleWeightColumnName = null,
             int numberOfLeaves = 20,
             int numberOfTrees = 100,
@@ -130,7 +185,26 @@ namespace MachineLearning
             Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -155,7 +229,6 @@ namespace MachineLearning
         }
         public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string labelColumnName,
             string exampleWeightColumnName = null,
             int numberOfLeaves = 20,
             int numberOfTrees = 100,
@@ -163,7 +236,26 @@ namespace MachineLearning
             Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
 
             var preprocessor = context.OneHotEncoding(properties);
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);

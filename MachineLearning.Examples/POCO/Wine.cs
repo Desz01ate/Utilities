@@ -1,5 +1,7 @@
 ﻿using MachineLearning.Examples.Classes;
 using MachineLearning.Examples.Interfaces;
+using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
 using Microsoft.ML.Data;
 using System;
 
@@ -7,7 +9,9 @@ namespace MachineLearning.Examples.POCO
 {
     public class Wine : IConstraint
     {
+        [LabelColumn]
         public string type { get; set; }
+        [ExcludeColumn]
         public float alcohol { get; set; }
         public float malic_acid { get; set; }
         public float ash { get; set; }
@@ -37,7 +41,7 @@ namespace MachineLearning.Examples.POCO
             throw new NotImplementedException();
         }
     }
-    public class WineClassfication : PredictionMulticlassClassificationModel<Wine>
+    public class WineClassification : PredictionMulticlassClassificationModel<Wine>
     {
         //[ColumnName("PredictedLabel")]
         //public string type { get; set; }

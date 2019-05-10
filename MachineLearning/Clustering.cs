@@ -4,23 +4,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
 
 namespace MachineLearning
 {
     public static class Clustering
     {
-        public static PredictionEngine<TIn, TOut> KMeans<TIn, TOut>(IEnumerable<TIn> trainDataset, int numberOfClusters = 5, string exampleWeightColumnName = null, Action<ITransformer> additionModelAction = null, params string[] excludedColumns)
+        public static PredictionEngine<TIn, TOut> KMeans<TIn, TOut>(IEnumerable<TIn> trainDataset, int numberOfClusters = 5, string exampleWeightColumnName = null, Action<ITransformer> additionModelAction = null)
         where TIn : class, new()
         where TOut : class, new()
         {
             var context = new MLContext();
-            //var features = typeof(TIn).GetProperties().Select(property => property.Name).Where(property => !excludedColumns.Contains(property)).ToArray();
-            var properties = typeof(TIn).GetProperties().Where(x=>!excludedColumns.Contains(x.Name)).ToArray();
+            var type = typeof(TIn);
+            var labelColumnName = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is LabelColumn labelColumn) return true;
+                }
+                return false;
+            }).FirstOrDefault().Name;
+            var properties = type.GetProperties().Where(property =>
+            {
+                var attributes = property.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute is ExcludeColumn excludeColumn) return false;
+                    if (attribute is LabelColumn labelColumn) return false;
+                }
+                return true;
+            });
+
             var preprocessing = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            //var pipeline = context.Transforms.Concatenate("Features", features).
-            //               Append(context.Clustering.Trainers.KMeans("Features", numberOfClusters: numberOfClusters, exampleWeightColumnName: exampleWeightColumnName));
+
             var pipeline = context.Transforms.Concatenate("Features", preprocessing.CombinedFeatures.ToArray())
                 .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .Append(preprocessing.OneHotEncodingEstimator)

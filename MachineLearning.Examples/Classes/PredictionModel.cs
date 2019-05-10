@@ -14,9 +14,9 @@ namespace MachineLearning.Examples.Classes
         public float[] Location { get; set; }
         [ColumnName("LastName")]
         public string LastName { get; set; }
-        public virtual float CalculateVariance(T obj)
+        public virtual float CalculateVariance(T obj, int precision = 0)
         {
-            return (float)Math.Round(Predicted_Score / obj.actual_float_result() * 100);
+            return (float)Math.Round(Predicted_Score / obj.actual_float_result() * 100, precision);
         }
     }
     public abstract class PredictionMulticlassClassificationModel<T> where T : class, IConstraint, new()

@@ -1,5 +1,6 @@
 ﻿using MachineLearning.Examples.Classes;
 using MachineLearning.Examples.Interfaces;
+using MachineLearning.Shared.Attributes;
 using Microsoft.ML.Data;
 using System;
 
@@ -13,6 +14,7 @@ namespace MachineLearning.Examples.POCO
         public float trip_time_in_secs { get; set; }
         public float trip_distance { get; set; }
         public string payment_type { get; set; }
+        [LabelColumn]
         public float fare_amount { get; set; }
 
         public string actual_string_result()
