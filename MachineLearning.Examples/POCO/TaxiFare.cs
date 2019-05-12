@@ -8,11 +8,13 @@ namespace MachineLearning.Examples.POCO
 {
     public class TaxiFare : IConstraint
     {
+        [OneHotEncodingColumn]
         public string vendor_id { get; set; }
         public float rate_code { get; set; }
         public float passenger_count { get; set; }
         public float trip_time_in_secs { get; set; }
         public float trip_distance { get; set; }
+        [OneHotEncodingColumn]
         public string payment_type { get; set; }
         [LabelColumn]
         public float fare_amount { get; set; }

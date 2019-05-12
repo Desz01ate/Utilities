@@ -100,9 +100,9 @@ namespace MachineLearning.Examples
         static async Task Main(string[] args)
         {
             bool train = true;
-            await MulticlassClassificationExample(train);
+            //await MulticlassClassificationExample(train);
             await RegressionExample(train);
-            await ClusteringExample(train);
+            //await ClusteringExample(train);
         }
         static async Task MulticlassClassificationExample(bool train = true)
         {

@@ -18,21 +18,11 @@ where TOut : class, new()
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                }
-                return true;
-            });
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
 
+            var preprocessing = Preprocessing.KeyToValueMapping(context, properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            var preprocessor = context.ValueToKeyMapping(properties);
-
-            var estimator = preprocessor.ValueToKeyMappingEstimator;
             var options = new MatrixFactorizationTrainer.Options
             {
                 MatrixColumnIndexColumnName = $@"{columnIndexColumnName}_encoded",
@@ -46,7 +36,8 @@ where TOut : class, new()
                 NonNegative = forceNonNegative
             };
 
-            var pipeline = estimator.Append(context.Recommendation().Trainers.MatrixFactorization(options));
+
+            var pipeline = preprocessing.KeyToValueMappingEstimator.Append(context.Recommendation().Trainers.MatrixFactorization(options));
 
             var model = pipeline.Fit(trainDataframe);
             var engine = context.Model.CreatePredictionEngine<TIn, TOut>(model);

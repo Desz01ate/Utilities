@@ -1,4 +1,5 @@
-﻿using MachineLearning.Shared.DataStructures;
+﻿using MachineLearning.Shared.Attributes;
+using MachineLearning.Shared.DataStructures;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms;
@@ -12,11 +13,44 @@ namespace MachineLearning.Shared
 {
     public static class Preprocessing
     {
+        public static PropertyInfo LabelColumn(this IEnumerable<PropertyInfo> properties)
+        {
+            var labelProperty = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<LabelColumn>(true);
+                if (attribute != null) return true;
+                return false;
+            });
+            if (labelProperty == null) throw new AttributeException("LabelColumn");
+            if (labelProperty.Count() > 1) throw new InvalidMultipleAttributesException("LabelColumn");
+            return labelProperty.First();
+        }
+        public static IEnumerable<PropertyInfo> ExcludeColumns(this IEnumerable<PropertyInfo> properties)
+        {
+            return properties.Where(property =>
+            {
+                var excludeAttr = property.GetCustomAttribute<ExcludeColumn>(true);
+                var labelAttr = property.GetCustomAttribute<LabelColumn>(true);
+                if (excludeAttr == null && labelAttr == null) return true;
+                return false;
+            });
+        }
         public static OneHotEncodingPreprocessor OneHotEncoding(this MLContext context, IEnumerable<PropertyInfo> properties, string encodedFormat = "{0}_encoded")
         {
             var ohePreprocessor = new OneHotEncodingPreprocessor();
-            var features = properties.Where(property => property.PropertyType != typeof(string)).Select(property => property.Name);
-            var needToEncodeFeatures = properties.Where(property => property.PropertyType == typeof(string)).Select(property => property.Name);
+            var features = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<OneHotEncodingColumn>(true);
+                if (attribute == null) return true;
+                return false;
+            }).Select(property => property.Name);
+
+            var needToEncodeFeatures = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<OneHotEncodingColumn>(true);
+                if (attribute != null) return true;
+                return false;
+            }).Select(property => property.Name);
 
             var oheEstimator = new EstimatorChain<OneHotEncodingTransformer>();
             List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();
@@ -37,8 +71,19 @@ namespace MachineLearning.Shared
         public static KeyToValueMappingPreprocessor KeyToValueMapping(this MLContext context, IEnumerable<PropertyInfo> properties, string encodedFormat = "{0}")
         {
             var ktvPreprocessor = new KeyToValueMappingPreprocessor();
-            var features = properties.Where(property => property.PropertyType != typeof(string)).Select(property => property.Name);
-            var needToEncodeFeatures = properties.Where(property => property.PropertyType == typeof(string)).Select(property => property.Name);
+            var features = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<KeyToValueColumn>(true);
+                if (attribute == null) return true;
+                return false;
+            }).Select(property => property.Name);
+
+            var needToEncodeFeatures = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<KeyToValueColumn>(true);
+                if (attribute != null) return true;
+                return false;
+            }).Select(property => property.Name);
 
             var vtkEstimator = new EstimatorChain<KeyToValueMappingTransformer>();
             List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();
@@ -59,8 +104,19 @@ namespace MachineLearning.Shared
         public static ValueToKeyMappingPreprocessor ValueToKeyMapping(this MLContext context, IEnumerable<PropertyInfo> properties, string encodedFormat = "{0}")
         {
             var vtkPreprocessor = new ValueToKeyMappingPreprocessor();
-            var features = properties.Where(property => property.PropertyType != typeof(string)).Select(property => property.Name);
-            var needToEncodeFeatures = properties.Where(property => property.PropertyType == typeof(string)).Select(property => property.Name);
+            var features = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<ValueToKeyColumn>(true);
+                if (attribute == null) return true;
+                return false;
+            }).Select(property => property.Name);
+
+            var needToEncodeFeatures = properties.Where(property =>
+            {
+                var attribute = property.GetCustomAttribute<ValueToKeyColumn>(true);
+                if (attribute != null) return true;
+                return false;
+            }).Select(property => property.Name);
 
             var vtkEstimator = new EstimatorChain<ValueToKeyMappingTransformer>();
             List<CombinedFeature> combinedFeatures = new List<CombinedFeature>();

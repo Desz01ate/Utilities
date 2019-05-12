@@ -11,7 +11,6 @@ namespace MachineLearning.Examples.POCO
     {
         [LabelColumn]
         public string type { get; set; }
-        [ExcludeColumn]
         public float alcohol { get; set; }
         public float malic_acid { get; set; }
         public float ash { get; set; }

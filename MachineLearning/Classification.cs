@@ -31,25 +31,9 @@ namespace MachineLearning
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var labelColumnName = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is LabelColumn labelColumn) return true;
-                }
-                return false;
-            }).FirstOrDefault().Name;
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                    if (attribute is LabelColumn labelColumn) return false;
-                }
-                return true;
-            });
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -96,25 +80,9 @@ namespace MachineLearning
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var labelColumnName = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is LabelColumn labelColumn) return true;
-                }
-                return false;
-            }).FirstOrDefault().Name;
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                    if (attribute is LabelColumn labelColumn) return false;
-                }
-                return true;
-            });
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
             var preprocessor = context.OneHotEncoding(properties);
 
 
@@ -144,25 +112,9 @@ namespace MachineLearning
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var labelColumnName = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is LabelColumn labelColumn) return true;
-                }
-                return false;
-            }).FirstOrDefault().Name;
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                    if (attribute is LabelColumn labelColumn) return false;
-                }
-                return true;
-            });
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -191,25 +143,9 @@ where TOut : class, new()
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var labelColumnName = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is LabelColumn labelColumn) return true;
-                }
-                return false;
-            }).FirstOrDefault().Name;
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                    if (attribute is LabelColumn labelColumn) return false;
-                }
-                return true;
-            });
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -234,25 +170,9 @@ where TOut : class, new()
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var labelColumnName = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is LabelColumn labelColumn) return true;
-                }
-                return false;
-            }).FirstOrDefault().Name;
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                    if (attribute is LabelColumn labelColumn) return false;
-                }
-                return true;
-            });
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
@@ -284,25 +204,9 @@ where TOut : class, new()
         {
             var context = new MLContext();
             var type = typeof(TIn);
-            var labelColumnName = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is LabelColumn labelColumn) return true;
-                }
-                return false;
-            }).FirstOrDefault().Name;
-            var properties = type.GetProperties().Where(property =>
-            {
-                var attributes = property.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
-                {
-                    if (attribute is ExcludeColumn excludeColumn) return false;
-                    if (attribute is LabelColumn labelColumn) return false;
-                }
-                return true;
-            });
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
