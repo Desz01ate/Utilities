@@ -135,6 +135,7 @@ namespace MachineLearning
         }
 
     }
+    
     public static class BinaryClassification
     {
         public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
@@ -149,16 +150,14 @@ where TOut : class, new()
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+            var pipeline = context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray())
                 .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastTree(
                     labelColumnName: labelColumnName,
                     featureColumnName: "Features"
-                 ))
-                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+                 ));
+
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
@@ -176,16 +175,14 @@ where TOut : class, new()
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+            var pipeline = context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray())
                 .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastForest(
                     labelColumnName: labelColumnName,
                     featureColumnName: "Features"
-                 ))
-                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+                 ));
+
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
@@ -210,9 +207,8 @@ where TOut : class, new()
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+            var pipeline = context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray())
                 .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.SdcaLogisticRegression(
                     labelColumnName: labelColumnName,
@@ -221,8 +217,8 @@ where TOut : class, new()
                     l1Regularization: l1Regularization,
                     l2Regularization: l2Regularization,
                     maximumNumberOfIterations: maximumNumberOfIterations
-                 ))
-                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+                 ));
+
             var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);

@@ -17,8 +17,17 @@ namespace MachineLearning.Shared
         public static BinaryClassificationMetrics EvaluateBinaryClassificationMetrics(ITransformer model, IDataView testDataframe, string labelColumnName = "Label", string scoreColumnName = "Score", string probabilityColumnName = "Probability", string predictedLabelColumnName = "PredictedLabel")
         {
             var prediction = model.Transform(testDataframe);
-            var metrics = new MLContext().BinaryClassification.Evaluate(prediction, labelColumnName, scoreColumnName, probabilityColumnName, predictedLabelColumnName);
-            return metrics;
+            var mlContext = new MLContext();
+            try
+            {
+                var metrics = mlContext.BinaryClassification.Evaluate(prediction, labelColumnName, scoreColumnName, probabilityColumnName, predictedLabelColumnName);
+                return metrics;
+            }
+            catch
+            {
+                var metrics = mlContext.BinaryClassification.EvaluateNonCalibrated(prediction, labelColumnName, scoreColumnName, predictedLabelColumnName);
+                return metrics;
+            }
         }
         public static MulticlassClassificationMetrics EvaluateMulticlassClassificationMetrics(ITransformer model, IDataView testDataframe, string labelColumnName = "Label", string scoreColumnName = "Score", string predictedLabelColumnName = "PredictedLabel")
         {

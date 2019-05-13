@@ -5,6 +5,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
 using OxyPlot;
+using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
@@ -100,9 +101,74 @@ namespace MachineLearning.Examples
         static async Task Main(string[] args)
         {
             bool train = true;
+            await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
-            await RegressionExample(train);
+            //await RegressionExample(train);
             //await ClusteringExample(train);
+        }
+        static async Task BinaryClassifier(bool train = true)
+        {
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+
+            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<HeartData>(sqlConnection, $@"SELECT * FROM HeartTraining");
+            var testdata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<HeartData>(sqlConnection, $@"SELECT * FROM HeartTest");
+
+            double accuracy = double.MinValue;
+            string bestAlg = string.Empty;
+            var mlContext = new MLContext();
+            var algorithms = new Dictionary<string, Func<IEnumerable<HeartData>, Action<ITransformer>, PredictionEngine<HeartData, HeartPredict>>>() {
+                { "FastTree", (data,action) => BinaryClassification.FastTree<HeartData,HeartPredict>(data,additionModelAction:action) },
+                { "FastForest", (data,action) => BinaryClassification.FastForest<HeartData,HeartPredict>(data,additionModelAction:action) },
+                { "SdcaLogisticRegression", (data,action) => BinaryClassification.SdcaLogisticRegression<HeartData,HeartPredict>(data,additionModelAction:action) },
+            };
+            foreach (var algorithm in algorithms)
+            {
+                PredictionEngine<HeartData, HeartPredict> engine = default;
+                ITransformer model = default;
+                var path = $@"BClassification_{algorithm.Key}.zip";
+                if (File.Exists(path) && !train)
+                {
+                    model = MachineLearning.Global.LoadModel(path);
+                    engine = mlContext.Model.CreatePredictionEngine<HeartData, HeartPredict>(model);
+
+                }
+                else
+                {
+                    engine = algorithm.Value(traindata, (mdl) =>
+                    {
+                        model = mdl;
+                    });
+                }
+                MachineLearning.Global.SaveModel(model, $@"Binaryclass_{algorithm.Key}.zip");
+                MachineLearning.ConsoleHelper.ConsoleWriteHeader($@"Evaluate metrics for {algorithm.Key} algorithm.");
+                try
+                {
+                    var metrics = Metrics.EvaluateBinaryClassificationMetrics(model, mlContext.Data.LoadFromEnumerable(testdata), labelColumnName: nameof(HeartData.Label));
+                    foreach (var prop in metrics.GetType().GetProperties())
+                    {
+                        Console.WriteLine($@"{prop.Name} : {prop.GetValue(metrics)}");
+                    }
+                    if (metrics.Accuracy > accuracy)
+                    {
+                        accuracy = metrics.Accuracy;
+                        bestAlg = algorithm.Key;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Unable to evaluate metrics : {e.Message}");
+                }
+
+                foreach (var t in testdata)
+                {
+                    var predict = engine.Predict(t);
+                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5}", t.Label, predict.Prediction));
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($@"Best algorithm based-on accuracy : {bestAlg}");
+            Console.ForegroundColor = ConsoleColor.White;
         }
         static async Task MulticlassClassificationExample(bool train = true)
         {
@@ -169,8 +235,8 @@ namespace MachineLearning.Examples
             double mse = double.MaxValue;
             var mlContext = new MLContext();
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]")).Take(20);
-            var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()");
+            var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]"));
+            var traindata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()"));
 
             var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFareRegression>>>() {
                 { "SDCA", (data,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
@@ -186,7 +252,7 @@ namespace MachineLearning.Examples
                 var path = $@"Regression_{algorithm.Key}.zip";
                 if (File.Exists(path) && !train)
                 {
-                    model = MachineLearning.Global.LoadModel(path);
+                    model = Global.LoadModel(path);
                     engine = mlContext.Model.CreatePredictionEngine<TaxiFare, TaxiFareRegression>(model);
 
                 }
@@ -217,7 +283,7 @@ namespace MachineLearning.Examples
                 //    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5} ({2,0}%)", Math.Round(t.fare_amount, 2), Math.Round(predict.Predicted_Score, 2), predict.CalculateVariance(t)));
                 //}
                 var predictedList = engine.Predict(testdata);
-                VisualizeRegression(algorithm.Key, testdata, predictedList, $"{algorithm.Key}_reg.svg");
+                VisualizeRegression(algorithm.Key, testdata, predictedList, metrics, $"{algorithm.Key}_reg.svg");
             }
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($@"Best algorithm based-on Mean Squared Error : {bestAlg}");
@@ -328,9 +394,15 @@ namespace MachineLearning.Examples
             }
             Console.WriteLine($"Clustering svg generated at {savePath}.");
         }
-        static void VisualizeRegression(string algorithmName, IEnumerable<TaxiFare> testData, IEnumerable<TaxiFareRegression> predictedData, string savePath)
+        static void VisualizeRegression(string algorithmName, IEnumerable<TaxiFare> testData, IEnumerable<TaxiFareRegression> predictedData, RegressionMetrics regressionMetrics, string savePath)
         {
             var plot = new PlotModel { Title = $"{algorithmName} - Taxi Fare Regression", IsLegendVisible = true };
+            plot.Axes.Add(new LinearAxis()
+            {
+                Title = regressionMetrics.MeanSquaredError.ToString(),
+                Position = AxisPosition.Bottom,
+
+            });
             var lineActual = new LineSeries()
             {
                 Title = "Actual Price",
@@ -355,6 +427,7 @@ namespace MachineLearning.Examples
             }
             plot.Series.Add(lineActual);
             plot.Series.Add(linePredict);
+
             var exporter = new SvgExporter { Width = 600, Height = 400 };
             using (var fs = new FileStream(savePath, FileMode.Create))
             {
