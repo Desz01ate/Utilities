@@ -7,12 +7,16 @@ namespace Utilities.Shared
 {
     public static class Enumerator
     {
-        public static IEnumerable<T> CombineEnumerator<T>(params IEnumerable<T>[] items) => items.SelectMany(i => i);
-        public static IEnumerable<T> SubEnumerable<T>(this IEnumerable<T> baseArray, int startIndex, int count)
+        public static IEnumerable<T> CombineEnumerator<T>(params IEnumerable<T>[] enumerables) => enumerables.SelectMany(i => i);
+        public static IEnumerable<T> SubEnumerable<T>(this IEnumerable<T> baseEnumerable, int startIndex, int count)
         {
             T[] result = new T[count];
-            Array.Copy(baseArray.ToArray(), startIndex, result, 0, count);
+            Array.Copy(baseEnumerable.ToArray(), startIndex, result, 0, count);
             return result;
+        }
+        public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> baseEnumerable, int count)
+        {
+            return baseEnumerable.Skip(Math.Max(0, baseEnumerable.Count() - count));
         }
     }
 }

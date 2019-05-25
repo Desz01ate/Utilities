@@ -109,7 +109,7 @@ namespace MachineLearning.Examples
             var bestAlg = string.Empty;
             double logLoss = double.MaxValue;
             var mlContext = new MLContext();
-            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            var sqlConnection = $@"Server = localhost\SQLSERVER2017;database = Local;user = sa;password = sa";
             var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Iris>(sqlConnection, "SELECT * FROM [Iris] ORDER BY NEWID()");
             var testdata = traindata.Take(20);
 
@@ -168,7 +168,7 @@ namespace MachineLearning.Examples
             var bestAlg = string.Empty;
             double mse = double.MaxValue;
             var mlContext = new MLContext();
-            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            var sqlConnection = $@"Server = localhost\SQLSERVER2017;database = Local;user = sa;password = sa";
             var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]")).Take(20);
             var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()");
 
@@ -228,7 +228,7 @@ namespace MachineLearning.Examples
             var bestAlg = string.Empty;
             double avgdist = double.MaxValue;
             var mlContext = new MLContext();
-            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            var sqlConnection = $@"Server = localhost\SQLSERVER2017;database = Local;user = sa;password = sa";
             var traindata = await Utilities.SQL.SQLServer.ExecuteReaderAsync<Iris>(sqlConnection, "SELECT * FROM [iris] ORDER BY NEWID()");
             var trainSize = (int)(traindata.Count() * 0.8);
             var testdata = traindata.Skip(trainSize).ToList();
