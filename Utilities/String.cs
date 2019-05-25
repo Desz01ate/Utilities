@@ -15,13 +15,13 @@ namespace Utilities
         /// </summary>
         /// <param name="input"></param>
         /// <param name="upperAllWords"></param>
-        /// <param name="splitter"></param>
+        /// <param name="seperator"></param>
         /// <returns></returns>
-        public static string ToLeadingUpper(this string input, bool upperAllWords = false, char splitter = ' ')
+        public static string ToLeadingUpper(this string input, bool upperAllWords = false, char seperator = ' ')
         {
             if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException("Input string must not be null or empty.");
             if (upperAllWords)
-                return string.Join(splitter.ToString(), input.Split(splitter).ToList().Select(word => $@"{word.First().ToString().ToUpper()}{word.Substring(1)}"));
+                return string.Join(seperator.ToString(), input.Split(seperator).ToList().Select(word => $@"{word.First().ToString().ToUpper()}{word.Substring(1)}"));
             return $@"{input.First().ToString().ToUpper()}{input.Substring(1)}";
         }
     }
