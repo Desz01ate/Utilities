@@ -134,5 +134,44 @@ namespace MachineLearning.Shared
             vtkPreprocessor.CombinedFeatures = Shared.Enumerator.CombineEnumerable(features, combinedFeatures.Select(x => x.EncodedFeature));
             return vtkPreprocessor;
         }
+       private static IEnumerable<T> MinMaxScale<T>(this IEnumerable<T> dataset)
+        {
+            var list = dataset.ToList();
+            foreach (var property in typeof(T).GetProperties())
+            {
+                var labelColumn = property.GetCustomAttribute<MinMaxScaleColumn>(true);
+                if ((property.PropertyType == typeof(float) || property.PropertyType == typeof(float?)) && labelColumn != null)
+                {
+                    var min = dataset.Min(x => (float)property.GetValue(x));
+                    var max = dataset.Max(x => (float)property.GetValue(x));
+                    for (var index = 0; index < list.Count(); index++)
+                    {
+                        var scaled = ((float)property.GetValue(list[index]) - min) / (max - min);
+                        property.SetValue(list[index], scaled);
+                    }
+                }
+            }
+            return list;
+        }
+        private static IEnumerable<T> Normalization<T>(this IEnumerable<T> dataset)
+        {
+            var list = dataset.ToList();
+            foreach (var property in typeof(T).GetProperties())
+            {
+                var labelColumn = property.GetCustomAttribute<NormalizationColumn>(true);
+                if ((property.PropertyType == typeof(float) || property.PropertyType == typeof(float?)) && labelColumn != null)
+                {
+                    var min = dataset.Min(x => (float)property.GetValue(x));
+                    var max = dataset.Max(x => (float)property.GetValue(x));
+                    var mean = dataset.Average(x => (float)property.GetValue(x));
+                    for (var index = 0; index < list.Count(); index++)
+                    {
+                        var norm = ((float)property.GetValue(list[index]) - mean) / (max - min);
+                        property.SetValue(list[index], norm);
+                    }
+                }
+            }
+            return list;
+        }
     }
 }
