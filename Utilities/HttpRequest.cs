@@ -13,14 +13,16 @@ namespace Utilities
         /// Send a GET request to the specified Uri.
         /// </summary>
         /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static HttpResponseMessage Get(string url, Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var request = httpClient.GetAsync(url).Result;
             request.EnsureSuccessStatusCode();
@@ -30,14 +32,16 @@ namespace Utilities
         /// Send a GET request to the specified Uri as an asynchronous operation.
         /// </summary>
         /// <param name="url">Target endpoint</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static async Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var request = await httpClient.GetAsync(url);
             request.EnsureSuccessStatusCode();
@@ -50,14 +54,16 @@ namespace Utilities
         /// <param name="body">The body content the request is sent to.</param>
         /// <param name="encoding">The body content type.</param>
         /// <param name="mediatype">The body media type.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static HttpResponseMessage Post(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
             var request = httpClient.PostAsync(url, bodyContent).Result;
@@ -71,14 +77,16 @@ namespace Utilities
         /// <param name="body">The body content the request is sent to.</param>
         /// <param name="encoding">The body content type.</param>
         /// <param name="mediatype">The body media type.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static async Task<HttpResponseMessage> PostAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
             var request = await httpClient.PostAsync(url, bodyContent);
@@ -92,14 +100,16 @@ namespace Utilities
         /// <param name="body">The body content the request is sent to.</param>
         /// <param name="encoding">The body content type.</param>
         /// <param name="mediatype">The body media type.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static HttpResponseMessage Put(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
             var request = httpClient.PutAsync(url, bodyContent).Result;
@@ -113,14 +123,16 @@ namespace Utilities
         /// <param name="body">The body content the request is sent to.</param>
         /// <param name="encoding">The body content type.</param>
         /// <param name="mediatype">The body media type.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static async Task<HttpResponseMessage> PutAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
             var request = await httpClient.PutAsync(url, bodyContent);
@@ -145,14 +157,16 @@ namespace Utilities
         /// Send a DELETE request to the specified Uri.
         /// </summary>
         /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static HttpResponseMessage Delete(string url, Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var request = httpClient.DeleteAsync(url).Result;
             request.EnsureSuccessStatusCode();
@@ -162,14 +176,16 @@ namespace Utilities
         /// Send a DELETE request to the specified Uri as an asynchronous operation.
         /// </summary>
         /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers">Custom header parameter.</param>
         /// <returns></returns>
         public static async Task<HttpResponseMessage> DeleteAsync(string url, Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
             if (headers != null)
             {
-                foreach (var header in headers) httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
             var request = await httpClient.DeleteAsync(url);
             request.EnsureSuccessStatusCode();
@@ -183,9 +199,16 @@ namespace Utilities
         /// <param name="encoding">The body content type.</param>
         /// <param name="mediatype">The body media type.</param>
         /// <returns></returns>
-        public static HttpResponseMessage Delete(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
+        public static HttpResponseMessage Delete(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
             var request = httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url)
             {
@@ -202,9 +225,16 @@ namespace Utilities
         /// <param name="encoding">The body content type.</param>
         /// <param name="mediatype">The body media type.</param>
         /// <returns></returns>
-        public static async Task<HttpResponseMessage> DeleteAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json")
+        public static async Task<HttpResponseMessage> DeleteAsync(string url, dynamic body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
         {
             var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
             var bodyContent = new StringContent(JsonConvert.SerializeObject(body), encoding ?? Encoding.UTF8, mediatype);
             var request = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url)
             {

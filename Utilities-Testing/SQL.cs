@@ -15,7 +15,7 @@ namespace Utilities.Testing
         [SetUp]
         public void Setup()
         {
-            _sqlConnection = @"Server=localhost;Database=Local;user=sa;password=sa";
+            _sqlConnection = @"Server=localhost\SQLSERVER2017;Database=Local;user=sa;password=sa";
         }
         [Test]
         public void SQLServer()
