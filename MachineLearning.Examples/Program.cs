@@ -101,10 +101,10 @@ namespace MachineLearning.Examples
         static async Task Main(string[] args)
         {
             bool train = true;
-            await BinaryClassifier(train);
-            await MulticlassClassificationExample(train);
+            //await BinaryClassifier(train);
+            //await MulticlassClassificationExample(train);
             await RegressionExample(train);
-            await ClusteringExample(train);
+            //await ClusteringExample(train);
         }
         static async Task BinaryClassifier(bool train = true)
         {
@@ -163,7 +163,7 @@ namespace MachineLearning.Examples
                 foreach (var t in testdata)
                 {
                     var predict = engine.Predict(t);
-                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5} with prob of {2,5}", t.Label, predict.Prediction,predict.Probability));
+                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5} with prob of {2,5}", t.Label, predict.Prediction, predict.Probability));
                 }
             }
             Console.ForegroundColor = ConsoleColor.Green;
@@ -236,8 +236,14 @@ namespace MachineLearning.Examples
             var mlContext = new MLContext();
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]"));
-            var traindata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()"));
-
+            List<dynamic> traindatap = null;
+            List<TaxiFare> traindata = null;
+            var t1 = await Utilities.Diagnostics.RuntimeEstimationAsync(async () => {
+                traindatap = (await Utilities.SQL.SQLServer.ExecuteReaderAsync(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()")).ToList();
+            });
+            var t2 = await Utilities.Diagnostics.RuntimeEstimationAsync(async () => {
+                traindata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()")).ToList();
+            });
             var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFareRegression>>>() {
                 { "SDCA", (data,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
                 { "LBFGS", (data,action) => Regression.LbfgsPoisson<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
