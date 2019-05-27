@@ -135,10 +135,17 @@ namespace MachineLearning
         }
 
     }
-    
+
     public static class BinaryClassification
     {
-        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(
+            IEnumerable<TIn> trainDataset, 
+            string exampleWeightColumnName = null,
+            int numberOfLeaves = 20,
+            int numberOfTrees = 100,
+            int minimumExampleCountPerLeaft = 10,
+            double learningRate = 0.2,
+            Action<ITransformer> additionModelAction = null)
 where TIn : class, new()
 where TOut : class, new()
         {
@@ -155,7 +162,12 @@ where TOut : class, new()
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastTree(
                     labelColumnName: labelColumnName,
-                    featureColumnName: "Features"
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: minimumExampleCountPerLeaft,
+                    learningRate: learningRate
                  ));
 
             var model = pipeline.Fit(trainDataframe);
@@ -163,7 +175,13 @@ where TOut : class, new()
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
-        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(IEnumerable<TIn> trainDataset, string outputColumnName = "PredictedLabel", Action<ITransformer> additionModelAction = null)
+        public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(
+            IEnumerable<TIn> trainDataset, 
+            string exampleWeightColumnName = null,
+            int numberOfLeaves = 20,
+            int numberOfTrees = 100,
+            int minimumExampleCountPerLeaft = 10, 
+            Action<ITransformer> additionModelAction = null)
 where TIn : class, new()
 where TOut : class, new()
         {
@@ -180,7 +198,11 @@ where TOut : class, new()
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastForest(
                     labelColumnName: labelColumnName,
-                    featureColumnName: "Features"
+                    featureColumnName: "Features",
+                    exampleWeightColumnName: exampleWeightColumnName,
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: minimumExampleCountPerLeaft
                  ));
 
             var model = pipeline.Fit(trainDataframe);

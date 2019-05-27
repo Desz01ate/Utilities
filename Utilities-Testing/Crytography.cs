@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests
+namespace Utilities.Testing
 {
     [TestFixture]
     class Crytography
@@ -11,8 +11,8 @@ namespace Tests
         [Test]
         public void EncAndDec()
         {
-            var plainText = "This is a test message";
-            var salt = "This is a salt message";
+            var plainText = "19500";
+            var salt = "ISUSTAE";
             var blockSizes = new[] { 128 }; //256 bit entropy is not working atm.
             foreach (var block in blockSizes)
             {

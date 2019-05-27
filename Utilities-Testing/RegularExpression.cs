@@ -1,5 +1,5 @@
 using NUnit.Framework;
-namespace Tests
+namespace Utilities.Testing
 {
     [TestFixture]
     public class RegularExpression

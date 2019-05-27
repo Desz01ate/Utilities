@@ -102,9 +102,9 @@ namespace MachineLearning.Examples
         {
             bool train = true;
             await BinaryClassifier(train);
-            //await MulticlassClassificationExample(train);
-            //await RegressionExample(train);
-            //await ClusteringExample(train);
+            await MulticlassClassificationExample(train);
+            await RegressionExample(train);
+            await ClusteringExample(train);
         }
         static async Task BinaryClassifier(bool train = true)
         {
@@ -117,7 +117,7 @@ namespace MachineLearning.Examples
             string bestAlg = string.Empty;
             var mlContext = new MLContext();
             var algorithms = new Dictionary<string, Func<IEnumerable<HeartData>, Action<ITransformer>, PredictionEngine<HeartData, HeartPredict>>>() {
-                { "FastTree", (data,action) => BinaryClassification.FastTree<HeartData,HeartPredict>(data,additionModelAction:action) },
+                { "FastTree", (data,action) => BinaryClassification.FastTree<HeartData,HeartPredict>(data, additionModelAction:action) },
                 { "FastForest", (data,action) => BinaryClassification.FastForest<HeartData,HeartPredict>(data,additionModelAction:action) },
                 { "SdcaLogisticRegression", (data,action) => BinaryClassification.SdcaLogisticRegression<HeartData,HeartPredict>(data,additionModelAction:action) },
             };
@@ -163,7 +163,7 @@ namespace MachineLearning.Examples
                 foreach (var t in testdata)
                 {
                     var predict = engine.Predict(t);
-                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5}", t.Label, predict.Prediction));
+                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5} with prob of {2,5}", t.Label, predict.Prediction,predict.Probability));
                 }
             }
             Console.ForegroundColor = ConsoleColor.Green;
