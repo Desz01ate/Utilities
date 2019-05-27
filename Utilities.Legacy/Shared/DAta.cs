@@ -28,7 +28,8 @@ namespace Utilities.Legacy.Shared
                     var propertyType = property.PropertyType;
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
-                    var value = row[property.Name];
+                    //if the value is not in string form, is can caused errors if the model is mismatch from the database
+                    var value = Convert.ToString(row[property.Name]);
                     if (propertyType == typeof(string))
                     {
                         property.SetValue(instance, value);
@@ -79,11 +80,11 @@ namespace Utilities.Legacy.Shared
                     }
                     else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                     {
-                        property.SetValue(instance, DateTime.Parse(value.ToString()));
+                        property.SetValue(instance, DateTime.Parse(value));
                     }
                     else if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
                     {
-                        property.SetValue(instance, Guid.Parse(value.ToString()));
+                        property.SetValue(instance, Guid.Parse(value));
                     }
                     else if (propertyType == typeof(byte) || propertyType == typeof(byte?))
                     {

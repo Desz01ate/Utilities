@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata minClientVersion="3.2">
+        <id>Utilities.Legacy</id>
+        <version>0.0.1.2</version>
+        <authors>Deszolate_C</authors>
+        <description>Some heavily repetitive code block packed together as utilities tools which targeting .NET Framework</description>
+        <dependencies>
+            <dependency id="Newtonsoft.Json" version="12.0.0.0" />
+            <dependency id="System.Data.SqlClient" version="4.6.0"/>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src=".\bin\Release\Utilities.Legacy.*" target="lib\net45" />
+    </files>
+</package>
