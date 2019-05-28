@@ -12,6 +12,25 @@ namespace MachineLearning
 {
     public static class Regression
     {
+        private static TransformerChain<TTrainer> RegressionTrainerTemplate<TType, TTrainer>(this MLContext context, IEnumerable<TType> trainDataset, IEstimator<TTrainer> estimator)
+        where TType : class, new()
+        where TTrainer : class, ITransformer
+        {
+            var type = typeof(TType);
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
+            var preprocessor = context.OneHotEncoding(properties);
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+
+            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
+                .Append(estimator);
+            var model = pipeline.Fit(trainDataframe);
+            return model;
+        }
         public static PredictionEngine<TIn, TOut> StochasticDoubleCoordinateAscent<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
             string exampleWeightColumnName = null,
@@ -24,20 +43,7 @@ namespace MachineLearning
     where TOut : class, new()
         {
             var context = new MLContext();
-            //var properties = typeof(TIn).GetProperties().Where(x => x.Name != labelColumnName);
-            var type = typeof(TIn);
-            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
-            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
-
-            var preprocessor = context.OneHotEncoding(properties);
-            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-
-
-            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
-                .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
-                .Append(context.Regression.Trainers.Sdca(
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.Sdca(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
@@ -46,7 +52,6 @@ namespace MachineLearning
                     l2Regularization: l2Regularization,
                     maximumNumberOfIterations: maximumNumberOfIterations
                 ));
-            var model = pipeline.Fit(trainDataframe);
             var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
             return predictEngine;
@@ -63,18 +68,7 @@ namespace MachineLearning
             ) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var type = typeof(TIn);
-            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
-            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
-
-            var preprocessor = context.OneHotEncoding(properties);
-            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-
-            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
-                .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
-                .Append(context.Regression.Trainers.LbfgsPoissonRegression(
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.LbfgsPoissonRegression(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
@@ -84,10 +78,10 @@ namespace MachineLearning
                     historySize: historySize,
                     enforceNonNegativity: enforceNonNegativity
                     ));
-            var model = pipeline.Fit(trainDataframe);
-            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
-            return predictionEngine;
+            return predictEngine;
         }
         public static PredictionEngine<TIn, TOut> FastTreeTweedie<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
@@ -99,18 +93,7 @@ namespace MachineLearning
             Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var type = typeof(TIn);
-            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
-            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
-
-            var preprocessor = context.OneHotEncoding(properties);
-            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-
-            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
-                .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
-                .Append(context.Regression.Trainers.FastTreeTweedie(
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.FastTreeTweedie(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
@@ -119,10 +102,10 @@ namespace MachineLearning
                     minimumExampleCountPerLeaf: minimumExampleCountPerLeaft,
                     learningRate: learningRate
                     ));
-            var model = pipeline.Fit(trainDataframe);
-            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
-            return predictionEngine;
+            return predictEngine;
         }
         public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
@@ -134,18 +117,7 @@ namespace MachineLearning
             Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var type = typeof(TIn);
-            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
-            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
-
-            var preprocessor = context.OneHotEncoding(properties);
-            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-
-            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
-                .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
-                .Append(context.Regression.Trainers.FastTree(
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.FastTree(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
@@ -154,7 +126,6 @@ namespace MachineLearning
                     minimumExampleCountPerLeaf: minimumExampleCountPerLeaft,
                     learningRate: learningRate
                     ));
-            var model = pipeline.Fit(trainDataframe);
             var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
             return predictionEngine;
@@ -168,18 +139,7 @@ namespace MachineLearning
             Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
         {
             var context = new MLContext();
-            var type = typeof(TIn);
-            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
-            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
-
-            var preprocessor = context.OneHotEncoding(properties);
-            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-
-            var pipeline = context.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: labelColumnName)
-                .Append(preprocessor.OneHotEncodingEstimator)
-                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
-                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
-                .Append(context.Regression.Trainers.FastForest(
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.FastForest(
                     labelColumnName: "Label",
                     featureColumnName: "Features",
                     exampleWeightColumnName: exampleWeightColumnName,
@@ -187,7 +147,6 @@ namespace MachineLearning
                     numberOfTrees: numberOfTrees,
                     minimumExampleCountPerLeaf: minimumExampleCountPerLeaft
                     ));
-            var model = pipeline.Fit(trainDataframe);
             var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
             return predictionEngine;

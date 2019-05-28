@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata minClientVersion="3.2">
         <id>Utilities.Legacy</id>
-        <version>0.0.1.2</version>
-        <authors>Deszolate_C</authors>
-        <description>Some heavily repetitive code block packed together as utilities tools which targeting .NET Framework</description>
+        <version>0.0.1.3</version>
+        <authors>Chanvut Booneid</authors>
+        <description>Some heavily repetitive code block packed together as utilities tools which specially targeting .NET Framework 4.5 by removed some dependencies and function</description>
         <dependencies>
             <dependency id="Newtonsoft.Json" version="12.0.0.0" />
             <dependency id="System.Data.SqlClient" version="4.6.0"/>
