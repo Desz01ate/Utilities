@@ -12,6 +12,15 @@ namespace MachineLearning
 {
     public static class Regression
     {
+        /// <summary>
+        /// A base template of regression trainer which contains pre-processing likes OHE,PCA with any choosing algorithm.
+        /// </summary>
+        /// <typeparam name="TType">Type of training data.</typeparam>
+        /// <typeparam name="TTrainer">Type of trainer algorithm.</typeparam>
+        /// <param name="context">Microsoft.ML context.</param>
+        /// <param name="trainDataset">Training dataset.</param>
+        /// <param name="estimator">Algorithm estimator.</param>
+        /// <returns>Model of training datatype from given estimator.</returns>
         private static TransformerChain<TTrainer> RegressionTrainerTemplate<TType, TTrainer>(this MLContext context, IEnumerable<TType> trainDataset, IEstimator<TTrainer> estimator)
         where TType : class, new()
         where TTrainer : class, ITransformer

@@ -5,7 +5,7 @@ using System.Text;
 namespace MachineLearning.Shared.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
-    class MinMaxScaleColumn : Attribute
+    public class MinMaxScaleColumn : Attribute
     {
     }
 }
