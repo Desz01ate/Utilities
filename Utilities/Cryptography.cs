@@ -176,5 +176,32 @@ namespace Utilities
             }
             return randomBytes;
         }
+        /// <summary>
+        /// Provide statistically random string generate with customizable length and combination.
+        /// </summary>
+        /// <param name="length">Length of string.</param>
+        /// <param name="combination">Combination of string.</param>
+        /// <returns></returns>
+        public static string SecureRandomString(int length, string combination = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+        {
+            var result = new StringBuilder(length);
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                int count = (int)Math.Ceiling(Math.Log(combination.Length, 2) / 8.0);
+                int offset = BitConverter.IsLittleEndian ? 0 : sizeof(uint) - count;
+                int max = (int)(Math.Pow(2, count * 8) / combination.Length) * combination.Length;
+                byte[] uintBuffer = new byte[sizeof(uint)];
+                while (result.Length < length)
+                {
+                    rng.GetBytes(uintBuffer, offset, count);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                    if (num < max)
+                    {
+                        result.Append(combination[(int)(num % combination.Length)]);
+                    }
+                }
+            }
+            return result.ToString();
+        }
     }
 }

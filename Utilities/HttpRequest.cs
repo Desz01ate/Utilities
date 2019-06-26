@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
+    /// </summary>
     public static class HttpRequest
     {
         /// <summary>
@@ -243,5 +246,150 @@ namespace Utilities
             request.EnsureSuccessStatusCode();
             return request;
         }
+        /// <summary>
+        /// Send a POST request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
+        public static HttpResponseMessage Post(string url, string body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
+        {
+            var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+            var bodyContent = new StringContent(body, encoding ?? Encoding.UTF8, mediatype);
+            var request = httpClient.PostAsync(url, bodyContent).Result;
+            request.EnsureSuccessStatusCode();
+            return request;
+        }
+        /// <summary>
+        /// Send a POST request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
+        public static async Task<HttpResponseMessage> PostAsync(string url, string body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
+        {
+            var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+            var bodyContent = new StringContent(body, encoding ?? Encoding.UTF8, mediatype);
+            var request = await httpClient.PostAsync(url, bodyContent);
+            request.EnsureSuccessStatusCode();
+            return request;
+        }
+        /// <summary>
+        /// Send a PUT request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
+        public static HttpResponseMessage Put(string url, string body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
+        {
+            var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+            var bodyContent = new StringContent(body, encoding ?? Encoding.UTF8, mediatype);
+            var request = httpClient.PutAsync(url, bodyContent).Result;
+            request.EnsureSuccessStatusCode();
+            return request;
+        }
+        /// <summary>
+        /// Send a PUT request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
+        public static async Task<HttpResponseMessage> PutAsync(string url, string body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
+        {
+            var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+            var bodyContent = new StringContent(body, encoding ?? Encoding.UTF8, mediatype);
+            var request = await httpClient.PutAsync(url, bodyContent);
+            request.EnsureSuccessStatusCode();
+            return request;
+        }
+        /// <summary>
+        /// Send a DELETE request to the specified Uri.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
+        public static HttpResponseMessage Delete(string url, string body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
+        {
+            var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+            var bodyContent = new StringContent(body, encoding ?? Encoding.UTF8, mediatype);
+            var request = httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = bodyContent
+            }).Result;
+            request.EnsureSuccessStatusCode();
+            return request;
+        }
+        /// <summary>
+        /// Send a DELETE request to the specified Uri as an asynchronous operation.
+        /// </summary>
+        /// <param name="url">The Uri the request is sent to.</param>
+        /// <param name="body">The body content the request is sent to.</param>
+        /// <param name="encoding">The body content type.</param>
+        /// <param name="mediatype">The body media type.</param>
+        /// <returns></returns>
+        public static async Task<HttpResponseMessage> DeleteAsync(string url, string body, Encoding encoding = null, string mediatype = "application/json", Dictionary<string, string> headers = null)
+        {
+            var httpClient = new HttpClient();
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+            var bodyContent = new StringContent(body, encoding ?? Encoding.UTF8, mediatype);
+            var request = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = bodyContent
+            });
+            request.EnsureSuccessStatusCode();
+            return request;
+        }
+
     }
 }

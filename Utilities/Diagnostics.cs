@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Simple diagnostic methods
+    /// </summary>
     public static class Diagnostics
     {
         /// <summary>

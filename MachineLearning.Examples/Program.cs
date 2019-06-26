@@ -1,4 +1,5 @@
-﻿using MachineLearning.Examples.POCO;
+﻿using HighPerformance;
+using MachineLearning.Examples.POCO;
 using MachineLearning.Shared;
 using Microsoft.ML;
 using Microsoft.ML.Data;
@@ -100,7 +101,7 @@ namespace MachineLearning.Examples
         }
         static async Task Main(string[] args)
         {
-            bool train = true;
+             bool train = true;
             //await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
             await RegressionExample(train);
