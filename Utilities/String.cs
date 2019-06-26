@@ -24,5 +24,25 @@ namespace Utilities
                 return string.Join(seperator.ToString(), input.Split(seperator).ToList().Select(word => $@"{word.First().ToString().ToUpper()}{word.Substring(1)}"));
             return $@"{input.First().ToString().ToUpper()}{input.Substring(1)}";
         }
+        /// <summary>
+        /// Convert input string to base64 format string
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ToBase64String(this string input)
+        {
+            var charArray = Encoding.UTF8.GetBytes(input);
+            return Convert.ToBase64String(charArray);
+        }
+        /// <summary>
+        /// Convert base64 string to original string
+        /// </summary>
+        /// <param name="base64String"></param>
+        /// <returns></returns>
+        public static string FromBase64String(this string base64String)
+        {
+            var charArray = Convert.FromBase64String(base64String);
+            return Encoding.UTF8.GetString(charArray);
+        }
     }
 }

@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Basic regular expression wrapper
+    /// </summary>
     public static class RegularExpression
     {
         private static Match RegexMatch(string input, string pattern)
@@ -31,7 +34,7 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <returns></returns>
         public static bool IsOnlyDigit(string input) => RegexMatch(input, @"^\d+$").Success;
-        //\u0E00-\u0E7F isa unicode for Thai language
+        //\u0E00-\u0E7F is a unicode for Thai language
         /// <summary>
         /// Check if the given input is matching the string-only (English and Thai alphabetics only)
         /// </summary>

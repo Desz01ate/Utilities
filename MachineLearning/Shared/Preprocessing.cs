@@ -134,9 +134,9 @@ namespace MachineLearning.Shared
             vtkPreprocessor.CombinedFeatures = Shared.Enumerator.CombineEnumerable(features, combinedFeatures.Select(x => x.EncodedFeature));
             return vtkPreprocessor;
         }
-       private static IEnumerable<T> MinMaxScale<T>(this IEnumerable<T> dataset)
+        public static IEnumerable<T> MinMaxScale<T>(this IEnumerable<T> dataset)
         {
-            var list = dataset.ToList();
+            var minMaxArray = dataset.ToArray();
             foreach (var property in typeof(T).GetProperties())
             {
                 var labelColumn = property.GetCustomAttribute<MinMaxScaleColumn>(true);
@@ -144,34 +144,36 @@ namespace MachineLearning.Shared
                 {
                     var min = dataset.Min(x => (float)property.GetValue(x));
                     var max = dataset.Max(x => (float)property.GetValue(x));
-                    for (var index = 0; index < list.Count(); index++)
+                    for (var index = 0; index < minMaxArray.Length; index++)
                     {
-                        var scaled = ((float)property.GetValue(list[index]) - min) / (max - min);
-                        property.SetValue(list[index], scaled);
+                        var element = minMaxArray[index];
+                        var scaled = ((float)property.GetValue(element) - min) / (max - min);
+                        property.SetValue(element, scaled);
                     }
                 }
             }
-            return list;
+            return minMaxArray;
         }
-        private static IEnumerable<T> Normalization<T>(this IEnumerable<T> dataset)
+        public static IEnumerable<T> Normalization<T>(this IEnumerable<T> dataset)
         {
-            var list = dataset.ToList();
+            var normArray = dataset.ToArray();
             foreach (var property in typeof(T).GetProperties())
             {
-                var labelColumn = property.GetCustomAttribute<NormalizationColumn>(true);
-                if ((property.PropertyType == typeof(float) || property.PropertyType == typeof(float?)) && labelColumn != null)
+                var normColumn = property.GetCustomAttribute<NormalizationColumn>(true);
+                if ((property.PropertyType == typeof(float) || property.PropertyType == typeof(float?)) && normColumn != null)
                 {
                     var min = dataset.Min(x => (float)property.GetValue(x));
                     var max = dataset.Max(x => (float)property.GetValue(x));
                     var mean = dataset.Average(x => (float)property.GetValue(x));
-                    for (var index = 0; index < list.Count(); index++)
+                    for (var index = 0; index < normArray.Length; index++)
                     {
-                        var norm = ((float)property.GetValue(list[index]) - mean) / (max - min);
-                        property.SetValue(list[index], norm);
+                        var element = normArray[index];
+                        var norm = ((float)property.GetValue(element) - mean) / (max - min);
+                        property.SetValue(element, norm);
                     }
                 }
             }
-            return list;
+            return normArray;
         }
     }
 }

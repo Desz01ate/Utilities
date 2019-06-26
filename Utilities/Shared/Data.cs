@@ -201,7 +201,7 @@ namespace Utilities.Shared
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             foreach (var column in columns)
             {
-                rowInstance.Add(column, row[column].ToString());
+                rowInstance.Add(column, row[column]);
             }
             return rowInstance;
         }

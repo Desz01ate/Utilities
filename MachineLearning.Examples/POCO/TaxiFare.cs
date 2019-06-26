@@ -12,6 +12,7 @@ namespace MachineLearning.Examples.POCO
         public string vendor_id { get; set; }
         public float rate_code { get; set; }
         public float passenger_count { get; set; }
+        [MinMaxScaleColumn]
         public float trip_time_in_secs { get; set; }
         public float trip_distance { get; set; }
         [OneHotEncodingColumn]
