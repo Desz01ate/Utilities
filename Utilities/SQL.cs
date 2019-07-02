@@ -9,6 +9,9 @@ using Utilities.Shared;
 using Oracle.ManagedDataAccess.Client;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using System.Text;
+using System.Reflection;
+using Utilities.Attributes;
 
 namespace Utilities
 {
@@ -161,6 +164,26 @@ namespace Utilities
                 return await DbConnectionBase.ExecuteNonQueryAsync<SqlConnection>(connectionString, sql, parameters, commandType);
             }
 
+            public static IEnumerable<T> Select<T>(string connectionString)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, SqlConnection>(connectionString);
+            }
+            public static int Insert<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Insert<T, SqlConnection, SqlParameter>(connectionString, obj);
+            }
+            public static int Update<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Update<T, SqlConnection, SqlParameter>(connectionString, obj);
+            }
+            public static int Delete<T>(string connectionString, T obj) where T : class, new()
+            {
+                return DbConnectionBase.Delete<T, SqlConnection, SqlParameter>(connectionString, obj);
+            }
+
         }
         /// <summary>
         /// Provide wrapper access to Oracle Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
@@ -306,6 +329,25 @@ namespace Utilities
                 return await DbConnectionBase.ExecuteNonQueryAsync<OracleConnection>(connectionString, sql, parameters, commandType);
             }
 
+            public static IEnumerable<T> Select<T>(string connectionString)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, OracleConnection>(connectionString);
+            }
+            public static int Insert<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Insert<T, OracleConnection, OracleParameter>(connectionString, obj);
+            }
+            public static int Update<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Update<T, OracleConnection, OracleParameter>(connectionString, obj);
+            }
+            public static int Delete<T>(string connectionString, T obj) where T : class, new()
+            {
+                return DbConnectionBase.Delete<T, OracleConnection, OracleParameter>(connectionString, obj);
+            }
         }
         /// <summary>
         /// Provide wrapper access to PostgreSQL Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
@@ -450,7 +492,25 @@ namespace Utilities
             {
                 return await DbConnectionBase.ExecuteNonQueryAsync<Npgsql.NpgsqlConnection>(connectionString, sql, parameters, commandType);
             }
-
+            public static IEnumerable<T> Select<T>(string connectionString)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, Npgsql.NpgsqlConnection>(connectionString);
+            }
+            public static int Insert<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Insert<T, Npgsql.NpgsqlConnection, Npgsql.NpgsqlParameter>(connectionString, obj);
+            }
+            public static int Update<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Update<T, Npgsql.NpgsqlConnection, Npgsql.NpgsqlParameter>(connectionString, obj);
+            }
+            public static int Delete<T>(string connectionString, T obj) where T : class, new()
+            {
+                return DbConnectionBase.Delete<T, Npgsql.NpgsqlConnection, Npgsql.NpgsqlParameter>(connectionString, obj);
+            }
         }
         /// <summary>
         /// Provide wrapper access to MySQL Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
@@ -596,6 +656,25 @@ namespace Utilities
                 return await DbConnectionBase.ExecuteNonQueryAsync<MySql.Data.MySqlClient.MySqlConnection>(connectionString, sql, parameters, commandType);
             }
 
+            public static IEnumerable<T> Select<T>(string connectionString)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, MySqlConnection>(connectionString);
+            }
+            public static int Insert<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Insert<T, MySqlConnection, MySqlParameter>(connectionString, obj);
+            }
+            public static int Update<T>(string connectionString, T obj)
+                where T : class, new()
+            {
+                return DbConnectionBase.Update<T, MySqlConnection, MySqlParameter>(connectionString, obj);
+            }
+            public static int Delete<T>(string connectionString, T obj) where T : class, new()
+            {
+                return DbConnectionBase.Delete<T, MySqlConnection, MySqlParameter>(connectionString, obj);
+            }
         }
         /// <summary>
         /// Provide wrapper access to Any Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
@@ -994,6 +1073,81 @@ namespace Utilities
                     throw e;
                 }
             }
+
+            #region Experimental CRUD
+            public static IEnumerable<T> Select<T, TDatabaseType>(string connectionString)
+                where T : class, new()
+                where TDatabaseType : DbConnection, new()
+            {
+                var tableName = typeof(T).TableNameValidate();
+                var query = $"SELECT * FROM {tableName}";
+                var result = ExecuteReader<T, TDatabaseType>(connectionString, query);
+                return result;
+            }
+            public static int Insert<T, TDatabaseType, TParameter>(string connectionString, T obj)
+                where T : class, new()
+                where TDatabaseType : DbConnection, new()
+                where TParameter : DbParameter, new()
+            {
+                var tableName = typeof(T).TableNameValidate();
+                var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
+                var query = new StringBuilder();
+                query.AppendLine($"INSERT INTO {tableName}");
+                query.AppendLine($"({string.Join(",", kvMapper.Select(field => field.Key))})");
+                query.AppendLine($"VALUES");
+                query.AppendLine($"({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})");
+                var result = ExecuteNonQuery<TDatabaseType>(connectionString, query.ToString(), kvMapper.Select(field => new TParameter()
+                {
+                    ParameterName = $"@{field.Key}",
+                    Value = field.Value
+                }));
+                return result;
+            }
+            public static int Update<T, TDatabaseType, TParameter>(string connectionString, T obj)
+                where T : class, new()
+                where TDatabaseType : DbConnection, new()
+                where TParameter : DbParameter, new()
+            {
+                var tableName = typeof(T).TableNameValidate();
+                var fields = typeof(T).GetProperties();
+                var primaryKey = fields.PrimaryKeyValidate();
+                var pkValue = primaryKey.GetValue(obj);
+                var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+                parameters.Remove(primaryKey.Name);
+                var query = new StringBuilder();
+                query.AppendLine($"UPDATE {tableName} SET");
+                query.AppendLine($"{string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}");
+                query.AppendLine($" WHERE ");
+                query.AppendLine($"{primaryKey.Name} = @{primaryKey.Name}");
+                var parametersArray = parameters.Select(x => new TParameter()
+                {
+                    ParameterName = $"@{x.Key}",
+                    Value = x.Value
+                }).ToList();
+                parametersArray.Add(new TParameter() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
+                var value = ExecuteNonQuery<TDatabaseType>(connectionString, query.ToString(), parametersArray);
+                return value;
+            }
+            public static int Delete<T, TDatabaseType, TParameter>(string connectionString, T obj)
+                where T : class, new()
+                where TDatabaseType : DbConnection, new()
+                where TParameter : DbParameter, new()
+            {
+                var tableName = typeof(T).TableNameValidate();
+                var fields = typeof(T).GetProperties();
+                var primaryKey = fields.PrimaryKeyValidate();
+
+                var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
+                var result = ExecuteNonQuery<TDatabaseType>(connectionString, query.ToString(), new[] {
+                    new TParameter()
+                    {
+                        ParameterName = primaryKey.Name,
+                        Value = Data.PrimaryKeyFormatter(primaryKey.GetValue(obj), primaryKey.PropertyType)
+                    }
+                });
+                return result;
+            }
+            #endregion
         }
     }
 }

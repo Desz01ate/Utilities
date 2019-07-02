@@ -9,11 +9,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.5.10</Version>
+    <Version>0.0.5.11</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>7.3</LangVersion>
-    <PackageReleaseNotes>Add overload for methods on HttpRequest as dynamic (auto json-serialize) and string (non-serialize),
-add support for MySQL, PostgreSQL in SQL module.</PackageReleaseNotes>
+    <PackageReleaseNotes>Introduce generic methods for HttpRequest module.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 

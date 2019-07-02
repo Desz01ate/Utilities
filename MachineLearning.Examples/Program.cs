@@ -1,10 +1,8 @@
-﻿using HighPerformance;
-using MachineLearning.Examples.POCO;
+﻿using MachineLearning.Examples.POCO;
 using MachineLearning.Shared;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
-using Microsoft.ML.Transforms;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -101,11 +99,24 @@ namespace MachineLearning.Examples
         }
         static async Task Main(string[] args)
         {
-             bool train = true;
+            bool train = true;
             //await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
-            await RegressionExample(train);
+            //await RegressionExample(train);
             //await ClusteringExample(train);
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            var traindata = Utilities.SQL.SQLServer.ExecuteReader(sqlConnection, "SELECT * FROM [taxi-fare-train]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row));
+            var obj = traindata.ToList()[0];
+            var test = Utilities.SQL.SQLServer.Select<TaxiFare>(sqlConnection);
+            foreach (var t in traindata)
+            {
+                Utilities.SQL.SQLServer.Insert(sqlConnection, t);
+            }
+            var sql = Utilities.SQL.SQLServer.Update(sqlConnection, obj);
+            Console.WriteLine(sql);
+            sql = Utilities.SQL.SQLServer.Delete(sqlConnection, obj);
+            Console.WriteLine(sql);
+            Console.ReadLine();
         }
         static async Task BinaryClassifier(bool train = true)
         {
@@ -236,8 +247,8 @@ namespace MachineLearning.Examples
             double mse = double.MaxValue;
             var mlContext = new MLContext();
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]"));
-            var traindata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()"));
+            var testdata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-test]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row)));
+            var traindata = (await Utilities.SQL.SQLServer.ExecuteReaderAsync<TaxiFare>(sqlConnection, "SELECT * FROM [taxi-fare-train] ORDER BY NEWID()", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row)));
             var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFareRegression>>>() {
                 { "SDCA", (data,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
                 { "LBFGS", (data,action) => Regression.LbfgsPoisson<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },

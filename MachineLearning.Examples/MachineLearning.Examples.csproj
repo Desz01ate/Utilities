@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HighPerformance\HighPerformance.csproj" />
     <ProjectReference Include="..\MachineLearning\MachineLearning.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>

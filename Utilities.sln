@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Util
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning", "MachineLearning\MachineLearning.csproj", "{18D587E6-AE69-4864-B2ED-9FCDDE1F23C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighPerformance", "HighPerformance\HighPerformance.csproj", "{7AB281E8-E2D3-4542-BF40-4EEF1464B27B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities-Testing", "Utilities-Testing\Utilities-Testing.csproj", "{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning.Examples", "MachineLearning.Examples\MachineLearning.Examples.csproj", "{375432CC-C34D-49ED-A1FF-D79919F71DC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Legacy", "Utilities.Legacy\Utilities.Legacy.csproj", "{FEF15944-869F-4696-A6D0-A6129B696466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Asp.Core", "Utilities.Asp.Core\Utilities.Asp.Core.csproj", "{2B12CFD4-A3F5-41B2-A57B-E5A248BE1CDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,6 @@ Global
 		{18D587E6-AE69-4864-B2ED-9FCDDE1F23C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18D587E6-AE69-4864-B2ED-9FCDDE1F23C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18D587E6-AE69-4864-B2ED-9FCDDE1F23C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AB281E8-E2D3-4542-BF40-4EEF1464B27B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AB281E8-E2D3-4542-BF40-4EEF1464B27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AB281E8-E2D3-4542-BF40-4EEF1464B27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AB281E8-E2D3-4542-BF40-4EEF1464B27B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{FEF15944-869F-4696-A6D0-A6129B696466}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEF15944-869F-4696-A6D0-A6129B696466}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEF15944-869F-4696-A6D0-A6129B696466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B12CFD4-A3F5-41B2-A57B-E5A248BE1CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B12CFD4-A3F5-41B2-A57B-E5A248BE1CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B12CFD4-A3F5-41B2-A57B-E5A248BE1CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B12CFD4-A3F5-41B2-A57B-E5A248BE1CDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
