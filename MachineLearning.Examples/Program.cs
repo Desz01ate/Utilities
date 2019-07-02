@@ -102,21 +102,22 @@ namespace MachineLearning.Examples
             bool train = true;
             //await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
-            //await RegressionExample(train);
+            await RegressionExample(train);
             //await ClusteringExample(train);
-            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            var traindata = Utilities.SQL.SQLServer.ExecuteReader(sqlConnection, "SELECT * FROM [taxi-fare-train]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row));
-            var obj = traindata.ToList()[0];
-            var test = Utilities.SQL.SQLServer.Select<TaxiFare>(sqlConnection);
-            foreach (var t in traindata)
-            {
-                Utilities.SQL.SQLServer.Insert(sqlConnection, t);
-            }
-            var sql = Utilities.SQL.SQLServer.Update(sqlConnection, obj);
-            Console.WriteLine(sql);
-            sql = Utilities.SQL.SQLServer.Delete(sqlConnection, obj);
-            Console.WriteLine(sql);
-            Console.ReadLine();
+
+            //var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            //var traindata = Utilities.SQL.SQLServer.ExecuteReader(sqlConnection, "SELECT * FROM [taxi-fare-train]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row));
+            //var obj = traindata.ToList()[0];
+            //var test = Utilities.SQL.SQLServer.Select<TaxiFare>(sqlConnection);
+            //foreach (var t in traindata)
+            //{
+            //    Utilities.SQL.SQLServer.Insert(sqlConnection, t);
+            //}
+            //var sql = Utilities.SQL.SQLServer.Update(sqlConnection, obj);
+            //Console.WriteLine(sql);
+            //sql = Utilities.SQL.SQLServer.Delete(sqlConnection, obj);
+            //Console.WriteLine(sql);
+            //Console.ReadLine();
         }
         static async Task BinaryClassifier(bool train = true)
         {

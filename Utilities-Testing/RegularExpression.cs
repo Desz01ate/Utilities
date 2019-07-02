@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 namespace Utilities.Testing
 {
     [TestFixture]
@@ -71,7 +71,7 @@ namespace Utilities.Testing
                 Assert.IsFalse(Utilities.RegularExpression.IsOnlyText(i.ToString()));
                 Assert.IsFalse(Utilities.RegularExpression.IsOnlyText($@"{asc}{i}"));
             }
-            Assert.IsTrue(Utilities.RegularExpression.IsOnlyText("���ʴ�"));
+            Assert.IsTrue(Utilities.RegularExpression.IsOnlyText("สวัสดี"));
             Assert.Pass();
         }
     }

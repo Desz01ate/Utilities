@@ -696,6 +696,7 @@ namespace Utilities
                 where T : new()
                 where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     List<T> result = new List<T>();
@@ -703,9 +704,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         connection.Open();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -722,12 +725,14 @@ namespace Utilities
                                 }
                             }
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -759,6 +764,7 @@ namespace Utilities
             public static IEnumerable<dynamic> ExecuteReader<TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     List<dynamic> result = new List<dynamic>();
@@ -766,9 +772,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         connection.Open();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -786,12 +794,14 @@ namespace Utilities
                                 }
                             }
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -808,6 +818,7 @@ namespace Utilities
             public static T ExecuteScalar<T, TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     T result = default;
@@ -815,9 +826,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         connection.Open();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -828,12 +841,14 @@ namespace Utilities
                             }
                             result = (T)command.ExecuteScalar();
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -849,6 +864,7 @@ namespace Utilities
             public static int ExecuteNonQuery<TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
                 where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     int result = -1;
@@ -856,9 +872,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         connection.Open();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -869,12 +887,14 @@ namespace Utilities
                             }
                             result = command.ExecuteNonQuery();
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -892,6 +912,7 @@ namespace Utilities
             public static async Task<IEnumerable<T>> ExecuteReaderAsync<T, TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : new()
             where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     List<T> result = new List<T>();
@@ -899,9 +920,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         await connection.OpenAsync();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -918,12 +941,14 @@ namespace Utilities
                                 }
                             }
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -954,6 +979,7 @@ namespace Utilities
             public static async Task<IEnumerable<dynamic>> ExecuteReaderAsync<TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     List<dynamic> result = new List<dynamic>();
@@ -961,9 +987,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         await connection.OpenAsync();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -981,12 +1009,14 @@ namespace Utilities
                                 }
                             }
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -1003,6 +1033,7 @@ namespace Utilities
             public static async Task<T> ExecuteScalarAsync<T, TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     T result = default;
@@ -1010,9 +1041,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         await connection.OpenAsync();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -1023,12 +1056,14 @@ namespace Utilities
                             }
                             result = (T)(await command.ExecuteScalarAsync());
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }
@@ -1044,6 +1079,7 @@ namespace Utilities
             public static async Task<int> ExecuteNonQueryAsync<TDatabaseType>(string connectionString, string sql, IEnumerable<DbParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
             where TDatabaseType : DbConnection, new()
             {
+                DbTransaction transaction = null;
                 try
                 {
                     int result = -1;
@@ -1051,9 +1087,11 @@ namespace Utilities
                     {
                         connection.ConnectionString = connectionString;
                         await connection.OpenAsync();
+                        transaction = connection.BeginTransaction();
                         using (var command = connection.CreateCommand())
                         {
                             command.CommandText = sql;
+                            command.Transaction = transaction;
                             command.CommandType = commandType;
                             if (parameters != null)
                             {
@@ -1064,12 +1102,14 @@ namespace Utilities
                             }
                             result = await command.ExecuteNonQueryAsync();
                         }
+                        transaction.Commit();
                         connection.Close();
                     }
                     return result;
                 }
                 catch (Exception e)
                 {
+                    transaction?.Rollback();
                     throw e;
                 }
             }

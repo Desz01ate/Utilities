@@ -4,6 +4,26 @@
         <name>Utilities</name>
     </assembly>
     <members>
+        <member name="T:Utilities.Attributes.SQL.FieldAttribute">
+            <summary>
+            Attribute for field name customization
+            </summary>
+        </member>
+        <member name="T:Utilities.Attributes.SQL.IgnoreFieldAttribute">
+            <summary>
+            Attribute for ignorance on insert or update statement
+            </summary>
+        </member>
+        <member name="T:Utilities.Attributes.SQL.PrimaryKeyAttribute">
+            <summary>
+            Attribute which specified which property is a primary key
+            </summary>
+        </member>
+        <member name="T:Utilities.Attributes.SQL.TableAttribute">
+            <summary>
+            Attribute for table name customization
+            </summary>
+        </member>
         <member name="T:Utilities.Diagnostics">
             <summary>
             Simple diagnostic methods
