@@ -8,6 +8,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -102,22 +103,27 @@ namespace MachineLearning.Examples
             bool train = true;
             //await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
-            await RegressionExample(train);
+            //await RegressionExample(train);
             //await ClusteringExample(train);
 
-            //var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            //var traindata = Utilities.SQL.SQLServer.ExecuteReader(sqlConnection, "SELECT * FROM [taxi-fare-train]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row));
-            //var obj = traindata.ToList()[0];
-            //var test = Utilities.SQL.SQLServer.Select<TaxiFare>(sqlConnection);
-            //foreach (var t in traindata)
-            //{
-            //    Utilities.SQL.SQLServer.Insert(sqlConnection, t);
-            //}
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+            var mocks = Utilities.SQL.SQLServer.Select<Mock>(sqlConnection);
+            var traindata = Utilities.SQL.SQLServer.ExecuteReader(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-train]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row));
+            var obj = traindata.ToList()[0];
+            var test = Utilities.SQL.SQLServer.Select<TaxiFare>(sqlConnection);
+            foreach (var t in traindata)
+            {
+                Utilities.SQL.SQLServer.Insert(sqlConnection, t);
+                t.payment_type = DateTime.Now.ToString();
+                Utilities.SQL.SQLServer.Update(sqlConnection, t);
+                Utilities.SQL.SQLServer.Delete(sqlConnection, t);
+                //Utilities.SQL.SQLServer.ExecuteNonQuery(sqlConnection, $@"DELETE FROM [taxi-fare-train2] WHERE vendor_id = @vendor_id", new[] { new SqlParameter("@vendor_id", t.vendor_id) });
+            }
             //var sql = Utilities.SQL.SQLServer.Update(sqlConnection, obj);
             //Console.WriteLine(sql);
-            //sql = Utilities.SQL.SQLServer.Delete(sqlConnection, obj);
+
             //Console.WriteLine(sql);
-            //Console.ReadLine();
+            Console.ReadLine();
         }
         static async Task BinaryClassifier(bool train = true)
         {

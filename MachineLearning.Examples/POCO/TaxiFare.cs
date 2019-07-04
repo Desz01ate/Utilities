@@ -13,13 +13,13 @@ namespace MachineLearning.Examples.POCO
         [Field("vendor_id")]
         [OneHotEncodingColumn]
         public string vendor_id { get; set; }
-        [PrimaryKey]
         public float rate_code { get; set; }
         public float passenger_count { get; set; }
         [MinMaxScaleColumn]
         public float trip_time_in_secs { get; set; }
         public float trip_distance { get; set; }
         [OneHotEncodingColumn]
+        [IgnoreField(false, false)]
         public string payment_type { get; set; }
         [LabelColumn]
         public float fare_amount { get; set; }

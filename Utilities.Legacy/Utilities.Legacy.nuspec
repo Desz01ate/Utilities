@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata minClientVersion="3.2">
+    <metadata>
         <id>Utilities.Legacy</id>
-        <version>0.0.1.3</version>
+        <version>0.0.2.2</version>
         <authors>Chanvut Booneid</authors>
         <description>Some heavily repetitive code block packed together as utilities tools which specially targeting .NET Framework 4.5 by removed some dependencies and function</description>
         <dependencies>

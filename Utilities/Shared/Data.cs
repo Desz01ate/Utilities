@@ -28,9 +28,10 @@ namespace Utilities.Shared
                 try
                 {
                     var propertyType = property.PropertyType;
+                    var propertyName = AttributeExtension.FieldNameValidate(property);
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
-                    var value = Convert.ToString(row[property.Name]);
+                    var value = Convert.ToString(row[propertyName]);
                     if (propertyType == typeof(string))
                     {
                         property.SetValue(instance, value);
@@ -119,10 +120,11 @@ namespace Utilities.Shared
                 try
                 {
                     var propertyType = property.PropertyType;
+                    var propertyName = AttributeExtension.FieldNameValidate(property);
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
                     //if the value is not in string form, is can caused errors if the model is mismatch from the database
-                    var value = row[property.Name];
+                    var value = row[propertyName];
                     if (propertyType == typeof(string))
                     {
                         property.SetValue(instance, value);

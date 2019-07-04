@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Attributes.SQL;
 
 namespace Utilities.Testing
 {
@@ -81,6 +82,41 @@ namespace Utilities.Testing
             }
         }
         [Test]
+        public void SQLServerCRUD()
+        {
+            try
+            {
+                Utilities.SQL.SQLServer.ExecuteNonQuery(_msSqlConnection, $@"CREATE TABLE [dbo].[TestTable]([id] int primary key,[value] nvarchar(255))");
+                for (var iter = 0; iter < 10; iter++)
+                {
+                    var affectedCreate = Utilities.SQL.SQLServer.Insert(_msSqlConnection, new TestTable()
+                    {
+                        id = iter,
+                        value = "test"
+                    });//Utilities.SQL.SQLServer.ExecuteNonQuery(_msSqlConnection, @"INSERT INTO [dbo].[TestTable]([id],[value]) VALUES(@id,@value)", new[] { new SqlParameter("id", iter), new SqlParameter("value", "test") });
+                    Assert.AreEqual(affectedCreate, 1);
+                    var selectedById = Utilities.SQL.SQLServer.Select<TestTable>(_msSqlConnection, iter);
+                    Assert.AreEqual(selectedById.id, iter);
+                    Assert.AreEqual(selectedById.value, "test");
+                    var selectedByIdDynamic = Utilities.SQL.SQLServer.ExecuteReader(_msSqlConnection, @"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                    Assert.AreEqual(selectedByIdDynamic.First().id, iter);
+                    Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                    selectedById.value = "updated";
+                    var affectedUpdate = Utilities.SQL.SQLServer.Update(_msSqlConnection, selectedById);
+                    Assert.AreEqual(affectedUpdate, 1);
+                    var affectedDelete = Utilities.SQL.SQLServer.Delete(_msSqlConnection, selectedById);
+                    Assert.AreEqual(affectedDelete, 1);
+                }
+                var affectedSelectScalar = Utilities.SQL.SQLServer.ExecuteScalar<int>(_msSqlConnection, @"SELECT COUNT(1) FROM [dbo].[TestTable]");
+                Assert.AreEqual(affectedSelectScalar, 0);
+                Assert.Pass();
+            }
+            finally
+            {
+                Utilities.SQL.SQLServer.ExecuteNonQuery(_msSqlConnection, $@"DROP TABLE [dbo].[TestTable]");
+            }
+        }
+        [Test]
         public async Task MySQLAsync()
         {
             try
@@ -140,10 +176,49 @@ namespace Utilities.Testing
                 Utilities.SQL.MySQL.ExecuteNonQuery(_mySqlConnection, $@"DROP TABLE TestTable");
             }
         }
+        [Test]
+        public void MySQLCRUD()
+        {
+            try
+            {
+                Utilities.SQL.MySQL.ExecuteNonQuery(_mySqlConnection, $@"CREATE TABLE TestTable(id int primary key,value nvarchar(255))");
+                for (var iter = 0; iter < 10; iter++)
+                {
+                    var affectedCreate = Utilities.SQL.MySQL.Insert(_mySqlConnection, new TestTable()
+                    {
+                        id = iter,
+                        value = "test"
+                    });//Utilities.SQL.SQLServer.ExecuteNonQuery(_msSqlConnection, @"INSERT INTO [dbo].[TestTable]([id],[value]) VALUES(@id,@value)", new[] { new SqlParameter("id", iter), new SqlParameter("value", "test") });
+                    Assert.AreEqual(affectedCreate, 1);
+                    var selectedById = Utilities.SQL.MySQL.Select<TestTable>(_mySqlConnection, iter);
+                    Assert.AreEqual(selectedById.id, iter);
+                    Assert.AreEqual(selectedById.value, "test");
+                    var selectedByIdDynamic = Utilities.SQL.MySQL.ExecuteReader(_mySqlConnection, @"SELECT * FROM TestTable WHERE id = @id", new[] { new MySqlParameter("id", iter) });
+                    Assert.AreEqual(selectedByIdDynamic.First().id, iter);
+                    Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                    selectedById.value = "updated";
+                    var affectedUpdate = Utilities.SQL.MySQL.Update(_mySqlConnection, selectedById);
+                    Assert.AreEqual(affectedUpdate, 1);
+                    var affectedDelete = Utilities.SQL.MySQL.Delete(_mySqlConnection, selectedById);
+                    Assert.AreEqual(affectedDelete, 1);
+                }
+                var affectedSelectScalar = Utilities.SQL.MySQL.ExecuteScalar<long>(_mySqlConnection, @"SELECT COUNT(1) FROM TestTable");
+                Assert.AreEqual(affectedSelectScalar, 0);
+                Assert.Pass();
+            }
+            catch (Exception e)
+            {
 
+            }
+            finally
+            {
+                Utilities.SQL.MySQL.ExecuteNonQuery(_mySqlConnection, $@"DROP TABLE TestTable");
+            }
+        }
     }
     class TestTable
     {
+        [PrimaryKey]
         public int id { get; set; }
         public string value { get; set; }
     }

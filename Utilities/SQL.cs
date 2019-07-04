@@ -169,6 +169,11 @@ namespace Utilities
             {
                 return DbConnectionBase.Select<T, SqlConnection>(connectionString);
             }
+            public static T Select<T>(string connectionString, object primaryKey)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, SqlConnection, SqlParameter>(connectionString, primaryKey);
+            }
             public static int Insert<T>(string connectionString, T obj)
                 where T : class, new()
             {
@@ -334,6 +339,11 @@ namespace Utilities
             {
                 return DbConnectionBase.Select<T, OracleConnection>(connectionString);
             }
+            public static T Select<T>(string connectionString, object primaryKey)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, OracleConnection, OracleParameter>(connectionString, primaryKey);
+            }
             public static int Insert<T>(string connectionString, T obj)
                 where T : class, new()
             {
@@ -496,6 +506,11 @@ namespace Utilities
                 where T : class, new()
             {
                 return DbConnectionBase.Select<T, Npgsql.NpgsqlConnection>(connectionString);
+            }
+            public static T Select<T>(string connectionString, object primaryKey)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, Npgsql.NpgsqlConnection, Npgsql.NpgsqlParameter>(connectionString, primaryKey);
             }
             public static int Insert<T>(string connectionString, T obj)
                 where T : class, new()
@@ -660,6 +675,11 @@ namespace Utilities
                 where T : class, new()
             {
                 return DbConnectionBase.Select<T, MySqlConnection>(connectionString);
+            }
+            public static T Select<T>(string connectionString, object primaryKey)
+                where T : class, new()
+            {
+                return DbConnectionBase.Select<T, MySqlConnection, MySqlParameter>(connectionString, primaryKey);
             }
             public static int Insert<T>(string connectionString, T obj)
                 where T : class, new()
@@ -1124,6 +1144,23 @@ namespace Utilities
                 var result = ExecuteReader<T, TDatabaseType>(connectionString, query);
                 return result;
             }
+            public static T Select<T, TDatabaseType, TParameter>(string connectionString, object primaryKey)
+                where T : class, new()
+                where TDatabaseType : DbConnection, new()
+                where TParameter : DbParameter, new()
+            {
+                var tableName = typeof(T).TableNameValidate();
+                var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+                var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
+                var result = ExecuteReader<T, TDatabaseType>(connectionString, query, new[] {
+                    new TParameter()
+                    {
+                        ParameterName = primaryKeyAttribute.Name,
+                        Value = primaryKey
+                    }
+                }).FirstOrDefault();
+                return result;
+            }
             public static int Insert<T, TDatabaseType, TParameter>(string connectionString, T obj)
                 where T : class, new()
                 where TDatabaseType : DbConnection, new()
@@ -1131,11 +1168,10 @@ namespace Utilities
             {
                 var tableName = typeof(T).TableNameValidate();
                 var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
-                var query = new StringBuilder();
-                query.AppendLine($"INSERT INTO {tableName}");
-                query.AppendLine($"({string.Join(",", kvMapper.Select(field => field.Key))})");
-                query.AppendLine($"VALUES");
-                query.AppendLine($"({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})");
+                var query = $@"INSERT INTO {tableName}
+                              ({string.Join(",", kvMapper.Select(field => field.Key))})
+                              VALUES
+                              ({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})";
                 var result = ExecuteNonQuery<TDatabaseType>(connectionString, query.ToString(), kvMapper.Select(field => new TParameter()
                 {
                     ParameterName = $"@{field.Key}",
@@ -1154,18 +1190,17 @@ namespace Utilities
                 var pkValue = primaryKey.GetValue(obj);
                 var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
                 parameters.Remove(primaryKey.Name);
-                var query = new StringBuilder();
-                query.AppendLine($"UPDATE {tableName} SET");
-                query.AppendLine($"{string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}");
-                query.AppendLine($" WHERE ");
-                query.AppendLine($"{primaryKey.Name} = @{primaryKey.Name}");
+                var query = $@"UPDATE {tableName} SET
+                               {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
+                                WHERE 
+                               {primaryKey.Name} = @{primaryKey.Name}";
                 var parametersArray = parameters.Select(x => new TParameter()
                 {
                     ParameterName = $"@{x.Key}",
                     Value = x.Value
                 }).ToList();
                 parametersArray.Add(new TParameter() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-                var value = ExecuteNonQuery<TDatabaseType>(connectionString, query.ToString(), parametersArray);
+                var value = ExecuteNonQuery<TDatabaseType>(connectionString, query, parametersArray);
                 return value;
             }
             public static int Delete<T, TDatabaseType, TParameter>(string connectionString, T obj)
@@ -1182,7 +1217,7 @@ namespace Utilities
                     new TParameter()
                     {
                         ParameterName = primaryKey.Name,
-                        Value = Data.PrimaryKeyFormatter(primaryKey.GetValue(obj), primaryKey.PropertyType)
+                        Value = primaryKey.GetValue(obj)
                     }
                 });
                 return result;
