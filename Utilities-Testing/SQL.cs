@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.Attributes.SQL;
+using Utilities.SQLConnector;
 
 namespace Utilities.Testing
 {
@@ -114,6 +115,72 @@ namespace Utilities.Testing
             finally
             {
                 Utilities.SQL.SQLServer.ExecuteNonQuery(_msSqlConnection, $@"DROP TABLE [dbo].[TestTable]");
+            }
+        }
+        [Test]
+        public void SQLServerConnector()
+        {
+            using (var connection = new SQLServerConnector(_msSqlConnection))
+            {
+                try
+                {
+                    connection.ExecuteNonQuery($@"CREATE TABLE [dbo].[TestTable]([id] int primary key,[value] nvarchar(255))");
+                    for (var iter = 0; iter < 10; iter++)
+                    {
+                        var affectedCreate = connection.ExecuteNonQuery(@"INSERT INTO [dbo].[TestTable]([id],[value]) VALUES(@id,@value)", new[] { new SqlParameter("id", iter), new SqlParameter("value", "test") });
+                        Assert.AreEqual(affectedCreate, 1);
+                        var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                        Assert.AreEqual(selectedById.First().id, iter);
+                        Assert.AreEqual(selectedById.First().value, "test");
+                        var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                        Assert.AreEqual(selectedByIdDynamic.First().id, iter);
+                        Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                        var affectedUpdate = connection.ExecuteNonQuery(@"UPDATE [dbo].[TestTable] SET [value] = @value WHERE [id] = @id", new[] { new SqlParameter("id", iter), new SqlParameter("value", "updated") });
+                        Assert.AreEqual(affectedUpdate, 1);
+                        var affectedDelete = connection.ExecuteNonQuery(@"DELETE FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                        Assert.AreEqual(affectedDelete, 1);
+                    }
+                    var affectedSelectScalar = connection.ExecuteScalar<int>(@"SELECT COUNT(1) FROM [dbo].[TestTable]");
+                    Assert.AreEqual(affectedSelectScalar, 0);
+                    Assert.Pass();
+                }
+                finally
+                {
+                    connection.ExecuteNonQuery($@"DROP TABLE [dbo].[TestTable]");
+                }
+            }
+        }
+        [Test]
+        public async Task SQLServerConnectorAsync()
+        {
+            using (var connection = new SQLServerConnector(_msSqlConnection))
+            {
+                try
+                {
+                    await connection.ExecuteNonQueryAsync($@"CREATE TABLE [dbo].[TestTable]([id] int primary key,[value] nvarchar(255))");
+                    for (var iter = 0; iter < 10; iter++)
+                    {
+                        var affectedCreate = await connection.ExecuteNonQueryAsync(@"INSERT INTO [dbo].[TestTable]([id],[value]) VALUES(@id,@value)", new[] { new SqlParameter("id", iter), new SqlParameter("value", "test") });
+                        Assert.AreEqual(affectedCreate, 1);
+                        var selectedById = await connection.ExecuteReaderAsync<TestTable>(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                        Assert.AreEqual(selectedById.First().id, iter);
+                        Assert.AreEqual(selectedById.First().value, "test");
+                        var selectedByIdDynamic = await connection.ExecuteReaderAsync(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                        Assert.AreEqual(selectedByIdDynamic.First().id, iter);
+                        Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                        var affectedUpdate = await connection.ExecuteNonQueryAsync(@"UPDATE [dbo].[TestTable] SET [value] = @value WHERE [id] = @id", new[] { new SqlParameter("id", iter), new SqlParameter("value", "updated") });
+                        Assert.AreEqual(affectedUpdate, 1);
+                        var affectedDelete = await connection.ExecuteNonQueryAsync(@"DELETE FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
+                        Assert.AreEqual(affectedDelete, 1);
+                    }
+                    var affectedSelectScalar = await connection.ExecuteScalarAsync<int>(@"SELECT COUNT(1) FROM [dbo].[TestTable]");
+                    Assert.AreEqual(affectedSelectScalar, 0);
+                    Assert.Pass();
+                }
+                finally
+                {
+                    await connection.ExecuteNonQueryAsync($@"DROP TABLE [dbo].[TestTable]");
+                }
             }
         }
         [Test]

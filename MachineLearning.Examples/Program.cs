@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.SQLConnector;
 
 namespace MachineLearning.Examples
 {
@@ -107,22 +108,15 @@ namespace MachineLearning.Examples
             //await ClusteringExample(train);
 
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            var mocks = Utilities.SQL.SQLServer.Select<Mock>(sqlConnection);
-            var traindata = Utilities.SQL.SQLServer.ExecuteReader(sqlConnection, "SELECT TOP(10) * FROM [taxi-fare-train]", parameters: null, objectBuilder: (row) => Utilities.Shared.Data.RowBuilderExplicit<TaxiFare>(row));
-            var obj = traindata.ToList()[0];
-            var test = Utilities.SQL.SQLServer.Select<TaxiFare>(sqlConnection);
-            foreach (var t in traindata)
+            using (var connection = new SQLServerConnector(sqlConnection))
             {
-                Utilities.SQL.SQLServer.Insert(sqlConnection, t);
-                t.payment_type = DateTime.Now.ToString();
-                Utilities.SQL.SQLServer.Update(sqlConnection, t);
-                Utilities.SQL.SQLServer.Delete(sqlConnection, t);
-                //Utilities.SQL.SQLServer.ExecuteNonQuery(sqlConnection, $@"DELETE FROM [taxi-fare-train2] WHERE vendor_id = @vendor_id", new[] { new SqlParameter("@vendor_id", t.vendor_id) });
+                var taxiFares = connection.ExecuteReader<TaxiFare>($@"SELECT TOP(1) * FROM [taxi-fare-train]");
+                var obj = taxiFares.FirstOrDefault();
+                Console.WriteLine(obj.fare_amount);
+                obj.fare_amount = 9999;
+                var affectedRow = connection.Update(obj);
             }
-            //var sql = Utilities.SQL.SQLServer.Update(sqlConnection, obj);
-            //Console.WriteLine(sql);
-
-            //Console.WriteLine(sql);
+            Console.WriteLine("Done");
             Console.ReadLine();
         }
         static async Task BinaryClassifier(bool train = true)
