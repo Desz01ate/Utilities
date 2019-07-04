@@ -588,17 +588,7 @@
             <param name="count">count of elements</param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.SQL">
-            <summary>
-            Collections of SQL Connection for SQL Server and Oracle Database
-            </summary>
-        </member>
-        <member name="T:Utilities.SQL.SQLServer">
-            <summary>
-            Provide wrapper access to SQL Server with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -611,7 +601,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -623,7 +613,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReader(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -634,7 +624,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteScalar``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -646,7 +636,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteNonQuery(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -657,7 +647,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -670,7 +660,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -682,7 +672,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteReaderAsync(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -693,7 +683,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteScalarAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -705,7 +695,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.SQLServer.ExecuteNonQueryAsync(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.SqlClient.SqlParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -716,381 +706,12 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="T:Utilities.SQL.Oracle">
-            <summary>
-            Provide wrapper access to Oracle Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteReader(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of dynamic object</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteScalar``1(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return a scalar object
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteNonQuery(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute any non-DML SQL Query
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteReaderAsync(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of dynamic object</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteScalarAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return a scalar object
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.Oracle.ExecuteNonQueryAsync(System.String,System.String,System.Collections.Generic.IEnumerable{Oracle.ManagedDataAccess.Client.OracleParameter},System.Data.CommandType)">
-            <summary>
-            Execute any non-DML SQL Query
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="T:Utilities.SQL.PostgreSQL">
-            <summary>
-            Provide wrapper access to PostgreSQL Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteReader(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of dynamic object</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteScalar``1(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return a scalar object
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteNonQuery(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute any non-DML SQL Query
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteReaderAsync(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of dynamic object</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteScalarAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return a scalar object
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.PostgreSQL.ExecuteNonQueryAsync(System.String,System.String,System.Collections.Generic.IEnumerable{Npgsql.NpgsqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute any non-DML SQL Query
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="T:Utilities.SQL.MySQL">
-            <summary>
-            Provide wrapper access to MySQL Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteReader(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of dynamic object</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteScalar``1(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return a scalar object
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteNonQuery(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute any non-DML SQL Query
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of POCO</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteReaderAsync(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns>IEnumerable of dynamic object</returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteScalarAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return a scalar object
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="M:Utilities.SQL.MySQL.ExecuteNonQueryAsync(System.String,System.String,System.Collections.Generic.IEnumerable{MySql.Data.MySqlClient.MySqlParameter},System.Data.CommandType)">
-            <summary>
-            Execute any non-DML SQL Query
-            </summary>
-            <param name="connectionString">Connection string to database</param>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
-            <returns></returns>
-            <exception cref="T:System.Exception"/>
-        </member>
-        <member name="T:Utilities.SQL.DbConnectionBase">
+        <member name="T:Utilities.SQL.StaticDatabseConnector">
             <summary>
             Provide wrapper access to Any Database with basic operation like ExecuteReader,ExecuteNonQuery and ExecuteScalar
             </summary>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteReader``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteReader``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1103,7 +724,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteReader``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteReader``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1115,7 +736,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteReader``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -1126,7 +747,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteScalar``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteScalar``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -1138,7 +759,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteNonQuery``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteNonQuery``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -1149,7 +770,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteReaderAsync``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteReaderAsync``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1162,7 +783,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteReaderAsync``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteReaderAsync``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1174,7 +795,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteReaderAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -1185,7 +806,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteScalarAsync``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteScalarAsync``2(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -1197,7 +818,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DbConnectionBase.ExecuteNonQueryAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.StaticDatabseConnector.ExecuteNonQueryAsync``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>

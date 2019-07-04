@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.Attributes.SQL;
-using Utilities.SQLConnector;
+using Utilities.SQL;
 
 namespace Utilities.Testing
 {
@@ -120,7 +120,7 @@ namespace Utilities.Testing
         [Test]
         public void SQLServerConnector()
         {
-            using (var connection = new SQLServerConnector(_msSqlConnection))
+            using (var connection = new SQLServer(_msSqlConnection))
             {
                 try
                 {
@@ -153,7 +153,7 @@ namespace Utilities.Testing
         [Test]
         public async Task SQLServerConnectorAsync()
         {
-            using (var connection = new SQLServerConnector(_msSqlConnection))
+            using (var connection = new SQLServer(_msSqlConnection))
             {
                 try
                 {

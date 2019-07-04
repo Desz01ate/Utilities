@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities.Shared;
 
-namespace Utilities.SQLConnector
+namespace Utilities.SQL
 {
     public class DatabaseConnector<TDatabaseType, TParameter> : IDisposable
         where TDatabaseType : DbConnection, new()

@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Utilities.SQLConnector;
+using Utilities.SQL;
 
 namespace MachineLearning.Examples
 {
@@ -108,7 +108,7 @@ namespace MachineLearning.Examples
             //await ClusteringExample(train);
 
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            using (var connection = new SQLServerConnector(sqlConnection))
+            using (var connection = new SQLServer(sqlConnection))
             {
                 var taxiFares = connection.ExecuteReader<TaxiFare>($@"SELECT TOP(1) * FROM [taxi-fare-train]");
                 var obj = taxiFares.FirstOrDefault();
