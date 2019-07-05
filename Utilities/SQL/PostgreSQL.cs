@@ -9,7 +9,10 @@ using Utilities.SQL;
 
 namespace Utilities.SQL
 {
-    public class PostgreSQL : DatabaseConnector<NpgsqlConnection, Npgsql.NpgsqlParameter>
+    /// <summary>
+    /// PostgreSQL Connector with implementation derived from DatabaseConnector
+    /// </summary>
+    public sealed class PostgreSQL : DatabaseConnector<NpgsqlConnection, Npgsql.NpgsqlParameter>
     {
         public PostgreSQL(string connectionString) : base(connectionString)
         {

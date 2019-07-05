@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Utilities.Testing
         {
             _msSqlConnection = @"Server=localhost;Database=Local;user=sa;password=sa;";
             _mySqlConnection = @"Server=localhost;Database=Local;Uid=root;Pwd=;";
-            _sqliteConnection = @"Data Source=C:\Users\TYCHE\Documents\SQLite\Local.db;Version=3;";
+            _sqliteConnection = $@"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files\Local.db")};Version=3;";
         }
         [Test]
         public async Task SQLServerAsync()
@@ -186,7 +187,7 @@ namespace Utilities.Testing
                 }
             }
         }
-        [Test]
+        //[Test]
         public async Task MySQLAsync()
         {
             try
@@ -216,7 +217,7 @@ namespace Utilities.Testing
                 Utilities.SQL.MySQL.ExecuteNonQuery(_mySqlConnection, $@"DROP TABLE TestTable");
             }
         }
-        [Test]
+        //[Test]
         public void MySQL()
         {
             try
@@ -246,7 +247,7 @@ namespace Utilities.Testing
                 Utilities.SQL.MySQL.ExecuteNonQuery(_mySqlConnection, $@"DROP TABLE TestTable");
             }
         }
-        [Test]
+        //[Test]
         public void MySQLCRUD()
         {
             try
@@ -285,7 +286,7 @@ namespace Utilities.Testing
                 Utilities.SQL.MySQL.ExecuteNonQuery(_mySqlConnection, $@"DROP TABLE TestTable");
             }
         }
-        [Test]
+        //[Test]
         public void MySQLConnector()
         {
             using (var connection = new MySQL(_mySqlConnection))
@@ -318,7 +319,7 @@ namespace Utilities.Testing
                 }
             }
         }
-        [Test]
+        //[Test]
         public async Task MySQLConnectorAsync()
         {
             using (var connection = new MySQL(_mySqlConnection))

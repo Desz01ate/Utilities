@@ -598,12 +598,44 @@
             <param name="count">count of elements</param>
             <returns></returns>
         </member>
+        <member name="T:Utilities.SQL.DatabaseConnector`2">
+            <summary>
+            Abstract class that is contains the implementation of the generic database connector.
+            </summary>
+            <typeparam name="TDatabaseConnection">Type of DbConnection</typeparam>
+            <typeparam name="TParameterType">Type of DbParameter</typeparam>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector`2.Connection">
+            <summary>
+            Instance of object that hold information of the connection.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectionString">Connection string for database</param>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose">
+            <summary>
+            Object disposer which close the connection related to this object.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector`2.ConnectionString">
+            <summary>
+            Connection string of this object.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector`2.IsOpen">
+            <summary>
+            Determine wheter the connection is open or not.
+            </summary>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
@@ -616,7 +648,6 @@
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -627,7 +658,6 @@
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -639,7 +669,6 @@
             Execute SELECT SQL query and return a scalar object
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -650,7 +679,6 @@
             <summary>
             Execute any non-DML SQL Query
             </summary>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -662,7 +690,6 @@
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
@@ -675,7 +702,6 @@
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -686,7 +712,6 @@
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -698,7 +723,6 @@
             Execute SELECT SQL query and return a scalar object
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
@@ -709,12 +733,114 @@
             <summary>
             Execute any non-DML SQL Query
             </summary>
-            <param name="connectionString">Connection string to database</param>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
             <param name="parameters">SQL parameters according to the sql parameter</param>
             <param name="commandType">Type of SQL Command</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1">
+            <summary>
+            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns>IEnumerable of object</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Object)">
+            <summary>
+            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of specific row</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(``0)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Update``1(``0)">
+            <summary>
+            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to update.</param>
+            <returns>Affected row after an update.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(``0)">
+            <summary>
+            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1">
+            <summary>
+            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns>IEnumerable of object</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object)">
+            <summary>
+            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of specific row</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(``0)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0)">
+            <summary>
+            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to update.</param>
+            <returns>Affected row after an update.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(``0)">
+            <summary>
+            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.SQL.MySQL">
+            <summary>
+            MySQL Connector with implementation derived from DatabaseConnector
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.Oracle">
+            <summary>
+            Oracle Database Connector with implementation derived from DatabaseConnector
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.PostgreSQL">
+            <summary>
+            PostgreSQL Connector with implementation derived from DatabaseConnector
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.SQLite">
+            <summary>
+            SQLite Connector with implementation derived from DatabaseConnector
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.SQLServer">
+            <summary>
+            SQLServer Connector with implementation derived from DatabaseConnector
+            </summary>
         </member>
         <member name="T:Utilities.SQL.StaticDatabseConnector">
             <summary>

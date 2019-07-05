@@ -9,7 +9,10 @@ using Utilities.SQL;
 
 namespace Utilities.SQL
 {
-    public class Oracle : DatabaseConnector<OracleConnection, OracleParameter>
+    /// <summary>
+    /// Oracle Database Connector with implementation derived from DatabaseConnector
+    /// </summary>
+    public sealed class Oracle : DatabaseConnector<OracleConnection, OracleParameter>
     {
         public Oracle(string connectionString) : base(connectionString)
         {

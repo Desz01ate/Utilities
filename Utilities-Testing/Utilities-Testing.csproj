@@ -16,4 +16,14 @@
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Files\Local.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

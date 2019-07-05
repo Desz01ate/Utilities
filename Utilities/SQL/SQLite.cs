@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Utilities.SQL
 {
-    public class SQLite : DatabaseConnector<SQLiteConnection, SQLiteParameter>
+    /// <summary>
+    /// SQLite Connector with implementation derived from DatabaseConnector
+    /// </summary>
+    public sealed class SQLite : DatabaseConnector<SQLiteConnection, SQLiteParameter>
     {
         public SQLite(string connectionString) : base(connectionString)
         {

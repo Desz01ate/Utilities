@@ -9,7 +9,10 @@ using Utilities.SQL;
 
 namespace Utilities.SQL
 {
-    public class MySQL : DatabaseConnector<MySqlConnection, MySqlParameter>
+    /// <summary>
+    /// MySQL Connector with implementation derived from DatabaseConnector
+    /// </summary>
+    public sealed class MySQL : DatabaseConnector<MySqlConnection, MySqlParameter>
     {
         public MySQL(string connectionString) : base(connectionString)
         {

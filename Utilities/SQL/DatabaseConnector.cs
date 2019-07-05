@@ -10,40 +10,60 @@ using Utilities.Shared;
 
 namespace Utilities.SQL
 {
-    public abstract class DatabaseConnector<TDatabaseType, TParameter> : IDisposable
-        where TDatabaseType : DbConnection, new()
-        where TParameter : DbParameter, new()
+    /// <summary>
+    /// Abstract class that is contains the implementation of the generic database connector.
+    /// </summary>
+    /// <typeparam name="TDatabaseConnection">Type of DbConnection</typeparam>
+    /// <typeparam name="TParameterType">Type of DbParameter</typeparam>
+    public class DatabaseConnector<TDatabaseConnection, TParameterType> : IDatabaseConnector<TDatabaseConnection, TParameterType>
+        where TDatabaseConnection : DbConnection, new()
+        where TParameterType : DbParameter, new()
     {
-        public TDatabaseType Connection { get; }
+        /// <summary>
+        /// Instance of object that hold information of the connection.
+        /// </summary>
+        public TDatabaseConnection Connection { get; }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connectionString">Connection string for database</param>
         public DatabaseConnector(string connectionString)
         {
             //connection = databaseType;
             //parameter = parameterType;
-            Connection = new TDatabaseType()
+            Connection = new TDatabaseConnection()
             {
                 ConnectionString = connectionString
             };
             Connection.Open();
         }
-        public void Dispose()
+        /// <summary>
+        /// Object disposer which close the connection related to this object.
+        /// </summary>
+        public virtual void Dispose()
         {
             Connection.Close();
         }
-        public string ConnectionString => Connection.ConnectionString;
-        public bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+        /// <summary>
+        /// Connection string of this object.
+        /// </summary>
+        public virtual string ConnectionString => Connection.ConnectionString;
+        /// <summary>
+        /// Determine wheter the connection is open or not.
+        /// </summary>
+        public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
 
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
-        public IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
             DbTransaction transaction = null;
@@ -84,13 +104,12 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
-        public IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
             return ExecuteReader(sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
@@ -98,13 +117,12 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns>IEnumerable of dynamic object</returns>
         /// <exception cref="Exception"/>
-        public IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
             DbTransaction transaction = null;
             try
@@ -145,13 +163,12 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public T ExecuteScalar<T>(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct
         {
             DbTransaction transaction = null;
             try
@@ -184,13 +201,12 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public int ExecuteNonQuery(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
             DbTransaction transaction = null;
             try
@@ -224,14 +240,13 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
-        public async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
             DbTransaction transaction = null;
@@ -272,13 +287,12 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
-        public async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
          where T : class, new()
         {
             return await ExecuteReaderAsync<T>(sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType);
@@ -286,13 +300,12 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns>IEnumerable of dynamic object</returns>
         /// <exception cref="Exception"/>
-        public async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
             DbTransaction transaction = null;
             try
@@ -333,13 +346,12 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct
         {
             DbTransaction transaction = null;
             try
@@ -372,13 +384,12 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
-        /// <param name="connectionString">Connection string to database</param>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
         /// <param name="parameters">SQL parameters according to the sql parameter</param>
         /// <param name="commandType">Type of SQL Command</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        public async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
+        public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
             DbTransaction transaction = null;
             try
@@ -414,7 +425,7 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>IEnumerable of object</returns>
-        public IEnumerable<T> Select<T>()
+        public virtual IEnumerable<T> Select<T>()
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -428,14 +439,14 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <returns>Object of given class</returns>
-        public T Select<T>(object primaryKey)
+        public virtual T Select<T>(object primaryKey)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
             var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = ExecuteReader<T>(query, new[] {
-                    new TParameter()
+                    new TParameterType()
                     {
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
@@ -449,7 +460,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <returns>Affected row after an insert.</returns>
-        public int Insert<T>(T obj)
+        public virtual int Insert<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -458,7 +469,7 @@ namespace Utilities.SQL
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
                               ({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})";
-            var result = ExecuteNonQuery(query.ToString(), kvMapper.Select(field => new TParameter()
+            var result = ExecuteNonQuery(query.ToString(), kvMapper.Select(field => new TParameterType()
             {
                 ParameterName = $"@{field.Key}",
                 Value = field.Value
@@ -471,7 +482,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to update.</param>
         /// <returns>Affected row after an update.</returns>
-        public int Update<T>(T obj)
+        public virtual int Update<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -484,12 +495,12 @@ namespace Utilities.SQL
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
                                 WHERE 
                                {primaryKey.Name} = @{primaryKey.Name}";
-            var parametersArray = parameters.Select(x => new TParameter()
+            var parametersArray = parameters.Select(x => new TParameterType()
             {
                 ParameterName = $"@{x.Key}",
                 Value = x.Value
             }).ToList();
-            parametersArray.Add(new TParameter() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
+            parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
             var value = ExecuteNonQuery(query, parametersArray);
             return value;
         }
@@ -499,7 +510,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public int Delete<T>(T obj)
+        public virtual int Delete<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -508,7 +519,7 @@ namespace Utilities.SQL
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = ExecuteNonQuery(query.ToString(), new[] {
-                    new TParameter()
+                    new TParameterType()
                     {
                         ParameterName = primaryKey.Name,
                         Value = primaryKey.GetValue(obj)
@@ -521,7 +532,7 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>IEnumerable of object</returns>
-        public async Task<IEnumerable<T>> SelectAsync<T>()
+        public virtual async Task<IEnumerable<T>> SelectAsync<T>()
     where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -535,14 +546,14 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <returns>Object of given class</returns>
-        public async Task<T> SelectAsync<T>(object primaryKey)
+        public virtual async Task<T> SelectAsync<T>(object primaryKey)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
             var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = (await ExecuteReaderAsync<T>(query, new[] {
-                    new TParameter()
+                    new TParameterType()
                     {
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
@@ -556,8 +567,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <returns>Affected row after an insert.</returns>
-        public async Task<int> InsertAsync<T>(T obj)
-            where T : class, new()
+        public virtual async Task<int> InsertAsync<T>(T obj) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
             var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
@@ -565,7 +575,7 @@ namespace Utilities.SQL
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
                               ({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})";
-            var result = await ExecuteNonQueryAsync(query.ToString(), kvMapper.Select(field => new TParameter()
+            var result = await ExecuteNonQueryAsync(query.ToString(), kvMapper.Select(field => new TParameterType()
             {
                 ParameterName = $"@{field.Key}",
                 Value = field.Value
@@ -578,7 +588,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to update.</param>
         /// <returns>Affected row after an update.</returns>
-        public async Task<int> UpdateAsync<T>(T obj)
+        public virtual async Task<int> UpdateAsync<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -591,12 +601,12 @@ namespace Utilities.SQL
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
                                 WHERE 
                                {primaryKey.Name} = @{primaryKey.Name}";
-            var parametersArray = parameters.Select(x => new TParameter()
+            var parametersArray = parameters.Select(x => new TParameterType()
             {
                 ParameterName = $"@{x.Key}",
                 Value = x.Value
             }).ToList();
-            parametersArray.Add(new TParameter() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
+            parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
             var value = await ExecuteNonQueryAsync(query, parametersArray);
             return value;
         }
@@ -606,7 +616,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync<T>(T obj)
+        public virtual async Task<int> DeleteAsync<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -615,7 +625,7 @@ namespace Utilities.SQL
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = await ExecuteNonQueryAsync(query.ToString(), new[] {
-                    new TParameter()
+                    new TParameterType()
                     {
                         ParameterName = primaryKey.Name,
                         Value = primaryKey.GetValue(obj)

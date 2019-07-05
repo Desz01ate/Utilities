@@ -9,12 +9,16 @@ using Utilities.SQL;
 
 namespace Utilities.SQL
 {
-    public class SQLServer : DatabaseConnector<SqlConnection, SqlParameter>
+    /// <summary>
+    /// SQLServer Connector with implementation derived from DatabaseConnector
+    /// </summary>
+    public sealed class SQLServer : DatabaseConnector<SqlConnection, SqlParameter>
     {
         public SQLServer(string connectionString) : base(connectionString)
         {
 
         }
+
         [Obsolete("This method is deprecated and will be remove in the future, please use non-static method instead.")]
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns

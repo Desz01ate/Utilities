@@ -143,11 +143,8 @@ namespace MachineLearning.Examples
                     var affectedRow = connector.Update(obj);
                 }
             }
-            using (var connector = new SQLite(""))
-            {
-                connector.
-            }
-                Console.WriteLine("Done");
+
+            Console.WriteLine("Done");
             Console.ReadLine();
         }
         static async Task BinaryClassifier(bool train = true)
