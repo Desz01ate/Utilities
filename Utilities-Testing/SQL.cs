@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,13 @@ namespace Utilities.Testing
     {
         private string _msSqlConnection;
         private string _mySqlConnection;
+        private string _sqliteConnection;
         [SetUp]
         public void Setup()
         {
             _msSqlConnection = @"Server=localhost;Database=Local;user=sa;password=sa;";
             _mySqlConnection = @"Server=localhost;Database=Local;Uid=root;Pwd=;";
+            _sqliteConnection = @"Data Source=C:\Users\TYCHE\Documents\SQLite\Local.db;Version=3;";
         }
         [Test]
         public async Task SQLServerAsync()
@@ -345,6 +348,39 @@ namespace Utilities.Testing
                 finally
                 {
                     await connection.ExecuteNonQueryAsync($@"DROP TABLE TestTable");
+                }
+            }
+        }
+        [Test]
+        public void SQLiteConnector()
+        {
+            using (var connection = new SQLite(_sqliteConnection))
+            {
+                try
+                {
+                    connection.ExecuteNonQuery($@"CREATE TABLE TestTable(id int primary key,value nvarchar(255))");
+                    for (var iter = 0; iter < 10; iter++)
+                    {
+                        var affectedCreate = connection.ExecuteNonQuery(@"INSERT INTO TestTable(id,value) VALUES(@id,@value)", new[] { new SQLiteParameter("id", iter), new SQLiteParameter("value", "test") });
+                        Assert.AreEqual(affectedCreate, 1);
+                        var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM TestTable WHERE id = @id", new[] { new SQLiteParameter("id", iter) });
+                        Assert.AreEqual(selectedById.First().id, iter);
+                        Assert.AreEqual(selectedById.First().value, "test");
+                        var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM TestTable WHERE id = @id", new[] { new SQLiteParameter("id", iter) });
+                        Assert.AreEqual(selectedByIdDynamic.First().id, iter);
+                        Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                        var affectedUpdate = connection.ExecuteNonQuery(@"UPDATE TestTable SET value = @value WHERE id = @id", new[] { new SQLiteParameter("id", iter), new SQLiteParameter("value", "updated") });
+                        Assert.AreEqual(affectedUpdate, 1);
+                        var affectedDelete = connection.ExecuteNonQuery(@"DELETE FROM TestTable WHERE id = @id", new[] { new SQLiteParameter("id", iter) });
+                        Assert.AreEqual(affectedDelete, 1);
+                    }
+                    var affectedSelectScalar = connection.ExecuteScalar<long>(@"SELECT COUNT(1) FROM TestTable");
+                    Assert.AreEqual(affectedSelectScalar, 0);
+                    Assert.Pass();
+                }
+                finally
+                {
+                    connection.ExecuteNonQuery($@"DROP TABLE TestTable");
                 }
             }
         }

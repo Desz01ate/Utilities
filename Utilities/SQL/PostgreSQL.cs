@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
@@ -8,7 +9,7 @@ using Utilities.SQL;
 
 namespace Utilities.SQL
 {
-    public class PostgreSQL : DatabaseConnector<Npgsql.NpgsqlConnection, Npgsql.NpgsqlParameter>
+    public class PostgreSQL : DatabaseConnector<NpgsqlConnection, Npgsql.NpgsqlParameter>
     {
         public PostgreSQL(string connectionString) : base(connectionString)
         {

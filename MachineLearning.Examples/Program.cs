@@ -134,13 +134,20 @@ namespace MachineLearning.Examples
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             using (var connector = new SQLServer(sqlConnection))
             {
-                //var taxiFares = connection.ExecuteReader<TaxiFare>($@"SELECT TOP(1) * FROM [taxi-fare-train]");
-                //var obj = taxiFares.FirstOrDefault();
-                //Console.WriteLine(obj.fare_amount);
-                //obj.fare_amount = 9999;
-                //var affectedRow = connection.Update(obj);
+                var taxiFares = connector.ExecuteReader<TaxiFare>($@"SELECT TOP(10) * FROM [taxi-fare-train]");
+                foreach (var obj in taxiFares)
+                {
+                    //var obj = taxiFares.FirstOrDefault();
+                    Console.WriteLine(obj.fare_amount);
+                    obj.fare_amount = 9999;
+                    var affectedRow = connector.Update(obj);
+                }
             }
-            Console.WriteLine("Done");
+            using (var connector = new SQLite(""))
+            {
+                connector.
+            }
+                Console.WriteLine("Done");
             Console.ReadLine();
         }
         static async Task BinaryClassifier(bool train = true)

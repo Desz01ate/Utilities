@@ -15,7 +15,6 @@ namespace Utilities.SQL
         {
         }
         [Obsolete("This method is deprecated and will be remove in the future, please use non-static method instead.")]
-
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>

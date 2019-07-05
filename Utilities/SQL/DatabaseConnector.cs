@@ -1,32 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Interfaces;
 using Utilities.Shared;
 
 namespace Utilities.SQL
 {
-    public class DatabaseConnector<TDatabaseType, TParameter> : IDisposable
+    public abstract class DatabaseConnector<TDatabaseType, TParameter> : IDisposable
         where TDatabaseType : DbConnection, new()
         where TParameter : DbParameter, new()
     {
-        private TDatabaseType connection { get; }
+        public TDatabaseType Connection { get; }
         public DatabaseConnector(string connectionString)
         {
             //connection = databaseType;
             //parameter = parameterType;
-            connection = new TDatabaseType()
+            Connection = new TDatabaseType()
             {
                 ConnectionString = connectionString
             };
-            connection.Open();
+            Connection.Open();
         }
         public void Dispose()
         {
-            connection.Close();
+            Connection.Close();
         }
+        public string ConnectionString => Connection.ConnectionString;
+        public bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -45,8 +50,8 @@ namespace Utilities.SQL
             try
             {
                 List<T> result = new List<T>();
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -105,8 +110,8 @@ namespace Utilities.SQL
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -152,8 +157,8 @@ namespace Utilities.SQL
             try
             {
                 T result = default;
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -191,8 +196,8 @@ namespace Utilities.SQL
             try
             {
                 int result = -1;
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -233,8 +238,8 @@ namespace Utilities.SQL
             try
             {
                 List<T> result = new List<T>();
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -293,8 +298,8 @@ namespace Utilities.SQL
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -340,8 +345,8 @@ namespace Utilities.SQL
             try
             {
                 T result = default;
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -379,8 +384,8 @@ namespace Utilities.SQL
             try
             {
                 int result = -1;
-                transaction = connection.BeginTransaction();
-                using (var command = connection.CreateCommand())
+                transaction = Connection.BeginTransaction();
+                using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.Transaction = transaction;
@@ -404,7 +409,11 @@ namespace Utilities.SQL
             }
         }
 
-        #region Experimental CRUD
+        /// <summary>
+        /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>IEnumerable of object</returns>
         public IEnumerable<T> Select<T>()
             where T : class, new()
         {
@@ -413,6 +422,12 @@ namespace Utilities.SQL
             var result = ExecuteReader<T>(query);
             return result;
         }
+        /// <summary>
+        /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey">Primary key of specific row</param>
+        /// <returns>Object of given class</returns>
         public T Select<T>(object primaryKey)
             where T : class, new()
         {
@@ -428,6 +443,12 @@ namespace Utilities.SQL
                 }).FirstOrDefault();
             return result;
         }
+        /// <summary>
+        /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">Object to insert.</param>
+        /// <returns>Affected row after an insert.</returns>
         public int Insert<T>(T obj)
             where T : class, new()
         {
@@ -444,6 +465,12 @@ namespace Utilities.SQL
             }));
             return result;
         }
+        /// <summary>
+        /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">Object to update.</param>
+        /// <returns>Affected row after an update.</returns>
         public int Update<T>(T obj)
             where T : class, new()
         {
@@ -466,6 +493,12 @@ namespace Utilities.SQL
             var value = ExecuteNonQuery(query, parametersArray);
             return value;
         }
+        /// <summary>
+        /// Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int Delete<T>(T obj)
             where T : class, new()
         {
@@ -483,7 +516,11 @@ namespace Utilities.SQL
                 });
             return result;
         }
-
+        /// <summary>
+        /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>IEnumerable of object</returns>
         public async Task<IEnumerable<T>> SelectAsync<T>()
     where T : class, new()
         {
@@ -492,6 +529,12 @@ namespace Utilities.SQL
             var result = await ExecuteReaderAsync<T>(query);
             return result;
         }
+        /// <summary>
+        /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey">Primary key of specific row</param>
+        /// <returns>Object of given class</returns>
         public async Task<T> SelectAsync<T>(object primaryKey)
             where T : class, new()
         {
@@ -507,6 +550,12 @@ namespace Utilities.SQL
                 })).FirstOrDefault();
             return result;
         }
+        /// <summary>
+        /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">Object to insert.</param>
+        /// <returns>Affected row after an insert.</returns>
         public async Task<int> InsertAsync<T>(T obj)
             where T : class, new()
         {
@@ -523,6 +572,12 @@ namespace Utilities.SQL
             }));
             return result;
         }
+        /// <summary>
+        /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">Object to update.</param>
+        /// <returns>Affected row after an update.</returns>
         public async Task<int> UpdateAsync<T>(T obj)
             where T : class, new()
         {
@@ -545,6 +600,12 @@ namespace Utilities.SQL
             var value = await ExecuteNonQueryAsync(query, parametersArray);
             return value;
         }
+        /// <summary>
+        /// Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public async Task<int> DeleteAsync<T>(T obj)
             where T : class, new()
         {
@@ -562,6 +623,5 @@ namespace Utilities.SQL
                 });
             return result;
         }
-        #endregion
     }
 }
