@@ -21,7 +21,7 @@ namespace Utilities.Legacy.Shared
         {
             object instance = new T();
             var type = typeof(T);
-            var properties = type.GetProperties();
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (var property in properties)
             {
                 try
@@ -113,7 +113,7 @@ namespace Utilities.Legacy.Shared
         {
             object instance = new T();
             var type = typeof(T);
-            var properties = type.GetProperties();
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (var property in properties)
             {
                 try
@@ -218,7 +218,7 @@ namespace Utilities.Legacy.Shared
             where T : class, new()
         {
             var values = new Dictionary<string, object>();
-            foreach (var property in typeof(T).GetProperties())
+            foreach (var property in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
             {
                 try
                 {
@@ -232,7 +232,7 @@ namespace Utilities.Legacy.Shared
                     }
                     var value = property.GetValue(obj);
                     var name = property.FieldNameValidate();
-                    values.Add(name, values == null ? DBNull.Value : value);
+                    values.Add(name, value == null ? DBNull.Value : value);
                 }
                 catch
                 {
@@ -288,7 +288,7 @@ namespace Utilities.Legacy.Shared
             where T : class, new()
         {
             var values = new Dictionary<string, object>();
-            var properties = (typeof(T).GetProperties()).ToList();
+            var properties = (typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)).ToList();
             properties.Remove(AttributeExtension.PrimaryKeyValidate(properties));
             foreach (var property in properties)
             {

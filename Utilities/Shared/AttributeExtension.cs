@@ -34,5 +34,11 @@ namespace Utilities.Shared
             if (attribute == null) return type.Name;
             return attribute.TableName;
         }
+        internal static IEnumerable<PropertyInfo> PropertiesValidate(this Type type)
+        {
+            var attribute = type.GetCustomAttribute<BindingFlagsAttribute>(true);
+            if (attribute == null) return type.GetProperties();
+            return type.GetProperties(attribute.BindingFlags);
+        }
     }
 }

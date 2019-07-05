@@ -4,6 +4,11 @@
         <name>Utilities</name>
     </assembly>
     <members>
+        <member name="T:Utilities.Attributes.SQL.BindingFlagsAttribute">
+            <summary>
+            Attribute for specific how reflection should perform on usage class
+            </summary>
+        </member>
         <member name="T:Utilities.Attributes.SQL.FieldAttribute">
             <summary>
             Attribute for field name customization
@@ -532,6 +537,11 @@
             <param name="encryptedBytes">Encrypted byte array</param>
             <returns>Raw data of encrypted byte array</returns>
         </member>
+        <member name="T:Utilities.Shared.Data">
+            <summary>
+            This class contains a generic way to build data from specific source such as DbDataReader or from object itself
+            </summary>
+        </member>
         <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
@@ -588,7 +598,7 @@
             <param name="count">count of elements</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -601,7 +611,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -613,7 +623,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -624,7 +634,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -636,7 +646,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -647,7 +657,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -660,7 +670,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -672,7 +682,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -683,7 +693,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -695,7 +705,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{System.Data.Common.DbParameter},System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>

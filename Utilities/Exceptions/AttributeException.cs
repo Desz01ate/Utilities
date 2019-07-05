@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Utilities.Exceptions
 {
-    class AttributeException : Exception
+    public class AttributeException : Exception
     {
         public AttributeException(string attributeName) : base(string.Format("Can't find attribute [{0}] on model class.", attributeName))
         {

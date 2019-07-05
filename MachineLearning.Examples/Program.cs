@@ -99,6 +99,30 @@ namespace MachineLearning.Examples
         {
 
         }
+        public partial class messaging
+        {
+            public int batch_num { get; set; }
+            public string target_mobile_number { get; set; }
+            public string target_email { get; set; }
+            public string channel { get; set; }
+            public string target_email_header { get; set; }
+            public string message_text { get; set; }
+            public Nullable<System.DateTime> add_date { get; set; }
+            public string add_by { get; set; }
+            public Nullable<System.DateTime> send_date { get; set; }
+            public string send_by { get; set; }
+            public string attach_document_1 { get; set; }
+            public string attach_document_2 { get; set; }
+            public string attach_document_3 { get; set; }
+            public string mem_group_code { get; set; }
+            public string mem_type_code { get; set; }
+            public string mlevel_code { get; set; }
+            public string x_status { get; set; }
+            public string x_note { get; set; }
+            public string x_log { get; set; }
+            public System.Guid id { get; set; }
+            public byte[] rowversion { get; set; }
+        }
         static async Task Main(string[] args)
         {
             bool train = true;
@@ -108,13 +132,13 @@ namespace MachineLearning.Examples
             //await ClusteringExample(train);
 
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-            using (var connection = new SQLServer(sqlConnection))
+            using (var connector = new SQLServer(sqlConnection))
             {
-                var taxiFares = connection.ExecuteReader<TaxiFare>($@"SELECT TOP(1) * FROM [taxi-fare-train]");
-                var obj = taxiFares.FirstOrDefault();
-                Console.WriteLine(obj.fare_amount);
-                obj.fare_amount = 9999;
-                var affectedRow = connection.Update(obj);
+                //var taxiFares = connection.ExecuteReader<TaxiFare>($@"SELECT TOP(1) * FROM [taxi-fare-train]");
+                //var obj = taxiFares.FirstOrDefault();
+                //Console.WriteLine(obj.fare_amount);
+                //obj.fare_amount = 9999;
+                //var affectedRow = connection.Update(obj);
             }
             Console.WriteLine("Done");
             Console.ReadLine();

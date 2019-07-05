@@ -60,7 +60,9 @@
     <Compile Include="Shared\AttributeExtension.cs" />
     <Compile Include="Shared\Data.cs" />
     <Compile Include="Shared\Enumerator.cs" />
-    <Compile Include="SQL.cs" />
+    <Compile Include="SQL\DatabaseConnector.cs" />
+    <Compile Include="SQL\SQLServer.cs" />
+    <Compile Include="SQL\StaticDatabaseConnector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
