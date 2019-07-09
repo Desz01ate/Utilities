@@ -7,7 +7,12 @@ using Utilities.SQL;
 
 namespace Utilities.Interfaces
 {
-    interface IDatabaseConnector<TDatabaseType, TParameter> : IDisposable, IDatabaseConnectorProperty
+    /// <summary>
+    /// Provide methods for wrapper operation on DbConnection class
+    /// </summary>
+    /// <typeparam name="TDatabaseType">DbConnection type</typeparam>
+    /// <typeparam name="TParameter">DbParameter type</typeparam>
+    public interface IDatabaseConnector<TDatabaseType, TParameter> : IDisposable, IDatabaseConnectorProperty
         where TDatabaseType : DbConnection, new()
         where TParameter : DbParameter, new()
     {
