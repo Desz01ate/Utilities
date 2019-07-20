@@ -23,6 +23,7 @@ namespace Utilities.SQL
         /// Instance of object that hold information of the connection.
         /// </summary>
         public TDatabaseConnection Connection { get; }
+        private bool disposed { get; set; }
         /// <summary>
         /// Constructor
         /// </summary>
@@ -38,11 +39,25 @@ namespace Utilities.SQL
             Connection.Open();
         }
         /// <summary>
+        /// Protected implementation of dispose pattern
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+            if (disposing)
+            {
+                Connection.Close();
+            }
+            disposed = true;
+        }
+        /// <summary>
         /// Object disposer which close the connection related to this object.
         /// </summary>
         public virtual void Dispose()
         {
-            Connection.Close();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
         /// <summary>
         /// Connection string of this object.

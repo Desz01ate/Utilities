@@ -363,6 +363,18 @@
             <param name="mediatype">The body media type.</param>
             <returns></returns>
         </member>
+        <member name="T:Utilities.Interfaces.IDatabaseConnector`2">
+            <summary>
+            Provide methods for wrapper operation on DbConnection class
+            </summary>
+            <typeparam name="TDatabaseType">DbConnection type</typeparam>
+            <typeparam name="TParameter">DbParameter type</typeparam>
+        </member>
+        <member name="T:Utilities.Interfaces.IDatabaseConnectorProperty">
+            <summary>
+            Provide an essential properties to database connector interface
+            </summary>
+        </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
             Basic regular expression wrapper
@@ -615,6 +627,12 @@
             Constructor
             </summary>
             <param name="connectionString">Connection string for database</param>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose(System.Boolean)">
+            <summary>
+            Protected implementation of dispose pattern
+            </summary>
+            <param name="disposing"></param>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose">
             <summary>
