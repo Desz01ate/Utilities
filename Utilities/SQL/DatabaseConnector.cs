@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
 {
@@ -646,6 +648,94 @@ namespace Utilities.SQL
                         Value = primaryKey.GetValue(obj)
                     }
                 });
+            return result;
+        }
+
+        public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var baseStatement = $@"SELECT * FROM {tableName} ";
+            var translator = new ExpressionTranslator();
+            var tranlatorResult = translator.Translate(predicate);
+            var result = ExecuteReader<T>(baseStatement + tranlatorResult);
+            return result;
+        }
+
+        public int Update<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var fields = typeof(T).GetProperties();
+            var primaryKey = fields.PrimaryKeyValidate();
+            var pkValue = primaryKey.GetValue(obj);
+            var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+            parameters.Remove(primaryKey.Name);
+            var translator = new ExpressionTranslator();
+            var tranlatorResult = translator.Translate(predicate);
+            var query = $@"UPDATE {tableName} SET
+                               {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
+                           WHERE " + tranlatorResult;
+
+            var parametersArray = parameters.Select(x => new TParameterType()
+            {
+                ParameterName = $"@{x.Key}",
+                Value = x.Value
+            }).ToList();
+            parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
+            var value = ExecuteNonQuery(query, parametersArray);
+            return value;
+        }
+
+        public int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var baseStatement = $@"DELETE FROM {tableName} WHERE ";
+            var translator = new ExpressionTranslator();
+            var tranlatorResult = translator.Translate(predicate);
+            var result = ExecuteNonQuery(baseStatement + tranlatorResult);
+            return result;
+        }
+
+        public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var baseStatement = $@"SELECT * FROM {tableName} ";
+            var translator = new ExpressionTranslator();
+            var tranlatorResult = translator.Translate(predicate);
+            var result = await ExecuteReaderAsync<T>(baseStatement + tranlatorResult);
+            return result;
+        }
+
+        public async Task<int> UpdateAsync<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var fields = typeof(T).GetProperties();
+            var primaryKey = fields.PrimaryKeyValidate();
+            var pkValue = primaryKey.GetValue(obj);
+            var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+            parameters.Remove(primaryKey.Name);
+            var translator = new ExpressionTranslator();
+            var tranlatorResult = translator.Translate(predicate);
+            var query = $@"UPDATE {tableName} SET
+                               {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
+                           WHERE " + tranlatorResult;
+
+            var parametersArray = parameters.Select(x => new TParameterType()
+            {
+                ParameterName = $"@{x.Key}",
+                Value = x.Value
+            }).ToList();
+            parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
+            var value = await ExecuteNonQueryAsync(query, parametersArray);
+            return value;
+        }
+
+        public async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var baseStatement = $@"DELETE FROM {tableName} WHERE ";
+            var translator = new ExpressionTranslator();
+            var tranlatorResult = translator.Translate(predicate);
+            var result = await ExecuteNonQueryAsync(baseStatement + tranlatorResult);
             return result;
         }
     }

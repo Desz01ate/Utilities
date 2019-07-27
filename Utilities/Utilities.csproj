@@ -9,10 +9,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.5.31</Version>
+    <Version>0.0.5.32</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>7.3</LangVersion>
-    <PackageReleaseNotes>Implement dispose pattern into SQL module</PackageReleaseNotes>
+    <PackageReleaseNotes>SQL Module now support Select,Update and Delete with Lambda expression on basis usage.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 

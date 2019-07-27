@@ -9,10 +9,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.0.0</Version>
+    <Version>0.1.1.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>7.3</LangVersion>
-    <PackageReleaseNotes>Release first version (equal to 0.0.5.30 of Deszolate.Utilities and any incremental will reflect from Deszolate.Utilities as much as possible)</PackageReleaseNotes>
+    <PackageReleaseNotes>SQL Module now support Select,Update and Delete with Lambda expression on basis usage.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
   </PropertyGroup>
@@ -29,6 +29,10 @@
   <ItemGroup>
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>

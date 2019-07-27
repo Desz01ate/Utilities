@@ -983,6 +983,22 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
+        <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
+        <!-- Badly formed XML comment ignored for member "T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator" -->
+        <member name="T:Utilities.SQL.Translator.Evaluator.Nominator">
+            <summary>
+            Performs bottom-up analysis to determine which nodes can possibly
+            be part of an evaluated sub-tree.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.Translator.ExpressionTranslator.VisitBinary(System.Linq.Expressions.BinaryExpression)">
+            <summary>
+            
+            </summary>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.String">
             <summary>
             Collection of extension method for string datatype

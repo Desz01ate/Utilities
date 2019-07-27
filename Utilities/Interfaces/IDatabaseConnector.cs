@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.SQL;
@@ -28,14 +29,20 @@ namespace Utilities.Interfaces
         Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct;
         Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameter> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text);
         IEnumerable<T> Select<T>() where T : class, new();
+        IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate) where T : class, new();
         T Select<T>(object primaryKey) where T : class, new();
         int Insert<T>(T obj) where T : class, new();
         int Update<T>(T obj) where T : class, new();
+        int Update<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new();
         int Delete<T>(T obj) where T : class, new();
+        int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new();
         Task<IEnumerable<T>> SelectAsync<T>() where T : class, new();
+        Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new();
         Task<T> SelectAsync<T>(object primaryKey) where T : class, new();
         Task<int> InsertAsync<T>(T obj) where T : class, new();
         Task<int> UpdateAsync<T>(T obj) where T : class, new();
+        Task<int> UpdateAsync<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new();
         Task<int> DeleteAsync<T>(T obj) where T : class, new();
+        Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new();
     }
 }
