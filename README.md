@@ -8,3 +8,4 @@ Some heavily repetitive code block packed together as utilities tools including
 # How do I get it
 - Machine Learning : https://www.nuget.org/packages/Deszolate.MachineLearning/
 - Utilities : https://www.nuget.org/packages/Deszolate.Utilities/
+- Utilities.Lite (Lite version of Utilities) : https://www.nuget.org/packages/Deszolate.Utilities.Lite/
