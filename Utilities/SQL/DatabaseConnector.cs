@@ -653,7 +653,12 @@ namespace Utilities.SQL
                 });
             return result;
         }
-
+        /// <summary>
+        /// Select data from table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <returns></returns>
         public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -663,7 +668,12 @@ namespace Utilities.SQL
             var result = ExecuteReader<T>(query);
             return result;
         }
-
+        /// <summary>
+        /// Update data to specific table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <returns></returns>
         public int Update<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -687,7 +697,12 @@ namespace Utilities.SQL
             var value = ExecuteNonQuery(query, parametersArray);
             return value;
         }
-
+        /// <summary>
+        /// Delete data from table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <returns></returns>
         public int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -697,7 +712,12 @@ namespace Utilities.SQL
             var result = ExecuteNonQuery(query);
             return result;
         }
-
+        /// <summary>
+        /// Select data from table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <returns></returns>
         public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -707,7 +727,12 @@ namespace Utilities.SQL
             var result = await ExecuteReaderAsync<T>(query);
             return result;
         }
-
+        /// <summary>
+        /// Update data to specific table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <returns></returns>
         public async Task<int> UpdateAsync<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
@@ -731,7 +756,12 @@ namespace Utilities.SQL
             var value = await ExecuteNonQueryAsync(query, parametersArray);
             return value;
         }
-
+        /// <summary>
+        /// Select data from table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <returns></returns>
         public async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();

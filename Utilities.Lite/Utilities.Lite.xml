@@ -835,6 +835,54 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Select data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Update``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Update data to specific table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Delete data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Select data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Update data to specific table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Select data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <returns></returns>
+        </member>
         <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
         <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
         <!-- Badly formed XML comment ignored for member "T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator" -->

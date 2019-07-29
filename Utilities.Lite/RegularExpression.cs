@@ -20,7 +20,7 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <param name="pattern">Regex pattern to check whether the input is matched or not</param>
         /// <returns></returns>
-        public static bool IsPhoneNumber(string input, string pattern = @"^(08|\+66)\d{8,9}$") => RegexMatch(input, pattern).Success;
+        public static bool IsPhoneNumber(string input, string pattern = @"^(0\d{1}|\+66)\d{8,9}$") => RegexMatch(input, pattern).Success;
         /// <summary>
         /// Check if the given input is matching the email
         /// </summary>
