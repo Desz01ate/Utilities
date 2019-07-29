@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Enumerables;
 using Utilities.Interfaces;
 using Utilities.Shared;
 using Utilities.SQL.Translator;
@@ -26,6 +27,7 @@ namespace Utilities.SQL
         /// </summary>
         public TDatabaseConnection Connection { get; }
         private bool disposed { get; set; }
+        protected Dictionary<SqlFunction, string> SQLFunctionConfiguration;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -34,6 +36,7 @@ namespace Utilities.SQL
         {
             //connection = databaseType;
             //parameter = parameterType;
+            SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
             Connection = new TDatabaseConnection()
             {
                 ConnectionString = connectionString
@@ -654,10 +657,10 @@ namespace Utilities.SQL
         public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
-            var baseStatement = $@"SELECT * FROM {tableName} ";
-            var translator = new ExpressionTranslator();
-            var tranlatorResult = translator.Translate(predicate);
-            var result = ExecuteReader<T>(baseStatement + tranlatorResult);
+            var translator = new ExpressionTranslator(SQLFunctionConfiguration);
+            var translatorResult = translator.Translate(predicate);
+            var query = $@"SELECT * FROM {tableName} WHERE {translatorResult}";
+            var result = ExecuteReader<T>(query);
             return result;
         }
 
@@ -669,11 +672,11 @@ namespace Utilities.SQL
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
-            var translator = new ExpressionTranslator();
-            var tranlatorResult = translator.Translate(predicate);
+            var translator = new ExpressionTranslator(SQLFunctionConfiguration);
+            var translatorResult = translator.Translate(predicate);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-                           WHERE " + tranlatorResult;
+                           WHERE {translatorResult}";
 
             var parametersArray = parameters.Select(x => new TParameterType()
             {
@@ -688,20 +691,20 @@ namespace Utilities.SQL
         public int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
-            var baseStatement = $@"DELETE FROM {tableName} WHERE ";
-            var translator = new ExpressionTranslator();
-            var tranlatorResult = translator.Translate(predicate);
-            var result = ExecuteNonQuery(baseStatement + tranlatorResult);
+            var translator = new ExpressionTranslator(SQLFunctionConfiguration);
+            var translatorResult = translator.Translate(predicate);
+            var query = $@"DELETE FROM {tableName} WHERE {translatorResult}";
+            var result = ExecuteNonQuery(query);
             return result;
         }
 
         public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
-            var baseStatement = $@"SELECT * FROM {tableName} ";
-            var translator = new ExpressionTranslator();
-            var tranlatorResult = translator.Translate(predicate);
-            var result = await ExecuteReaderAsync<T>(baseStatement + tranlatorResult);
+            var translator = new ExpressionTranslator(SQLFunctionConfiguration);
+            var translatorResult = translator.Translate(predicate);
+            var query = $@"SELECT * FROM {tableName} WHERE {translatorResult}";
+            var result = await ExecuteReaderAsync<T>(query);
             return result;
         }
 
@@ -713,11 +716,11 @@ namespace Utilities.SQL
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
-            var translator = new ExpressionTranslator();
-            var tranlatorResult = translator.Translate(predicate);
+            var translator = new ExpressionTranslator(SQLFunctionConfiguration);
+            var translatorResult = translator.Translate(predicate);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-                           WHERE " + tranlatorResult;
+                           WHERE " + translatorResult;
 
             var parametersArray = parameters.Select(x => new TParameterType()
             {
@@ -733,9 +736,9 @@ namespace Utilities.SQL
         {
             var tableName = typeof(T).TableNameValidate();
             var baseStatement = $@"DELETE FROM {tableName} WHERE ";
-            var translator = new ExpressionTranslator();
-            var tranlatorResult = translator.Translate(predicate);
-            var result = await ExecuteNonQueryAsync(baseStatement + tranlatorResult);
+            var translator = new ExpressionTranslator(SQLFunctionConfiguration);
+            var translatorResult = translator.Translate(predicate);
+            var result = await ExecuteNonQueryAsync(baseStatement + translatorResult);
             return result;
         }
     }

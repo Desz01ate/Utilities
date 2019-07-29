@@ -16,7 +16,7 @@ namespace Utilities.SQL
     {
         public SQLServer(string connectionString) : base(connectionString)
         {
-
+            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LEN");
         }
 
         [Obsolete("This method is deprecated and will be remove in the future, please use non-static method instead.")]

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+using Utilities.Enumerables;
 
 namespace Utilities.SQL.Translator
 {
@@ -15,7 +17,7 @@ namespace Utilities.SQL.Translator
         private int? _skip = null;
         private int? _take = null;
         private string _whereClause = string.Empty;
-
+        private Dictionary<SqlFunction, string> _platformFunctionConfig;
         public int? Skip
         {
             get
@@ -48,9 +50,11 @@ namespace Utilities.SQL.Translator
             }
         }
 
-        public ExpressionTranslator()
+        public ExpressionTranslator(Dictionary<SqlFunction, string> platformFunctionConfiguration)
         {
+            _platformFunctionConfig = platformFunctionConfiguration;
         }
+
 
         public string Translate(Expression expression)
         {
@@ -109,6 +113,14 @@ namespace Utilities.SQL.Translator
                     Expression nextExpression = m.Arguments[0];
                     return this.Visit(nextExpression);
                 }
+            }
+            else if (m.Method.Name == "Contains")
+            {
+                var field = ((MemberExpression)m.Object).Member.Name;
+                var expression = m.Arguments[0].ToString().Replace("\"", "");
+                sb.Append($@"({field} LIKE '%{expression}%')");
+                return m;
+
             }
 
             throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
@@ -273,18 +285,18 @@ namespace Utilities.SQL.Translator
                         var value = f.DynamicInvoke();
                         sb.Append(value);
                         return m;
-                        //need more research on this
-                        //case ExpressionType.MemberAccess:
-                        //    var member = (m.Expression as MemberExpression).Member.Name;
-                        //    var accessingProperty = m.Member.Name.ToLower();
-                        //    switch (accessingProperty)
-                        //    {
-                        //        case "count":
-                        //        case "length":
-                        //            sb.Append($"COUNT({member})");
-                        //            break;
-                        //    }
-                        //    return m;
+                    //need more research on this
+                    case ExpressionType.MemberAccess:
+                        var member = (m.Expression as MemberExpression).Member.Name;
+                        var accessingProperty = m.Member.Name.ToLower();
+                        switch (accessingProperty)
+                        {
+                            case "length":
+                                var lengthFunction = _platformFunctionConfig[SqlFunction.Length];
+                                sb.Append($"{lengthFunction}({member})");
+                                break;
+                        }
+                        return m;
                 }
             }
             throw new NotSupportedException(string.Format("Expression contains unsupported statement."));

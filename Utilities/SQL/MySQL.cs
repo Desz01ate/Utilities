@@ -16,6 +16,8 @@ namespace Utilities.SQL
     {
         public MySQL(string connectionString) : base(connectionString)
         {
+            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LENGTH");
+
         }
         [Obsolete("This method is deprecated and will be remove in the future, please use non-static method instead.")]
         /// <summary>
