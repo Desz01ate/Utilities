@@ -46,7 +46,7 @@ namespace Utilities.Security.Cryptography
             {
                 decrypted = DecryptStringFromBytes_Aes(data, keys[0], keys[1]);
             }
-            catch (CryptographicException ex)
+            catch (CryptographicException)
             {
                 string a = "";
             }
