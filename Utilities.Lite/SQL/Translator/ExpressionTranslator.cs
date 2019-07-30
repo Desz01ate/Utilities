@@ -283,25 +283,49 @@ namespace Utilities.SQL.Translator
                     case ExpressionType.Constant:
                         var f = Expression.Lambda(m).Compile();
                         var value = f.DynamicInvoke();
-                        sb.Append(value);
+                        var b = (m.Member as FieldInfo);
+                        if (IsQuoteNeeded(b.FieldType))
+                            sb.Append($"'{value}'");
+                        else
+                            sb.Append(value);
                         return m;
                     //need more research on this
                     case ExpressionType.MemberAccess:
-                        var member = (m.Expression as MemberExpression).Member.Name;
                         var accessingProperty = m.Member.Name.ToLower();
+                        var accessingPropetyType = m.Member.GetType();
                         switch (accessingProperty)
                         {
                             case "length":
+                                var member = (m.Expression as MemberExpression).Member.Name;
                                 var lengthFunction = _platformFunctionConfig[SqlFunction.Length];
                                 sb.Append($"{lengthFunction}({member})");
+                                break;
+                            default:
+                                var objectMember = Expression.Convert(m, typeof(object));
+                                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+                                var getter = getterLambda.Compile();
+                                if (IsQuoteNeeded((m.Member as PropertyInfo).PropertyType))
+                                    sb.Append($"'{getter()}'");
+                                else
+                                    sb.Append(getter());
                                 break;
                         }
                         return m;
                 }
             }
-            throw new NotSupportedException(string.Format("Expression contains unsupported statement."));
+            throw new NotSupportedException($"Expression contains unsupported statement ({m}).");
         }
-
+        private bool IsQuoteNeeded(Type propertyType)
+        {
+            return
+               propertyType == typeof(string) ||
+               propertyType == typeof(char) ||
+               propertyType == typeof(char?) ||
+               propertyType == typeof(DateTime) ||
+               propertyType == typeof(DateTime?) ||
+               propertyType == typeof(Guid) ||
+               propertyType == typeof(Guid?);
+        }
         protected bool IsNullConstant(Expression exp)
         {
             return (exp.NodeType == ExpressionType.Constant && ((ConstantExpression)exp).Value == null);

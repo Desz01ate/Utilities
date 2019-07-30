@@ -28,6 +28,36 @@ namespace Utilities.Testing
             _sqliteConnection = $@"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files\Local.db")};Version=3;";
         }
         [Test]
+        public void Test()
+        {
+            var voter = new Voter()
+            {
+                Active = true,
+                CreatedBy = "MIGRATE",
+                CreatedDate = DateTime.Parse("25/07/2019 11:37:12 PM"),
+                Email = "",
+                FirstName = "นายสุทธิศักดิ์ ",
+                LastName = "ยศไธสง",
+                MobilePhone = "0611169533",
+                PositionName = "DEVELOPER",
+                RefCode = "",
+                UpdatedBy = "",
+                UpdatedDate = null,
+                VoterCode = "0611169533"
+            };
+            var credential = new Credential()
+            {
+                Otp = "437859",
+                Ref_code = "10zg"
+            };
+            var vcode = voter.VoterCode;
+            var refCode = credential.Ref_code;
+            using (var connection = new SQLServer("Server=172.22.22.23;Database=COJiVOTE;User=cojdba;Password=Cdb@2019"))
+            {
+                var otpInstance = connection.Select<VoterOTP>(x => x.VoterCode == vcode && x.RefCode == credential.Ref_code).FirstOrDefault();
+            }
+        }
+        [Test]
         public void SQLServerConnectorCRUD()
         {
             using (var connection = new SQLServer(_msSqlConnection))
