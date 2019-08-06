@@ -23,7 +23,7 @@ Breaking changess on HttpRequest Module which use enum to tell the MIME type ins
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
