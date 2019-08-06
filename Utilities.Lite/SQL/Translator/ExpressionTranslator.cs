@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Utilities.Enumerables;
+using Utilities.Shared;
 
 namespace Utilities.SQL.Translator
 {
     //implementation taken from https://stackoverflow.com/questions/7731905/how-to-convert-an-expression-tree-to-a-partial-sql-query with some customized
-    public class ExpressionTranslator : ExpressionVisitor
+    public class ExpressionTranslator<TObject, TSqlParameter> : ExpressionVisitor
+        where TObject : class, new()
+        where TSqlParameter : DbParameter, new()
     {
         private StringBuilder sb;
         private string _orderBy = string.Empty;
@@ -18,6 +22,8 @@ namespace Utilities.SQL.Translator
         private int? _take = null;
         private string _whereClause = string.Empty;
         private Dictionary<SqlFunction, string> _platformFunctionConfig;
+        private Dictionary<string, string> _fieldsConfiguration;
+        private List<TSqlParameter> _sqlParameters;
         public int? Skip
         {
             get
@@ -53,6 +59,15 @@ namespace Utilities.SQL.Translator
         public ExpressionTranslator(Dictionary<SqlFunction, string> platformFunctionConfiguration)
         {
             _platformFunctionConfig = platformFunctionConfiguration;
+            _fieldsConfiguration = new Dictionary<string, string>();
+            _sqlParameters = new List<TSqlParameter>();
+            foreach (var property in typeof(TObject).PropertiesValidate())
+            {
+                var key = property.Name;
+                var value = property.FieldNameValidate();
+                _fieldsConfiguration.Add(key, value);
+            }
+            //_fieldsConfiguration = fieldsConfiguration;
         }
 
 
@@ -116,9 +131,14 @@ namespace Utilities.SQL.Translator
             }
             else if (m.Method.Name == "Contains")
             {
-                var field = ((MemberExpression)m.Object).Member.Name;
+                var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                 var expression = m.Arguments[0].ToString().Replace("\"", "");
-                sb.Append($@"({field} LIKE '%{expression}%')");
+                _sqlParameters.Add(new TSqlParameter()
+                {
+                    ParameterName = field,
+                    Value = expression
+                });
+                sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                 return m;
 
             }
@@ -278,16 +298,16 @@ namespace Utilities.SQL.Translator
                 switch (m.Expression.NodeType)
                 {
                     case ExpressionType.Parameter:
-                        sb.Append(m.Member.Name);
+                        sb.Append(_fieldsConfiguration[m.Member.Name]);
                         return m;
                     case ExpressionType.Constant:
                         var f = Expression.Lambda(m).Compile();
-                        var value = f.DynamicInvoke();
-                        var b = (m.Member as FieldInfo);
-                        if (IsQuoteNeeded(b.FieldType))
-                            sb.Append($"'{value}'");
+                        var v = f.DynamicInvoke();
+                        var fieldInfo = (m.Member as FieldInfo);
+                        if (IsQuoteNeeded(fieldInfo.FieldType))
+                            sb.Append($"'{v}'");
                         else
-                            sb.Append(value);
+                            sb.Append(v);
                         return m;
                     //need more research on this
                     case ExpressionType.MemberAccess:

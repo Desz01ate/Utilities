@@ -11,5 +11,6 @@ namespace Utilities.Interfaces
     {
         string ConnectionString { get; }
         bool IsOpen { get; }
+        bool UseTransaction { get; }
     }
 }

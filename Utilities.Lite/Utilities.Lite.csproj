@@ -9,10 +9,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.1.3</Version>
+    <Version>0.1.2-rc0003</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>7.3</LangVersion>
-    <PackageReleaseNotes>Fix bug on ExpressionTranslator.</PackageReleaseNotes>
+    <PackageReleaseNotes>Breaking changes on SQL Module such as remove static method as stated as 'obsolete', add option to constructor as a way to tell that the connection should use the transaction or not.
+Breaking changess on HttpRequest Module which use enum to tell the MIME type instead of string and remove unnecessary overload from the codebase.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
   </PropertyGroup>

@@ -62,6 +62,11 @@
             <param name="action">Any given function to execute</param>
             <returns>An execution time in milliseconds</returns>
         </member>
+        <member name="T:Utilities.Enumerables.InternalHttpContent.HttpContentType">
+            <summary>
+            Contain enumerable that describe to MIME type
+            </summary>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -72,6 +77,7 @@
             Send a GET request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.GetFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -79,6 +85,7 @@
             Send a GET request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.GetAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -86,6 +93,7 @@
             Send a GET request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">Target endpoint</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.GetAsyncFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -93,86 +101,95 @@
             Send a GET request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.Post(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.Post(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a POST request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PostFor``1(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PostFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a POST request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a POST request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PostAsyncFor``1(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PostAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a POST request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.Put(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.Put(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a PUT request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PutFor``1(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PutFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a PUT request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a PUT request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PutAsyncFor``1(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PutAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a PUT request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.Delete(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -180,6 +197,7 @@
             Send a DELETE request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -187,6 +205,7 @@
             Send a DELETE request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -194,6 +213,7 @@
             Send a DELETE request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -201,166 +221,51 @@
             Send a DELETE request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a DELETE request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a DELETE request to the specified Uri.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a DELETE request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Object,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a DELETE request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Post(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostFor``1(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostAsyncFor``1(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Put(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutFor``1(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutAsyncFor``1(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Delete(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.String,System.Text.Encoding,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="mediatype">The body media type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.Interfaces.IDatabaseConnector`2">
@@ -628,6 +533,13 @@
             </summary>
             <param name="connectionString">Connection string for database</param>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectionString">Connection string for database</param>
+            <param name="useTransaction">Indicate that the transaction should enable or not</param>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose(System.Boolean)">
             <summary>
             Protected implementation of dispose pattern
@@ -647,6 +559,11 @@
         <member name="P:Utilities.SQL.DatabaseConnector`2.IsOpen">
             <summary>
             Determine wheter the connection is open or not.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector`2.UseTransaction">
+            <summary>
+            Determine wether the connection use transaction or not
             </summary>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
@@ -892,7 +809,7 @@
             be part of an evaluated sub-tree.
             </summary>
         </member>
-        <member name="M:Utilities.SQL.Translator.ExpressionTranslator.VisitBinary(System.Linq.Expressions.BinaryExpression)">
+        <member name="M:Utilities.SQL.Translator.ExpressionTranslator`1.VisitBinary(System.Linq.Expressions.BinaryExpression)">
             <summary>
             
             </summary>

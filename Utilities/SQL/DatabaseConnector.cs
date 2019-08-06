@@ -34,8 +34,23 @@ namespace Utilities.SQL
         /// <param name="connectionString">Connection string for database</param>
         public DatabaseConnector(string connectionString)
         {
-            //connection = databaseType;
-            //parameter = parameterType;
+            UseTransaction = false;
+            SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
+            Connection = new TDatabaseConnection()
+            {
+                ConnectionString = connectionString
+            };
+            Connection.Open();
+        }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connectionString">Connection string for database</param>
+        /// <param name="useTransaction">Indicate that the transaction should enable or not</param>
+        public DatabaseConnector(string connectionString, bool useTransaction)
+        {
+
+            UseTransaction = useTransaction;
             SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
             Connection = new TDatabaseConnection()
             {
@@ -72,6 +87,10 @@ namespace Utilities.SQL
         /// Determine wheter the connection is open or not.
         /// </summary>
         public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+        /// <summary>
+        /// Determine wether the connection use transaction or not
+        /// </summary>
+        public bool UseTransaction { get; }
 
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
@@ -90,7 +109,7 @@ namespace Utilities.SQL
             try
             {
                 List<T> result = new List<T>();
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -111,7 +130,7 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -148,7 +167,7 @@ namespace Utilities.SQL
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -170,7 +189,7 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -194,7 +213,7 @@ namespace Utilities.SQL
             try
             {
                 T result = default;
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -209,7 +228,7 @@ namespace Utilities.SQL
                     }
                     result = (T)command.ExecuteScalar();
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -232,7 +251,7 @@ namespace Utilities.SQL
             try
             {
                 int result = -1;
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -247,7 +266,7 @@ namespace Utilities.SQL
                     }
                     result = command.ExecuteNonQuery();
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -273,7 +292,7 @@ namespace Utilities.SQL
             try
             {
                 List<T> result = new List<T>();
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -294,7 +313,7 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -331,7 +350,7 @@ namespace Utilities.SQL
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -353,7 +372,7 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -377,7 +396,7 @@ namespace Utilities.SQL
             try
             {
                 T result = default;
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -392,7 +411,7 @@ namespace Utilities.SQL
                     }
                     result = (T)(await command.ExecuteScalarAsync());
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
@@ -415,7 +434,7 @@ namespace Utilities.SQL
             try
             {
                 int result = -1;
-                transaction = Connection.BeginTransaction();
+                transaction = UseTransaction ? Connection.BeginTransaction() : null;
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -430,7 +449,7 @@ namespace Utilities.SQL
                     }
                     result = await command.ExecuteNonQueryAsync();
                 }
-                transaction.Commit();
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)

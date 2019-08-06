@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Dynamic;
+using System.Linq;
 using System.Reflection;
 using Utilities.Attributes.SQL;
 using Utilities.Enumerables;
