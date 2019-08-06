@@ -790,5 +790,35 @@ namespace Utilities.SQL
             var result = await ExecuteNonQueryAsync(baseStatement + expression, parameters);
             return result;
         }
+
+        public int Delete<T>(object primaryKey) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+            var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
+            var result = this.ExecuteNonQuery(query, new[] {
+                    new TParameterType()
+                    {
+                        ParameterName = primaryKeyAttribute.Name,
+                        Value = primaryKey
+                    }
+                }, CommandType.Text);
+            return result;
+        }
+
+        public async Task<int> DeleteAsync<T>(object primaryKey) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameValidate();
+            var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+            var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
+            var result = await this.ExecuteNonQueryAsync(query, new[] {
+                    new TParameterType()
+                    {
+                        ParameterName = primaryKeyAttribute.Name,
+                        Value = primaryKey
+                    }
+                }, CommandType.Text);
+            return result;
+        }
     }
 }
