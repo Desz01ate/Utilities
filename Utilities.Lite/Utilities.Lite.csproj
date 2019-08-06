@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.2-rc0003</Version>
+    <Version>0.1.2-rc0001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>7.3</LangVersion>
     <PackageReleaseNotes>Breaking changes on SQL Module such as remove static method as stated as 'obsolete', add option to constructor as a way to tell that the connection should use the transaction or not.

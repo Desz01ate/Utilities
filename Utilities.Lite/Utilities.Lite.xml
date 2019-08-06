@@ -809,7 +809,7 @@
             be part of an evaluated sub-tree.
             </summary>
         </member>
-        <member name="M:Utilities.SQL.Translator.ExpressionTranslator`1.VisitBinary(System.Linq.Expressions.BinaryExpression)">
+        <member name="M:Utilities.SQL.Translator.ExpressionTranslator`2.VisitBinary(System.Linq.Expressions.BinaryExpression)">
             <summary>
             
             </summary>

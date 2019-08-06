@@ -21,6 +21,7 @@ namespace Utilities.SQL.Translator
         private int? _skip = null;
         private int? _take = null;
         private string _whereClause = string.Empty;
+        private string _previousVisitField;
         private Dictionary<SqlFunction, string> _platformFunctionConfig;
         private Dictionary<string, string> _fieldsConfiguration;
         private List<TSqlParameter> _sqlParameters;
@@ -71,12 +72,12 @@ namespace Utilities.SQL.Translator
         }
 
 
-        public string Translate(Expression expression)
+        public (string expression, IEnumerable<TSqlParameter> parameters) Translate(Expression expression)
         {
             this.sb = new StringBuilder();
             this.Visit(expression);
             _whereClause = this.sb.ToString();
-            return _whereClause;
+            return (_whereClause, _sqlParameters);
         }
 
         private static Expression StripQuotes(Expression e)
@@ -266,18 +267,24 @@ namespace Utilities.SQL.Translator
                     case TypeCode.Boolean:
                         sb.Append(((bool)c.Value) ? 1 : 0);
                         break;
-
-                    case TypeCode.String:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
-                        break;
-
                     case TypeCode.DateTime:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
+                    case TypeCode.String:
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = _previousVisitField,
+                            Value = c.Value
+                        });
+                        sb.Append($"@{_previousVisitField}");
+                        //sb.Append("'");
+                        //sb.Append(c.Value);
+                        //sb.Append("'");
                         break;
+
+                    //case TypeCode.DateTime:
+                    //    sb.Append("'");
+                    //    sb.Append(c.Value);
+                    //    sb.Append("'");
+                    //    break;
 
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
@@ -298,16 +305,18 @@ namespace Utilities.SQL.Translator
                 switch (m.Expression.NodeType)
                 {
                     case ExpressionType.Parameter:
-                        sb.Append(_fieldsConfiguration[m.Member.Name]);
+                        _previousVisitField = _fieldsConfiguration[m.Member.Name];
+                        sb.Append(_previousVisitField);
                         return m;
                     case ExpressionType.Constant:
                         var f = Expression.Lambda(m).Compile();
-                        var v = f.DynamicInvoke();
-                        var fieldInfo = (m.Member as FieldInfo);
-                        if (IsQuoteNeeded(fieldInfo.FieldType))
-                            sb.Append($"'{v}'");
-                        else
-                            sb.Append(v);
+                        var value = f.DynamicInvoke();
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = _previousVisitField,
+                            Value = value
+                        });
+                        sb.Append($"@{_previousVisitField}");
                         return m;
                     //need more research on this
                     case ExpressionType.MemberAccess:
@@ -324,10 +333,12 @@ namespace Utilities.SQL.Translator
                                 var objectMember = Expression.Convert(m, typeof(object));
                                 var getterLambda = Expression.Lambda<Func<object>>(objectMember);
                                 var getter = getterLambda.Compile();
-                                if (IsQuoteNeeded((m.Member as PropertyInfo).PropertyType))
-                                    sb.Append($"'{getter()}'");
-                                else
-                                    sb.Append(getter());
+                                _sqlParameters.Add(new TSqlParameter()
+                                {
+                                    ParameterName = _previousVisitField,
+                                    Value = getter
+                                });
+                                sb.Append($"@{_previousVisitField}");
                                 break;
                         }
                         return m;

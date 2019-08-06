@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Utilities.Enumerables;
+using Utilities.Shared;
 
 namespace Utilities.SQL.Translator
 {
     //implementation taken from https://stackoverflow.com/questions/7731905/how-to-convert-an-expression-tree-to-a-partial-sql-query with some customized
-    public class ExpressionTranslator : ExpressionVisitor
+    public class ExpressionTranslator<TObject, TSqlParameter> : ExpressionVisitor
+        where TObject : class, new()
+        where TSqlParameter : DbParameter, new()
     {
         private StringBuilder sb;
         private string _orderBy = string.Empty;
         private int? _skip = null;
         private int? _take = null;
         private string _whereClause = string.Empty;
+        private string _previousVisitField;
         private Dictionary<SqlFunction, string> _platformFunctionConfig;
+        private Dictionary<string, string> _fieldsConfiguration;
+        private List<TSqlParameter> _sqlParameters;
         public int? Skip
         {
             get
@@ -53,15 +60,24 @@ namespace Utilities.SQL.Translator
         public ExpressionTranslator(Dictionary<SqlFunction, string> platformFunctionConfiguration)
         {
             _platformFunctionConfig = platformFunctionConfiguration;
+            _fieldsConfiguration = new Dictionary<string, string>();
+            _sqlParameters = new List<TSqlParameter>();
+            foreach (var property in typeof(TObject).PropertiesValidate())
+            {
+                var key = property.Name;
+                var value = property.FieldNameValidate();
+                _fieldsConfiguration.Add(key, value);
+            }
+            //_fieldsConfiguration = fieldsConfiguration;
         }
 
 
-        public string Translate(Expression expression)
+        public (string expression, IEnumerable<TSqlParameter> parameters) Translate(Expression expression)
         {
             this.sb = new StringBuilder();
             this.Visit(expression);
             _whereClause = this.sb.ToString();
-            return _whereClause;
+            return (_whereClause, _sqlParameters);
         }
 
         private static Expression StripQuotes(Expression e)
@@ -116,9 +132,14 @@ namespace Utilities.SQL.Translator
             }
             else if (m.Method.Name == "Contains")
             {
-                var field = ((MemberExpression)m.Object).Member.Name;
+                var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                 var expression = m.Arguments[0].ToString().Replace("\"", "");
-                sb.Append($@"({field} LIKE '%{expression}%')");
+                _sqlParameters.Add(new TSqlParameter()
+                {
+                    ParameterName = field,
+                    Value = expression
+                });
+                sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                 return m;
 
             }
@@ -246,18 +267,24 @@ namespace Utilities.SQL.Translator
                     case TypeCode.Boolean:
                         sb.Append(((bool)c.Value) ? 1 : 0);
                         break;
-
-                    case TypeCode.String:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
-                        break;
-
                     case TypeCode.DateTime:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
+                    case TypeCode.String:
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = _previousVisitField,
+                            Value = c.Value
+                        });
+                        sb.Append($"@{_previousVisitField}");
+                        //sb.Append("'");
+                        //sb.Append(c.Value);
+                        //sb.Append("'");
                         break;
+
+                    //case TypeCode.DateTime:
+                    //    sb.Append("'");
+                    //    sb.Append(c.Value);
+                    //    sb.Append("'");
+                    //    break;
 
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
@@ -278,16 +305,18 @@ namespace Utilities.SQL.Translator
                 switch (m.Expression.NodeType)
                 {
                     case ExpressionType.Parameter:
-                        sb.Append(m.Member.Name);
+                        _previousVisitField = _fieldsConfiguration[m.Member.Name];
+                        sb.Append(_previousVisitField);
                         return m;
                     case ExpressionType.Constant:
                         var f = Expression.Lambda(m).Compile();
                         var value = f.DynamicInvoke();
-                        var b = (m.Member as FieldInfo);
-                        if (IsQuoteNeeded(b.FieldType))
-                            sb.Append($"'{value}'");
-                        else
-                            sb.Append(value);
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = _previousVisitField,
+                            Value = value
+                        });
+                        sb.Append($"@{_previousVisitField}");
                         return m;
                     //need more research on this
                     case ExpressionType.MemberAccess:
@@ -304,10 +333,12 @@ namespace Utilities.SQL.Translator
                                 var objectMember = Expression.Convert(m, typeof(object));
                                 var getterLambda = Expression.Lambda<Func<object>>(objectMember);
                                 var getter = getterLambda.Compile();
-                                if (IsQuoteNeeded((m.Member as PropertyInfo).PropertyType))
-                                    sb.Append($"'{getter()}'");
-                                else
-                                    sb.Append(getter());
+                                _sqlParameters.Add(new TSqlParameter()
+                                {
+                                    ParameterName = _previousVisitField,
+                                    Value = getter
+                                });
+                                sb.Append($"@{_previousVisitField}");
                                 break;
                         }
                         return m;
