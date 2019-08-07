@@ -1,5 +1,6 @@
 ﻿using MachineLearning.Examples.POCO;
 using MachineLearning.Shared;
+using MachineLearning.Shared.Model.Tensorflow;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
@@ -20,14 +21,51 @@ namespace MachineLearning.Examples
     {
         static async Task Main(string[] args)
         {
-            bool train = true;
-            await BinaryClassifier(train);
-            await MulticlassClassificationExample(train);
-            await RegressionExample(train);
-            await ClusteringExample(train);
+            bool train = false;
+            //await BinaryClassifier(train);
+            //await MulticlassClassificationExample(train);
+            //await RegressionExample(train);
+            //await ClusteringExample(train);
+            await TensorflowImageClassification();
             Console.WriteLine("Done");
             Console.ReadLine();
         }
+
+        private static async Task TensorflowImageClassification()
+        {
+            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+            string fullPath = _dataRoot.Directory.FullName;
+            var tagsTsv = Path.Combine(fullPath, "images", "tags.tsv");
+            var imagesFolder = Path.Combine(fullPath, "images");
+            var inceptionPb = Path.Combine(fullPath, "inception", "tensorflow_inception_graph.pb");
+            var labelsTxt = Path.Combine(fullPath, "inception", "imagenet_comp_graph_label_strings.txt");
+            var testLocation = Path.Combine(fullPath, "images", "tags.tsv");
+
+            var engine = TensorFlow.ImageClassification(tagsTsv, inceptionPb, imagesFolder);
+            var testData = TfImageMetadata.ReadFromCsv(testLocation, imagesFolder, '\t');
+            var labels = File.ReadAllLines(labelsTxt);
+            foreach (var data in testData)
+            {
+                var predict = engine.Predict(data);
+                var translated = predict.Translate(labels);
+                Console.WriteLine(translated);
+            }
+            Console.ReadLine();
+        }
+
+        private static async Task Test()
+        {
+            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
+
+            IEnumerable<SalesCountry> traindata = null;
+            IEnumerable<SalesCountry> testdata = null;
+            using (var connection = new SQLServer(sqlConnection))
+            {
+                traindata = await connection.SelectAsync<SalesCountry>();
+                testdata = traindata.TakeLast(20);
+            }
+        }
+
         static async Task BinaryClassifier(bool train = true)
         {
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
@@ -48,6 +86,8 @@ namespace MachineLearning.Examples
                 { "FastTree", (data,action) => BinaryClassification.FastTree<HeartData,HeartPredict>(data, additionModelAction:action) },
                 { "FastForest", (data,action) => BinaryClassification.FastForest<HeartData,HeartPredict>(data,additionModelAction:action) },
                 { "SdcaLogisticRegression", (data,action) => BinaryClassification.SdcaLogisticRegression<HeartData,HeartPredict>(data,additionModelAction:action) },
+                { "AveragedPerceptron", (data,action) => BinaryClassification.AveragedPerceptron<HeartData,HeartPredict>(data,additionModelAction : action) },
+                { "LinearSVM", (data,action) => BinaryClassification.LinearSVM<HeartData,HeartPredict>(data,additionModelAction:action) }
             };
             foreach (var algorithm in algorithms)
             {
@@ -91,7 +131,7 @@ namespace MachineLearning.Examples
                 foreach (var t in testdata)
                 {
                     var predict = engine.Predict(t);
-                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5} with prob of {2,5}", t.Label, predict.Prediction, predict.Probability));
+                    Console.WriteLine(string.Format(@"Actual {0,5} / Predict {1,5} with prob of {2,5}", t.Label, predict.PredictedLabel, predict.Probability));
                 }
             }
             Console.ForegroundColor = ConsoleColor.Green;
@@ -112,6 +152,7 @@ namespace MachineLearning.Examples
             var testdata = traindata.Take(20);
 
             var algorithms = new Dictionary<string, Func<IEnumerable<Iris>, Action<ITransformer>, PredictionEngine<Iris, IrisClassification>>>() {
+                { "SdcaNonCalibrated", (data,action) => MulticlassClassfication.SdcaNonCalibrated<Iris,IrisClassification>(data,additionModelAction:action) },
                 { "SdcaMaximumEntropy", (data,action) => MulticlassClassfication.SdcaMaximumEntropy<Iris,IrisClassification>(data,additionModelAction:action) },
                 { "LbfgsMaximumEntropy", (data,action) => MulticlassClassfication.LbfgsMaximumEntropy<Iris,IrisClassification>(data,additionModelAction:action) },
                 { "NaiveBayes", (data,action) => MulticlassClassfication.NaiveBayes<Iris,IrisClassification>(data,additionModelAction:action) },
@@ -151,7 +192,7 @@ namespace MachineLearning.Examples
                 {
                     var predict = engine.Predict(t);
                     irisClassifications.Add(predict);
-                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5} {2}", t.Label, predict.Predicted_result, predict.ComparePrediction(t)));
+                    Console.WriteLine(string.Format(@"Actual : {0,5} / Predict {1,5} {2}", t.Label, predict.PredictedLabel, predict.IsCorrectPredict(t)));
                 }
                 //VisualizeMulticlassClassification(algorithm.Key, testdata, irisClassifications, $"{algorithm.Key}_clsf.svg");
             }
@@ -181,6 +222,7 @@ namespace MachineLearning.Examples
                 { "FastTree", (data,action) => Regression.FastTree<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
                 { "FastTreeTweedie", (data,action) => Regression.FastTreeTweedie<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
                 { "FastForest", (data,action) => Regression.FastForest<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
+                { "GeneralizedAdditiveModel", (data,action) => Regression.GeneralizedAdditiveModel<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
             };
             foreach (var algorithm in algorithms)
             {
@@ -282,7 +324,7 @@ namespace MachineLearning.Examples
                     var temp = t.Label;
                     var predict = engine.Predict(t);
                     predictedData.Add(predict);
-                    Console.WriteLine(string.Format(@"Cluster ID : {0,5}", predict.Predicted_cluster));
+                    Console.WriteLine(string.Format(@"Cluster ID : {0,5}", predict.PredictedLabel));
                 }
                 VisualizeClustering(predictedData, "clustering.svg");
             }
@@ -319,11 +361,11 @@ namespace MachineLearning.Examples
         static void VisualizeClustering(IEnumerable<IrisClustering> predictedData, string savePath)
         {
             var plot = new PlotModel { Title = "Iris Cluster", IsLegendVisible = true };
-            var clusters = predictedData.Select(x => x.Predicted_cluster).Distinct().OrderBy(x => x);
+            var clusters = predictedData.Select(x => x.PredictedLabel).Distinct().OrderBy(x => x);
             foreach (var cluster in clusters)
             {
                 var scatter = new ScatterSeries() { MarkerType = MarkerType.Circle, MarkerStrokeThickness = 2, Title = $"Cluster : {cluster}" };
-                var series = predictedData.Where(x => x.Predicted_cluster == cluster).Select(p => new ScatterPoint(p.Location[0], p.Location[1]));
+                var series = predictedData.Where(x => x.PredictedLabel == cluster).Select(p => new ScatterPoint(p.PCAFeatures[0], p.PCAFeatures[1]));
                 scatter.Points.AddRange(series);
                 plot.Series.Add(scatter);
             }
@@ -364,7 +406,7 @@ namespace MachineLearning.Examples
             for (var x = 0; x < predictArray.Length; x++)
             {
                 var predict = predictArray[x];
-                linePredict.Points.Add(new DataPoint(x, predict.Predicted_Score));
+                linePredict.Points.Add(new DataPoint(x, predict.Score));
             }
             plot.Series.Add(lineActual);
             plot.Series.Add(linePredict);

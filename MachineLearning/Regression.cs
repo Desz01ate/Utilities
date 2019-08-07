@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MachineLearning.Shared;
 using MachineLearning.Shared.Attributes;
+using Microsoft.ML.Trainers.FastTree;
 
 namespace MachineLearning
 {
@@ -156,6 +157,72 @@ namespace MachineLearning
                     numberOfTrees: numberOfTrees,
                     minimumExampleCountPerLeaf: minimumExampleCountPerLeaft
                     ));
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> GeneralizedAdditiveModel<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string exampleWeightColumnName = null,
+            int numberOfIterations = 9500,
+            int maximumBinCountPerFeature = 255,
+            double learningRate = 0.002,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.Gam(
+                labelColumnName: "Label",
+                featureColumnName: "Features",
+                exampleWeightColumnName,
+                numberOfIterations,
+                maximumBinCountPerFeature,
+                learningRate
+            ));
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> GeneralizedAdditiveModel<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            GamRegressionTrainer.Options options,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.Gam(options));
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> OnlineGradientDescent<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            IRegressionLoss lossFunction = null,
+            float learningRate = 0.1f,
+            bool decreaseLearningRate = true,
+            float l2Regularization = 0,
+            int numberOfIterations = 1,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.OnlineGradientDescent(
+                 labelColumnName: "Label",
+                 featureColumnName: "Features",
+                 lossFunction,
+                 learningRate,
+                 decreaseLearningRate,
+                 l2Regularization,
+                 numberOfIterations
+            ));
+            var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictionEngine;
+        }
+        public static PredictionEngine<TIn, TOut> OnlineGradientDescent<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            OnlineGradientDescentTrainer.Options options,
+            Action<ITransformer> additionModelAction = null) where TIn : class, new() where TOut : class, new()
+        {
+            var context = new MLContext();
+            var model = context.RegressionTrainerTemplate(trainDataset, context.Regression.Trainers.OnlineGradientDescent(options));
             var predictionEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
             additionModelAction?.Invoke(model);
             return predictionEngine;

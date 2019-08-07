@@ -133,13 +133,53 @@ namespace MachineLearning
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
+        public static PredictionEngine<TIn, TOut> SdcaNonCalibrated<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string outputColumnName = "PredictedLabel",
+            string exampleWeightColumnName = null,
+            ISupportSdcaClassificationLoss lossFunction = null,
+            float? l1Regularization = null,
+            float? l2Regularization = null,
+            int? maximumNumberOfIterations = null,
+            Action<ITransformer> additionModelAction = null
+        )
+            where TIn : class, new()
+            where TOut : class, new()
+        {
+            var context = new MLContext();
+            var type = typeof(TIn);
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
 
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Conversion.MapValueToKey(labelColumnName)
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
+                .Append(context.Transforms.ProjectToPrincipalComponents(outputColumnName: "PCAFeatures", inputColumnName: "Features", rank: 2))
+                .AppendCacheCheckpoint(context)
+                .Append(context.MulticlassClassification.Trainers.SdcaNonCalibrated(
+                    labelColumnName,
+                    featureColumnName: "Features",
+                    exampleWeightColumnName,
+                    lossFunction,
+                    l2Regularization,
+                    l1Regularization,
+                    maximumNumberOfIterations
+                ))
+                .Append(context.Transforms.Conversion.MapKeyToValue(outputColumnName));
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
     }
 
     public static class BinaryClassification
     {
         public static PredictionEngine<TIn, TOut> FastTree<TIn, TOut>(
-            IEnumerable<TIn> trainDataset, 
+            IEnumerable<TIn> trainDataset,
             string exampleWeightColumnName = null,
             int numberOfLeaves = 20,
             int numberOfTrees = 100,
@@ -176,11 +216,11 @@ where TOut : class, new()
             return predictEngine;
         }
         public static PredictionEngine<TIn, TOut> FastForest<TIn, TOut>(
-            IEnumerable<TIn> trainDataset, 
+            IEnumerable<TIn> trainDataset,
             string exampleWeightColumnName = null,
             int numberOfLeaves = 20,
             int numberOfTrees = 100,
-            int minimumExampleCountPerLeaft = 10, 
+            int minimumExampleCountPerLeaft = 10,
             Action<ITransformer> additionModelAction = null)
 where TIn : class, new()
 where TOut : class, new()
@@ -212,7 +252,6 @@ where TOut : class, new()
         }
         public static PredictionEngine<TIn, TOut> SdcaLogisticRegression<TIn, TOut>(
             IEnumerable<TIn> trainDataset,
-            string outputColumnName = "PredictedLabel",
             string exampleWeightColumnName = null,
             float? l1Regularization = null,
             float? l2Regularization = null,
@@ -246,6 +285,68 @@ where TOut : class, new()
             additionModelAction?.Invoke(model);
             return predictEngine;
         }
+        public static PredictionEngine<TIn, TOut> LinearSVM<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            string exampleWeightColumnName = null,
+            int numberOfIterations = 1,
+            Action<ITransformer> additionModelAction = null)
+         where TIn : class, new()
+         where TOut : class, new()
+        {
+            var context = new MLContext();
+            var type = typeof(TIn);
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
 
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray())
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.LinearSvm(labelColumnName, featureColumnName: "Features", exampleWeightColumnName, numberOfIterations));
+
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
+        public static PredictionEngine<TIn, TOut> AveragedPerceptron<TIn, TOut>(
+            IEnumerable<TIn> trainDataset,
+            IClassificationLoss lossFunction = null,
+            float learningRate = 1f,
+            bool decreaseLearningRate = false,
+            float l2Regularization = 0f,
+            int numberOfIterations = 1,
+            Action<ITransformer> additionModelAction = null)
+         where TIn : class, new()
+         where TOut : class, new()
+        {
+            var context = new MLContext();
+            var type = typeof(TIn);
+            var labelColumnName = Preprocessing.LabelColumn(type.GetProperties()).Name;
+            var properties = Preprocessing.ExcludeColumns(type.GetProperties());
+
+            var preprocessor = context.OneHotEncoding(properties);
+
+            var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
+            var pipeline = context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray())
+                .Append(preprocessor.OneHotEncodingEstimator)
+                .AppendCacheCheckpoint(context)
+                .Append(context.BinaryClassification.Trainers.AveragedPerceptron(
+                    labelColumnName,
+                    featureColumnName: "Features",
+                    lossFunction,
+                    learningRate,
+                    decreaseLearningRate,
+                    l2Regularization,
+                    numberOfIterations
+                 ));
+
+            var model = pipeline.Fit(trainDataframe);
+            var predictEngine = context.Model.CreatePredictionEngine<TIn, TOut>(model);
+            additionModelAction?.Invoke(model);
+            return predictEngine;
+        }
     }
 }

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MachineLearning</name>
+    </assembly>
+    <members>
+        <member name="M:MachineLearning.MulticlassClassfication.LbfgsMaximumEntropy``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.Single,System.Single,System.Double,System.Int32,System.Boolean,System.Action{Microsoft.ML.ITransformer})">
+            <summary>
+            Create engine of Limited-Memory Broyden–Fletcher–Goldfarb–Shanno algorithm using training dataset and hyperparameters
+            </summary>
+            <typeparam name="TIn"></typeparam>
+            <typeparam name="TOut"></typeparam>
+            <param name="trainDataset">Enumerable of TIn type.</param>
+            <param name="labelColumnName">The name of the label column.</param>
+            <param name="outputColumnName">The name of the feature column.</param>
+            <param name="exampleWeightColumnName">The name of the example weight column.</param>
+            <param name="l1Regularization">Weight of L1 regularization term.</param>
+            <param name="l2Regularization">Weight of L2 regularization term.</param>
+            <param name="optimizationTolerance">Threshold for optimizer convergence.</param>
+            <param name="historySize">Memory size. Low=faster, less accurate.</param>
+            <param name="enforceNonNegativity">Enforce non-negative weights.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MachineLearning.MulticlassClassfication.SdcaMaximumEntropy``2(System.Collections.Generic.IEnumerable{``0},System.String,System.String,Microsoft.ML.Trainers.ISupportSdcaClassificationLoss,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Int32},System.Action{Microsoft.ML.ITransformer})">
+            <summary>
+            Create engine of Stochastic Dual Coordination Ascent (optimization as such Stochastic Gradient Descent) algorithm using training dataset and hyperparameters
+            </summary>
+            <typeparam name="TIn"></typeparam>
+            <typeparam name="TOut"></typeparam>
+            <param name="trainDataset">Enumerable of TIn type.</param>
+            <param name="labelColumnName">The name of the label column.</param>
+            <param name="outputColumnName">The name of the feature column.</param>
+            <param name="exampleWeightColumnName">The name of the example weight column.</param>
+            <param name="l2Regularization">The L2 regularization hyperparameter.</param>
+            <param name="l1Regularization">The L1 regularization hyperparameter. Higher values will tend to lead to more sparse model.</param>
+            <param name="maximumNumberOfIterations">The maximum number of passes to perform over the data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MachineLearning.Regression.RegressionTrainerTemplate``2(Microsoft.ML.MLContext,System.Collections.Generic.IEnumerable{``0},Microsoft.ML.IEstimator{``1})">
+            <summary>
+            A base template of regression trainer which contains pre-processing likes OHE,PCA with any choosing algorithm.
+            </summary>
+            <typeparam name="TType">Type of training data.</typeparam>
+            <typeparam name="TTrainer">Type of trainer algorithm.</typeparam>
+            <param name="context">Microsoft.ML context.</param>
+            <param name="trainDataset">Training dataset.</param>
+            <param name="estimator">Algorithm estimator.</param>
+            <returns>Model of training datatype from given estimator.</returns>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Regression.Label">
+            <summary>
+            Label: Original regression value of the example.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Regression.Score">
+            <summary>
+            Score: Predicted regression value.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.Label">
+            <summary>
+            Label: Original Label of the example.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.Score">
+            <summary>
+            Score: Raw score from the learner (e.g. value before applying sigmoid function to get probability).
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.Probability">
+            <summary>
+            Probability: Probability of being in certain class
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.PredictedLabel">
+            <summary>
+            PredictedLabel: Predicted class.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.Label">
+            <summary>
+            Label: Original Label of the example.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.Score">
+            <summary>
+            Score: Its an array whose length is equal to number of classes and contains probability for each class.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.PredictedLabel">
+            <summary>
+            PredictedLabel: Predicted class.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Clustering.Label">
+            <summary>
+            Original cluster Id of the example.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Clustering.Score">
+            <summary>
+            Score: Its an array whose length is equal to number of clusters. It contains square distance from the cluster centeriod.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Clustering.PredictedLabel">
+            <summary>
+            PredictedLabel: Predicted cluster Id.
+            </summary>
+        </member>
+    </members>
+</doc>

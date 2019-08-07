@@ -1,6 +1,7 @@
 ﻿using MachineLearning.Examples.Classes;
 using MachineLearning.Examples.Interfaces;
 using MachineLearning.Shared.Attributes;
+using MachineLearning.Shared.Model;
 using System;
 using Utilities.Attributes.SQL;
 
@@ -39,7 +40,7 @@ namespace MachineLearning.Examples.POCO
             throw new NotImplementedException();
         }
     }
-    public class TaxiFareRegression : PredictionRegressionModel<TaxiFare>
+    public class TaxiFareRegression : RegressionPredictionResult
     {
 
     }

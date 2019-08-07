@@ -28,6 +28,22 @@ namespace MachineLearning.Examples.POCO
         [LoadColumn(9)]
         public float prev { get; set; }
     }
+    public class SalesCountry
+    {
+        public float next { get; set; }
+        public string country { get; set; }
+        public float year { get; set; }
+        public float month { get; set; }
+        public float max { get; set; }
+        public float min { get; set; }
+        public float std { get; set; }
+        public float count { get; set; }
+        public float sales { get; set; }
+        public float med { get; set; }
+        public float prev { get; set; }
+    }
+
+
     public class SalesPrediction
     {
         public float Score;

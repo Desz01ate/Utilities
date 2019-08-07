@@ -1,6 +1,8 @@
 ﻿using MachineLearning.Examples.Classes;
 using MachineLearning.Examples.Interfaces;
 using MachineLearning.Shared.Attributes;
+using MachineLearning.Shared.Model;
+using MachineLearning.Shared.Model.Interfaces;
 using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Text;
 
 namespace MachineLearning.Examples.POCO
 {
-    public class Iris : IConstraint
+    public class Iris : IMLConstraint
     {
         public float SepalLength { get; set; }
         public float SepalWidth { get; set; }
@@ -16,38 +18,43 @@ namespace MachineLearning.Examples.POCO
         public float PetalWidth { get; set; }
         [LabelColumn]
         public string Label { get; set; }
-        public float actual_float_result()
+
+        public float Actual_float_Result()
         {
-            throw new NotImplementedException();
+            return 0f;
         }
 
-        public string actual_string_result()
+        public string Actual_string_Result()
         {
             return Label;
         }
 
-        public uint actual_uint_result()
+        public uint Actual_uint_Result()
         {
-            throw new NotImplementedException();
+            return 0u;
         }
     }
-    public class IrisClassification : PredictionMulticlassClassificationModel<Iris>
+    public class IrisClassification : MulticlassClassficationPredictionResult
     {
-        public int TranslateLabelIntoNumber()
+        //public int TranslateLabelIntoNumber()
+        //{
+        //    switch (this.PredictedLabel)
+        //    {
+        //        case "Iris-setosa":
+        //            return 1;
+        //        case ("Iris-versicolor"):
+        //            return 2;
+        //        case ("Iris-virginica"):
+        //            return 3;
+        //    }
+        //    return 0;
+        //}
+        public bool IsCorrectPredict(Iris iris)
         {
-            switch (this.Predicted_result)
-            {
-                case "Iris-setosa":
-                    return 1;
-                case ("Iris-versicolor"):
-                    return 2;
-                case ("Iris-virginica"):
-                    return 3;
-            }
-            return 0;
+            return iris.Label == this.PredictedLabel;
         }
     }
-    public class IrisClustering : PredictionClusteringModel<Iris>
+    public class IrisClustering : MachineLearning.Shared.Model.ClusteringPredictionResult
     {
 
     }
