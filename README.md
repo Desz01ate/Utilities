@@ -43,6 +43,24 @@ class MyCustomConnector : Utilities.Interfaces.IDatabaseConnector<T1,T2>{
 ```
 
 # How to use - MachineLearning
+
+All algorithms are split into their category (BinaryClassification, MulticlassClassfication, Regression and Clustering)
+all methods share the same signature of Taking the generic data type such as 
 ```
-coming soon.
+var engine = MachineLearning.BinaryClassification.FastTree<T1,T2>(data);
 ```
+where T1 is a shape of data you are going to train
+and T2 is a shape of data which you will use as a predict result
+
+the data using in the above context is an IEnumerable of T1, after the training complete you will receive a PredictionEngine<T1,T2> which 
+can be use to predict given data like
+
+```
+var predicted = engine.Predict(newData);
+```
+
+for more information please read some example on https://github.com/Desz01ate/Utilities/blob/master/MachineLearning.Examples/Program.cs
+and helpful data can be found at https://dotnet.microsoft.com/apps/machinelearning-ai/ml-dotnet
+
+
+
