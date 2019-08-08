@@ -115,6 +115,7 @@ namespace Utilities
                         bodyContent = new FormUrlEncodedContent(body);
                         break;
                     case HttpContentType.multipart_formdata:
+                    default:
                         throw new NotSupportedException($"{innerContentType} is currently not supported.");
                         bodyContent = new MultipartFormDataContent();
                         break;
@@ -172,6 +173,7 @@ namespace Utilities
                         bodyContent = new FormUrlEncodedContent(body);
                         break;
                     case HttpContentType.multipart_formdata:
+                    default:
                         throw new NotSupportedException($"{innerContentType} is currently not supported.");
                         bodyContent = new MultipartFormDataContent();
                         break;
@@ -229,6 +231,7 @@ namespace Utilities
                         bodyContent = new FormUrlEncodedContent(body);
                         break;
                     case HttpContentType.multipart_formdata:
+                    default:
                         throw new NotSupportedException($"{innerContentType} is currently not supported.");
                         bodyContent = new MultipartFormDataContent();
                         break;
@@ -286,6 +289,7 @@ namespace Utilities
                         bodyContent = new FormUrlEncodedContent(body);
                         break;
                     case HttpContentType.multipart_formdata:
+                    default:
                         throw new NotSupportedException($"{innerContentType} is currently not supported.");
                         bodyContent = new MultipartFormDataContent();
                         break;
@@ -427,6 +431,7 @@ namespace Utilities
                         bodyContent = new FormUrlEncodedContent(body);
                         break;
                     case HttpContentType.multipart_formdata:
+                    default:
                         throw new NotSupportedException($"{innerContentType} is currently not supported.");
                         bodyContent = new MultipartFormDataContent();
                         break;
@@ -489,6 +494,7 @@ namespace Utilities
                         bodyContent = new FormUrlEncodedContent(body);
                         break;
                     case HttpContentType.multipart_formdata:
+                    default:
                         throw new NotSupportedException($"{innerContentType} is currently not supported.");
                         bodyContent = new MultipartFormDataContent();
                         break;

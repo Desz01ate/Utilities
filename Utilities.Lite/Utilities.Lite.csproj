@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- <TargetFrameworks>netstandard2.0;net472</TargetFrameworks> -->
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <Authors>Chanvut Booneid</Authors>
     <Company>Deszolate_C</Company>
     <Copyright>Copyright © Chanvut Booneid 2019</Copyright>
@@ -9,13 +10,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.2-rc0001</Version>
+    <Version>0.1.2-internal-0.0.2</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>Breaking changes on SQL Module such as remove static method as stated as 'obsolete', add option to constructor as a way to tell that the connection should use the transaction or not.
 Breaking changess on HttpRequest Module which use enum to tell the MIME type instead of string and remove unnecessary overload from the codebase.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,9 +29,19 @@ Breaking changess on HttpRequest Module which use enum to tell the MIME type ins
     <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
+  <!-- <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup> -->
+
   <ItemGroup>
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net452'">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Net.Http.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

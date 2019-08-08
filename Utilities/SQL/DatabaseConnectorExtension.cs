@@ -26,7 +26,7 @@ namespace Utilities.SQL
             where T : class, new()
         {
             var tableName = typeof(T).TableNameValidate();
-            var query = $"SELECT * FROM {tableName}";
+            var query = $"SELECT * FROM {tableName}"; 
             var result = ExecuteReader<T>(query);
             return result;
         }
@@ -240,9 +240,9 @@ namespace Utilities.SQL
         {
             var tableName = typeof(T).TableNameValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-            var translateResult = translator.Translate(predicate);
-            var query = $@"SELECT * FROM {tableName} WHERE {translateResult.Expression}";
-            var result = ExecuteReader<T>(query, translateResult.Parameters);
+            var (expression, parameters) = translator.Translate(predicate);
+            var query = $@"SELECT * FROM {tableName} WHERE {expression}";
+            var result = ExecuteReader<T>(query, parameters);
             return result;
         }
         /// <summary>
@@ -284,9 +284,9 @@ namespace Utilities.SQL
         {
             var tableName = typeof(T).TableNameValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-            var translateResult = translator.Translate(predicate);
-            var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
-            var result = ExecuteNonQuery(query, translateResult.Parameters);
+            var (expression, parameters) = translator.Translate(predicate);
+            var query = $@"DELETE FROM {tableName} WHERE {expression}";
+            var result = ExecuteNonQuery(query, parameters);
             return result;
         }
         /// <summary>
@@ -299,9 +299,9 @@ namespace Utilities.SQL
         {
             var tableName = typeof(T).TableNameValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-            var translateResult = translator.Translate(predicate);
-            var query = $@"SELECT * FROM {tableName} WHERE {translateResult.Expression}";
-            var result = await ExecuteReaderAsync<T>(query, translateResult.Parameters);
+            var (expression, parameters) = translator.Translate(predicate);
+            var query = $@"SELECT * FROM {tableName} WHERE {expression}";
+            var result = await ExecuteReaderAsync<T>(query, parameters);
             return result;
         }
         /// <summary>
@@ -344,8 +344,8 @@ namespace Utilities.SQL
             var tableName = typeof(T).TableNameValidate();
             var baseStatement = $@"DELETE FROM {tableName} WHERE ";
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-            var translateResult = translator.Translate(predicate);
-            var result = await ExecuteNonQueryAsync(baseStatement + translateResult.Expression, translateResult.Parameters);
+            var (expression, parameters) = translator.Translate(predicate);
+            var result = await ExecuteNonQueryAsync(baseStatement + expression, parameters);
             return result;
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Dynamic;
+using System.Linq;
 using System.Reflection;
 using Utilities.Attributes.SQL;
 using Utilities.Enumerables;
@@ -238,6 +239,92 @@ namespace Utilities.Shared
                 }
             }
             return values;
+        }
+
+        public static IEnumerable<string> MapToSQLCreate<T>()
+            where T : class, new()
+        {
+            List<string> converter = new List<string>();
+            foreach (var property in typeof(T).PropertiesValidate())
+            {
+                try
+                {
+                    var propertyType = property.PropertyType;
+                    var propertyName = AttributeExtension.FieldNameValidate(property);
+                    var primaryKeyPostfix = property.IsSQLPrimaryKey() ? " PRIMARY KEY " : "";
+                    //this one generally slow down the overall performance compare to dynamic method but can
+                    //safely sure that all value is going the right way
+                    if (propertyType == typeof(string))
+                    {
+                        converter.Add($"{propertyName} NVARCHAR(MAX) {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(char) || propertyType == typeof(char?))
+                    {
+                        converter.Add($"{propertyName} CHAR(255) {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(short) || propertyType == typeof(short?))
+                    {
+                        converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(int) || propertyType == typeof(int?))
+                    {
+                        converter.Add($"{propertyName} INT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(long) || propertyType == typeof(long?))
+                    {
+                        converter.Add($"{propertyName} BIGINT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(float) || propertyType == typeof(float?))
+                    {
+                        converter.Add($"{propertyName} SQLDOUBLE {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(double) || propertyType == typeof(double?))
+                    {
+                        converter.Add($"{propertyName} FLOAT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(ushort) || propertyType == typeof(ushort?))
+                    {
+                        converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(uint) || propertyType == typeof(uint?))
+                    {
+                        converter.Add($"{propertyName} INT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(ulong) || propertyType == typeof(ulong?))
+                    {
+                        converter.Add($"{propertyName} BIGINT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
+                    {
+                        converter.Add($"{propertyName} BIT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(decimal) || propertyType == typeof(decimal?))
+                    {
+                        converter.Add($"{propertyName} SMALLMONEY {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
+                    {
+                        converter.Add($"{propertyName} DATETIME {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
+                    {
+                        converter.Add($"{propertyName} UNIQUEIDENTIFIER {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(byte) || propertyType == typeof(byte?))
+                    {
+                        converter.Add($"{propertyName} TINYINT {primaryKeyPostfix}");
+                    }
+                    else if (propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
+                    {
+                        converter.Add($"{propertyName} TINYINT {primaryKeyPostfix}");
+                    }
+                }
+                catch
+                {
+                    continue; //skip error property
+                }
+            }
+            return converter;
         }
     }
 }

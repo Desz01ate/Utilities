@@ -25,19 +25,19 @@ namespace Utilities.Testing
                     var gh2 = Utilities.Cryptography.GenerateHash(plainText, saltBytes, 128, iter);
                     var gh3 = Utilities.Cryptography.GenerateHash(plainText, Convert.ToBase64String(saltBytes), 128, iter);
                     Assert.AreEqual(decrypt, plainText);
-                    Assert.IsTrue(Utilities.Cryptography.Verify(plainText, gh1.hash, gh1.salt, iter));
-                    Assert.IsTrue(Utilities.Cryptography.Verify(plainText, gh2.hash, gh2.salt, iter));
-                    Assert.IsTrue(Utilities.Cryptography.Verify(plainText, gh3.hash, gh3.salt, iter));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh1.hash, gh1.salt, iter + 1));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh2.hash, gh2.salt, iter + 1));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh3.hash, gh3.salt, iter + 1));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh1.hash, gh2.salt, iter));
-                    //since gh2,gh3 use the same salt while gh1 randomly generate new one, we use 1 as a false comparer.
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh2.hash, gh1.salt, iter));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh3.hash, gh1.salt, iter));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh1.hash, gh2.salt, iter + 1));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh2.hash, gh3.salt, iter + 1));
-                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh3.hash, gh1.salt, iter + 1));
+                    Assert.IsTrue(Utilities.Cryptography.Verify(plainText,  gh1.Hash, gh1.Salt, iter));
+                    Assert.IsTrue(Utilities.Cryptography.Verify(plainText,  gh2.Hash, gh2.Salt, iter));
+                    Assert.IsTrue(Utilities.Cryptography.Verify(plainText,  gh3.Hash, gh3.Salt, iter));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh1.Hash, gh1.Salt, iter + 1));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh2.Hash, gh2.Salt, iter + 1));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh3.Hash, gh3.Salt, iter + 1));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh1.Hash, gh2.Salt, iter));
+                    //since gh2,gh3 use the same salt while gh1 randomly generatH new one,Swe use 1 as a false comparer.
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh2.Hash, gh1.Salt, iter));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh3.Hash, gh1.Salt, iter));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh1.Hash, gh2.Salt, iter + 1));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh2.Hash, gh3.Salt, iter + 1));
+                    Assert.IsFalse(Utilities.Cryptography.Verify(plainText, gh3.Hash, gh1.Salt, iter + 1));
                 }
             }
 
