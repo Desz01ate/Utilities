@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Utilities.Enumerables;
 
 namespace Utilities.Interfaces
 {
@@ -12,5 +13,6 @@ namespace Utilities.Interfaces
         string ConnectionString { get; }
         bool IsOpen { get; }
         bool UseTransaction { get; }
+        Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
     }
 }

@@ -57,6 +57,16 @@
             Score: Predicted regression value.
             </summary>
         </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Regression.PCAFeatures">
+            <summary>
+            PCAFeatures : Principal-Component-Analysis features.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Regression.LastName">
+            <summary>
+            Unverified column name.
+            </summary>
+        </member>
         <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.Label">
             <summary>
             Label: Original Label of the example.
@@ -77,6 +87,16 @@
             PredictedLabel: Predicted class.
             </summary>
         </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.PCAFeatures">
+            <summary>
+            PCAFeatures : Principal-Component-Analysis features.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.BinaryClassification.LastName">
+            <summary>
+            Unverified column name.
+            </summary>
+        </member>
         <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.Label">
             <summary>
             Label: Original Label of the example.
@@ -90,6 +110,16 @@
         <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.PredictedLabel">
             <summary>
             PredictedLabel: Predicted class.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.PCAFeatures">
+            <summary>
+            PCAFeatures : Principal-Component-Analysis features.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.MulticlassClassification.LastName">
+            <summary>
+            Unverified column name.
             </summary>
         </member>
         <member name="F:MachineLearning.Shared.Constants.IDataView.Clustering.Label">
@@ -106,6 +136,45 @@
             <summary>
             PredictedLabel: Predicted cluster Id.
             </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Clustering.PCAFeatures">
+            <summary>
+            PCAFeatures : Principal-Component-Analysis features.
+            </summary>
+        </member>
+        <member name="F:MachineLearning.Shared.Constants.IDataView.Clustering.LastName">
+            <summary>
+            Unverified column name.
+            </summary>
+        </member>
+        <member name="M:MachineLearning.TensorFlow.ImageClassification(Microsoft.ML.MLContext,Microsoft.ML.IDataView,System.String,System.String)">
+            <summary>
+            Scores a dataset using a pre-trained TensorFlow model.
+            </summary>
+            <param name="context">MLContext instant</param>
+            <param name="data">Data to train</param>
+            <param name="tensorflowModelLocation">Tensorflow pre-trained model (*.pb).</param>
+            <param name="imagesFolder">Images folder to load into trainer</param>
+            <returns></returns>
+        </member>
+        <member name="M:MachineLearning.TensorFlow.ImageClassification(System.Collections.Generic.IEnumerable{MachineLearning.Shared.Model.Tensorflow.TfImageMetadata},System.String,System.String)">
+            <summary>
+            Scores a dataset using a pre-trained TensorFlow model.
+            </summary>
+            <param name="tfImages">IEnumerable of TfImageMetadata</param>
+            <param name="tensorflowModelLocation">Tensorflow pre-trained model (*.pb).</param>
+            <param name="imagesFolder">Images folder to load into trainer</param>
+            <returns></returns>
+        </member>
+        <member name="M:MachineLearning.TensorFlow.ImageClassification(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Scores a dataset using a pre-trained TensorFlow model.
+            </summary>
+            <param name="dataLocation">Data path to load as TfImageMetadata</param>
+            <param name="tensorflowModelLocation">Tensorflow pre-trained model (*.pb).</param>
+            <param name="imagesFolder">Images folder to load into trainer</param>
+            <param name="hasHeader">Is dataLocation file has header row.</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

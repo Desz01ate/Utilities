@@ -53,18 +53,6 @@ namespace MachineLearning.Examples
             Console.ReadLine();
         }
 
-        private static async Task Test()
-        {
-            var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
-
-            IEnumerable<SalesCountry> traindata = null;
-            IEnumerable<SalesCountry> testdata = null;
-            using (var connection = new SQLServer(sqlConnection))
-            {
-                traindata = await connection.SelectAsync<SalesCountry>();
-                testdata = traindata.TakeLast(20);
-            }
-        }
 
         static async Task BinaryClassifier(bool train = true)
         {

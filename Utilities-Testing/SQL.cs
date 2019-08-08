@@ -34,7 +34,7 @@ namespace Utilities.Testing
             {
                 try
                 {
-                    connection.ExecuteNonQuery($@"CREATE TABLE [dbo].[TestTable]([id] int primary key,[value] nvarchar(255))");
+                    connection.CreateTable<TestTable>();
                     for (var iter = 0; iter < 10; iter++)
                     {
                         TestTable testTable = new TestTable() { id = iter, value = $"test" };
@@ -52,10 +52,6 @@ namespace Utilities.Testing
                         testTable.value = "updated";
                         var affectedUpdate = connection.Update(testTable);
                         Assert.AreEqual(affectedUpdate, 1);
-                        var affectedUpdateLambdaValid = connection.Update(testTable, x => x.id == iter);
-                        Assert.AreEqual(affectedUpdateLambdaValid, 1);
-                        var affectedUpdateLambdaInvalid = connection.Update(testTable, x => x.id == iter + 1);
-                        Assert.AreEqual(affectedUpdateLambdaInvalid, 0);
                         var affectedDeleteLambdaInvalid = connection.Delete<TestTable>(x => x.id == iter + 1);
                         Assert.AreEqual(affectedDeleteLambdaInvalid, 0);
                         var affectedDelete = connection.Delete(testTable);
@@ -67,7 +63,7 @@ namespace Utilities.Testing
                 }
                 finally
                 {
-                    connection.ExecuteNonQuery($@"DROP TABLE [dbo].[TestTable]");
+                    connection.DROP_TABLE_USE_WITH_CAUTION<TestTable>();
                 }
             }
         }

@@ -22,6 +22,11 @@ namespace Utilities.Shared
             if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException("PrimaryKey");
             return primaryKeyProperty.First();
         }
+        internal static bool IsSQLPrimaryKey(this PropertyInfo property)
+        {
+            var attrib = property.GetCustomAttribute<PrimaryKeyAttribute>(true);
+            return attrib != null;
+        }
         internal static string FieldNameValidate(this PropertyInfo propertyInfo)
         {
             var attribute = propertyInfo.GetCustomAttribute<FieldAttribute>(true);
