@@ -24,9 +24,9 @@ namespace MachineLearning.Examples
             bool train = false;
             //await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
-            //await RegressionExample(train);
+            await RegressionExample(train);
             //await ClusteringExample(train);
-            await TensorflowImageClassification();
+            //await TensorflowImageClassification();
             Console.WriteLine("Done");
             Console.ReadLine();
         }

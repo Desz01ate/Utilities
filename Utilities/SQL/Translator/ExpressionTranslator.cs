@@ -63,10 +63,10 @@ namespace Utilities.SQL.Translator
             _platformFunctionConfig = platformFunctionConfiguration;
             _fieldsConfiguration = new Dictionary<string, string>();
             _sqlParameters = new List<TSqlParameter>();
-            foreach (var property in typeof(TObject).PropertiesValidate())
+            foreach (var property in typeof(TObject).PropertiesBindingFlagsAttributeValidate())
             {
                 var key = property.Name;
-                var value = property.FieldNameValidate();
+                var value = property.FieldNameAttributeValidate();
                 _fieldsConfiguration.Add(key, value);
             }
             //_fieldsConfiguration = fieldsConfiguration;

@@ -25,7 +25,7 @@ namespace Utilities.SQL
         public virtual IEnumerable<T> Select<T>()
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var query = $"SELECT * FROM {tableName}";
             var result = ExecuteReader<T>(query);
             return result;
@@ -39,8 +39,8 @@ namespace Utilities.SQL
         public virtual T Select<T>(object primaryKey)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+            var tableName = typeof(T).TableNameAttributeValidate();
+            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = ExecuteReader<T>(query, new[] {
                     new TParameterType()
@@ -60,7 +60,7 @@ namespace Utilities.SQL
         public virtual int Insert<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
             var query = $@"INSERT INTO {tableName}
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
@@ -82,9 +82,9 @@ namespace Utilities.SQL
         public virtual int Update<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyValidate();
+            var primaryKey = fields.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
@@ -110,9 +110,9 @@ namespace Utilities.SQL
         public virtual int Delete<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyValidate();
+            var primaryKey = fields.PrimaryKeyAttributeValidate();
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = ExecuteNonQuery(query.ToString(), new[] {
@@ -132,7 +132,7 @@ namespace Utilities.SQL
         public virtual async Task<IEnumerable<T>> SelectAsync<T>()
     where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var query = $"SELECT * FROM {tableName}";
             var result = await ExecuteReaderAsync<T>(query);
             return result;
@@ -146,8 +146,8 @@ namespace Utilities.SQL
         public virtual async Task<T> SelectAsync<T>(object primaryKey)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+            var tableName = typeof(T).TableNameAttributeValidate();
+            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = (await ExecuteReaderAsync<T>(query, new[] {
                     new TParameterType()
@@ -166,7 +166,7 @@ namespace Utilities.SQL
         /// <returns>Affected row after an insert.</returns>
         public virtual async Task<int> InsertAsync<T>(T obj) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
             var query = $@"INSERT INTO {tableName}
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
@@ -188,9 +188,9 @@ namespace Utilities.SQL
         public virtual async Task<int> UpdateAsync<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyValidate();
+            var primaryKey = fields.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
@@ -216,9 +216,9 @@ namespace Utilities.SQL
         public virtual async Task<int> DeleteAsync<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyValidate();
+            var primaryKey = fields.PrimaryKeyAttributeValidate();
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = await ExecuteNonQueryAsync(query.ToString(), new[] {
@@ -238,7 +238,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
             var query = $@"SELECT * FROM {tableName} WHERE {translateResult.Expression}";
@@ -282,7 +282,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
@@ -297,7 +297,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
             var query = $@"SELECT * FROM {tableName} WHERE {translateResult.Expression}";
@@ -341,7 +341,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var baseStatement = $@"DELETE FROM {tableName} WHERE ";
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
@@ -351,8 +351,8 @@ namespace Utilities.SQL
 
         public int Delete<T>(object primaryKey) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+            var tableName = typeof(T).TableNameAttributeValidate();
+            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = this.ExecuteNonQuery(query, new[] {
                     new TParameterType()
@@ -366,8 +366,8 @@ namespace Utilities.SQL
 
         public async Task<int> DeleteAsync<T>(object primaryKey) where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyValidate(typeof(T).GetProperties());
+            var tableName = typeof(T).TableNameAttributeValidate();
+            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = await this.ExecuteNonQueryAsync(query, new[] {
                     new TParameterType()
@@ -385,7 +385,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public int CreateTable<T>() where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var fields = Data.MapToSQLCreate<T>();
             var query = $@"CREATE TABLE {tableName}({string.Join(",", fields)})";
             var result = this.ExecuteNonQuery(query);
@@ -400,7 +400,7 @@ namespace Utilities.SQL
         [Obsolete("Use this method with CAUTION, THE ACTION CANNOT BE UNDONE!")]
         public int DROP_TABLE_USE_WITH_CAUTION<T>() where T : class, new()
         {
-            var tableName = typeof(T).TableNameValidate();
+            var tableName = typeof(T).TableNameAttributeValidate();
             var query = $@"DROP TABLE {tableName}";
             var result = this.ExecuteNonQuery(query);
             return result;

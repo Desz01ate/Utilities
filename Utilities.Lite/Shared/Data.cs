@@ -20,15 +20,15 @@ namespace Utilities.Shared
         /// <typeparam name="T">typeof specific PO</typeparam>
         /// <param name="row">data reader to convert to POCO object</param>
         /// <returns></returns>
-        public static T RowBuilder<T>(this DbDataReader row) where T : new()
+        public static T RowBuilderHighStrict<T>(this DbDataReader row) where T : new()
         {
             object instance = new T();
-            foreach (var property in typeof(T).PropertiesValidate())
+            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
                 try
                 {
                     var propertyType = property.PropertyType;
-                    var propertyName = AttributeExtension.FieldNameValidate(property);
+                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
                     var value = Convert.ToString(row[propertyName]);
@@ -110,15 +110,15 @@ namespace Utilities.Shared
         /// <typeparam name="T">typeof specific PO</typeparam>
         /// <param name="row">data reader to convert to POCO object</param>
         /// <returns></returns>
-        public static T RowBuilderExplicit<T>(this DbDataReader row) where T : new()
+        public static T RowBuilderLowStrict<T>(this DbDataReader row) where T : new()
         {
             object instance = new T();
-            foreach (var property in typeof(T).PropertiesValidate())
+            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
                 try
                 {
                     var propertyType = property.PropertyType;
-                    var propertyName = AttributeExtension.FieldNameValidate(property);
+                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
                     //if the value is not in string form, is can caused errors if the model is mismatch from the database
@@ -196,6 +196,37 @@ namespace Utilities.Shared
             return (T)instance;
         }
         /// <summary>
+        /// Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public static T RowBuilder<T>(this DbDataReader row) where T : new()
+        {
+            T instance = new T();
+            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
+            {
+                try
+                {
+                    var value = row[property.Name];
+                    if (value == DBNull.Value)
+                    {
+                        property.SetValue(instance, null);
+                    }
+                    else
+                    {
+                        property.SetValue(instance, value);
+                    }
+
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return instance;
+        }
+        /// <summary>
         /// Convert DbDataReader into dynamic object with specified column name
         /// </summary>
         /// <param name="row">data reader to convert to dynamic object</param>
@@ -217,7 +248,7 @@ namespace Utilities.Shared
             where T : class, new()
         {
             var values = new Dictionary<string, object>();
-            foreach (var property in typeof(T).PropertiesValidate())
+            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
                 try
                 {
@@ -230,7 +261,7 @@ namespace Utilities.Shared
                         }
                     }
                     var value = property.GetValue(obj);
-                    var name = property.FieldNameValidate();
+                    var name = property.FieldNameAttributeValidate();
                     values.Add(name, value == null ? DBNull.Value : value);
                 }
                 catch
@@ -245,13 +276,13 @@ namespace Utilities.Shared
             where T : class, new()
         {
             List<string> converter = new List<string>();
-            foreach (var property in typeof(T).PropertiesValidate())
+            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
                 try
                 {
                     var propertyType = property.PropertyType;
-                    var propertyName = AttributeExtension.FieldNameValidate(property);
-                    var primaryKeyPostfix = property.IsSQLPrimaryKey() ? " PRIMARY KEY " : "";
+                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
+                    var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
                     if (propertyType == typeof(string))
