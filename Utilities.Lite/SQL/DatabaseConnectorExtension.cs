@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Delegates;
 using Utilities.Interfaces;
 using Utilities.Shared;
 using Utilities.SQL.Translator;
@@ -22,12 +23,20 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>IEnumerable of object</returns>
-        public virtual IEnumerable<T> Select<T>()
+        public IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var query = $"SELECT * FROM {tableName}";
-            var result = ExecuteReader<T>(query);
+            var query = string.Format("SELECT {0} * FROM {1}", top.HasValue ? $"TOP({top.Value})" : "", tableName);
+            IEnumerable<T> result;
+            if (dataBuilder == null)
+            {
+                result = ExecuteReader<T>(query);
+            }
+            else
+            {
+                result = ExecuteReader<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor));
+            }
             return result;
         }
         /// <summary>
@@ -36,19 +45,33 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <returns>Object of given class</returns>
-        public virtual T Select<T>(object primaryKey)
+        public T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
-            var result = ExecuteReader<T>(query, new[] {
+            T result;
+            if (dataBuilder == null)
+            {
+                result = ExecuteReader<T>(query, new[] {
                     new TParameterType()
                     {
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
                 }).FirstOrDefault();
+            }
+            else
+            {
+                result = ExecuteReader<T>(query, new[] {
+                    new TParameterType()
+                    {
+                        ParameterName = primaryKeyAttribute.Name,
+                        Value = primaryKey
+                    }
+                }, objectBuilder: (cursor) => dataBuilder(cursor)).FirstOrDefault();
+            }
             return result;
         }
         /// <summary>
@@ -57,7 +80,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual int Insert<T>(T obj)
+        public int Insert<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -79,7 +102,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to update.</param>
         /// <returns>Affected row after an update.</returns>
-        public virtual int Update<T>(T obj)
+        public int Update<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -107,7 +130,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public virtual int Delete<T>(T obj)
+        public int Delete<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -129,12 +152,20 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>IEnumerable of object</returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>()
-    where T : class, new()
+        public async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null)
+            where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var query = $"SELECT * FROM {tableName}";
-            var result = await ExecuteReaderAsync<T>(query);
+            var query = string.Format("SELECT {0} * FROM {1}", top.HasValue ? $"TOP({top.Value})" : "", tableName);
+            IEnumerable<T> result;
+            if (dataBuilder == null)
+            {
+                result = await ExecuteReaderAsync<T>(query);
+            }
+            else
+            {
+                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor));
+            }
             return result;
         }
         /// <summary>
@@ -143,19 +174,33 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> SelectAsync<T>(object primaryKey)
+        public async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
-            var result = (await ExecuteReaderAsync<T>(query, new[] {
+            T result;
+            if (dataBuilder == null)
+            {
+                result = (await ExecuteReaderAsync<T>(query, new[] {
                     new TParameterType()
                     {
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
                 })).FirstOrDefault();
+            }
+            else
+            {
+                result = (await ExecuteReaderAsync<T>(query, new[] {
+                    new TParameterType()
+                    {
+                        ParameterName = primaryKeyAttribute.Name,
+                        Value = primaryKey
+                    }
+                }, objectBuilder: (cursor) => dataBuilder(cursor))).FirstOrDefault();
+            }
             return result;
         }
         /// <summary>
@@ -164,7 +209,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual async Task<int> InsertAsync<T>(T obj) where T : class, new()
+        public async Task<int> InsertAsync<T>(T obj) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
@@ -185,7 +230,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to update.</param>
         /// <returns>Affected row after an update.</returns>
-        public virtual async Task<int> UpdateAsync<T>(T obj)
+        public async Task<int> UpdateAsync<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -213,7 +258,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(T obj)
+        public async Task<int> DeleteAsync<T>(T obj)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -236,13 +281,21 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <returns></returns>
-        public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
-            var query = $@"SELECT * FROM {tableName} WHERE {translateResult.Expression}";
-            var result = ExecuteReader<T>(query, translateResult.Parameters);
+            var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
+            IEnumerable<T> result;
+            if (dataBuilder == null)
+            {
+                result = ExecuteReader<T>(query, translateResult.Parameters);
+            }
+            else
+            {
+                result = ExecuteReader<T>(query, translateResult.Parameters, objectBuilder: (cursor) => dataBuilder(cursor));
+            }
             return result;
         }
         /// <summary>
@@ -295,13 +348,21 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
-            var query = $@"SELECT * FROM {tableName} WHERE {translateResult.Expression}";
-            var result = await ExecuteReaderAsync<T>(query, translateResult.Parameters);
+            var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
+            IEnumerable<T> result;
+            if (dataBuilder == null)
+            {
+                result = await ExecuteReaderAsync<T>(query, translateResult.Parameters);
+            }
+            else
+            {
+                result = await ExecuteReaderAsync<T>(query, translateResult.Parameters, objectBuilder: (cursor) => dataBuilder(cursor));
+            }
             return result;
         }
         /// <summary>

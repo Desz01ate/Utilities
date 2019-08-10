@@ -16,7 +16,6 @@ namespace MachineLearning
         /// <typeparam name="TIn"></typeparam>
         /// <typeparam name="TOut"></typeparam>
         /// <param name="trainDataset">Enumerable of TIn type.</param>
-        /// <param name="labelColumnName">The name of the label column.</param>
         /// <param name="outputColumnName">The name of the feature column.</param>
         /// <param name="exampleWeightColumnName">The name of the example weight column.</param>
         /// <param name="l1Regularization">Weight of L1 regularization term.</param>
@@ -67,7 +66,6 @@ namespace MachineLearning
         /// <typeparam name="TIn"></typeparam>
         /// <typeparam name="TOut"></typeparam>
         /// <param name="trainDataset">Enumerable of TIn type.</param>
-        /// <param name="labelColumnName">The name of the label column.</param>
         /// <param name="outputColumnName">The name of the feature column.</param>
         /// <param name="exampleWeightColumnName">The name of the example weight column.</param>
         /// <param name="l2Regularization">The L2 regularization hyperparameter.</param>

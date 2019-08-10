@@ -287,43 +287,31 @@ namespace Utilities.Shared
                     //safely sure that all value is going the right way
                     if (propertyType == typeof(string))
                     {
-                        converter.Add($"{propertyName} NVARCHAR(MAX) {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} NVARCHAR(1024) {primaryKeyPostfix}");
                     }
                     else if (propertyType == typeof(char) || propertyType == typeof(char?))
                     {
-                        converter.Add($"{propertyName} CHAR(255) {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} NCHAR(1) {primaryKeyPostfix}");
                     }
-                    else if (propertyType == typeof(short) || propertyType == typeof(short?))
+                    else if (propertyType == typeof(short) || propertyType == typeof(short?) || propertyType == typeof(ushort) || propertyType == typeof(ushort?))
                     {
                         converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix}");
                     }
-                    else if (propertyType == typeof(int) || propertyType == typeof(int?))
+                    else if (propertyType == typeof(int) || propertyType == typeof(int?) || propertyType == typeof(uint) || propertyType == typeof(uint?))
                     {
                         converter.Add($"{propertyName} INT {primaryKeyPostfix}");
                     }
-                    else if (propertyType == typeof(long) || propertyType == typeof(long?))
+                    else if (propertyType == typeof(long) || propertyType == typeof(long?) || propertyType == typeof(ulong) || propertyType == typeof(ulong?))
                     {
                         converter.Add($"{propertyName} BIGINT {primaryKeyPostfix}");
                     }
                     else if (propertyType == typeof(float) || propertyType == typeof(float?))
                     {
-                        converter.Add($"{propertyName} SQLDOUBLE {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} REAL {primaryKeyPostfix}");
                     }
                     else if (propertyType == typeof(double) || propertyType == typeof(double?))
                     {
                         converter.Add($"{propertyName} FLOAT {primaryKeyPostfix}");
-                    }
-                    else if (propertyType == typeof(ushort) || propertyType == typeof(ushort?))
-                    {
-                        converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix}");
-                    }
-                    else if (propertyType == typeof(uint) || propertyType == typeof(uint?))
-                    {
-                        converter.Add($"{propertyName} INT {primaryKeyPostfix}");
-                    }
-                    else if (propertyType == typeof(ulong) || propertyType == typeof(ulong?))
-                    {
-                        converter.Add($"{propertyName} BIGINT {primaryKeyPostfix}");
                     }
                     else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
                     {
@@ -331,7 +319,7 @@ namespace Utilities.Shared
                     }
                     else if (propertyType == typeof(decimal) || propertyType == typeof(decimal?))
                     {
-                        converter.Add($"{propertyName} SMALLMONEY {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} MONEY {primaryKeyPostfix}");
                     }
                     else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                     {
@@ -341,13 +329,13 @@ namespace Utilities.Shared
                     {
                         converter.Add($"{propertyName} UNIQUEIDENTIFIER {primaryKeyPostfix}");
                     }
-                    else if (propertyType == typeof(byte) || propertyType == typeof(byte?))
+                    else if (propertyType == typeof(byte) || propertyType == typeof(byte?) || propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
                     {
                         converter.Add($"{propertyName} TINYINT {primaryKeyPostfix}");
                     }
-                    else if (propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
+                    else if (propertyType == typeof(byte[]))
                     {
-                        converter.Add($"{propertyName} TINYINT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} VARBINARY {primaryKeyPostfix}");
                     }
                 }
                 catch

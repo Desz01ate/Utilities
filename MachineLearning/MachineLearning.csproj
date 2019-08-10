@@ -19,7 +19,7 @@ Add Tensorflow Image Classification to MachineLearning</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\MachineLearning\MachineLearning.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\MachineLearning\MachineLearning.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

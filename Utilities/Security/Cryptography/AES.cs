@@ -46,12 +46,10 @@ namespace Utilities.Security.Cryptography
             {
                 decrypted = DecryptStringFromBytes_Aes(data, keys[0], keys[1]);
             }
-            catch (CryptographicException)
+            catch (Exception ex)
             {
-                string a = "";
+                throw ex;
             }
-            catch (ArgumentNullException) { }
-
             return decrypted;
         }
 

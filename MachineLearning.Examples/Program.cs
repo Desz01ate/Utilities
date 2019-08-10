@@ -1,19 +1,17 @@
-﻿using MachineLearning.Examples.POCO;
+﻿using MachineLearning.Examples.DataConnector;
+using MachineLearning.Examples.POCO;
 using MachineLearning.Shared;
 using MachineLearning.Shared.Model.Tensorflow;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using Microsoft.ML.Trainers;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Utilities.SQL;
 
 namespace MachineLearning.Examples
 {
@@ -21,7 +19,7 @@ namespace MachineLearning.Examples
     {
         static async Task Main(string[] args)
         {
-            bool train = false;
+            bool train = true;
             //await BinaryClassifier(train);
             //await MulticlassClassificationExample(train);
             await RegressionExample(train);
@@ -199,11 +197,23 @@ namespace MachineLearning.Examples
 
             using (var connection = new SQLServer(sqlConnection))
             {
-                testdata = await connection.ExecuteReaderAsync<TaxiFare>("SELECT TOP(10) * FROM [taxi-fare-test]");
-                traindata = await connection.ExecuteReaderAsync<TaxiFare>("SELECT * FROM [taxi-fare-train] ORDER BY NEWID()");
+                testdata = await connection.SelectAsync<TaxiFareTest>(top: 10);
+                traindata = await connection.SelectAsync<TaxiFareTrain>();
+                var context = new MLContext(1);
+                var dataframe = context.Data.LoadFromEnumerable(traindata);
+                var crossValidatePreparer = context.Transforms.Concatenate("Features", new[] { "rate_code", "passenger_count", "trip_time_in_secs", "trip_distance" }).
+                        Append(context.Transforms.NormalizeMinMax("Features"));
+                var cleanedData = crossValidatePreparer.Fit(dataframe);
+                var transformedData = cleanedData.Transform(dataframe);
+                var crossValidate = context.Regression.CrossValidate(transformedData, context.Regression.Trainers.FastTreeTweedie(), numberOfFolds: 5);
+                var rsqrs = crossValidate.Select(x => new
+                {
+                    model = x.Model,
+                    rsquared = x.Metrics.RSquared
+                }).ToList();
+
             }
-
-
+            return;
             var algorithms = new Dictionary<string, Func<IEnumerable<TaxiFare>, Action<ITransformer>, PredictionEngine<TaxiFare, TaxiFareRegression>>>() {
                 { "SDCA", (data,action) => Regression.StochasticDoubleCoordinateAscent<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },
                 { "LBFGS", (data,action) => Regression.LbfgsPoisson<TaxiFare,TaxiFareRegression>(data,additionModelAction : action) },

@@ -689,14 +689,14 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
             <typeparam name="T"></typeparam>
             <returns>IEnumerable of object</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Object)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -728,14 +728,14 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
             <typeparam name="T"></typeparam>
             <returns>IEnumerable of object</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -767,7 +767,7 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -783,7 +783,7 @@
             <param name="predicate">Predicate of data in LINQ manner</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -813,9 +813,26 @@
             <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
-        <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
-        <!-- Badly formed XML comment ignored for member "T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator" -->
+        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
+            <summary>
+            Performs evaluation and replacement of independent sub-trees
+            </summary>
+            <param name="expression">The root of the expression tree.</param>
+            <param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>
+            <returns>A new tree with sub-trees evaluated and replaced.</returns>
+        </member>
+        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)">
+            <summary>
+            Performs evaluation and replacement of independent sub-trees
+            </summary>
+            <param name="expression">The root of the expression tree.</param>
+            <returns>A new tree with sub-trees evaluated and replaced.</returns>
+        </member>
+        <member name="T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator">
+            <summary>
+            Evaluates and replaces sub-trees when first candidate is reached (top-down)
+            </summary>
+        </member>
         <member name="T:Utilities.SQL.Translator.Evaluator.Nominator">
             <summary>
             Performs bottom-up analysis to determine which nodes can possibly

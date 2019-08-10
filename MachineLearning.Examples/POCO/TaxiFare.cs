@@ -2,13 +2,14 @@
 using MachineLearning.Examples.Interfaces;
 using MachineLearning.Shared.Attributes;
 using MachineLearning.Shared.Model;
+using Microsoft.ML.Data;
 using System;
+using System.Data.Common;
 using Utilities.Attributes.SQL;
 
 namespace MachineLearning.Examples.POCO
 {
-    [Table("[taxi-fare-train2]")]
-    public class TaxiFare : IConstraint
+    public class TaxiFare
     {
         [PrimaryKey]
         [Field("vendor_id")]
@@ -23,22 +24,19 @@ namespace MachineLearning.Examples.POCO
         [IgnoreField(false, false)]
         public string payment_type { get; set; }
         [LabelColumn]
+        [ColumnName("Label")]
         public float fare_amount { get; set; }
+    }
+    [Table("[taxi-fare-train]")]
 
-        public string actual_string_result()
-        {
-            throw new NotImplementedException();
-        }
+    public class TaxiFareTrain : TaxiFare
+    {
 
-        public float actual_float_result()
-        {
-            return fare_amount;
-        }
+    }
+    [Table("[taxi-fare-test]")]
+    public class TaxiFareTest : TaxiFare
+    {
 
-        public uint actual_uint_result()
-        {
-            throw new NotImplementedException();
-        }
     }
     public class TaxiFareRegression : RegressionPredictionResult
     {

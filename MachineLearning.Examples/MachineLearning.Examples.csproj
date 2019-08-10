@@ -8,11 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MachineLearning\MachineLearning.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Utilities.Lite\Utilities.Lite.csproj" />
   </ItemGroup>
 
   <ItemGroup>

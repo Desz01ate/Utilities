@@ -466,7 +466,7 @@
             This class contains a generic way to build data from specific source such as DbDataReader or from object itself
             </summary>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.Data.RowBuilderHighStrict``1(System.Data.Common.DbDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
             </summary>
@@ -474,12 +474,20 @@
             <param name="row">data reader to convert to POCO object</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilderExplicit``1(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.Data.RowBuilderLowStrict``1(System.Data.Common.DbDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection using explicit inference (can cause the property to be default or null if mismatch data type but has a significant improved speed compare to implicitly style.)
             </summary>
             <typeparam name="T">typeof specific PO</typeparam>
             <param name="row">data reader to convert to POCO object</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
+            <summary>
+            Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="row"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{System.String})">
@@ -830,9 +838,26 @@
             SQLServer Connector with implementation derived from DatabaseConnector
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
-        <!-- Badly formed XML comment ignored for member "M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
-        <!-- Badly formed XML comment ignored for member "T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator" -->
+        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
+            <summary>
+            Performs evaluation and replacement of independent sub-trees
+            </summary>
+            <param name="expression">The root of the expression tree.</param>
+            <param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>
+            <returns>A new tree with sub-trees evaluated and replaced.</returns>
+        </member>
+        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)">
+            <summary>
+            Performs evaluation and replacement of independent sub-trees
+            </summary>
+            <param name="expression">The root of the expression tree.</param>
+            <returns>A new tree with sub-trees evaluated and replaced.</returns>
+        </member>
+        <member name="T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator">
+            <summary>
+            Evaluates and replaces sub-trees when first candidate is reached (top-down)
+            </summary>
+        </member>
         <member name="T:Utilities.SQL.Translator.Evaluator.Nominator">
             <summary>
             Performs bottom-up analysis to determine which nodes can possibly
