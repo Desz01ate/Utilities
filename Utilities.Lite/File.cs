@@ -12,7 +12,7 @@ namespace Utilities
     {
         public static T ReadJsonAs<T>(string path, FileMode fileMode = FileMode.Open) where T : new()
         {
-            if (string.IsNullOrWhiteSpace(path) || path.ToLower().EndsWith("json"))
+            if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("json"))
             {
                 throw new FormatException("It seem that the path is not ending with .json, please verify the path.");
             }
@@ -23,7 +23,7 @@ namespace Utilities
         }
         public static T ReadXmlAs<T>(string path, FileMode fileMode = FileMode.Open, bool omitRootObject = true) where T : new()
         {
-            if (string.IsNullOrWhiteSpace(path) || path.ToLower().EndsWith("xml"))
+            if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("xml"))
             {
                 throw new FormatException("It seem that the path is not ending with .xml, please verify the path.");
             }
@@ -58,11 +58,15 @@ namespace Utilities
             var json = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.None, omitRootObject);
             return JsonConvert.DeserializeObject<T>(json);
         }
-        public static void WriteAsJson<T>(T obj, string path, Encoding encoding, FileMode fileMode = FileMode.OpenOrCreate)
+        public static void WriteAsJson<T>(T obj, string path, Encoding encoding)
         {
             if (obj == null)
             {
                 throw new ArgumentNullException("Object must not be null.");
+            }
+            if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("json"))
+            {
+                throw new FormatException("It seem that the path is not ending with .json, please verify the path.");
             }
             var json = JsonConvert.SerializeObject(obj);
             System.IO.File.WriteAllText(path, json, encoding);

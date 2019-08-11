@@ -40,7 +40,7 @@ namespace Utilities.Testing
                         TestTable testTable = new TestTable() { id = iter, value = $"test" };
                         var affectedCreate = connection.Insert(testTable);
                         Assert.AreEqual(affectedCreate, 1);
-                        var selectedById = connection.Select<TestTable>(iter);
+                        var selectedById = connection.Select<TestTable>(primaryKey: iter);
                         Assert.AreEqual(selectedById.id, iter);
                         Assert.AreEqual(selectedById.value, "test");
                         var selectedByIdLambda = connection.Select<TestTable>(x => x.id == iter);

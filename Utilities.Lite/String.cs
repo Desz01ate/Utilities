@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace Utilities
@@ -43,6 +45,26 @@ namespace Utilities
         {
             var charArray = Convert.FromBase64String(base64String);
             return Encoding.UTF8.GetString(charArray);
+        }
+        /// <summary>
+        /// Translate original text from given language to target language, supported language can be found in Utilities.Enumerables.Language.
+        /// </summary>
+        /// <param name="originalText">Original text.</param>
+        /// <param name="fromLanguage">From language.</param>
+        /// <param name="toLanguage">To language.</param>
+        /// <returns></returns>
+        public static string Translate(string originalText, string fromLanguage, string toLanguage)
+        {
+            var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={fromLanguage}&tl={toLanguage}&dt=t&q={WebUtility.UrlEncode(originalText)}";
+            var webClient = new WebClient
+            {
+                Encoding = Encoding.UTF8
+            };
+            var response = webClient.DownloadString(url);
+            var startExtractIndex = response.IndexOf('"');
+            var endExtractIndex = response.IndexOf('"', startExtractIndex + 1) - 1;
+            var result = response.Substring(startExtractIndex + 1, endExtractIndex - 3);
+            return result;
         }
     }
 }

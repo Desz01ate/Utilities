@@ -177,6 +177,7 @@ namespace Utilities
             }
             return randomBytes;
         }
+
         /// <summary>
         /// Provide statistically random string generate with customizable length and combination.
         /// </summary>
@@ -196,14 +197,16 @@ namespace Utilities
                 {
 #if NET452
                     rng.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                    result.Append(combination[(int)(num % combination.Length)]);
 #else
                     rng.GetBytes(uintBuffer, offset, count);
-#endif
                     uint num = BitConverter.ToUInt32(uintBuffer, 0);
                     if (num < max)
                     {
                         result.Append(combination[(int)(num % combination.Length)]);
                     }
+#endif
                 }
             }
             return result.ToString();

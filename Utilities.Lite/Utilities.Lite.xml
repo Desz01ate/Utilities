@@ -71,6 +71,9 @@
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
             </summary>
+            <summary>
+            Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
+            </summary>
         </member>
         <member name="M:Utilities.HttpRequest.Get(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
@@ -258,6 +261,118 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a DELETE request to the specified Uri as an asynchronous operation.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="encoding">The body content type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.Post(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a POST request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PostFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a POST request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a POST request to the specified Uri as an asynchronous operation.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PostAsyncFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a POST request to the specified Uri as an asynchronous operation.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="encoding">The body content type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.Put(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a PUT request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PutFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a PUT request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a PUT request to the specified Uri as an asynchronous operation.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PutAsyncFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a PUT request to the specified Uri as an asynchronous operation.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a DELETE request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a DELETE request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a DELETE request to the specified Uri as an asynchronous operation.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="body">The body content the request is sent to.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a DELETE request to the specified Uri as an asynchronous operation.
             </summary>
@@ -872,6 +987,15 @@
             Convert base64 string to original string
             </summary>
             <param name="base64String"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Translate(System.String,System.String,System.String)">
+            <summary>
+            Translate original text from given language to target language, supported language can be found in Utilities.Enumerables.Language.
+            </summary>
+            <param name="originalText">Original text.</param>
+            <param name="fromLanguage">From language.</param>
+            <param name="toLanguage">To language.</param>
             <returns></returns>
         </member>
     </members>

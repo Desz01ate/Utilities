@@ -194,11 +194,13 @@ namespace MachineLearning.Examples
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             IEnumerable<TaxiFare> testdata = null;
             IEnumerable<TaxiFare> traindata = null;
-
             using (var connection = new SQLServer(sqlConnection))
             {
                 testdata = await connection.SelectAsync<TaxiFareTest>(top: 10);
-                traindata = await connection.SelectAsync<TaxiFareTrain>();
+                var stw = await Utilities.Diagnostics.RuntimeEstimationAsync(async () =>
+                {
+                    traindata = await connection.SelectAsync<TaxiFareTrain>();
+                });
                 var context = new MLContext(1);
                 var dataframe = context.Data.LoadFromEnumerable(traindata);
                 var crossValidatePreparer = context.Transforms.Concatenate("Features", new[] { "rate_code", "passenger_count", "trip_time_in_secs", "trip_distance" }).

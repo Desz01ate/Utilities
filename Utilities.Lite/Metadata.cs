@@ -10,6 +10,6 @@ namespace Utilities
     public static class Metadata
     {
         public static string Version => ((AssemblyFileVersionAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyFileVersionAttribute), false)).Version;
-        public static string TargetFramework => (Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false).First() as TargetFrameworkAttribute)?.FrameworkDisplayName;
+        public static string TargetFramework => (Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false).First() as TargetFrameworkAttribute)?.FrameworkName;
     }
 }

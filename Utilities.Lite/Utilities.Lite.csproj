@@ -10,17 +10,16 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.2</Version>
+    <Version>0.1.2.1-beta-002</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>Breaking changes on SQL Module such as remove static method as stated as 'obsolete', add option to constructor as a way to tell that the connection should use the transaction or not.
-Breaking changess on HttpRequest Module which use enum to tell the MIME type instead of string and remove unnecessary overload from the codebase.
+    <PackageReleaseNotes>[.NET Framework]
+New module 'ImageProcessing' which currently contains bitmap resize and Gaussian Blur
+- .NET framework 4.5.2 got bug fix to Utilities.Cryptography.SecureRandomString where generator infinitely freeze.
 
-Row builder is now 'greatly' enhanced by lower cpu usage and superior build speed.
-
-Add .NET Framework 4.5.2, .NET Standard 2.1 as alternative targets for more compatible projects.
-Add basic DDL methods to SQL Module.
-Some anonymous tuple has been converted to structs for compatibility over multiple framework.</PackageReleaseNotes>
+[All]
+New module 'File' which allow you to load json/xml file into object or write object into json file.
+Change Metadata.TargetFramework to display FrameworkName instead of FrameworkDisplayName</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
