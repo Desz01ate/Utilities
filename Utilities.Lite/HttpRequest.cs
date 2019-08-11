@@ -752,8 +752,6 @@ namespace Utilities
         /// </summary>
         /// <param name="url">The Uri the request is sent to.</param>
         /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="encoding">The body content type.</param>
-        /// <param name="contentType">The body media type.</param>
         /// <param name="headers"></param>
         /// <returns></returns>
         public static async Task<T> DeleteAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()

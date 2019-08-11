@@ -15,12 +15,43 @@ namespace Utilities.Shared
     public static class Data
     {
         /// <summary>
+        /// Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public static T RowBuilder<T>(this DbDataReader row) where T : new()
+        {
+            T instance = new T();
+            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
+            {
+                try
+                {
+                    var value = row[property.Name];
+                    if (value == DBNull.Value)
+                    {
+                        property.SetValue(instance, null);
+                    }
+                    else
+                    {
+                        property.SetValue(instance, value);
+                    }
+
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return instance;
+        }
+        /// <summary>
         /// Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
         /// </summary>
         /// <typeparam name="T">typeof specific PO</typeparam>
         /// <param name="row">data reader to convert to POCO object</param>
         /// <returns></returns>
-        public static T RowBuilderHighStrict<T>(this DbDataReader row) where T : new()
+        public static T RowBuilderStrict<T>(this DbDataReader row) where T : new()
         {
             object instance = new T();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
@@ -105,128 +136,6 @@ namespace Utilities.Shared
             return (T)instance;
         }
         /// <summary>
-        /// Convert DbDataReader into POCO object using reflection using explicit inference (can cause the property to be default or null if mismatch data type but has a significant improved speed compare to implicitly style.)
-        /// </summary>
-        /// <typeparam name="T">typeof specific PO</typeparam>
-        /// <param name="row">data reader to convert to POCO object</param>
-        /// <returns></returns>
-        public static T RowBuilderLowStrict<T>(this DbDataReader row) where T : new()
-        {
-            object instance = new T();
-            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
-            {
-                try
-                {
-                    var propertyType = property.PropertyType;
-                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
-                    //this one generally slow down the overall performance compare to dynamic method but can
-                    //safely sure that all value is going the right way
-                    //if the value is not in string form, is can caused errors if the model is mismatch from the database
-                    var value = row[propertyName];
-                    if (propertyType == typeof(string))
-                    {
-                        property.SetValue(instance, value);
-                    }
-                    else if (propertyType == typeof(char) || propertyType == typeof(char?))
-                    {
-                        property.SetValue(instance, Convert.ToChar(value));
-                    }
-                    else if (propertyType == typeof(short) || propertyType == typeof(short?))
-                    {
-                        property.SetValue(instance, Convert.ToInt16(value));
-                    }
-                    else if (propertyType == typeof(int) || propertyType == typeof(int?))
-                    {
-                        property.SetValue(instance, Convert.ToInt32(value));
-                    }
-                    else if (propertyType == typeof(long) || propertyType == typeof(long?))
-                    {
-                        property.SetValue(instance, Convert.ToInt64(value));
-                    }
-                    else if (propertyType == typeof(float) || propertyType == typeof(float?))
-                    {
-                        property.SetValue(instance, Convert.ToSingle(value));
-                    }
-                    else if (propertyType == typeof(double) || propertyType == typeof(double?))
-                    {
-                        property.SetValue(instance, Convert.ToDouble(value));
-                    }
-                    else if (propertyType == typeof(ushort) || propertyType == typeof(ushort?))
-                    {
-                        property.SetValue(instance, Convert.ToUInt16(value));
-                    }
-                    else if (propertyType == typeof(uint) || propertyType == typeof(uint?))
-                    {
-                        property.SetValue(instance, Convert.ToUInt32(value));
-                    }
-                    else if (propertyType == typeof(ulong) || propertyType == typeof(ulong?))
-                    {
-                        property.SetValue(instance, Convert.ToUInt64(value));
-                    }
-                    else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
-                    {
-                        property.SetValue(instance, Convert.ToBoolean(value));
-                    }
-                    else if (propertyType == typeof(decimal) || propertyType == typeof(decimal?))
-                    {
-                        property.SetValue(instance, Convert.ToDecimal(value));
-                    }
-                    else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
-                    {
-                        property.SetValue(instance, DateTime.Parse(value.ToString()));
-                    }
-                    else if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
-                    {
-                        property.SetValue(instance, Guid.Parse(value.ToString()));
-                    }
-                    else if (propertyType == typeof(byte) || propertyType == typeof(byte?))
-                    {
-                        property.SetValue(instance, Convert.ToByte(value));
-                    }
-                    else if (propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
-                    {
-                        property.SetValue(instance, Convert.ToSByte(value));
-                    }
-                }
-                catch
-                {
-                    continue; //skip error property
-                }
-            }
-            return (T)instance;
-        }
-        /// <summary>
-        /// Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        public static T RowBuilder<T>(this DbDataReader row) where T : new()
-        {
-            T instance = new T();
-            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
-            {
-                try
-                {
-                    var value = row[property.Name];
-                    if (value == DBNull.Value)
-                    {
-                        property.SetValue(instance, null);
-                    }
-                    else
-                    {
-                        property.SetValue(instance, value);
-                    }
-
-                }
-                catch
-                {
-                    continue;
-                }
-            }
-            return instance;
-        }
-        /// <summary>
         /// Convert DbDataReader into dynamic object with specified column name
         /// </summary>
         /// <param name="row">data reader to convert to dynamic object</param>
@@ -262,7 +171,7 @@ namespace Utilities.Shared
                     }
                     var value = property.GetValue(obj);
                     var name = property.FieldNameAttributeValidate();
-                    values.Add(name, value == null ? DBNull.Value : value);
+                    values.Add(name, value ?? DBNull.Value);
                 }
                 catch
                 {
@@ -272,7 +181,7 @@ namespace Utilities.Shared
             return values;
         }
 
-        public static IEnumerable<string> MapToSQLCreate<T>()
+        internal static IEnumerable<string> GenerateSQLCreteFieldStatement<T>()
             where T : class, new()
         {
             List<string> converter = new List<string>();
@@ -283,8 +192,6 @@ namespace Utilities.Shared
                     var propertyType = property.PropertyType;
                     var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
                     var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
-                    //this one generally slow down the overall performance compare to dynamic method but can
-                    //safely sure that all value is going the right way
                     if (propertyType == typeof(string))
                     {
                         converter.Add($"{propertyName} NVARCHAR(1024) {primaryKeyPostfix}");

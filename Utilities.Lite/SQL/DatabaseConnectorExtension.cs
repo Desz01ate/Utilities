@@ -447,7 +447,7 @@ namespace Utilities.SQL
         public int CreateTable<T>() where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = Data.MapToSQLCreate<T>();
+            var fields = Data.GenerateSQLCreteFieldStatement<T>();
             var query = $@"CREATE TABLE {tableName}({string.Join(",", fields)})";
             var result = this.ExecuteNonQuery(query);
             return result;
