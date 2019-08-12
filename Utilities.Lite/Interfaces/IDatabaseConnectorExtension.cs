@@ -4,7 +4,6 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Utilities.Delegates;
 
 namespace Utilities.Interfaces
 {

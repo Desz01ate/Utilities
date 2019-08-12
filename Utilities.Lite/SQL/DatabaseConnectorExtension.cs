@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Utilities.Delegates;
 using Utilities.Interfaces;
 using Utilities.Shared;
 using Utilities.SQL.Translator;

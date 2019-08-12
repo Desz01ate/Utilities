@@ -9,9 +9,11 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.SQL.Generator.Enumerable;
 
 namespace MachineLearning.Examples
 {
@@ -194,6 +196,41 @@ namespace MachineLearning.Examples
             var sqlConnection = $@"Server = localhost;database = Local;user = sa;password = sa";
             IEnumerable<TaxiFare> testdata = null;
             IEnumerable<TaxiFare> traindata = null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            var generator = new Utilities.SQL.Generator.ModelGenerator<SqlConnection>(sqlConnection, @"D:\Documents\Test");
+            generator.GenerateAllTables(TargetLanguage.CSharp);
+            generator.GenerateAllTables(TargetLanguage.VisualBasic);
+            generator.GenerateAllTables(TargetLanguage.TypeScript);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             using (var connection = new SQLServer(sqlConnection))
             {
                 testdata = await connection.SelectAsync<TaxiFareTest>(top: 10);

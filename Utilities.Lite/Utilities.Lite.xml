@@ -378,8 +378,6 @@
             </summary>
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
             <param name="headers"></param>
             <returns></returns>
         </member>
@@ -581,28 +579,20 @@
             This class contains a generic way to build data from specific source such as DbDataReader or from object itself
             </summary>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilderHighStrict``1(System.Data.Common.DbDataReader)">
-            <summary>
-            Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
-            </summary>
-            <typeparam name="T">typeof specific PO</typeparam>
-            <param name="row">data reader to convert to POCO object</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.Data.RowBuilderLowStrict``1(System.Data.Common.DbDataReader)">
-            <summary>
-            Convert DbDataReader into POCO object using reflection using explicit inference (can cause the property to be default or null if mismatch data type but has a significant improved speed compare to implicitly style.)
-            </summary>
-            <typeparam name="T">typeof specific PO</typeparam>
-            <param name="row">data reader to convert to POCO object</param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
             </summary>
             <typeparam name="T"></typeparam>
             <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilderStrict``1(System.Data.Common.DbDataReader)">
+            <summary>
+            Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
+            </summary>
+            <typeparam name="T">typeof specific PO</typeparam>
+            <param name="row">data reader to convert to POCO object</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{System.String})">
@@ -927,6 +917,12 @@
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
+        </member>
+        <member name="T:Utilities.SQL.Generator.ModelGenerator`1">
+            <summary>
+            This class contain definition for database model generator.
+            </summary>
+            <typeparam name="TDatabase"></typeparam>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
             <summary>
