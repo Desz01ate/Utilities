@@ -198,7 +198,7 @@ namespace MachineLearning.Examples
             IEnumerable<TaxiFare> traindata = null;
 
 
-
+            var result = Utilities.String.NumberFormat(1024m);
 
 
 

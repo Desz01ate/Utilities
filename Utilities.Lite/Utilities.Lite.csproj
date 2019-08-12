@@ -10,16 +10,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.2.1-beta-002</Version>
+    <Version>0.1.2.1-beta-003</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>[.NET Framework]
-New module 'ImageProcessing' which currently contains bitmap resize and Gaussian Blur
-- .NET framework 4.5.2 got bug fix to Utilities.Cryptography.SecureRandomString where generator infinitely freeze.
-
-[All]
-New module 'File' which allow you to load json/xml file into object or write object into json file.
-Change Metadata.TargetFramework to display FrameworkName instead of FrameworkDisplayName</PackageReleaseNotes>
+    <PackageReleaseNotes>Add POCO model generator which is currently support C#, Visual Basic and TypeScript</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

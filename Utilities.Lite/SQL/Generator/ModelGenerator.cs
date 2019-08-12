@@ -11,7 +11,7 @@ using Utilities.SQL.Generator.Model;
 namespace Utilities.SQL.Generator
 {
     /// <summary>
-    /// This class contain definition for database model generator.
+    /// This class contain definition for database model generator (This class is consider a beta feature and only tested on SQLServer).
     /// </summary>
     /// <typeparam name="TDatabase"></typeparam>
     public class ModelGenerator<TDatabase> where TDatabase : DbConnection, new()
@@ -62,38 +62,36 @@ namespace Utilities.SQL.Generator
             };
             connection.Open();
             using var command = connection.CreateCommand();
-            command.CommandText = $@"SELECT TOP(1) * FROM {TableNameCleanser(tableName)}";
+            command.CommandText = $@"SELECT * FROM {TableNameCleanser(tableName)} WHERE 1 = 0";
             command.CommandType = CommandType.Text;
             command.CommandTimeout = 60;
             using var cursor = command.ExecuteReader();
-            var columns = new List<SqlColumn>();
-            while (cursor.Read())
-            {
-                var typeProperties = new[] { "DataType", "ProviderSpecificDataType" };
-                var schema = cursor.GetSchemaTable();
 
-                for (var rowIndex = 0; rowIndex < schema.Rows.Count; rowIndex++)
+            var columns = new List<SqlColumn>();
+            var typeProperties = new[] { "DataType", "ProviderSpecificDataType" };
+            var schema = cursor.GetSchemaTable();
+            for (var rowIndex = 0; rowIndex < schema.Rows.Count; rowIndex++)
+            {
+                var sqlColumn = new SqlColumn();
+                for (var colIndex = 0; colIndex < schema.Columns.Count; colIndex++)
                 {
-                    var sqlColumn = new SqlColumn();
-                    for (var colIndex = 0; colIndex < schema.Columns.Count; colIndex++)
-                    {
-                        var propertyName = schema.Columns[colIndex].ColumnName;
-                        var value = schema.Rows[rowIndex][colIndex];
-                        if (typeProperties.Contains(propertyName))
-                            value = ((Type)value).FullName;
-                        var property = typeof(SqlColumn).GetProperty(propertyName);
-                        if (!Convert.IsDBNull(value) && property != null)
-                            property.SetValue(sqlColumn, value, null);
-                    }
-                    var decimalTypes = new[] { "real", "float", "decimal", "money", "smallmoney" };
-                    if (decimalTypes.Contains(sqlColumn.DataTypeName))
-                    {
-                        sqlColumn.NumericScale = 0;
-                        sqlColumn.NumericPrecision = 0;
-                    }
-                    columns.Add(sqlColumn);
+                    var propertyName = schema.Columns[colIndex].ColumnName;
+                    var value = schema.Rows[rowIndex][colIndex];
+                    if (typeProperties.Contains(propertyName))
+                        value = ((Type)value).FullName;
+                    var property = typeof(SqlColumn).GetProperty(propertyName);
+                    if (!Convert.IsDBNull(value) && property != null)
+                        property.SetValue(sqlColumn, value, null);
                 }
+                var decimalTypes = new[] { "real", "float", "decimal", "money", "smallmoney" };
+                if (decimalTypes.Contains(sqlColumn.DataTypeName))
+                {
+                    sqlColumn.NumericScale = 0;
+                    sqlColumn.NumericPrecision = 0;
+                }
+                columns.Add(sqlColumn);
             }
+
             var table = new Table()
             {
                 Name = tableName,
@@ -112,7 +110,6 @@ namespace Utilities.SQL.Generator
                     break;
             }
         }
-
         private string GetNullableDataType(SqlColumn sqlColumn, TargetLanguage targetLanguage)
         {
             switch (targetLanguage)
@@ -188,8 +185,6 @@ namespace Utilities.SQL.Generator
             var filePath = Path.Combine(_outputDirectory, $@"{table.Name}.vb");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
-
-
         private void GenerateCSharpCode(Table table, TargetLanguage targetLanguage)
         {
             var sb = new StringBuilder();

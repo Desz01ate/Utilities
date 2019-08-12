@@ -920,7 +920,7 @@
         </member>
         <member name="T:Utilities.SQL.Generator.ModelGenerator`1">
             <summary>
-            This class contain definition for database model generator.
+            This class contain definition for database model generator (This class is consider a beta feature and only tested on SQLServer).
             </summary>
             <typeparam name="TDatabase"></typeparam>
         </member>
@@ -992,6 +992,14 @@
             <param name="originalText">Original text.</param>
             <param name="fromLanguage">From language.</param>
             <param name="toLanguage">To language.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Decimal,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
             <returns></returns>
         </member>
     </members>
