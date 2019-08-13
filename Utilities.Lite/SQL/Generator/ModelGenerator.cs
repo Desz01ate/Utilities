@@ -100,6 +100,7 @@ namespace Utilities.SQL.Generator
                 Name = tableName,
                 Columns = columns
             };
+            connection.Close();
             switch (targetLanguage)
             {
                 case TargetLanguage.CSharp:
@@ -169,6 +170,7 @@ namespace Utilities.SQL.Generator
                 Name = tableName,
                 Columns = columns
             };
+            connection.Close();
             parser(table);
         }
         private string GetNullableDataType(SqlColumn sqlColumn, TargetLanguage targetLanguage)
