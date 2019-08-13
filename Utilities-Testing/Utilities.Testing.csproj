@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Utilities.Asp.Core\Utilities.Asp.Core.csproj" />
     <ProjectReference Include="..\Utilities.Lite\Utilities.Lite.csproj" />
   </ItemGroup>
 

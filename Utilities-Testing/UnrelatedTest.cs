@@ -18,7 +18,7 @@ namespace Utilities.Testing
                 {
                     vendor_id = "VTS"
                 };
-                var taxis = connection.Select<taxifaretest>(x => x.vendor_id == taxi.vendor_id);
+                var taxies = connection.Select<taxifaretest>(x => x.vendor_id == taxi.vendor_id);
             }
         }
     }
