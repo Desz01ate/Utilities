@@ -211,10 +211,14 @@ namespace MachineLearning.Examples
 
 
 
-            var generator = new Utilities.SQL.Generator.ModelGenerator<SqlConnection>(sqlConnection, @"D:\Documents\Test");
+            var generator = new Utilities.SQL.Generator.ModelGenerator<SqlConnection>(sqlConnection, @"D:\Documents\Test", "Fuck.You.AllDay");
             generator.GenerateAllTables(TargetLanguage.CSharp);
             generator.GenerateAllTables(TargetLanguage.VisualBasic);
             generator.GenerateAllTables(TargetLanguage.TypeScript);
+            generator.GenerateAllTables(TargetLanguage.Python);
+            generator.GenerateAllTables(TargetLanguage.Python3_7);
+            generator.GenerateAllTables(TargetLanguage.Java);
+            generator.GenerateAllTables(TargetLanguage.PHP);
 
 
 

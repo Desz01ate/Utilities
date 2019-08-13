@@ -10,12 +10,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.2.1</Version>
+    <Version>0.1.2.2-internal-001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>Add POCO model generator which is currently support C#, Visual Basic and TypeScript.
-New overload for HttpRequest module to simplify the code (and concept!) on usage.
-Row Builder is 'greatly' improve on speed and less CPU, Memory consumption.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add POCO model generator which is currently support C#, Visual Basic and TypeScript</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -23,11 +21,11 @@ Row Builder is 'greatly' improve on speed and less CPU, Memory consumption.</Pac
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
   <!-- <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
