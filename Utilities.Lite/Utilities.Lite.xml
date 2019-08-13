@@ -1002,5 +1002,37 @@
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.String.NumberFormat(System.Int32,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

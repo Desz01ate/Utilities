@@ -10,7 +10,7 @@ namespace Utilities
 {
     public static class ImageProcessing
     {
-        public class GaussianBlur : IDisposable
+        public class GaussianBlur
         {
             private readonly int[] _alpha;
             private readonly int[] _red;
@@ -20,10 +20,6 @@ namespace Utilities
             private readonly int _width;
             private readonly int _height;
             private readonly ParallelOptions _pOptions = new ParallelOptions { MaxDegreeOfParallelism = 16 };
-            public void Dispose()
-            {
-                GC.SuppressFinalize(this);
-            }
             public GaussianBlur(Bitmap image)
             {
                 var rct = new Rectangle(0, 0, image.Width, image.Height);
