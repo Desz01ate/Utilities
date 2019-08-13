@@ -924,6 +924,31 @@
             </summary>
             <typeparam name="TDatabase"></typeparam>
         </member>
+        <member name="P:Utilities.SQL.Generator.ModelGenerator`1.Tables">
+            <summary>
+            Active table of current database.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.Generator.ModelGenerator`1.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectionString">connection string</param>
+            <param name="outputDirectory">output directory</param>
+        </member>
+        <member name="M:Utilities.SQL.Generator.ModelGenerator`1.GenerateAllTables(Utilities.SQL.Generator.Enumerable.TargetLanguage)">
+            <summary>
+            Generate model for all tables of current database.
+            </summary>
+            <param name="targetLanguage">Target language of model</param>
+        </member>
+        <member name="M:Utilities.SQL.Generator.ModelGenerator`1.GenerateFromTable(System.String,Utilities.SQL.Generator.Enumerable.TargetLanguage)">
+            <summary>
+            Generate model for specific table.
+            </summary>
+            <param name="tableName">Table name</param>
+            <param name="targetLanguage">Target language of model</param>
+        </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
             <summary>
             Performs evaluation and replacement of independent sub-trees
@@ -995,6 +1020,38 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.String.NumberFormat(System.Decimal,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Int32,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
             <summary>
             Convert given value into a number format.
             </summary>
