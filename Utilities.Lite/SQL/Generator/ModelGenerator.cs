@@ -19,6 +19,7 @@ namespace Utilities.SQL.Generator
     {
         private string _connectionString { get; }
         private string _outputDirectory { get; }
+        private string _namespace { get; }
         /// <summary>
         /// Active table of current database.
         /// </summary>
@@ -28,7 +29,7 @@ namespace Utilities.SQL.Generator
         /// </summary>
         /// <param name="connectionString">connection string</param>
         /// <param name="outputDirectory">output directory</param>
-        public ModelGenerator(string connectionString, string outputDirectory)
+        public ModelGenerator(string connectionString, string outputDirectory, string targetNamespace)
         {
             if (!Directory.Exists(outputDirectory))
             {

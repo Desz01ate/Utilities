@@ -929,7 +929,7 @@
             Active table of current database.
             </summary>
         </member>
-        <member name="M:Utilities.SQL.Generator.ModelGenerator`1.#ctor(System.String,System.String)">
+        <member name="M:Utilities.SQL.Generator.ModelGenerator`1.#ctor(System.String,System.String,System.String)">
             <summary>
             Constructor
             </summary>

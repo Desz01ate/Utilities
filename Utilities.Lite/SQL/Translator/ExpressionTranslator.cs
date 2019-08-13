@@ -310,12 +310,11 @@ namespace Utilities.SQL.Translator
                         sb.Append(_previousVisitField);
                         return m;
                     case ExpressionType.Constant:
-                        var f = Expression.Lambda(m).Compile();
-                        var value = f.DynamicInvoke();
+                        var constantInvokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
                         _sqlParameters.Add(new TSqlParameter()
                         {
                             ParameterName = _previousVisitField,
-                            Value = value
+                            Value = constantInvokedValue
                         });
                         sb.Append($"@{_previousVisitField}");
                         return m;
@@ -331,13 +330,11 @@ namespace Utilities.SQL.Translator
                                 sb.Append($"{lengthFunction}({member})");
                                 break;
                             default:
-                                var objectMember = Expression.Convert(m, typeof(object));
-                                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
-                                var getter = getterLambda.Compile();
+                                object invokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
                                 _sqlParameters.Add(new TSqlParameter()
                                 {
                                     ParameterName = _previousVisitField,
-                                    Value = getter
+                                    Value = invokedValue
                                 });
                                 sb.Append($"@{_previousVisitField}");
                                 break;

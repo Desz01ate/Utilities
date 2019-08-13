@@ -1,7 +1,7 @@
 using System;
 using Utilities.Attributes.SQL;
 
-[Table("taxi-fare-test")]
+[Table("[taxi-fare-test]")]
 public class taxifaretest
 {
     public string vendor_id { get; set; }
