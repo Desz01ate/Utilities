@@ -1,5 +1,7 @@
 using System;
 
+namespace Utilities.Testing.Models
+{
 public class coordinate
 {
     public int nonesense_id { get; set; }
@@ -13,4 +15,4 @@ public class coordinate
     public double? lng2 { get; set; }
     public string base64Image { get; set; }
 }
-
+}

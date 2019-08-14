@@ -1,5 +1,7 @@
 using System;
 
+namespace Utilities.Testing.Models
+{
 public class land_data
 {
     public int schematic_id { get; set; }
@@ -25,4 +27,4 @@ public class land_data
     public string office { get; set; }
     public string utilization { get; set; }
 }
-
+}

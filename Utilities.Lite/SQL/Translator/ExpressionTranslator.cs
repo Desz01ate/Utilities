@@ -321,7 +321,6 @@ namespace Utilities.SQL.Translator
                     //need more research on this
                     case ExpressionType.MemberAccess:
                         var accessingProperty = m.Member.Name.ToLower();
-                        var accessingPropetyType = m.Member.GetType();
                         switch (accessingProperty)
                         {
                             case "length":

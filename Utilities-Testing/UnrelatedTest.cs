@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Utilities.Asp.Core.Repository.Boilerplate;
 using Utilities.Testing.SQLConnectors;
 
 namespace Utilities.Testing
@@ -12,14 +13,11 @@ namespace Utilities.Testing
         [Test]
         public void Playground()
         {
-            using (var connection = new SQLServer("Server=localhost;Database=Local;user=sa;password=sa;"))
-            {
-                var taxi = new taxifaretest()
-                {
-                    vendor_id = "VTS"
-                };
-                var taxies = connection.Select<taxifaretest>(x => x.vendor_id == taxi.vendor_id);
-            }
+            var connectionString = "Server=localhost;Database=Local;user=sa;password=sa;";
+            var outputDir = $@"C:\Users\kunvu\source\repos\Utilities\Utilities-Testing";
+            var targetNamespace = "Utilities.Testing";
+            BoilerplateGenerator.GenerateRepositoryService(
+                connectionString, outputDir, targetNamespace);
         }
     }
 }
