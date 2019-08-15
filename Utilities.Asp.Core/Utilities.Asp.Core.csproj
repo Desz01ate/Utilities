@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.2</Version>
+    <Version>0.0.14</Version>
+    <PackageReleaseNotes>Add boilerplate generator for repository pattern
+
+Add support for .NET Standard 2.0, 2.1 and .NET Core 2.0, 2.1, 2.2, 3.0</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Deszolate.Utilities.Lite" Version="0.1.2.2-beta001" />
+    <PackageReference Include="Deszolate.Utilities.Lite" Version="0.1.2.2" />
     <PackageReference Include="microsoft.aspnetcore" Version="2.2.0" />
     <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="2.2.0" />
     <PackageReference Include="microsoft.aspnetcore.mvc" Version="2.2.0" />
