@@ -11,6 +11,7 @@ namespace Utilities.Testing.Repositories
     {
        public ListenerRepository(DatabaseConnector<SqlConnection,SqlParameter> connector) : base(connector)
        {
+
        }
     }
 }

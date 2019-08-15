@@ -9,19 +9,19 @@ namespace Utilities.Testing
 {
     public class Service
     {
-        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(() => new Service(), true);
+        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service(),true);
         public static Service Instant => _lazyInstant.Value;
-        private readonly DatabaseConnector<SqlConnection, SqlParameter> _connection;
+        private readonly DatabaseConnector<SqlConnection,SqlParameter> _connection;
         Service()
         {
-            _connection = new DatabaseConnector<SqlConnection, SqlParameter>("Server=localhost;Database=Local;user=sa;password=sa;MultipleActiveResultSets=true;");
+                _connection = new DatabaseConnector<SqlConnection,SqlParameter>("Server=localhost;Database=Local;user=sa;password=sa;");
         }
         private taxifaretestRepository _taxifaretest { get; set; }
         public taxifaretestRepository taxifaretest
         {
             get
             {
-                if (_taxifaretest == null)
+                if(_taxifaretest == null)
                 {
                     _taxifaretest = new taxifaretestRepository(_connection);
                 }
@@ -33,7 +33,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_taxifaretrain == null)
+                if(_taxifaretrain == null)
                 {
                     _taxifaretrain = new taxifaretrainRepository(_connection);
                 }
@@ -45,7 +45,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_forestfires == null)
+                if(_forestfires == null)
                 {
                     _forestfires = new forestfiresRepository(_connection);
                 }
@@ -57,7 +57,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Member == null)
+                if(_Member == null)
                 {
                     _Member = new MemberRepository(_connection);
                 }
@@ -69,7 +69,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Sales == null)
+                if(_Sales == null)
                 {
                     _Sales = new SalesRepository(_connection);
                 }
@@ -81,7 +81,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_SalesCountry == null)
+                if(_SalesCountry == null)
                 {
                     _SalesCountry = new SalesCountryRepository(_connection);
                 }
@@ -93,7 +93,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_TrainListener == null)
+                if(_TrainListener == null)
                 {
                     _TrainListener = new TrainListenerRepository(_connection);
                 }
@@ -105,7 +105,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Project == null)
+                if(_Project == null)
                 {
                     _Project = new ProjectRepository(_connection);
                 }
@@ -117,7 +117,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_housing == null)
+                if(_housing == null)
                 {
                     _housing = new housingRepository(_connection);
                 }
@@ -129,7 +129,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_HeartTest == null)
+                if(_HeartTest == null)
                 {
                     _HeartTest = new HeartTestRepository(_connection);
                 }
@@ -141,7 +141,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_HeartTraining == null)
+                if(_HeartTraining == null)
                 {
                     _HeartTraining = new HeartTrainingRepository(_connection);
                 }
@@ -153,7 +153,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_LineMember == null)
+                if(_LineMember == null)
                 {
                     _LineMember = new LineMemberRepository(_connection);
                 }
@@ -165,7 +165,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Listener == null)
+                if(_Listener == null)
                 {
                     _Listener = new ListenerRepository(_connection);
                 }
@@ -177,7 +177,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Members == null)
+                if(_Members == null)
                 {
                     _Members = new MembersRepository(_connection);
                 }
@@ -189,7 +189,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Item == null)
+                if(_Item == null)
                 {
                     _Item = new ItemRepository(_connection);
                 }
@@ -201,7 +201,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_taxifaretrain2 == null)
+                if(_taxifaretrain2 == null)
                 {
                     _taxifaretrain2 = new taxifaretrain2Repository(_connection);
                 }
@@ -213,7 +213,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_sysdiagrams == null)
+                if(_sysdiagrams == null)
                 {
                     _sysdiagrams = new sysdiagramsRepository(_connection);
                 }
@@ -225,7 +225,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_wine == null)
+                if(_wine == null)
                 {
                     _wine = new wineRepository(_connection);
                 }
@@ -237,7 +237,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_iris == null)
+                if(_iris == null)
                 {
                     _iris = new irisRepository(_connection);
                 }

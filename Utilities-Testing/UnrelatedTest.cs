@@ -14,6 +14,11 @@ namespace Utilities.Testing
         [Test]
         public void Playground()
         {
+            var connectionString = "Server=localhost;Database=Local;user=sa;password=sa;";
+            var outputDir = $@"C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities-Testing";
+            var targetNamespace = "Utilities.Testing";
+            BoilerplateGenerator.GenerateRepositoryService(
+                connectionString, outputDir, targetNamespace);
 
         }
     }

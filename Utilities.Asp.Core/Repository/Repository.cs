@@ -19,44 +19,44 @@ namespace Utilities.Asp.Core.Repository
     public class Repository<T> : IGenericRepository<T>
         where T : class, new()
     {
-        private readonly DatabaseConnector<SqlConnection, SqlParameter> _databaseConnector;
+        protected readonly DatabaseConnector<SqlConnection, SqlParameter> DatabaseConnector;
         public Repository(DatabaseConnector<SqlConnection, SqlParameter> databaseConnector)
         {
-            _databaseConnector = databaseConnector;
+            DatabaseConnector = databaseConnector;
         }
         public virtual void Delete(T obj)
         {
-            _databaseConnector.Delete(obj);
+            DatabaseConnector.Delete(obj);
         }
 
         public virtual void Delete(object key)
         {
-            _databaseConnector.Delete(key);
+            DatabaseConnector.Delete(key);
         }
 
         public virtual void Insert(T obj)
         {
-            _databaseConnector.Insert(obj);
+            DatabaseConnector.Insert(obj);
         }
 
         public virtual IEnumerable<T> Select()
         {
-            return _databaseConnector.Select<T>();
+            return DatabaseConnector.Select<T>();
         }
 
         public virtual IEnumerable<T> Select(Expression<Func<T, bool>> predicate)
         {
-            return _databaseConnector.Select<T>(predicate);
+            return DatabaseConnector.Select<T>(predicate);
         }
 
         public virtual T Select(object key)
         {
-            return _databaseConnector.Select<T>(key);
+            return DatabaseConnector.Select<T>(key);
         }
 
         public virtual void Update(T obj)
         {
-            _databaseConnector.Update(obj);
+            DatabaseConnector.Update(obj);
         }
     }
 }
