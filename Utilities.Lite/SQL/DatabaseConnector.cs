@@ -109,7 +109,7 @@ namespace Utilities.SQL
             try
             {
                 List<T> result = new List<T>();
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -130,12 +130,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -167,7 +167,7 @@ namespace Utilities.SQL
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -189,12 +189,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -213,7 +213,7 @@ namespace Utilities.SQL
             try
             {
                 T result = default;
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -228,12 +228,12 @@ namespace Utilities.SQL
                     }
                     result = (T)command.ExecuteScalar();
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -251,7 +251,7 @@ namespace Utilities.SQL
             try
             {
                 int result = -1;
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -266,12 +266,12 @@ namespace Utilities.SQL
                     }
                     result = command.ExecuteNonQuery();
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -292,7 +292,7 @@ namespace Utilities.SQL
             try
             {
                 List<T> result = new List<T>();
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -313,12 +313,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -350,7 +350,7 @@ namespace Utilities.SQL
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -372,12 +372,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -396,7 +396,7 @@ namespace Utilities.SQL
             try
             {
                 T result = default;
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -411,12 +411,12 @@ namespace Utilities.SQL
                     }
                     result = (T)(await command.ExecuteScalarAsync());
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
@@ -434,7 +434,7 @@ namespace Utilities.SQL
             try
             {
                 int result = -1;
-                transaction = UseTransaction ? Connection.BeginTransaction() : null;
+                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -449,15 +449,50 @@ namespace Utilities.SQL
                     }
                     result = await command.ExecuteNonQueryAsync();
                 }
-                transaction?.Commit();
+                Commit(transaction);
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+                Rollback(transaction);
                 throw e;
             }
         }
-
+        /// <summary>
+        /// Starts a database transaction.
+        /// </summary>
+        /// <returns></returns>
+        private DbTransaction InternalBeginTransaction()
+        {
+            if (UseTransaction)
+            {
+                return Connection.BeginTransaction();
+            }
+            return null;
+        }
+        /// <summary>
+        /// Starts a database transaction.
+        /// </summary>
+        /// <returns></returns>
+        public virtual DbTransaction BeginTransaction()
+        {
+            return Connection.BeginTransaction();
+        }
+        /// <summary>
+        /// Commits the database transaction.
+        /// </summary>
+        /// <param name="transaction"></param>
+        public virtual void Commit(DbTransaction transaction)
+        {
+            transaction?.Commit();
+        }
+        /// <summary>
+        /// Rolls back a transaction from a pending state.
+        /// </summary>
+        /// <param name="transaction"></param>
+        public virtual void Rollback(DbTransaction transaction)
+        {
+            transaction?.Rollback();
+        }
     }
 }

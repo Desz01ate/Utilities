@@ -799,6 +799,30 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InternalBeginTransaction">
+            <summary>
+            Starts a database transaction.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.BeginTransaction">
+            <summary>
+            Starts a database transaction.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Commit(System.Data.Common.DbTransaction)">
+            <summary>
+            Commits the database transaction.
+            </summary>
+            <param name="transaction"></param>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Rollback(System.Data.Common.DbTransaction)">
+            <summary>
+            Rolls back a transaction from a pending state.
+            </summary>
+            <param name="transaction"></param>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).

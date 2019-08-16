@@ -19,7 +19,7 @@ namespace Utilities.Asp.Core.Repository
     public class Repository<T> : IGenericRepository<T>
         where T : class, new()
     {
-        private readonly DatabaseConnector<SqlConnection, SqlParameter> _databaseConnector;
+        protected readonly DatabaseConnector<SqlConnection, SqlParameter> _databaseConnector;
         public Repository(DatabaseConnector<SqlConnection, SqlParameter> databaseConnector)
         {
             _databaseConnector = databaseConnector;
