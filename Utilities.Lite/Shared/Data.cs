@@ -38,9 +38,9 @@ namespace Utilities.Shared
                     }
 
                 }
-                catch
+                catch (Exception ex)
                 {
-                    continue;
+                    throw ex;
                 }
             }
             return instance;
@@ -59,7 +59,7 @@ namespace Utilities.Shared
                 try
                 {
                     var propertyType = property.PropertyType;
-                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
+                    var propertyName = property.Name;
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
                     var value = Convert.ToString(row[propertyName]);

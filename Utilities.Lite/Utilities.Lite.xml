@@ -29,6 +29,11 @@
             Attribute for table name customization
             </summary>
         </member>
+        <member name="T:Utilities.Classes.InternalPropertyInfo">
+            <summary>
+            Proxy for PropertyInfo for set-able PropertyInfo.Name
+            </summary>
+        </member>
         <member name="T:Utilities.Diagnostics">
             <summary>
             Simple diagnostic methods

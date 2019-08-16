@@ -13,7 +13,7 @@ namespace Utilities.Exceptions
     }
     public class InvalidMultipleAttributesException : Exception
     {
-        public InvalidMultipleAttributesException(string attributeName) : base(string.Format("The attribute [{0}] can't be specified more than one property.", attributeName))
+        public InvalidMultipleAttributesException(string attributeName) : base(string.Format("The attribute [{0}] must specific one and only one.", attributeName))
         {
 
         }

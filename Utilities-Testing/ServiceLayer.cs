@@ -4,6 +4,7 @@ using System.Text;
 using Utilities.Testing.SQLConnectors;
 using Utilities.Asp.Core.Repository;
 using System.Data.SqlClient;
+using Utilities.Testing.Models;
 
 namespace Utilities.Testing
 {
