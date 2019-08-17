@@ -27,8 +27,6 @@ namespace Utilities.SQL
         /// </summary>
         public TDatabaseConnection Connection { get; }
         private bool Disposed { get; set; }
-        public bool IsPendingTransaction { get; private set; }
-        private DbTransaction PendingTransaction { get; set; }
         public Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
         /// <summary>
         /// Constructor
@@ -36,6 +34,23 @@ namespace Utilities.SQL
         /// <param name="connectionString">Connection string for database</param>
         public DatabaseConnector(string connectionString)
         {
+            UseTransaction = false;
+            SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
+            Connection = new TDatabaseConnection()
+            {
+                ConnectionString = connectionString
+            };
+            Connection.Open();
+        }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connectionString">Connection string for database</param>
+        /// <param name="useTransaction">Indicate that the transaction should enable or not</param>
+        public DatabaseConnector(string connectionString, bool useTransaction)
+        {
+
+            UseTransaction = useTransaction;
             SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
             Connection = new TDatabaseConnection()
             {
@@ -73,6 +88,18 @@ namespace Utilities.SQL
         /// </summary>
         public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
         /// <summary>
+        /// Determine wether the connection use transaction or not
+        /// </summary>
+        public bool UseTransaction { get; }
+        private DbTransaction InternalBeginTransaction()
+        {
+            if (UseTransaction)
+            {
+                return Connection.BeginTransaction();
+            }
+            return null;
+        }
+        /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -85,7 +112,7 @@ namespace Utilities.SQL
         public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
-
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<T> result = new List<T>();
@@ -93,7 +120,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -110,10 +137,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -141,15 +170,14 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<dynamic> result = new List<dynamic>();
-
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -167,12 +195,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -187,6 +215,7 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct
         {
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 T result = default;
@@ -194,7 +223,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -205,12 +234,12 @@ namespace Utilities.SQL
                     }
                     result = (T)command.ExecuteScalar();
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -224,7 +253,7 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 int result = -1;
@@ -232,7 +261,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -243,12 +272,12 @@ namespace Utilities.SQL
                     }
                     result = command.ExecuteNonQuery();
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -265,7 +294,7 @@ namespace Utilities.SQL
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
-
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<T> result = new List<T>();
@@ -273,7 +302,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -290,12 +319,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -323,7 +352,7 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<dynamic> result = new List<dynamic>();
@@ -331,7 +360,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -349,12 +378,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -369,7 +398,7 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct
         {
-
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 T result = default;
@@ -377,7 +406,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -388,12 +417,12 @@ namespace Utilities.SQL
                     }
                     result = (T)(await command.ExecuteScalarAsync());
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -407,6 +436,7 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 int result = -1;
@@ -414,7 +444,7 @@ namespace Utilities.SQL
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
-                    command.Transaction = InternalBeginTransaction();
+                    command.Transaction = transaction;
                     command.CommandType = commandType;
                     if (parameters != null)
                     {
@@ -425,68 +455,13 @@ namespace Utilities.SQL
                     }
                     result = await command.ExecuteNonQueryAsync();
                 }
-
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-
+                transaction?.Rollback();
                 throw e;
-            }
-        }
-        /// <summary>
-        /// Starts a database transaction.
-        /// </summary>
-        /// <returns></returns>
-        private DbTransaction InternalBeginTransaction()
-        {
-            if (IsPendingTransaction)
-            {
-                return PendingTransaction;
-            }
-            return null;
-        }
-        /// <summary>
-        /// Starts a database transaction.
-        /// </summary>
-        /// <returns></returns>
-        public virtual void BeginTransaction()
-        {
-            if (IsPendingTransaction)
-            {
-                PendingTransaction?.Rollback();
-                throw new Exception("There is already an open transaction that is not commit, all changes has been reverted.");
-            }
-            PendingTransaction = Connection.BeginTransaction();
-            IsPendingTransaction = true;
-
-        }
-        /// <summary>
-        /// Commits the database transaction.
-        /// </summary>
-        public virtual void Commit()
-        {
-            if (IsPendingTransaction)
-            {
-                lock (PendingTransaction)
-                {
-                    PendingTransaction?.Commit();
-                    IsPendingTransaction = false;
-                }
-            }
-        }
-        /// <summary>
-        /// Rolls back a transaction from a pending state.
-        /// </summary>
-        public virtual void Rollback()
-        {
-            if (IsPendingTransaction)
-            {
-                lock (PendingTransaction)
-                {
-                    PendingTransaction?.Rollback();
-                    IsPendingTransaction = false;
-                }
             }
         }
     }
