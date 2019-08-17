@@ -12,7 +12,7 @@ namespace Utilities.Interfaces
     {
         string ConnectionString { get; }
         bool IsOpen { get; }
-        bool UseTransaction { get; }
+        bool IsPendingTransaction { get; }
         Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
     }
 }

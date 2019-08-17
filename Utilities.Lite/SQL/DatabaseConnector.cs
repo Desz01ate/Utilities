@@ -29,28 +29,24 @@ namespace Utilities.SQL
         private bool Disposed { get; set; }
         public Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
         /// <summary>
+        /// Connection string of this object.
+        /// </summary>
+        public virtual string ConnectionString => Connection.ConnectionString;
+        /// <summary>
+        /// Determine wheter the connection is open or not.
+        /// </summary>
+        public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+        /// <summary>
+        /// Determine wether the connection use transaction or not
+        /// </summary>
+        public bool IsPendingTransaction { get; protected set; }
+        private DbTransaction Transaction { get; set; }
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="connectionString">Connection string for database</param>
         public DatabaseConnector(string connectionString)
         {
-            UseTransaction = false;
-            SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
-            Connection = new TDatabaseConnection()
-            {
-                ConnectionString = connectionString
-            };
-            Connection.Open();
-        }
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="connectionString">Connection string for database</param>
-        /// <param name="useTransaction">Indicate that the transaction should enable or not</param>
-        public DatabaseConnector(string connectionString, bool useTransaction)
-        {
-
-            UseTransaction = useTransaction;
             SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
             Connection = new TDatabaseConnection()
             {
@@ -79,23 +75,11 @@ namespace Utilities.SQL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        /// <summary>
-        /// Connection string of this object.
-        /// </summary>
-        public virtual string ConnectionString => Connection.ConnectionString;
-        /// <summary>
-        /// Determine wheter the connection is open or not.
-        /// </summary>
-        public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
-        /// <summary>
-        /// Determine wether the connection use transaction or not
-        /// </summary>
-        public bool UseTransaction { get; }
         private DbTransaction InternalBeginTransaction()
         {
-            if (UseTransaction)
+            if (IsPendingTransaction)
             {
-                return Connection.BeginTransaction();
+                return Transaction;
             }
             return null;
         }
@@ -137,12 +121,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -195,12 +179,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -234,12 +218,12 @@ namespace Utilities.SQL
                     }
                     result = (T)command.ExecuteScalar();
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -272,12 +256,12 @@ namespace Utilities.SQL
                     }
                     result = command.ExecuteNonQuery();
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -319,12 +303,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -378,12 +362,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -417,12 +401,12 @@ namespace Utilities.SQL
                     }
                     result = (T)(await command.ExecuteScalarAsync());
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
             }
         }
@@ -455,13 +439,41 @@ namespace Utilities.SQL
                     }
                     result = await command.ExecuteNonQueryAsync();
                 }
-                transaction?.Commit();
+
                 return result;
             }
             catch (Exception e)
             {
-                transaction?.Rollback();
+
                 throw e;
+            }
+        }
+
+        public void BeginTransaction()
+        {
+            if (IsPendingTransaction)
+            {
+                Rollback();
+            }
+            Transaction = Connection.BeginTransaction();
+            IsPendingTransaction = true;
+        }
+
+        public void Commit()
+        {
+            if (IsPendingTransaction)
+            {
+                Transaction?.Commit();
+                IsPendingTransaction = false;
+            }
+        }
+
+        public void Rollback()
+        {
+            if (IsPendingTransaction)
+            {
+                Transaction?.Rollback();
+                IsPendingTransaction = false;
             }
         }
     }
