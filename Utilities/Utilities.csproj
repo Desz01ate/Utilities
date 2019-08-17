@@ -9,12 +9,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.6.1</Version>
+    <Version>0.0.6.2</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>Add POCO model generator which is currently support C#, Visual Basic and TypeScript.
-New overload for HttpRequest module to simplify the code (and concept!) on usage.
-Row Builder is 'greatly' improve on speed and less CPU, Memory consumption.</PackageReleaseNotes>
+    <PackageReleaseNotes>Hotfix on ExpressionTranslator where MemberAccess not compile correctly.
+
+POCO model generator now supported      C#, Visual Basic, TypeScript,  Java, PHP,Python and Python3.7 (with @dataclass)
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 
@@ -24,7 +25,7 @@ Row Builder is 'greatly' improve on speed and less CPU, Memory consumption.</Pac
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

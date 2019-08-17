@@ -90,8 +90,8 @@ namespace Utilities.Asp.Core.Repository.Boilerplate
             sb.AppendLine("{");
             sb.AppendLine($"    public class Service : IUnitOfWork");
             sb.AppendLine("    {");
-            sb.AppendLine("        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service());");
-            sb.AppendLine("        public readonly static Service Context = _lazyInstant.Value;");
+            sb.AppendLine("        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service(),true);");
+            sb.AppendLine("        public static Service Instant => _lazyInstant.Value;");
             sb.AppendLine("        private readonly DatabaseConnector<SqlConnection,SqlParameter> _connection;");
             sb.AppendLine("        Service()");
             sb.AppendLine("        {");

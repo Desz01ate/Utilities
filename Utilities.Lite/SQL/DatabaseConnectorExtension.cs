@@ -109,7 +109,7 @@ namespace Utilities.SQL
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+            var parameters = Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
