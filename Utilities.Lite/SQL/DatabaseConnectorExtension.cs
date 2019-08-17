@@ -47,8 +47,9 @@ namespace Utilities.SQL
         public T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             T result;
             if (dataBuilder == null)
@@ -104,11 +105,11 @@ namespace Utilities.SQL
         public int Update<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+            var parameters = Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
@@ -132,9 +133,9 @@ namespace Utilities.SQL
         public int Delete<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = ExecuteNonQuery(query.ToString(), new[] {
@@ -176,8 +177,9 @@ namespace Utilities.SQL
         public async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             T result;
             if (dataBuilder == null)
@@ -232,9 +234,9 @@ namespace Utilities.SQL
         public async Task<int> UpdateAsync<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
@@ -260,9 +262,9 @@ namespace Utilities.SQL
         public async Task<int> DeleteAsync<T>(T obj)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = await ExecuteNonQueryAsync(query.ToString(), new[] {
@@ -411,8 +413,9 @@ namespace Utilities.SQL
 
         public int Delete<T>(object primaryKey) where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = this.ExecuteNonQuery(query, new[] {
                     new TParameterType()
@@ -426,8 +429,9 @@ namespace Utilities.SQL
 
         public async Task<int> DeleteAsync<T>(object primaryKey) where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = await this.ExecuteNonQueryAsync(query, new[] {
                     new TParameterType()

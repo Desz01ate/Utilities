@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,8 +34,8 @@ namespace Utilities.Asp.Core.Based
         [HttpGet]
         public virtual Response Authenticate([FromQuery]string id)
         {
-            var exists = VerifyAuthentication(id);
-            if (!exists)
+            var valid = VerifyAuthentication(id);
+            if (!valid)
                 return new Response(false, NotFound().StatusCode.ToString(), string.Empty);
             var claims = new List<Claim>
                 {
@@ -110,6 +111,14 @@ namespace Utilities.Asp.Core.Based
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
+        }
+        /// <summary>
+        /// This is an optional configuration, you could simply use app.UseAuthentication() in Configure method of Startup instead.
+        /// </summary>
+        /// <param name="app"></param>
+        public static void SetOptionalAppConfiguration(ref IApplicationBuilder app)
+        {
+            app.UseAuthentication();
         }
     }
 }

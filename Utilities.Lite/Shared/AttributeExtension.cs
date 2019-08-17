@@ -10,6 +10,11 @@ namespace Utilities.Shared
 {
     internal static class AttributeExtension
     {
+        internal static PropertyInfo PrimaryKeyAttributeValidate(this Type t)
+        {
+            var properties = t.GetProperties();
+            return PrimaryKeyAttributeValidate(properties);
+        }
         internal static PropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties)
         {
             var primaryKeyProperty = properties.Where(property =>

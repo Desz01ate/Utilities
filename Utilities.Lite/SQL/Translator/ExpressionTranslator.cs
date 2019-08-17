@@ -144,7 +144,13 @@ namespace Utilities.SQL.Translator
                 return m;
 
             }
-
+            else if (m.Method.Name == "IsNullOrWhiteSpace" || m.Method.Name == "IsNullOrEmpty")
+            {
+                var node = m.Arguments[0] as MemberExpression;
+                var field = _fieldsConfiguration[node.Member.Name];
+                sb.Append($@"({field} IS NULL AND {field} = '')");
+                return m;
+            }
             throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
         }
 
