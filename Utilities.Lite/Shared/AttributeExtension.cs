@@ -41,6 +41,11 @@ namespace Utilities.Shared
             if (attribute == null) return type.Name;
             return attribute.TableName;
         }
+        internal static bool NotNullAttributeValidate(this PropertyInfo propertyInfo)
+        {
+            var attribute = propertyInfo.GetCustomAttribute<NotNullAttribute>();
+            return attribute != null;
+        }
         internal static IEnumerable<InternalPropertyInfo> PropertiesBindingFlagsAttributeValidate(this Type type)
         {
             var attribute = type.GetCustomAttribute<BindingFlagsAttribute>(true);
@@ -59,6 +64,25 @@ namespace Utilities.Shared
                 return internalPropertyInfo;
             });
             return internalProperties;
+        }
+        internal static IEnumerable<InternalPropertyInfo> ForeignKeyAttributeValidate(this Type type)
+        {
+            List<InternalPropertyInfo> properties = new List<InternalPropertyInfo>();
+
+            foreach (var property in type.GetProperties())
+            {
+                var attribute = property.GetCustomAttribute<ForeignKeyAttribute>(true);
+                if (attribute != null)
+                {
+                    foreach (var p in attribute.ReferenceKeyProperty)
+                    {
+                        p.ForeignKeyName = property.Name;
+                        properties.Add(p);
+                    }
+
+                }
+            }
+            return properties;
         }
     }
 }

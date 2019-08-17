@@ -13,7 +13,7 @@ namespace Utilities.Classes
     internal class InternalPropertyInfo : PropertyInfo
     {
         private string _innerName = null;
-        private readonly PropertyInfo _basePropertyInfo;
+        internal readonly PropertyInfo _basePropertyInfo;
         public InternalPropertyInfo(PropertyInfo property)
         {
             _basePropertyInfo = property;
@@ -27,6 +27,7 @@ namespace Utilities.Classes
         public override Type PropertyType => _basePropertyInfo.PropertyType;
 
         public override Type DeclaringType => _basePropertyInfo.DeclaringType;
+        public string ForeignKeyName { get; set; }
 
         public override string Name
         {

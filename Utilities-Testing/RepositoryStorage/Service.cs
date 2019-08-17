@@ -9,19 +9,19 @@ namespace Utilities.Testing
 {
     public class Service : IUnitOfWork
     {
-        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(() => new Service());
+        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service());
         public readonly static Service Context = _lazyInstant.Value;
-        private readonly IDatabaseConnectorExtension<SqlConnection, SqlParameter> _connection;
+        private readonly IDatabaseConnectorExtension<SqlConnection,SqlParameter> _connection;
         Service()
         {
-            _connection = new DatabaseConnector<SqlConnection, SqlParameter>("Server=localhost;Database=Local;user=sa;password=sa;");
+                _connection = new DatabaseConnector<SqlConnection,SqlParameter>("Server=localhost;Database=Local;user=sa;password=sa;");
         }
         private taxifaretestRepository _taxifaretest { get; set; }
         public taxifaretestRepository taxifaretest
         {
             get
             {
-                if (_taxifaretest == null)
+                if(_taxifaretest == null)
                 {
                     _taxifaretest = new taxifaretestRepository(_connection);
                 }
@@ -33,7 +33,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_taxifaretrain == null)
+                if(_taxifaretrain == null)
                 {
                     _taxifaretrain = new taxifaretrainRepository(_connection);
                 }
@@ -45,7 +45,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_taxifaretrain2 == null)
+                if(_taxifaretrain2 == null)
                 {
                     _taxifaretrain2 = new taxifaretrain2Repository(_connection);
                 }
@@ -57,7 +57,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_land_data == null)
+                if(_land_data == null)
                 {
                     _land_data = new land_dataRepository(_connection);
                 }
@@ -69,7 +69,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_CustomCreation == null)
+                if(_CustomCreation == null)
                 {
                     _CustomCreation = new CustomCreationRepository(_connection);
                 }
@@ -81,7 +81,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_coordinate == null)
+                if(_coordinate == null)
                 {
                     _coordinate = new coordinateRepository(_connection);
                 }
@@ -93,7 +93,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_EventLog == null)
+                if(_EventLog == null)
                 {
                     _EventLog = new EventLogRepository(_connection);
                 }
@@ -105,7 +105,7 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_Users == null)
+                if(_Users == null)
                 {
                     _Users = new UsersRepository(_connection);
                 }
@@ -117,28 +117,28 @@ namespace Utilities.Testing
         {
             get
             {
-                if (_TestTable == null)
+                if(_TestTable == null)
                 {
                     _TestTable = new TestTableRepository(_connection);
                 }
                 return _TestTable;
             }
         }
-        public void BeginTransaction()
-        {
-            _connection.BeginTransaction();
-        }
-        public void SaveChanges()
-        {
-            _connection.Commit();
-        }
-        public void RollbackChanges()
-        {
-            _connection.Rollback();
-        }
-        public void Dispose()
-        {
-            _connection.Dispose();
-        }
+            public void BeginTransaction()
+            {
+                _connection.BeginTransaction();
+            }
+            public void SaveChanges()
+            {
+                _connection.Commit();
+            }
+            public void RollbackChanges()
+            {
+                _connection.Rollback();
+            }
+            public void Dispose()
+            {
+                _connection.Dispose();
+            }
     }
 }

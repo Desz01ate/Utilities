@@ -10,5 +10,8 @@ namespace Utilities.Testing.Models
         [PrimaryKey]
         public int id { get; set; }
         public string value { get; set; }
+        [NotNull]
+        [ForeignKey(typeof(Users))]
+        public Guid idx { get; set; }
     }
 }
