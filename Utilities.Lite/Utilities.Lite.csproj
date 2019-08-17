@@ -24,7 +24,7 @@ POCO model generator now supported      C#, Visual Basic, TypeScript,  Java, PHP
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

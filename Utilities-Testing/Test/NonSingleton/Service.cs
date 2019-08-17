@@ -118,16 +118,16 @@ namespace Utilities.Testing2
         }
         public void BeginTransaction()
         {
-            _connection.BeginTransaction();
+
 
         }
         public void SaveChanges()
         {
-            _connection.Commit();
+
         }
         public void RollbackChanges()
         {
-            _connection.Rollback();
+
         }
         public void Dispose()
         {
