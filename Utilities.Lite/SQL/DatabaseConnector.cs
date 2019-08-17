@@ -26,7 +26,7 @@ namespace Utilities.SQL
         /// Instance of object that hold information of the connection.
         /// </summary>
         public TDatabaseConnection Connection { get; }
-        private bool disposed { get; set; }
+        private bool Disposed { get; set; }
         public Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
         /// <summary>
         /// Constructor
@@ -64,12 +64,12 @@ namespace Utilities.SQL
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed) return;
+            if (Disposed) return;
             if (disposing)
             {
                 Connection.Close();
             }
-            disposed = true;
+            Disposed = true;
         }
         /// <summary>
         /// Object disposer which close the connection related to this object.
@@ -91,7 +91,14 @@ namespace Utilities.SQL
         /// Determine wether the connection use transaction or not
         /// </summary>
         public bool UseTransaction { get; }
-
+        private DbTransaction InternalBeginTransaction()
+        {
+            if (UseTransaction)
+            {
+                return Connection.BeginTransaction();
+            }
+            return null;
+        }
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -130,12 +137,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -189,12 +196,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -228,12 +235,12 @@ namespace Utilities.SQL
                     }
                     result = (T)command.ExecuteScalar();
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -266,12 +273,12 @@ namespace Utilities.SQL
                     }
                     result = command.ExecuteNonQuery();
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -313,12 +320,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -372,12 +379,12 @@ namespace Utilities.SQL
                         }
                     }
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -411,12 +418,12 @@ namespace Utilities.SQL
                     }
                     result = (T)(await command.ExecuteScalarAsync());
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
         }
@@ -449,50 +456,14 @@ namespace Utilities.SQL
                     }
                     result = await command.ExecuteNonQueryAsync();
                 }
-                Commit(transaction);
+                transaction?.Commit();
                 return result;
             }
             catch (Exception e)
             {
-                Rollback(transaction);
+                transaction?.Rollback();
                 throw e;
             }
-        }
-        /// <summary>
-        /// Starts a database transaction.
-        /// </summary>
-        /// <returns></returns>
-        private DbTransaction InternalBeginTransaction()
-        {
-            if (UseTransaction)
-            {
-                return Connection.BeginTransaction();
-            }
-            return null;
-        }
-        /// <summary>
-        /// Starts a database transaction.
-        /// </summary>
-        /// <returns></returns>
-        public virtual DbTransaction BeginTransaction()
-        {
-            return Connection.BeginTransaction();
-        }
-        /// <summary>
-        /// Commits the database transaction.
-        /// </summary>
-        /// <param name="transaction"></param>
-        public virtual void Commit(DbTransaction transaction)
-        {
-            transaction?.Commit();
-        }
-        /// <summary>
-        /// Rolls back a transaction from a pending state.
-        /// </summary>
-        /// <param name="transaction"></param>
-        public virtual void Rollback(DbTransaction transaction)
-        {
-            transaction?.Rollback();
         }
     }
 }
