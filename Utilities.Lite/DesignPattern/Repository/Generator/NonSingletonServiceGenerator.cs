@@ -8,6 +8,10 @@ using Utilities.SQL.Generator.Model;
 
 namespace Utilities.DesignPattern.Repository
 {
+    /// <summary>
+    /// Generator for Non-Singleton Unit Of Work boilerplate
+    /// </summary>
+    /// <typeparam name="TDatabase"></typeparam>
     public sealed class NonSingletonServiceGenerator<TDatabase> : GenericServiceAbstract<TDatabase>, IGeneratorStrategy
         where TDatabase : DbConnection, new()
     {

@@ -448,7 +448,9 @@ namespace Utilities.SQL
                 throw e;
             }
         }
-
+        /// <summary>
+        /// Starts a database transaction (if you call this method again without Commit,Rollback the engine will Rollback all your changes).
+        /// </summary>
         public void BeginTransaction()
         {
             if (IsPendingTransaction)
@@ -458,7 +460,9 @@ namespace Utilities.SQL
             Transaction = Connection.BeginTransaction();
             IsPendingTransaction = true;
         }
-
+        /// <summary>
+        /// Commits the database transaction if there is open one.
+        /// </summary>
         public void Commit()
         {
             if (IsPendingTransaction)
@@ -467,7 +471,9 @@ namespace Utilities.SQL
                 IsPendingTransaction = false;
             }
         }
-
+        /// <summary>
+        /// Rolls back a transaction from a pending state if there is open one.
+        /// </summary>
         public void Rollback()
         {
             if (IsPendingTransaction)

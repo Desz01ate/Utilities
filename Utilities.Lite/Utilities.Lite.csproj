@@ -10,12 +10,21 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.2.2-beta001</Version>
+    <Version>0.1.3.0-dev-beta-001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>Hotfix on ExpressionTranslator where MemberAccess not compile correctly.
+    <PackageReleaseNotes>*** This build contains a lots of internal changes and should not be use on production at this moment ***
 
-POCO model generator now supported      C#, Visual Basic, TypeScript,  Java, PHP,Python and Python3.7 (with @dataclass)
+Changes to [SQL] Module
++ Expose transaction management into the hand of programmer via [BeginTransaction],[Commit] and [Rollback], which is more convenient when it come to custom implementation or to proxy the connector.
+- Due to transaction now being managed by programmer, the second overload (string connectionString,bool UseTransaction) has been removed from DataConnector
++ ExpressionTranslator now support string.IsNullOrEmpty/Whitespace translation.
+
+Add new module [DesignPattern]
++ This module aimed to utilize functionality inside this library by provide generator to generate code boilerplate for design pattern
++ This build is coming with UnitOfWork generator (and more later)
+
+
 </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>

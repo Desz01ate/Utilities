@@ -34,6 +34,57 @@
             Proxy for PropertyInfo for set-able PropertyInfo.Name
             </summary>
         </member>
+        <member name="T:Utilities.Interfaces.IGenericRepository`1">
+            <summary>
+            Contains required implementation on Repository template
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Utilities.Interfaces.IDatabaseConnector`2">
+            <summary>
+            Provide methods for wrapper operation on DbConnection class
+            </summary>
+            <typeparam name="TDatabaseType">DbConnection type</typeparam>
+            <typeparam name="TParameter">DbParameter type</typeparam>
+        </member>
+        <member name="T:Utilities.Interfaces.IDatabaseConnectorExtension`2">
+            <summary>
+            Provide methods for wrapper operation on DbConnection class
+            </summary>
+            <typeparam name="TDatabaseType">DbConnection type</typeparam>
+            <typeparam name="TParameter">DbParameter type</typeparam>
+        </member>
+        <member name="T:Utilities.Interfaces.IDatabaseConnectorProperty">
+            <summary>
+            Provide an essential properties to database connector interface
+            </summary>
+        </member>
+        <member name="T:Utilities.DesignPattern.Repository.GenericServiceAbstract`1">
+            <summary>
+            Abstract class which defined how the generator should work.
+            </summary>
+            <typeparam name="TDatabase"></typeparam>
+        </member>
+        <member name="T:Utilities.DesignPattern.Repository.NonSingletonServiceGenerator`1">
+            <summary>
+            Generator for Non-Singleton Unit Of Work boilerplate
+            </summary>
+            <typeparam name="TDatabase"></typeparam>
+        </member>
+        <member name="T:Utilities.DesignPattern.Repository.SingletonServiceGenerator`1">
+            <summary>
+            Generator for Singleton Unit Of Work boilerplate
+            </summary>
+            <typeparam name="TDatabase"></typeparam>
+        </member>
+        <member name="T:Utilities.DesignPattern.Repository`3">
+            <summary>
+            Example implementation of IGenericRepository with dependency injection of DAL
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TDatabase"></typeparam>
+            <typeparam name="TParameter"></typeparam>
+        </member>
         <member name="T:Utilities.Diagnostics">
             <summary>
             Simple diagnostic methods
@@ -386,25 +437,6 @@
             <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Interfaces.IDatabaseConnector`2">
-            <summary>
-            Provide methods for wrapper operation on DbConnection class
-            </summary>
-            <typeparam name="TDatabaseType">DbConnection type</typeparam>
-            <typeparam name="TParameter">DbParameter type</typeparam>
-        </member>
-        <member name="T:Utilities.Interfaces.IDatabaseConnectorExtension`2">
-            <summary>
-            Provide methods for wrapper operation on DbConnection class
-            </summary>
-            <typeparam name="TDatabaseType">DbConnection type</typeparam>
-            <typeparam name="TParameter">DbParameter type</typeparam>
-        </member>
-        <member name="T:Utilities.Interfaces.IDatabaseConnectorProperty">
-            <summary>
-            Provide an essential properties to database connector interface
-            </summary>
-        </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
             Basic regular expression wrapper
@@ -652,30 +684,6 @@
             Instance of object that hold information of the connection.
             </summary>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="connectionString">Connection string for database</param>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String,System.Boolean)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="connectionString">Connection string for database</param>
-            <param name="useTransaction">Indicate that the transaction should enable or not</param>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose(System.Boolean)">
-            <summary>
-            Protected implementation of dispose pattern
-            </summary>
-            <param name="disposing"></param>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose">
-            <summary>
-            Object disposer which close the connection related to this object.
-            </summary>
-        </member>
         <member name="P:Utilities.SQL.DatabaseConnector`2.ConnectionString">
             <summary>
             Connection string of this object.
@@ -686,9 +694,26 @@
             Determine wheter the connection is open or not.
             </summary>
         </member>
-        <member name="P:Utilities.SQL.DatabaseConnector`2.UseTransaction">
+        <member name="P:Utilities.SQL.DatabaseConnector`2.IsPendingTransaction">
             <summary>
             Determine wether the connection use transaction or not
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectionString">Connection string for database</param>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose(System.Boolean)">
+            <summary>
+            Protected implementation of dispose pattern
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose">
+            <summary>
+            Object disposer which close the connection related to this object.
             </summary>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType)">
@@ -799,29 +824,20 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.InternalBeginTransaction">
-            <summary>
-            Starts a database transaction.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.BeginTransaction">
             <summary>
-            Starts a database transaction.
+            Starts a database transaction (if you call this method again without Commit,Rollback the engine will Rollback all your changes).
             </summary>
-            <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Commit(System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Commit">
             <summary>
-            Commits the database transaction.
+            Commits the database transaction if there is open one.
             </summary>
-            <param name="transaction"></param>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Rollback(System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Rollback">
             <summary>
-            Rolls back a transaction from a pending state.
+            Rolls back a transaction from a pending state if there is open one.
             </summary>
-            <param name="transaction"></param>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0})">
             <summary>

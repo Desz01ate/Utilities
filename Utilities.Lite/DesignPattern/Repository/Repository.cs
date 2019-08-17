@@ -12,51 +12,51 @@ namespace Utilities.DesignPattern
     /// Example implementation of IGenericRepository with dependency injection of DAL
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TDatabaseType"></typeparam>
+    /// <typeparam name="TDatabase"></typeparam>
     /// <typeparam name="TParameter"></typeparam>
     public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>
         where T : class, new()
         where TDatabase : DbConnection, new()
         where TParameter : DbParameter, new()
     {
-        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> _databaseConnector;
+        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> DatabaseConnector;
         public Repository(IDatabaseConnectorExtension<TDatabase, TParameter> databaseConnector)
         {
-            _databaseConnector = databaseConnector;
+            DatabaseConnector = databaseConnector;
         }
         public virtual void Delete(T obj)
         {
-            _databaseConnector.Delete(obj);
+            DatabaseConnector.Delete(obj);
         }
 
         public virtual void Delete(object key)
         {
-            _databaseConnector.Delete<T>(key);
+            DatabaseConnector.Delete<T>(key);
         }
 
         public virtual void Insert(T obj)
         {
-            _databaseConnector.Insert(obj);
+            DatabaseConnector.Insert(obj);
         }
 
         public virtual IEnumerable<T> Select()
         {
-            return _databaseConnector.Select<T>();
+            return DatabaseConnector.Select<T>();
         }
 
         public virtual IEnumerable<T> Select(Expression<Func<T, bool>> predicate)
         {
-            return _databaseConnector.Select<T>(predicate);
+            return DatabaseConnector.Select<T>(predicate);
         }
 
         public virtual T Select(object key)
         {
-            return _databaseConnector.Select<T>(key);
+            return DatabaseConnector.Select<T>(key);
         }
 
         public virtual void Update(T obj)
         {
-            _databaseConnector.Update(obj);
+            DatabaseConnector.Update(obj);
         }
     }
 }

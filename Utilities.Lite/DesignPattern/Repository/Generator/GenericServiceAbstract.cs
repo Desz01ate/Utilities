@@ -9,6 +9,10 @@ using Utilities.SQL.Generator.Model;
 
 namespace Utilities.DesignPattern.Repository
 {
+    /// <summary>
+    /// Abstract class which defined how the generator should work.
+    /// </summary>
+    /// <typeparam name="TDatabase"></typeparam>
     public abstract class GenericServiceAbstract<TDatabase> : IGeneratorStrategy
         where TDatabase : DbConnection, new()
     {
