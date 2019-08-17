@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Text;
-using Utilities.Asp.Core.Repository.Interfaces;
+using Utilities.Interfaces;
 using Utilities.SQL;
 
-namespace Utilities.Asp.Core.Repository
+namespace Utilities.DesignPattern
 {
     /// <summary>
     /// Example implementation of IGenericRepository with dependency injection of DAL
@@ -15,11 +14,13 @@ namespace Utilities.Asp.Core.Repository
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDatabaseType"></typeparam>
     /// <typeparam name="TParameter"></typeparam>
-    public class Repository<T> : IGenericRepository<T>
+    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>
         where T : class, new()
+        where TDatabase : DbConnection, new()
+        where TParameter : DbParameter, new()
     {
-        protected readonly DatabaseConnector<SqlConnection, SqlParameter> _databaseConnector;
-        public Repository(DatabaseConnector<SqlConnection, SqlParameter> databaseConnector)
+        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> _databaseConnector;
+        public Repository(IDatabaseConnectorExtension<TDatabase, TParameter> databaseConnector)
         {
             _databaseConnector = databaseConnector;
         }
@@ -30,7 +31,7 @@ namespace Utilities.Asp.Core.Repository
 
         public virtual void Delete(object key)
         {
-            _databaseConnector.Delete(key);
+            _databaseConnector.Delete<T>(key);
         }
 
         public virtual void Insert(T obj)

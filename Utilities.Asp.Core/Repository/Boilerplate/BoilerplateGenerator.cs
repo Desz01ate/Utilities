@@ -17,7 +17,7 @@ namespace Utilities.Asp.Core.Repository.Boilerplate
         /// <param name="connectionString"></param>
         /// <param name="outputPath"></param>
         /// <param name="targetNamespace"></param>
-        public static void GenerateRepositoryService(string connectionString, string outputDirectory, string targetNamespace, RepositoryType repositoryType = RepositoryType.Singleton)
+        public static void GenerateRepositoryService(string connectionString, string outputDirectory, string targetNamespace, RepositoryType repositoryType = RepositoryType.NonSingleton)
         {
             var modelDirectory = Path.Combine(outputDirectory, "Models");
             var repositoryDirectory = Path.Combine(outputDirectory, "Repositories");
@@ -82,7 +82,8 @@ namespace Utilities.Asp.Core.Repository.Boilerplate
             sb.AppendLine("using Utilities.Asp.Core.Repository;");
             sb.AppendLine("using System.Data.SqlClient;");
             sb.AppendLine("using Utilities.SQL;");
-            sb.AppendLine("using Utilities.Asp.Core.Repository.Interfaces");
+            sb.AppendLine("using Utilities.Asp.Core.Repository.Interfaces;");
+            sb.AppendLine("using System.Data.Common;");
             sb.AppendLine($"using {targetNamespace}.Repositories;");
             sb.AppendLine();
             sb.AppendLine($@"namespace {targetNamespace}");
@@ -142,7 +143,8 @@ namespace Utilities.Asp.Core.Repository.Boilerplate
             sb.AppendLine("using Utilities.Asp.Core.Repository;");
             sb.AppendLine("using System.Data.SqlClient;");
             sb.AppendLine("using Utilities.SQL;");
-            sb.AppendLine("using Utilities.Asp.Core.Repository.Interfaces");
+            sb.AppendLine("using Utilities.Asp.Core.Repository.Interfaces;");
+            sb.AppendLine("using System.Data.Common;");
             sb.AppendLine($"using {targetNamespace}.Repositories;");
             sb.AppendLine();
             sb.AppendLine($@"namespace {targetNamespace}");
@@ -150,6 +152,10 @@ namespace Utilities.Asp.Core.Repository.Boilerplate
             sb.AppendLine($"    public class Service : IUnitOfWork");
             sb.AppendLine("    {");
             sb.AppendLine("        private readonly DatabaseConnector<SqlConnection,SqlParameter> _connection;");
+            sb.AppendLine("        public Service(DatabaseConnector<SqlConnection,SqlParameter> connector)");
+            sb.AppendLine("        {");
+            sb.AppendLine($"                _connection = connector;");
+            sb.AppendLine("        }");
             sb.AppendLine("        public Service()");
             sb.AppendLine("        {");
             sb.AppendLine($"                _connection = new DatabaseConnector<SqlConnection,SqlParameter>(\"{connectionString}\");");

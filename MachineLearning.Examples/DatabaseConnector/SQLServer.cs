@@ -12,10 +12,6 @@ namespace MachineLearning.Examples.DataConnector
         {
             SetFunctions();
         }
-        public SQLServer(string connectionString, bool useTransaction) : base(connectionString, useTransaction)
-        {
-            SetFunctions();
-        }
         private void SetFunctions()
         {
             this.SQLFunctionConfiguration.Add(Utilities.Enumerables.SqlFunction.Length, "LEN");

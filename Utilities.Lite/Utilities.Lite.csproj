@@ -31,6 +31,10 @@ POCO model generator now supported      C#, Visual Basic, TypeScript,  Java, PHP
     <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="SQL\DatabaseConnector - Copy.cs" />
+  </ItemGroup>
+
   <!-- <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup> -->
