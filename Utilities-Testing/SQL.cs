@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities.Attributes.SQL;
 using Utilities.SQL;
+using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 
 namespace Utilities.Testing
@@ -165,11 +166,5 @@ namespace Utilities.Testing
                 }
             }
         }
-    }
-    class TestTable
-    {
-        [PrimaryKey]
-        public int id { get; set; }
-        public string value { get; set; }
     }
 }

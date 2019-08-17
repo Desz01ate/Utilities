@@ -1,9 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Utilities.Asp.Core.Repository.Boilerplate;
-using Utilities.Testing.SQLConnectors;
+using System.Data.SqlClient;
 
 namespace Utilities.Testing
 {
@@ -14,15 +10,10 @@ namespace Utilities.Testing
         public void Playground()
         {
             var connectionString = "Server=localhost;Database=Local;user=sa;password=sa;";
-            //var outputDir = $@"C:\Users\kunvu\source\repos\Utilities\Utilities-Testing";
-            //var targetNamespace = "Utilities.Testing";
-            //BoilerplateGenerator.GenerateRepositoryService(
-            //    connectionString, outputDir, targetNamespace);
-            using (var con = new SQLServer(connectionString))
-            {
-                var d1 = con.Select<Models.taxifaretest>();
-                var d2 = con.Select<Models.taxifaretest>(x => string.IsNullOrEmpty(x.v));
-            }
+            var outputDir = $@"C:\Users\kunvu\source\repos\Utilities\Utilities-Testing\RepositoryStorage";
+            var targetNamespace = "Utilities.Testing";
+            var generator = new Utilities.DesignPattern.Repository.SingletonServiceGenerator<SqlConnection>(connectionString, outputDir, targetNamespace);
+            generator.Generate();
         }
     }
 }

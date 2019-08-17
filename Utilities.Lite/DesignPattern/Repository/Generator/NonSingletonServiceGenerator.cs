@@ -81,17 +81,17 @@ namespace Utilities.DesignPattern.Repository
                 sb.AppendLine($"            }}");
                 sb.AppendLine($"        }}");
             }
-            sb.AppendLine($"            public DbTransaction BeginTransaction()");
+            sb.AppendLine($"            public void BeginTransaction()");
             sb.AppendLine("            {");
-            sb.AppendLine($"                return _connection.BeginTransaction();");
+            sb.AppendLine($"                _connection.BeginTransaction();");
             sb.AppendLine("            }");
-            sb.AppendLine($"            public void SaveChanges(DbTransaction transaction)");
+            sb.AppendLine($"            public void SaveChanges()");
             sb.AppendLine("            {");
-            sb.AppendLine($"                transaction?.Commit();");
+            sb.AppendLine($"                _connection.Commit();");
             sb.AppendLine("            }");
-            sb.AppendLine($"            public void RollbackChanges(DbTransaction transaction)");
+            sb.AppendLine($"            public void RollbackChanges()");
             sb.AppendLine("            {");
-            sb.AppendLine($"                transaction?.Rollback();");
+            sb.AppendLine($"                _connection.Rollback();");
             sb.AppendLine("            }");
             sb.AppendLine($"            public void Dispose()");
             sb.AppendLine("            {");
