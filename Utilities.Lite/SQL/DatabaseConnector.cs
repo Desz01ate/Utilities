@@ -112,11 +112,11 @@ namespace Utilities.SQL
         public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<T> result = new List<T>();
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -170,11 +170,10 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = InternalBeginTransaction();
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -216,11 +215,11 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 T result = default;
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -254,11 +253,11 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 int result = -1;
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -295,11 +294,11 @@ namespace Utilities.SQL
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, System.Data.CommandType commandType = System.Data.CommandType.Text)
         where T : class, new()
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<T> result = new List<T>();
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -353,11 +352,11 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 List<dynamic> result = new List<dynamic>();
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -399,11 +398,11 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text) where T : struct
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 T result = default;
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
@@ -437,11 +436,11 @@ namespace Utilities.SQL
         /// <exception cref="Exception"/>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, System.Data.CommandType commandType = System.Data.CommandType.Text)
         {
-            DbTransaction transaction = null;
+            DbTransaction transaction = InternalBeginTransaction();
             try
             {
                 int result = -1;
-                transaction = InternalBeginTransaction();
+
                 using (var command = Connection.CreateCommand())
                 {
                     command.CommandText = sql;
