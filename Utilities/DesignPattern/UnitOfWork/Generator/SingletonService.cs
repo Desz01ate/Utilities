@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 using System.Text;
-using Utilities.DesignPattern.Repository;
+using Utilities.DesignPattern.UnitOfWork;
 using Utilities.Interfaces;
+using Utilities.SQL.Generator;
 using Utilities.SQL.Generator.Model;
 
-namespace Utilities.DesignPattern.Repository
+namespace Utilities.DesignPattern.UnitOfWork
 {
     /// <summary>
     /// Generator for Singleton Unit Of Work boilerplate
@@ -27,11 +29,9 @@ namespace Utilities.DesignPattern.Repository
             var tableName = TableNameCleanser(tb.Name);
             var repositoryName = $"{tableName}Repository";
             var sb = new StringBuilder();
-            sb.AppendLine("using System;");
-            sb.AppendLine("using System.Data.SqlClient;");
-            sb.AppendLine("using Utilities.DesignPattern;");
-            sb.AppendLine("using Utilities.SQL;");
-            sb.AppendLine("using Utilities.Interfaces;");
+            sb.AppendLine($"using System.Data.SqlClient;");
+            sb.AppendLine($"using Utilities.Interfaces;");
+            sb.AppendLine($"using Utilities.DesignPattern.UnitOfWork.Components;");
             sb.AppendLine($"using {Namespace}.Models;");
             sb.AppendLine();
             sb.AppendLine($@"namespace {Namespace}.Repositories");
@@ -84,18 +84,17 @@ namespace Utilities.DesignPattern.Repository
                 sb.AppendLine($"            }}");
                 sb.AppendLine($"        }}");
             }
-            sb.AppendLine($"            public void BeginTransaction()");
-            sb.AppendLine("            {");
-            sb.AppendLine($"                _connection.BeginTransaction();");
-            sb.AppendLine("            }");
-            sb.AppendLine($"            public void SaveChanges()");
-            sb.AppendLine("            {");
-            sb.AppendLine($"                _connection.Commit();");
-            sb.AppendLine("            }");
-            sb.AppendLine($"            public void RollbackChanges()");
-            sb.AppendLine("            {");
-            sb.AppendLine($"                _connection.Rollback();");
-            sb.AppendLine("            }");
+            var unitOfWorkMethods = typeof(IUnitOfWork).GetMethods();
+            foreach (var method in unitOfWorkMethods)
+            {
+                var parameters = string.Join(",", method.GetParameters().Select(parameter =>
+                {
+                    return $"{parameter.ParameterType.Name} {parameter.Name}";
+                }));
+                var returnType = method.ReturnType == typeof(void) ? "void" : method.ReturnType.Name;
+                var methodName = method.Name;
+                sb.AppendLine($"            public {returnType} {methodName}({parameters}) => throw new NotImplementedException();");
+            }
             sb.AppendLine($"            public void Dispose()");
             sb.AppendLine("            {");
             sb.AppendLine($"                _connection.Dispose();");

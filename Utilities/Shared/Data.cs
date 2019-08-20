@@ -38,9 +38,9 @@ namespace Utilities.Shared
                     }
 
                 }
-                catch
+                catch (Exception ex)
                 {
-                    continue;
+                    throw ex;
                 }
             }
             return instance;
@@ -59,7 +59,7 @@ namespace Utilities.Shared
                 try
                 {
                     var propertyType = property.PropertyType;
-                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
+                    var propertyName = property.Name;
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
                     var value = Convert.ToString(row[propertyName]);
@@ -185,70 +185,80 @@ namespace Utilities.Shared
             where T : class, new()
         {
             List<string> converter = new List<string>();
-            foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
+            var properties = typeof(T).PropertiesBindingFlagsAttributeValidate();
+            var referenceProperties = typeof(T).ForeignKeyAttributeValidate();
+            foreach (var property in properties)
             {
                 try
                 {
                     var propertyType = property.PropertyType;
                     var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
+                    var IsNotNull = AttributeExtension.NotNullAttributeValidate(property);
                     var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
+                    var notNullPostfix = IsNotNull ? " NOT NULL " : "";
                     if (propertyType == typeof(string))
                     {
-                        converter.Add($"{propertyName} NVARCHAR(1024) {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} NVARCHAR(1024) {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(char) || propertyType == typeof(char?))
                     {
-                        converter.Add($"{propertyName} NCHAR(1) {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} NCHAR(1) {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(short) || propertyType == typeof(short?) || propertyType == typeof(ushort) || propertyType == typeof(ushort?))
                     {
-                        converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(int) || propertyType == typeof(int?) || propertyType == typeof(uint) || propertyType == typeof(uint?))
                     {
-                        converter.Add($"{propertyName} INT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} INT {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(long) || propertyType == typeof(long?) || propertyType == typeof(ulong) || propertyType == typeof(ulong?))
                     {
-                        converter.Add($"{propertyName} BIGINT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} BIGINT {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(float) || propertyType == typeof(float?))
                     {
-                        converter.Add($"{propertyName} REAL {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} REAL {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(double) || propertyType == typeof(double?))
                     {
-                        converter.Add($"{propertyName} FLOAT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} FLOAT {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
                     {
-                        converter.Add($"{propertyName} BIT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} BIT {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(decimal) || propertyType == typeof(decimal?))
                     {
-                        converter.Add($"{propertyName} MONEY {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} MONEY {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                     {
-                        converter.Add($"{propertyName} DATETIME {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} DATETIME {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
                     {
-                        converter.Add($"{propertyName} UNIQUEIDENTIFIER {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} UNIQUEIDENTIFIER {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(byte) || propertyType == typeof(byte?) || propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
                     {
-                        converter.Add($"{propertyName} TINYINT {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} TINYINT {primaryKeyPostfix} {notNullPostfix}");
                     }
                     else if (propertyType == typeof(byte[]))
                     {
-                        converter.Add($"{propertyName} VARBINARY {primaryKeyPostfix}");
+                        converter.Add($"{propertyName} VARBINARY {primaryKeyPostfix} {notNullPostfix}");
                     }
                 }
                 catch
                 {
                     continue; //skip error property
                 }
+            }
+            foreach (var foreignKey in referenceProperties)
+            {
+                var propertyName = AttributeExtension.FieldNameAttributeValidate(foreignKey);
+                var targetTable = foreignKey.DeclaringType.Name;
+                converter.Add($"CONSTRAINT fk_{typeof(T).Name}_{targetTable} FOREIGN KEY ({foreignKey.ForeignKeyName}) REFERENCES {targetTable} ({propertyName})");
             }
             return converter;
         }

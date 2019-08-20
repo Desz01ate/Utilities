@@ -12,7 +12,6 @@ namespace Utilities.Interfaces
     {
         string ConnectionString { get; }
         bool IsOpen { get; }
-        bool UseTransaction { get; }
         Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
     }
 }

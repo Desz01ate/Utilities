@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Utilities.Asp.Core</name>
+    </assembly>
+    <members>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.Authenticate(System.String)">
+            <summary>
+            Get method for request JWT with given user id
+            </summary>
+            <param name="id">User ID</param>
+            <returns>Response of request in form of { success, message , data }</returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.VerifyAuthentication(System.String)">
+            <summary>
+            Verify any request for JWT from Authenticate method by given id and return if the user is valid or not
+            </summary>
+            <param name="id">User ID</param>
+            <returns>boolean which indicate whether the user is allow to get the JWT or not</returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SetPreconfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection@,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
+            </summary>
+            <param name="services">instance of IServiceCollection</param>
+            <param name="configuration">configuration read from appsettings.json with 'JwtIssuer','JwtAudience' and 'JwtKey' properties.</param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SetPreconfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection@,System.String,System.String,System.String,System.Double)">
+            <summary>
+            Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
+            </summary>
+            <param name="services">instance of IServiceCollection</param>
+            <param name="validIssuer">issuer of JWT</param>
+            <param name="validAudience">audience of JWT</param>
+            <param name="jwtKey">key of JWT</param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SetAppUseAuthentication(Microsoft.AspNetCore.Builder.IApplicationBuilder@)">
+            <summary>
+            (optional) You can use app.UserAuthentication(); in Startup.Configure.
+            </summary>
+            <param name="application"></param>
+        </member>
+    </members>
+</doc>

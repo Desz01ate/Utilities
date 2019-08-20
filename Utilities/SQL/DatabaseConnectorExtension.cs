@@ -22,7 +22,7 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>IEnumerable of object</returns>
-        public IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null)
+        public IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -30,11 +30,11 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = ExecuteReader<T>(query);
+                result = ExecuteReader<T>(query, transaction: transaction);
             }
             else
             {
-                result = ExecuteReader<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor));
+                result = ExecuteReader<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
             }
             return result;
         }
@@ -44,11 +44,12 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <returns>Object of given class</returns>
-        public T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null)
+        public T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             T result;
             if (dataBuilder == null)
@@ -59,7 +60,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
-                }).FirstOrDefault();
+                }, transaction: transaction).FirstOrDefault();
             }
             else
             {
@@ -69,7 +70,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
-                }, objectBuilder: (cursor) => dataBuilder(cursor)).FirstOrDefault();
+                }, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).FirstOrDefault();
             }
             return result;
         }
@@ -79,7 +80,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <returns>Affected row after an insert.</returns>
-        public int Insert<T>(T obj)
+        public int Insert<T>(T obj, DbTransaction transaction = null)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -92,7 +93,7 @@ namespace Utilities.SQL
             {
                 ParameterName = $"@{field.Key}",
                 Value = field.Value
-            }));
+            }), transaction: transaction);
             return result;
         }
         /// <summary>
@@ -101,12 +102,12 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to update.</param>
         /// <returns>Affected row after an update.</returns>
-        public int Update<T>(T obj)
+        public int Update<T>(T obj, DbTransaction transaction = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
@@ -120,7 +121,7 @@ namespace Utilities.SQL
                 Value = x.Value
             }).ToList();
             parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-            var value = ExecuteNonQuery(query, parametersArray);
+            var value = ExecuteNonQuery(query, parametersArray, transaction: transaction);
             return value;
         }
         /// <summary>
@@ -129,12 +130,12 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public int Delete<T>(T obj)
+        public int Delete<T>(T obj, DbTransaction transaction = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = ExecuteNonQuery(query.ToString(), new[] {
@@ -143,7 +144,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKey.Name,
                         Value = primaryKey.GetValue(obj)
                     }
-                });
+                }, transaction: transaction);
             return result;
         }
         /// <summary>
@@ -151,7 +152,7 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>IEnumerable of object</returns>
-        public async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null)
+        public async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
             where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -159,11 +160,11 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = await ExecuteReaderAsync<T>(query);
+                result = await ExecuteReaderAsync<T>(query, transaction: transaction);
             }
             else
             {
-                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor));
+                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
             }
             return result;
         }
@@ -173,11 +174,12 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <returns>Object of given class</returns>
-        public async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null)
+        public async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             T result;
             if (dataBuilder == null)
@@ -188,7 +190,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
-                })).FirstOrDefault();
+                }, transaction: transaction)).FirstOrDefault();
             }
             else
             {
@@ -198,7 +200,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
-                }, objectBuilder: (cursor) => dataBuilder(cursor))).FirstOrDefault();
+                }, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction)).FirstOrDefault();
             }
             return result;
         }
@@ -208,7 +210,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <returns>Affected row after an insert.</returns>
-        public async Task<int> InsertAsync<T>(T obj) where T : class, new()
+        public async Task<int> InsertAsync<T>(T obj, DbTransaction transaction = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
@@ -220,7 +222,7 @@ namespace Utilities.SQL
             {
                 ParameterName = $"@{field.Key}",
                 Value = field.Value
-            }));
+            }), transaction: transaction);
             return result;
         }
         /// <summary>
@@ -229,12 +231,12 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to update.</param>
         /// <returns>Affected row after an update.</returns>
-        public async Task<int> UpdateAsync<T>(T obj)
+        public async Task<int> UpdateAsync<T>(T obj, DbTransaction transaction = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
             var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
             parameters.Remove(primaryKey.Name);
@@ -248,7 +250,7 @@ namespace Utilities.SQL
                 Value = x.Value
             }).ToList();
             parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-            var value = await ExecuteNonQueryAsync(query, parametersArray);
+            var value = await ExecuteNonQueryAsync(query, parametersArray, transaction: transaction);
             return value;
         }
         /// <summary>
@@ -257,12 +259,12 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync<T>(T obj)
+        public async Task<int> DeleteAsync<T>(T obj, DbTransaction transaction = null)
             where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = typeof(T).GetProperties();
-            var primaryKey = fields.PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var result = await ExecuteNonQueryAsync(query.ToString(), new[] {
@@ -271,7 +273,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKey.Name,
                         Value = primaryKey.GetValue(obj)
                     }
-                });
+                }, transaction: transaction);
             return result;
         }
         /// <summary>
@@ -280,7 +282,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <returns></returns>
-        public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null) where T : class, new()
+        public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
@@ -289,56 +291,28 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = ExecuteReader<T>(query, translateResult.Parameters);
+                result = ExecuteReader<T>(query, translateResult.Parameters, transaction: transaction);
             }
             else
             {
-                result = ExecuteReader<T>(query, translateResult.Parameters, objectBuilder: (cursor) => dataBuilder(cursor));
+                result = ExecuteReader<T>(query, translateResult.Parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
             }
             return result;
         }
-        /// <summary>
-        /// Update data to specific table by using matched predicate
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Predicate of data in LINQ manner</param>
-        /// <returns></returns>
-        //public int Update<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new()
-        //{
-        //    var tableName = typeof(T).TableNameValidate();
-        //    var fields = typeof(T).GetProperties();
-        //    var primaryKey = fields.PrimaryKeyValidate();
-        //    var pkValue = primaryKey.GetValue(obj);
-        //    var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
-        //    parameters.Remove(primaryKey.Name);
-        //    var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-        //    var translatorResult = translator.Translate(predicate);
-        //    var query = $@"UPDATE {tableName} SET
-        //                       {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-        //                   WHERE {translatorResult.expression}";
 
-        //    var parametersArray = parameters.Select(x => new TParameterType()
-        //    {
-        //        ParameterName = $"@{x.Key}",
-        //        Value = x.Value
-        //    }).ToList();
-        //    parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-        //    var value = ExecuteNonQuery(query, parametersArray.Concat(translatorResult.parameters));
-        //    return value;
-        //}
         /// <summary>
         /// Delete data from table by using matched predicate
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <returns></returns>
-        public int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public int Delete<T>(Expression<Func<T, bool>> predicate, DbTransaction transaction = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
-            var result = ExecuteNonQuery(query, translateResult.Parameters);
+            var result = ExecuteNonQuery(query, translateResult.Parameters, transaction: transaction);
             return result;
         }
         /// <summary>
@@ -347,7 +321,7 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null) where T : class, new()
+        public async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
@@ -356,63 +330,35 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = await ExecuteReaderAsync<T>(query, translateResult.Parameters);
+                result = await ExecuteReaderAsync<T>(query, translateResult.Parameters, transaction: transaction);
             }
             else
             {
-                result = await ExecuteReaderAsync<T>(query, translateResult.Parameters, objectBuilder: (cursor) => dataBuilder(cursor));
+                result = await ExecuteReaderAsync<T>(query, translateResult.Parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
             }
             return result;
         }
-        /// <summary>
-        /// Update data to specific table by using matched predicate
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Predicate of data in LINQ manner</param>
-        /// <returns></returns>
-        //public async Task<int> UpdateAsync<T>(T obj, Expression<Func<T, bool>> predicate) where T : class, new()
-        //{
-        //    var tableName = typeof(T).TableNameValidate();
-        //    var fields = typeof(T).GetProperties();
-        //    var primaryKey = fields.PrimaryKeyValidate();
-        //    var pkValue = primaryKey.GetValue(obj);
-        //    var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
-        //    parameters.Remove(primaryKey.Name);
-        //    var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-        //    var translatorResult = translator.Translate(predicate);
-        //    var query = $@"UPDATE {tableName} SET
-        //                       {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-        //                   WHERE " + translatorResult;
-
-        //    var parametersArray = parameters.Select(x => new TParameterType()
-        //    {
-        //        ParameterName = $"@{x.Key}",
-        //        Value = x.Value
-        //    }).ToList();
-        //    parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-        //    var value = await ExecuteNonQueryAsync(query, parametersArray.Concat(translatorResult.parameters));
-        //    return value;
-        //}
         /// <summary>
         /// Select data from table by using matched predicate
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate, DbTransaction transaction = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var baseStatement = $@"DELETE FROM {tableName} WHERE ";
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
-            var result = await ExecuteNonQueryAsync(baseStatement + translateResult.Expression, translateResult.Parameters);
+            var result = await ExecuteNonQueryAsync(baseStatement + translateResult.Expression, translateResult.Parameters, transaction: transaction);
             return result;
         }
 
-        public int Delete<T>(object primaryKey) where T : class, new()
+        public int Delete<T>(object primaryKey, DbTransaction transaction = null) where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = this.ExecuteNonQuery(query, new[] {
                     new TParameterType()
@@ -420,14 +366,15 @@ namespace Utilities.SQL
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
-                }, CommandType.Text);
+                }, CommandType.Text, transaction);
             return result;
         }
 
-        public async Task<int> DeleteAsync<T>(object primaryKey) where T : class, new()
+        public async Task<int> DeleteAsync<T>(object primaryKey, DbTransaction transaction = null) where T : class, new()
         {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var primaryKeyAttribute = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T).GetProperties());
+            var type = typeof(T);
+            var tableName = type.TableNameAttributeValidate();
+            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var result = await this.ExecuteNonQueryAsync(query, new[] {
                     new TParameterType()
@@ -435,7 +382,7 @@ namespace Utilities.SQL
                         ParameterName = primaryKeyAttribute.Name,
                         Value = primaryKey
                     }
-                }, CommandType.Text);
+                }, CommandType.Text, transaction);
             return result;
         }
         /// <summary>

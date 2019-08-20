@@ -14,13 +14,13 @@ namespace Utilities.Shared
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this Type type)
         {
             var properties = type.GetProperties();
-            return PrimaryKeyAttributeValidate(properties);
+            return PrimaryKeyAttributeValidate(properties, type);
         }
-        internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties)
+        internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
             var primaryKeyProperty = properties.Where(property => property.GetCustomAttribute<PrimaryKeyAttribute>(true) != null);
-            if (primaryKeyProperty == null) throw new AttributeException("PrimaryKey");
-            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException("PrimaryKey");
+            if (primaryKeyProperty == null) throw new AttributeException("PrimaryKey", type.FullName);
+            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException("PrimaryKey", type.FullName);
             var property = new InternalPropertyInfo(primaryKeyProperty.First());
             return property;
         }
@@ -74,11 +74,14 @@ namespace Utilities.Shared
                 var attribute = property.GetCustomAttribute<ForeignKeyAttribute>(true);
                 if (attribute != null)
                 {
-                    foreach (var p in attribute.ReferenceKeyProperty)
-                    {
-                        p.ForeignKeyName = property.Name;
-                        properties.Add(p);
-                    }
+                    //foreach (var p in attribute.ReferenceKeyProperty)
+                    //{
+                    //    p.ForeignKeyName = property.Name;
+                    //    properties.Add(p);
+                    //}
+                    var refKey = attribute.ReferenceKeyProperty;
+                    refKey.ForeignKeyName = property.Name;
+                    properties.Add(refKey);
 
                 }
             }

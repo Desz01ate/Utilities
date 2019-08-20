@@ -65,11 +65,10 @@ namespace Utilities.SQL.Translator
             _sqlParameters = new List<TSqlParameter>();
             foreach (var property in typeof(TObject).PropertiesBindingFlagsAttributeValidate())
             {
-                var key = property.Name;
-                var value = property.FieldNameAttributeValidate();
+                var key = property.OriginalName;
+                var value = property.Name;
                 _fieldsConfiguration.Add(key, value);
             }
-            //_fieldsConfiguration = fieldsConfiguration;
         }
 
 
@@ -143,6 +142,13 @@ namespace Utilities.SQL.Translator
                 sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                 return m;
 
+            }
+            else if (m.Method.Name == "IsNullOrEmpty" || m.Method.Name == "IsNullOrWhitespace")
+            {
+                var node = ((MemberExpression)m.Arguments[0]).Member.Name;
+                var field = _fieldsConfiguration[node];
+                sb.Append($"({field} IS NULL AND {field} = '')");
+                return m;
             }
 
             throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
@@ -310,19 +316,17 @@ namespace Utilities.SQL.Translator
                         sb.Append(_previousVisitField);
                         return m;
                     case ExpressionType.Constant:
-                        var f = Expression.Lambda(m).Compile();
-                        var value = f.DynamicInvoke();
+                        var constantInvokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
                         _sqlParameters.Add(new TSqlParameter()
                         {
                             ParameterName = _previousVisitField,
-                            Value = value
+                            Value = constantInvokedValue
                         });
                         sb.Append($"@{_previousVisitField}");
                         return m;
                     //need more research on this
                     case ExpressionType.MemberAccess:
                         var accessingProperty = m.Member.Name.ToLower();
-                        var accessingPropetyType = m.Member.GetType();
                         switch (accessingProperty)
                         {
                             case "length":
@@ -331,13 +335,11 @@ namespace Utilities.SQL.Translator
                                 sb.Append($"{lengthFunction}({member})");
                                 break;
                             default:
-                                var objectMember = Expression.Convert(m, typeof(object));
-                                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
-                                var getter = getterLambda.Compile();
+                                object invokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
                                 _sqlParameters.Add(new TSqlParameter()
                                 {
                                     ParameterName = _previousVisitField,
-                                    Value = getter
+                                    Value = invokedValue
                                 });
                                 sb.Append($"@{_previousVisitField}");
                                 break;

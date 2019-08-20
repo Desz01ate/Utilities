@@ -7,7 +7,7 @@ using Utilities.Interfaces;
 using Utilities.SQL.Generator;
 using Utilities.SQL.Generator.Model;
 
-namespace Utilities.DesignPattern.Repository
+namespace Utilities.DesignPattern.UnitOfWork
 {
     /// <summary>
     /// Abstract class which defined how the generator should work.
@@ -16,7 +16,7 @@ namespace Utilities.DesignPattern.Repository
     public abstract class GenericServiceAbstract<TDatabase> : IGeneratorStrategy
         where TDatabase : DbConnection, new()
     {
-        protected ModelGenerator<TDatabase> generator;
+        protected CSharpGenerator<TDatabase> generator;
 
         public string Directory { get; protected set; }
 
@@ -31,7 +31,7 @@ namespace Utilities.DesignPattern.Repository
             //var files = Directory.EnumerateFiles(modelDirectory);
             foreach (var table in Table)
             {
-                generator.GenerateFromTable(table, GenerateRepository);
+                generator.GenerateFromSpecificTable(table, GenerateRepository);
             }
         }
         protected string TableNameCleanser(string tableName)
@@ -40,7 +40,7 @@ namespace Utilities.DesignPattern.Repository
         }
         protected virtual void GenerateModel()
         {
-            generator.GenerateAllTables(SQL.Generator.Enumerable.TargetLanguage.CSharp);
+            generator.GenerateAllTable();
         }
         protected virtual void GenerateRepository(Table tb)
         {
@@ -54,8 +54,9 @@ namespace Utilities.DesignPattern.Repository
         {
             System.IO.Directory.CreateDirectory(ModelDirectory);
             System.IO.Directory.CreateDirectory(RepositoryDirectory);
-            this.generator = new ModelGenerator<TDatabase>(ConnectionString, ModelDirectory, $"{Namespace}.Models");
+            this.generator = new CSharpGenerator<TDatabase>(ConnectionString, ModelDirectory, $"{Namespace}.Models");
             Table = generator.Tables;
+            generator.GenerateAllTable();
             GenerateRepositories(Namespace);
             GenerateService();
         }

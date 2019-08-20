@@ -6,7 +6,7 @@ using System.Text;
 using Utilities.Interfaces;
 using Utilities.SQL;
 
-namespace Utilities.DesignPattern
+namespace Utilities.DesignPattern.UnitOfWork.Components
 {
     /// <summary>
     /// Example implementation of IGenericRepository with dependency injection of DAL

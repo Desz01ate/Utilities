@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -110,6 +111,14 @@ namespace Utilities.Asp.Core.Based
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
+        }
+        /// <summary>
+        /// (optional) You can use app.UserAuthentication(); in Startup.Configure.
+        /// </summary>
+        /// <param name="application"></param>
+        public static void SetAppUseAuthentication(ref IApplicationBuilder application)
+        {
+            application.UseAuthentication();
         }
     }
 }

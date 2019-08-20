@@ -8,6 +8,10 @@ namespace Utilities.SQL.Generator.Enumerable
     {
         CSharp,
         VisualBasic,
-        TypeScript
+        TypeScript,
+        Java,
+        PHP,
+        Python,
+        Python3_7
     }
 }

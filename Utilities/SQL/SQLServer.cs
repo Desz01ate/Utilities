@@ -18,9 +18,5 @@ namespace Utilities.SQL
         {
             SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LEN");
         }
-        public SQLServer(string connectionString, bool useTransaction) : base(connectionString, useTransaction)
-        {
-            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LEN");
-        }
     }
 }

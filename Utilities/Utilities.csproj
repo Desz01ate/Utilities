@@ -9,12 +9,17 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.6.1</Version>
+    <Version>0.0.6.3-beta-001</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>Add POCO model generator which is currently support C#, Visual Basic and TypeScript.
-New overload for HttpRequest module to simplify the code (and concept!) on usage.
-Row Builder is 'greatly' improve on speed and less CPU, Memory consumption.</PackageReleaseNotes>
+    <PackageReleaseNotes>Changes to [SQL] Module
++ Transaction now revamped to support older version by using optional parameter 'transaction' so user can fully control the transaction instead of internal handle.
++ExpressionTranslator now support string.IsNullOrEmpty/Whitespace translation.
+- Due to transaction now being managed by programmer, the second overload (string connectionString,bool UseTransaction) has been removed from DataConnector
+
+Add new module [DesignPattern]
++ This module aimed to utilize functionality inside this library by provide generator to generate code boilerplate for design pattern
++ This build is coming with UnitOfWork generator (and more later)</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 
@@ -24,7 +29,7 @@ Row Builder is 'greatly' improve on speed and less CPU, Memory consumption.</Pac
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
