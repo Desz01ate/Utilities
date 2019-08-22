@@ -123,8 +123,55 @@
             Contain enumerable that describe to MIME type
             </summary>
         </member>
-        <member name="T:Utilities.HttpRequest">
+        <member name="M:Utilities.File.ReadJsonAs``1(System.String,System.IO.FileMode)">
             <summary>
+            Read json file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target json file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadXmlAs``1(System.String,System.IO.FileMode,System.Boolean)">
+            <summary>
+            Read xml file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target xml file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <param name="omitRootObject">Omits writing the root object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadJsonAsAsync``1(System.String,System.IO.FileMode)">
+            <summary>
+            Read json file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target json file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadXmlAsAsync``1(System.String,System.IO.FileMode,System.Boolean)">
+            <summary>
+            Read xml file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target xml file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <param name="omitRootObject">Omits writing the root object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJson``1(``0,System.String,System.Text.Encoding)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJso            <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
             </summary>
             <summary>
@@ -247,6 +294,17 @@
             <param name="url">The Uri the request is sent to.</param>
             <param name="body">The body content the request is sent to.</param>
             <param name="encoding">The body content type.</param>
+            <param name="contentType">The body media type.</param>
+            <param name="headers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Send a DELETE request to the specified Uri.
+            </summary>
+            <param name="url">The Uri the request is sent to.</param>
+            <param name="headers"></param>
+ram>
             <param name="contentType">The body media type.</param>
             <param name="headers"></param>
             <returns></returns>
@@ -437,6 +495,16 @@
             <param name="headers"></param>
             <returns></returns>
         </member>
+        <member name="P:Utilities.Metadata.Version">
+            <summary>
+            Library version.
+            </summary>
+        </member>
+        <member name="P:Utilities.Metadata.TargetFramework">
+            <summary>
+            Build target framework version.
+            </summary>
+        </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
             Basic regular expression wrapper
@@ -448,17 +516,7 @@
             </summary>
             <param name="input">Input string</param>
             <param name="pattern">Regex pattern to check whether the input is matched or not</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.RegularExpression.IsEmail(System.String,System.String)">
-            <summary>
-            Check if the given input is matching the email
-            </summary>
-            <param name="input">Input string</param>
-            <param name="pattern">Regex pattern to check whether the input is matched or not</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.RegularExpression.IsOnlyDigit(System.String)">
+      ing)">
             <summary>
             Check if the given input is matching the number-only
             </summary>
@@ -702,6 +760,19 @@
             Connection string of this object.
             </summary>
         </member>
+        <member name="P:Utilitie of object that hold information of the connection.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector`2.SQLFunctionConfiguration">
+            <summary>
+            SQL-function configuration for LINQ usage.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector`2.ConnectionString">
+            <summary>
+            Connection string of this object.
+            </summary>
+        </member>
         <member name="P:Utilities.SQL.DatabaseConnector`2.IsOpen">
             <summary>
             Determine wheter the connection is open or not.
@@ -762,12 +833,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
+        <member name="M:Utilities.parameter.</param>
             <param name="commandType">Type of SQL Command.</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of dynamic object</returns>
@@ -935,6 +1001,12 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
             <summary>
+            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name im name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of object</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
             <typeparam name="T"></typeparam>
@@ -990,15 +1062,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
-            <summary>
-            Select data from table by using matched predicate
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate">Predicate of data in LINQ manner</param>
-            <param name="top">Specified TOP(n) rows.</param>
-            <param name="dataBuilder">Row builder template.</param>
-            <param name="transaction">Transaction for current execution.</param>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},Sys for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
@@ -1142,6 +1206,19 @@
             </summary>
             <param name="value">Value</param>
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
+ormat-strings</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.NumberFormat(System.String,System.String)">

@@ -123,6 +123,54 @@
             Contain enumerable that describe to MIME type
             </summary>
         </member>
+        <member name="M:Utilities.File.ReadJsonAs``1(System.String,System.IO.FileMode)">
+            <summary>
+            Read json file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target json file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadXmlAs``1(System.String,System.IO.FileMode,System.Boolean)">
+            <summary>
+            Read xml file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target xml file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <param name="omitRootObject">Omits writing the root object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadJsonAsAsync``1(System.String,System.IO.FileMode)">
+            <summary>
+            Read json file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target json file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadXmlAsAsync``1(System.String,System.IO.FileMode,System.Boolean)">
+            <summary>
+            Read xml file and deserialize to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to target xml file.</param>
+            <param name="fileMode">A constant that determines how to open or create the file.</param>
+            <param name="omitRootObject">Omits writing the root object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJson``1(``0,System.String,System.Text.Encoding)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -437,6 +485,16 @@
             <param name="headers"></param>
             <returns></returns>
         </member>
+        <member name="P:Utilities.Metadata.Version">
+            <summary>
+            Library version.
+            </summary>
+        </member>
+        <member name="P:Utilities.Metadata.TargetFramework">
+            <summary>
+            Build target framework version.
+            </summary>
+        </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
             Basic regular expression wrapper
@@ -640,6 +698,46 @@
             <param name="columns">column name container</param>
             <returns></returns>
         </member>
+        <member name="T:Utilities.Shared.Enumerable">
+            <summary>
+            Collection of Emnumerable extension methods
+            </summary>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.Merge``1(System.Collections.Generic.IEnumerable{``0}[])">
+            <summary>
+            Combine 2 or more enumerable of the same type into new enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="enumerables">enumerables to combine</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Create new enumerable from given enumerable, start index and count
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="baseEnumerable">base enumerable</param>
+            <param name="startIndex">starting index</param>
+            <param name="count">count of elements</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="baseEnumerable">base enumerable</param>
+            <param name="count">count of elements</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.AsList``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Convert given enumerable to list **only if** enumerable is currently not a list, otherwise return data without mutable.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.Shared.Enumerator">
             <summary>
             Collection of Emnumerable extension methods
@@ -703,28 +801,42 @@
             <summary>
             Constructor
             </summary>
-            <param name="connectionString">Connection string for database</param>
+            <param name="connectionString">Connection string for database.</param>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose(System.Boolean)">
             <summary>
             Protected implementation of dispose pattern
             </summary>
-            <param name="disposing"></param>
+            <param name="disposing">.</param>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Dispose">
             <summary>
             Object disposer which close the connection related to this object.
             </summary>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.BeginTransaction">
+            <summary>
+            Shortcut for this.Connection.BeginTransaction()
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.BeginTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Shortcut for this.Connection.BeginTransaction(isolationLevel)
+            </summary>
+            <param name="isolationLevel">Specified isolation level.</param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType,System.Data.Common.DbTransaction)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -733,9 +845,10 @@
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -743,9 +856,10 @@
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -754,9 +868,10 @@
             Execute SELECT SQL query and return a scalar object
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -764,9 +879,10 @@
             <summary>
             Execute any non-DML SQL Query
             </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -775,10 +891,11 @@
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -787,9 +904,10 @@
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -797,9 +915,9 @@
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -808,9 +926,10 @@
             Execute SELECT SQL query and return a scalar object
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -818,9 +937,10 @@
             <summary>
             Execute any non-DML SQL Query
             </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -828,9 +948,10 @@
             <summary>
             Execute SELECT SQL query and return a string
             </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -838,9 +959,10 @@
             <summary>
             Execute SELECT SQL query and return a string in asynchronous manner
             </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-            <param name="parameters">SQL parameters according to the sql parameter</param>
-            <param name="commandType">Type of SQL Command</param>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
@@ -849,7 +971,10 @@
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
             <typeparam name="T"></typeparam>
-            <returns>IEnumerable of object</returns>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
             <summary>
@@ -857,6 +982,8 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="primaryKey">Primary key of specific row</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(``0,System.Data.Common.DbTransaction)">
@@ -865,6 +992,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Update``1(``0,System.Data.Common.DbTransaction)">
@@ -873,6 +1001,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="obj">Object to update.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an update.</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(``0,System.Data.Common.DbTransaction)">
@@ -881,6 +1010,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="obj"></param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
@@ -888,6 +1018,9 @@
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
             <typeparam name="T"></typeparam>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of object</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
@@ -896,6 +1029,8 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="primaryKey">Primary key of specific row</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(``0,System.Data.Common.DbTransaction)">
@@ -904,6 +1039,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
@@ -912,6 +1048,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="obj">Object to update.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an update.</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(``0,System.Data.Common.DbTransaction)">
@@ -920,6 +1057,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="obj"></param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
@@ -928,6 +1066,9 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
@@ -936,6 +1077,7 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
@@ -944,6 +1086,9 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
@@ -952,6 +1097,25 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Object,System.Data.Common.DbTransaction)">
+            <summary>
+            Select data from table by using primary key
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Specified primary key.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Object,System.Data.Common.DbTransaction)">
+            <summary>
+            Select data from table by using primary key
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Specified primary key.</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.CreateTable``1">
