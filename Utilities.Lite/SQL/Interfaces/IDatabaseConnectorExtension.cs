@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Structs;
 
 namespace Utilities.Interfaces
 {
@@ -39,6 +40,16 @@ namespace Utilities.Interfaces
         #region DDL
         int CreateTable<T>() where T : class, new();
         int DROP_TABLE_USE_WITH_CAUTION<T>() where T : class, new();
+        #endregion
+        #region query_translator
+        QueryParamsCombination<TParameter> SelectQueryGenerate<T>(int? top = null) where T : class, new();
+        QueryParamsCombination<TParameter> SelectQueryGenerate<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new();
+        QueryParamsCombination<TParameter> SelectQueryGenerate<T>(object primaryKey) where T : class, new();
+        QueryParamsCombination<TParameter> InsertQueryGenerate<T>(T obj) where T : class, new();
+        QueryParamsCombination<TParameter> UpdateQueryGenerate<T>(T obj) where T : class, new();
+        QueryParamsCombination<TParameter> DeleteQueryGenerate<T>(T obj) where T : class, new();
+        QueryParamsCombination<TParameter> DeleteQueryGenerate<T>(object primaryKey) where T : class, new();
+        QueryParamsCombination<TParameter> DeleteQueryGenerate<T>(Expression<Func<T, bool>> predicate) where T : class, new();
         #endregion
     }
 }

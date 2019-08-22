@@ -39,7 +39,7 @@ namespace Utilities.SQL
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="connectionString">Connection string for database</param>
+        /// <param name="connectionString">Connection string for database.</param>
         public DatabaseConnector(string connectionString)
         {
             SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
@@ -52,7 +52,7 @@ namespace Utilities.SQL
         /// <summary>
         /// Protected implementation of dispose pattern
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (Disposed) return;
@@ -71,13 +71,32 @@ namespace Utilities.SQL
             GC.SuppressFinalize(this);
         }
         /// <summary>
+        /// Shortcut for this.Connection.BeginTransaction()
+        /// </summary>
+        /// <returns></returns>
+        public DbTransaction BeginTransaction()
+        {
+            return Connection.BeginTransaction();
+        }
+        /// <summary>
+        /// Shortcut for this.Connection.BeginTransaction(isolationLevel)
+        /// </summary>
+        /// <param name="isolationLevel">Specified isolation level.</param>
+        /// <returns></returns>
+        public DbTransaction BeginTransaction(IsolationLevel isolationLevel)
+        {
+            return Connection.BeginTransaction(isolationLevel);
+        }
+
+        /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
         public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
@@ -119,9 +138,10 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
         public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
@@ -131,9 +151,10 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of dynamic object</returns>
         /// <exception cref="Exception"/>
         public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
@@ -155,7 +176,7 @@ namespace Utilities.SQL
                     }
                     using (var cursor = command.ExecuteReader())
                     {
-                        var columns = Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
+                        var columns = System.Linq.Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
                         while (cursor.Read())
                         {
                             result.Add(Data.RowBuilder(cursor, columns));
@@ -175,9 +196,10 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
         public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : struct
@@ -212,9 +234,10 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
         public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
@@ -250,10 +273,11 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
@@ -295,9 +319,10 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
@@ -307,9 +332,9 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
         /// <exception cref="Exception"/>
         public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
@@ -332,7 +357,7 @@ namespace Utilities.SQL
                     }
                     using (var cursor = await command.ExecuteReaderAsync())
                     {
-                        var columns = Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
+                        var columns = System.Linq.Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
                         while (await cursor.ReadAsync())
                         {
                             result.Add(Data.RowBuilder(cursor, columns));
@@ -352,9 +377,10 @@ namespace Utilities.SQL
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
         public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : struct
@@ -389,9 +415,10 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
@@ -426,9 +453,10 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute SELECT SQL query and return a string
         /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
         public string ExecuteScalar(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
@@ -463,9 +491,10 @@ namespace Utilities.SQL
         /// <summary>
         /// Execute SELECT SQL query and return a string in asynchronous manner
         /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter)</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter</param>
-        /// <param name="commandType">Type of SQL Command</param>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
         public async Task<string> ExecuteScalarAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)

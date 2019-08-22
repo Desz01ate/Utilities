@@ -58,14 +58,14 @@ namespace Utilities.DesignPattern.UnitOfWork
             sb.AppendLine();
             sb.AppendLine($@"namespace {Namespace}");
             sb.AppendLine("{");
-            sb.AppendLine($"    public class Service : IUnitOfWork");
+            sb.AppendLine($"    public sealed class Service : IUnitOfWork");
             sb.AppendLine("    {");
             sb.AppendLine("        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service());");
             sb.AppendLine("        public readonly static Service Context = _lazyInstant.Value;");
             sb.AppendLine("        private readonly IDatabaseConnectorExtension<SqlConnection,SqlParameter> _connection;");
             sb.AppendLine("        Service()");
             sb.AppendLine("        {");
-            sb.AppendLine($"                _connection = new DatabaseConnector<SqlConnection,SqlParameter>(\"{ConnectionString}\");");
+            sb.AppendLine($"                _connection = new DatabaseConnector<SqlConnection,SqlParameter>(\"***YOUR DATABASE CREDENTIAL***\");");
             sb.AppendLine("        }");
             foreach (var table in generator.Tables)
             {

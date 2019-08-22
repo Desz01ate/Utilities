@@ -8,7 +8,7 @@ namespace Utilities.Shared
     /// <summary>
     /// Collection of Emnumerable extension methods
     /// </summary>
-    public static class Enumerator
+    public static class Enumerable
     {
         /// <summary>
         /// Combine 2 or more enumerable of the same type into new enumerable
@@ -41,6 +41,20 @@ namespace Utilities.Shared
         public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> baseEnumerable, int count)
         {
             return baseEnumerable.Skip(Math.Max(0, baseEnumerable.Count() - count));
+        }
+        /// <summary>
+        /// Convert given enumerable to list **only if** enumerable is currently not a list, otherwise return data without mutable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static List<T> AsList<T>(this IEnumerable<T> source)
+        {
+            if (source == null || source is List<T>)
+            {
+                return (List<T>)source;
+            }
+            return source.ToList();
         }
     }
 }

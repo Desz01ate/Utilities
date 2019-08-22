@@ -13,6 +13,7 @@
     <Version>0.1.3.0-beta-001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
+    <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>This build has been used by some real projects and is ongoing to be a release candidate.
 
 Changes to [SQL] Module
