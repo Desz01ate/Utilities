@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using Utilities.Structs;
 
 namespace Utilities.Security.Cryptography
 {
@@ -15,19 +14,11 @@ namespace Utilities.Security.Cryptography
         /// Generate private key and public key as a pair.
         /// </summary>
         /// <returns>Tuple of private and public key</returns>
-        public static RSACombination KeyGenerator()
+        public static (string PrivateKey, string PublicKey) KeyGenerator()
         {
-            //CspParameters cspParams = new CspParameters { ProviderType = 1 };
-
-            //RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(1024, cspParams);
-
-            //string publicKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(false));
-            //string privateKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(true));
-
-            //return (privateKey, publicKey);
             var privateKey = CreatePrivateKey();
             var publicKey = CreatePublicKey(privateKey);
-            return new RSACombination(privateKey, publicKey);
+            return (privateKey, publicKey);
         }
         /// <summary>
         /// Generate private key.

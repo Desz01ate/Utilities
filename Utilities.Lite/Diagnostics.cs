@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using Utilities.Structs;
 
 namespace Utilities
 {
@@ -30,24 +29,24 @@ namespace Utilities
         /// </summary>
         /// <param name="action">Any given function to execute</param>
         /// <returns>Total memory usage</returns>
-        public static MemoryEstimation MemeryEstimation(Action action)
+        public static (long Before, long After, long Amount) MemeryEstimation(Action action)
         {
             long beforeExecution = GC.GetTotalMemory(false) / 1024;
             action();
             long afterExecution = GC.GetTotalMemory(false) / 1024;
-            return new MemoryEstimation(beforeExecution, afterExecution);
+            return (beforeExecution, afterExecution, beforeExecution - afterExecution);
         }
         /// <summary>
         /// Execute given function and return total memory usage during an execution
         /// </summary>
         /// <param name="action">Any given function to execute</param>
         /// <returns>Total memory usage</returns>
-        public static async Task<MemoryEstimation> MemeryEstimationAsync(Func<Task> action)
+        public static async Task<(long Before, long After, long Amount)> MemeryEstimationAsync(Func<Task> action)
         {
             long beforeExecution = GC.GetTotalMemory(false) / 1024;
             await action();
             long afterExecution = GC.GetTotalMemory(false) / 1024;
-            return new MemoryEstimation(beforeExecution, afterExecution);
+            return (beforeExecution, afterExecution, beforeExecution - afterExecution);
 
         }
         /// <summary>

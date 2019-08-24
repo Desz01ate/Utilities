@@ -46,15 +46,14 @@ Changes to [DesignPattern] Module
   <ItemGroup>
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net452'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452' OR '$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Net.Http">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Net.Http.dll</HintPath>
     </Reference>
-        <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net461'">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Net.Http.dll</HintPath>
-    </Reference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
 </Project>
