@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Utilities.Structs;
 
 namespace Utilities.Shared
 {
@@ -43,7 +44,7 @@ namespace Utilities.Shared
             return baseEnumerable.Skip(Math.Max(0, baseEnumerable.Count() - count));
         }
         /// <summary>
-        /// Convert given enumerable to list **only if** enumerable is currently not a list, otherwise return data without mutable.
+        /// Convert given collection to list **only if** enumerable is currently not a list, otherwise return data without mutable.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
@@ -55,6 +56,19 @@ namespace Utilities.Shared
                 return (List<T>)source;
             }
             return source.ToList();
+        }
+        /// <summary>
+        /// Splits the collection into two collections, which is paired as Match and Unmatch in return EnumerablePartitionPair.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataset">A base dataset.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns></returns>
+        public static EnumerablePartitionPair<T> Partition<T>(this IEnumerable<T> dataset, Func<T, bool> predicate)
+        {
+            var match = dataset.Where(predicate);
+            var unmatch = dataset.Except(match);
+            return new EnumerablePartitionPair<T>(match, unmatch);
         }
     }
 }
