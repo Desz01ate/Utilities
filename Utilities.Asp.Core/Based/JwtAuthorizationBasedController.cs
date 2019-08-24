@@ -34,8 +34,8 @@ namespace Utilities.Asp.Core.Based
         [HttpGet]
         public virtual Response Authenticate([FromQuery]string id)
         {
-            var valid = VerifyAuthentication(id);
-            if (!valid)
+            var exists = VerifyAuthentication(id);
+            if (!exists)
                 return new Response(false, NotFound().StatusCode.ToString(), string.Empty);
             var claims = new List<Claim>
                 {
@@ -113,12 +113,12 @@ namespace Utilities.Asp.Core.Based
                 });
         }
         /// <summary>
-        /// This is an optional configuration, you could simply use app.UseAuthentication() in Configure method of Startup instead.
+        /// (optional) You can use app.UserAuthentication(); in Startup.Configure.
         /// </summary>
-        /// <param name="app"></param>
-        public static void SetOptionalAppConfiguration(ref IApplicationBuilder app)
+        /// <param name="application"></param>
+        public static void SetAppUseAuthentication(ref IApplicationBuilder application)
         {
-            app.UseAuthentication();
+            application.UseAuthentication();
         }
     }
 }

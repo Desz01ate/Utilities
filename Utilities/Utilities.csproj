@@ -9,12 +9,19 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.6.2</Version>
+    <Version>0.0.6.3</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>Hotfix on ExpressionTranslator where MemberAccess not compile correctly.
+    <PackageReleaseNotes>Changes to [SQL] Module
++ Transaction now revamped to support older version by using optional parameter 'transaction' so user can fully control the transaction instead of internal handle.
++ Query generator for DatabaseConnectorExtension, you can now observed what the internal engine CRUD generated before execute it.
+- Remove [BeginTransaction],[Commit] and [Rollback] from interface of previous dev-beta build
 
-POCO model generator now supported      C#, Visual Basic, TypeScript,  Java, PHP,Python and Python3.7 (with @dataclass)
+Changes to [DesignPattern] Module
++ Change signature of IUnitOfWork
++ Rename some namespace
+
+
 </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
@@ -25,7 +32,7 @@ POCO model generator now supported      C#, Visual Basic, TypeScript,  Java, PHP
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

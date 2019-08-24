@@ -65,11 +65,10 @@ namespace Utilities.SQL.Translator
             _sqlParameters = new List<TSqlParameter>();
             foreach (var property in typeof(TObject).PropertiesBindingFlagsAttributeValidate())
             {
-                var key = property.Name;
-                var value = property.FieldNameAttributeValidate();
+                var key = property.OriginalName;
+                var value = property.Name;
                 _fieldsConfiguration.Add(key, value);
             }
-            //_fieldsConfiguration = fieldsConfiguration;
         }
 
 
@@ -143,6 +142,13 @@ namespace Utilities.SQL.Translator
                 sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                 return m;
 
+            }
+            else if (m.Method.Name == "IsNullOrEmpty" || m.Method.Name == "IsNullOrWhitespace")
+            {
+                var node = ((MemberExpression)m.Arguments[0]).Member.Name;
+                var field = _fieldsConfiguration[node];
+                sb.Append($"({field} IS NULL AND {field} = '')");
+                return m;
             }
 
             throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));

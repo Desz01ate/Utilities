@@ -14,13 +14,13 @@ namespace Utilities.Shared
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this Type type)
         {
             var properties = type.GetProperties();
-            return PrimaryKeyAttributeValidate(properties);
+            return PrimaryKeyAttributeValidate(properties, type);
         }
-        internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties)
+        internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
             var primaryKeyProperty = properties.Where(property => property.GetCustomAttribute<PrimaryKeyAttribute>(true) != null);
-            if (primaryKeyProperty == null) throw new AttributeException("PrimaryKey");
-            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException("PrimaryKey");
+            if (primaryKeyProperty == null) throw new AttributeException("PrimaryKey", type.FullName);
+            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException("PrimaryKey", type.FullName);
             var property = new InternalPropertyInfo(primaryKeyProperty.First());
             return property;
         }
@@ -41,6 +41,11 @@ namespace Utilities.Shared
             if (attribute == null) return type.Name;
             return attribute.TableName;
         }
+        internal static bool NotNullAttributeValidate(this PropertyInfo propertyInfo)
+        {
+            var attribute = propertyInfo.GetCustomAttribute<NotNullAttribute>();
+            return attribute != null;
+        }
         internal static IEnumerable<InternalPropertyInfo> PropertiesBindingFlagsAttributeValidate(this Type type)
         {
             var attribute = type.GetCustomAttribute<BindingFlagsAttribute>(true);
@@ -59,6 +64,28 @@ namespace Utilities.Shared
                 return internalPropertyInfo;
             });
             return internalProperties;
+        }
+        internal static IEnumerable<InternalPropertyInfo> ForeignKeyAttributeValidate(this Type type)
+        {
+            List<InternalPropertyInfo> properties = new List<InternalPropertyInfo>();
+
+            foreach (var property in type.GetProperties())
+            {
+                var attribute = property.GetCustomAttribute<ForeignKeyAttribute>(true);
+                if (attribute != null)
+                {
+                    //foreach (var p in attribute.ReferenceKeyProperty)
+                    //{
+                    //    p.ForeignKeyName = property.Name;
+                    //    properties.Add(p);
+                    //}
+                    var refKey = attribute.ReferenceKeyProperty;
+                    refKey.ForeignKeyName = property.Name;
+                    properties.Add(refKey);
+
+                }
+            }
+            return properties;
         }
     }
 }

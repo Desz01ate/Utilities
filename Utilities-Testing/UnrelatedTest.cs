@@ -1,28 +1,15 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Utilities.Asp.Core.Repository.Boilerplate;
+using System.Data.SqlClient;
+using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 
 namespace Utilities.Testing
 {
-    [TestFixture]
     class UnrelatedTest
     {
-        [Test]
         public void Playground()
         {
-            var connectionString = "Server=localhost;Database=Local;user=sa;password=sa;";
-            //var outputDir = $@"C:\Users\kunvu\source\repos\Utilities\Utilities-Testing";
-            //var targetNamespace = "Utilities.Testing";
-            //BoilerplateGenerator.GenerateRepositoryService(
-            //    connectionString, outputDir, targetNamespace);
-            using (var con = new SQLServer(connectionString))
-            {
-                var d1 = con.Select<Models.taxifaretest>();
-                var d2 = con.Select<Models.taxifaretest>(x => string.IsNullOrEmpty(x.v));
-            }
+
         }
     }
 }
