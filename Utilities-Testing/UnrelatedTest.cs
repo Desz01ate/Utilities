@@ -3,18 +3,20 @@ using System.Data.SqlClient;
 using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 using Utilities.Shared;
+using System.Text;
+
 namespace Utilities.Testing
 {
     class UnrelatedTest
     {
+        [Test]
         public void Playground()
         {
-            using (var connection = new SQLServer("Server=localhost;Database=Local;User=sa;Password=sa;"))
+            using (var con = new SQLServer("server=localhost;database=Local;user=sa;password=sa"))
             {
-                var dataset = connection.Select<taxifaretest>();
-                var split = dataset.Partition(x => x.fare_amount > 150);
-                var match = split.Match;
-                var unmatch = split.Unmatch;
+                var iris = con.Select<iris>(top: 10);
+                Utilities.File.WriteAsCsv(iris, @"C:\Users\TYCHE\Desktop\iris.csv", Encoding.UTF8);
+                Utilities.File.WriteAsJson(iris, @"C:\Users\TYCHE\Desktop\iris.json", Encoding.UTF8);
             }
         }
     }
