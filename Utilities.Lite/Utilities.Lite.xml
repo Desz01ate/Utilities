@@ -40,6 +40,18 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="T:Utilities.Interfaces.IExcelReader">
+            <summary>
+            Interface required for Excel Data Reader
+            </summary>
+        </member>
+        <member name="M:Utilities.Interfaces.IExcelReader.GetExternalColumnIndex(System.String)">
+            <summary>
+            Map object property name to its index inside excel file.
+            </summary>
+            <param name="property">Property name per implemented class</param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.Interfaces.IDatabaseConnector`2">
             <summary>
             Provide methods for wrapper operation on DbConnection class
@@ -126,11 +138,6 @@
             <param name="action">Any given function to execute</param>
             <returns>An execution time in milliseconds</returns>
         </member>
-        <member name="T:Utilities.Enumerables.InternalHttpContent.HttpContentType">
-            <summary>
-            Contain enumerable that describe to MIME type
-            </summary>
-        </member>
         <member name="M:Utilities.File.ReadJsonAs``1(System.String,System.IO.FileMode)">
             <summary>
             Read json file and deserialize to object.
@@ -169,7 +176,15 @@
             <param name="omitRootObject">Omits writing the root object.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsJson``1(``0,System.String,System.Text.Encoding)">
+        <member name="M:Utilities.File.ReadCsvAs``1(System.String,System.Boolean)">
+            <summary>
+            Read csv file and transform input into given CSV (you still need to manually give custom implement via ICSVReader)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJson(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding)">
             <summary>
             Serialize given object and write to json file.
             </summary>
@@ -178,6 +193,64 @@
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJson(System.Object,System.String,System.Text.Encoding)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsCsv(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to csv file.
+            </summary>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsCsv(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to csv file.
+            </summary>
+            <param name="data">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.ReadExcelAs``1(System.String,System.Boolean,System.String)">
+            <summary>
+            Read excel file and convert to object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path"></param>
+            <param name="hasHeader"></param>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
         </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
@@ -219,94 +292,6 @@
             <param name="headers"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.Post(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Put(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.HttpRequest.Delete(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a DELETE request to the specified Uri.
@@ -336,50 +321,6 @@
             Send a DELETE request to the specified Uri as an asynchronous operation.
             </summary>
             <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Object,System.Text.Encoding,Utilities.Enumerables.InternalHttpContent.HttpContentType,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="encoding">The body content type.</param>
-            <param name="contentType">The body media type.</param>
             <param name="headers"></param>
             <returns></returns>
         </member>
@@ -706,6 +647,14 @@
             <param name="columns">column name container</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.Data.ConvertDataRowTo``1(System.Data.DataRow)">
+            <summary>
+            Convert data row into POCO.
+            </summary>
+            <typeparam name="T">Class that implement IExcelReader</typeparam>
+            <param name="dr"></param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.Shared.Enumerable">
             <summary>
             Collection of Emnumerable extension methods
@@ -740,42 +689,19 @@
         </member>
         <member name="M:Utilities.Shared.Enumerable.AsList``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
-            Convert given enumerable to list **only if** enumerable is currently not a list, otherwise return data without mutable.
+            Convert given collection to list **only if** enumerable is currently not a list, otherwise return data without mutable.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Shared.Enumerator">
+        <member name="M:Utilities.Shared.Enumerable.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
-            Collection of Emnumerable extension methods
+            Splits the collection into two collections, which is paired as Match and Unmatch in return EnumerablePartitionPair.
             </summary>
-        </member>
-        <member name="M:Utilities.Shared.Enumerator.Merge``1(System.Collections.Generic.IEnumerable{``0}[])">
-            <summary>
-            Combine 2 or more enumerable of the same type into new enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="enumerables">enumerables to combine</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.Enumerator.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
-            <summary>
-            Create new enumerable from given enumerable, start index and count
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="baseEnumerable">base enumerable</param>
-            <param name="startIndex">starting index</param>
-            <param name="count">count of elements</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.Enumerator.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Take last element out of given enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="baseEnumerable">base enumerable</param>
-            <param name="count">count of elements</param>
+            <typeparam name="T"></typeparam>
+            <param name="dataset">A base dataset.</param>
+            <param name="predicate">A function to test each element for a condition.</param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -1271,19 +1197,6 @@
             </summary>
             <param name="value">Value</param>
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
-            <summary>
-            Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-    </members>
-</doc>
-ormat-strings</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.NumberFormat(System.String,System.String)">

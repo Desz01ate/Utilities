@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using ExcelDataReader;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -104,8 +106,8 @@ namespace Utilities
                 throw new FormatException("It seem that the path is not ending with .csv, please verify the path.");
             }
             IEnumerable<string> content = System.IO.File.ReadAllLines(path);
-            if (hasHeader) content = content.Skip(1);
-            foreach (var line in content)
+            var skipBy = hasHeader ? 1 : 0;
+            foreach (var line in content.Skip(skipBy))
             {
                 var obj = new T();
                 obj.ReadFromCSV(line);
@@ -189,6 +191,37 @@ namespace Utilities
         public static void WriteAsCsv(object data, string path, Encoding encoding, FileMode fileMode = FileMode.OpenOrCreate)
         {
             WriteAsCsv(new[] { data }, path, encoding, fileMode);
+        }
+        /// <summary>
+        /// Read excel file and convert to object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <param name="hasHeader"></param>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> ReadExcelAs<T>(string path, bool hasHeader = true, string table = null) where T : IExcelReader, new()
+        {
+            if (string.IsNullOrWhiteSpace(path) || !path.Contains(".xls"))
+            {
+                throw new FormatException("It seem that the path is not ending with .xls/.xlsx, please verify the path.");
+            }
+            var tableType = table ?? typeof(T).Name;
+            List<T> dataset = new List<T>();
+            using (var stream = System.IO.File.Open(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    var dt = result.Tables[tableType];
+                    var skipBy = hasHeader ? 1 : 0;
+                    foreach (DataRow row in dt.Rows.Cast<DataRow>().Skip(skipBy))
+                    {
+                        dataset.Add(Utilities.Shared.Data.ConvertDataRowTo<T>(row));
+                    }
+                }
+            }
+            return dataset;
         }
 #if NETSTANDARD2_1
         /// <summary>
