@@ -29,7 +29,7 @@ namespace Utilities.Shared
             {
                 try
                 {
-                    var value = row[property.Name];
+                    var value = row?[property.Name];
                     if (value == DBNull.Value)
                     {
                         property.SetValue(instance, null);
@@ -40,9 +40,9 @@ namespace Utilities.Shared
                     }
 
                 }
-                catch (Exception ex)
+                catch
                 {
-                    throw ex;
+                    throw;
                 }
             }
             return instance;
@@ -64,7 +64,7 @@ namespace Utilities.Shared
                     var propertyName = property.Name;
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
-                    var value = Convert.ToString(row[propertyName]);
+                    var value = Convert.ToString(row?[propertyName]);
                     if (propertyType == typeof(string))
                     {
                         property.SetValue(instance, value);
@@ -148,7 +148,7 @@ namespace Utilities.Shared
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             foreach (var column in columns)
             {
-                rowInstance.Add(column, row[column]);
+                rowInstance.Add(column, row?[column]);
             }
             return rowInstance;
         }
@@ -167,7 +167,7 @@ namespace Utilities.Shared
             {
                 var property = properties[idx];
                 var externalIndex = obj.GetExternalColumnIndex(property.Name);
-                var value = dr[externalIndex];
+                var value = dr?[externalIndex];
                 property.SetValue(obj, value);
             }
             return obj;

@@ -67,6 +67,7 @@ namespace Utilities.SQL.Generator
 
         public void GenerateFromSpecificTable(string tableName, Action<Table> parser)
         {
+            if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentNullException("tableName must not be null");
             if (!Tables.Contains(tableName)) throw new KeyNotFoundException("Table name not found.");
             using var connection = new TDatabase()
             {

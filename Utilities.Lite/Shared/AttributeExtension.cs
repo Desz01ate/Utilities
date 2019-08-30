@@ -19,8 +19,8 @@ namespace Utilities.Shared
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
             var primaryKeyProperty = properties.Where(property => property.GetCustomAttribute<PrimaryKeyAttribute>(true) != null);
-            if (primaryKeyProperty == null) throw new AttributeException("PrimaryKey", type.FullName);
-            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException("PrimaryKey", type.FullName);
+            if (primaryKeyProperty == null) throw new AttributeException(typeof(PrimaryKeyAttribute), type.FullName, null);
+            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException(typeof(PrimaryKeyAttribute), type.FullName, null);
             var property = new InternalPropertyInfo(primaryKeyProperty.First());
             return property;
         }

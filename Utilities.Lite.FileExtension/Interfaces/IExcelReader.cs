@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.Interfaces
+﻿namespace Utilities.Interfaces
 {
     /// <summary>
-    /// Interface required for Excel Data Reader.
+    /// Interface required for Excel Data Reader
     /// </summary>
     public interface IExcelReader
     {
@@ -17,3 +13,5 @@ namespace Utilities.Interfaces
         int GetExternalColumnIndex(string property);
     }
 }
+
+

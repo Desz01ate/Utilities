@@ -18,6 +18,7 @@ namespace Utilities
         /// <returns>An execution time in milliseconds</returns>
         public static long RuntimeEstimation(Action action)
         {
+            if (action == null) return 0;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             action();
@@ -31,6 +32,7 @@ namespace Utilities
         /// <returns>Total memory usage</returns>
         public static (long Before, long After, long Amount) MemeryEstimation(Action action)
         {
+            if (action == null) return (0, 0, 0);
             long beforeExecution = GC.GetTotalMemory(false) / 1024;
             action();
             long afterExecution = GC.GetTotalMemory(false) / 1024;
@@ -43,6 +45,7 @@ namespace Utilities
         /// <returns>Total memory usage</returns>
         public static async Task<(long Before, long After, long Amount)> MemeryEstimationAsync(Func<Task> action)
         {
+            if (action == null) return (0, 0, 0);
             long beforeExecution = GC.GetTotalMemory(false) / 1024;
             await action();
             long afterExecution = GC.GetTotalMemory(false) / 1024;
@@ -56,9 +59,10 @@ namespace Utilities
         /// <returns>An execution time in milliseconds</returns>
         public static async Task<long> RuntimeEstimationAsync(Func<Task> action)
         {
+            if (action == null) return 0;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            await action();
+            await action().ConfigureAwait(false);
             stopwatch.Stop();
             return stopwatch.ElapsedMilliseconds;
         }

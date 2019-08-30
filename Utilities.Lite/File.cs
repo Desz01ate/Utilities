@@ -69,7 +69,7 @@ namespace Utilities
             }
             using var fs = new FileStream(path, fileMode);
             using var sr = new StreamReader(fs);
-            var content = await sr.ReadToEndAsync();
+            var content = await sr.ReadToEndAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<T>(content);
         }
         /// <summary>
@@ -88,7 +88,7 @@ namespace Utilities
             }
             using var fs = new FileStream(path, fileMode);
             using var sr = new StreamReader(fs);
-            var content = await sr.ReadToEndAsync();
+            var content = await sr.ReadToEndAsync().ConfigureAwait(false);
             var xmlDoc = new XmlDocument();
             var json = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.None, omitRootObject);
             return JsonConvert.DeserializeObject<T>(json);
@@ -243,7 +243,7 @@ namespace Utilities
                 throw new FormatException("It seem that the path is not ending with .json, please verify the path.");
             }
             var json = JsonConvert.SerializeObject(obj);
-            await System.IO.File.WriteAllTextAsync(path, json, encoding);
+            await System.IO.File.WriteAllTextAsync(path, json, encoding).ConfigureAwait(false);
         }
         /// <summary>
         /// Serialize given object and write to json file.
@@ -255,7 +255,7 @@ namespace Utilities
         /// <param name="fileMode">File mode.</param>
         public static async Task WriteAsJsonAsync(object obj, string path, Encoding encoding, FileMode fileMode = FileMode.OpenOrCreate)
         {
-            await WriteAsJsonAsync(new[] { obj }, path, encoding, fileMode);
+            await WriteAsJsonAsync(new[] { obj }, path, encoding, fileMode).ConfigureAwait(false);
         }
 #endif
 
