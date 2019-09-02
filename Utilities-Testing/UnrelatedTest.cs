@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Data.SqlClient;
-using Utilities.Testing.Models;
-using Utilities.Testing.SQLConnectors;
+using Utilities.DesignPattern.UnitOfWork.Strategy.Singleton;
 using Utilities.Shared;
-using System.Text;
 
 namespace Utilities.Testing
 {
@@ -12,12 +10,11 @@ namespace Utilities.Testing
         [Test]
         public void Playground()
         {
-            using (var con = new SQLServer("server=localhost;database=Local;user=sa;password=sa"))
-            {
-                var iris = con.Select<iris>(top: 10);
-                Utilities.File.WriteAsCsv(iris, @"C:\Users\TYCHE\Desktop\iris.csv", Encoding.UTF8);
-                Utilities.File.WriteAsJson(iris, @"C:\Users\TYCHE\Desktop\iris.json", Encoding.UTF8);
-            }
+
+            var generator = new Utilities.DesignPattern.UnitOfWork.Generator.UnitOfWorkGenerator<SqlConnection>();
+            generator.SetStrategy(new CSharpStrategy<SqlConnection>("Server=localhost;Database=Local;User=sa;Password=sa;", @"C:\Users\TYCHE\Documents\Golang", "Test"));
+            generator.Generate();
         }
     }
+
 }

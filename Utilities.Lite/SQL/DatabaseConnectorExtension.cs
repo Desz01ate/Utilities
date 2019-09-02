@@ -134,11 +134,11 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = await ExecuteReaderAsync<T>(query, transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
             }
             else
             {
-                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
             }
             return result;
         }
@@ -159,11 +159,11 @@ namespace Utilities.SQL
             T result;
             if (dataBuilder == null)
             {
-                result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction)).FirstOrDefault();
+                result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             }
             else
             {
-                result = (await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction)).FirstOrDefault();
+                result = (await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             }
             return result;
         }
@@ -179,7 +179,7 @@ namespace Utilities.SQL
             var preparer = InsertQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -195,7 +195,7 @@ namespace Utilities.SQL
             var preparer = UpdateQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -211,7 +211,7 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -272,11 +272,11 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
             }
             else
             {
-                result = await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
             }
             return result;
         }
@@ -292,7 +292,7 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -322,7 +322,7 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>

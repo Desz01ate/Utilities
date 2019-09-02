@@ -14,6 +14,6 @@ namespace Utilities.Interfaces
         /// </summary>
         /// <param name="property">Property name per implemented class</param>
         /// <returns></returns>
-        int GetExternalColumnIndex(string property);
+        public int GetExternalColumnIndex(string property);
     }
 }
