@@ -10,7 +10,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Generator
     public class UnitOfWorkGenerator<TDatabase> where TDatabase : DbConnection, new()
     {
         IGeneratorStrategy<TDatabase> _strategy;
-        public void SetStrategy(IGeneratorStrategy<TDatabase> strategy)
+        public void UseStrategy(IGeneratorStrategy<TDatabase> strategy)
         {
             _strategy = strategy;
         }

@@ -10,16 +10,15 @@ using Utilities.SQL.Generator.Model;
 
 namespace Utilities.DesignPattern.UnitOfWork.Strategy.Singleton
 {
-    public class CSharpStrategy<TDatabase> : IGeneratorStrategy<TDatabase> where TDatabase : DbConnection, new()
+    public class CSharpSingletonStrategy<TDatabase> : IGeneratorStrategy<TDatabase> where TDatabase : DbConnection, new()
     {
-        public CSharpStrategy(string connectionString, string directory, string @namespace)
+        public CSharpSingletonStrategy(string connectionString, string directory, string @namespace)
         {
             ConnectionString = connectionString;
             Directory = directory;
             Namespace = @namespace;
-            Generator = new CSharpGenerator<TDatabase>(connectionString, directory, @namespace);
+            Generator = new CSharpGenerator<TDatabase>(connectionString, ModelDirectory, $"{@namespace}.Models");
         }
-
         public string Directory { get; }
 
         public string Namespace { get; }
