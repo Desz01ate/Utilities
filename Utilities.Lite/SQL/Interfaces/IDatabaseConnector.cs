@@ -19,12 +19,19 @@ namespace Utilities.Interfaces
         IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameter> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new();
         IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new();
         IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
+
+        DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
+
         string ExecuteScalar(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
         T ExecuteScalar<T>(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : struct;
         int ExecuteNonQuery(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
         Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new();
         Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new();
         Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
+
+        Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
+
+
         Task<string> ExecuteScalarAsync(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null);
 
         Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameter> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : struct;

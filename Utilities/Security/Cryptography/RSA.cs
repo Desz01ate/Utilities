@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using Utilities.Structs;
 
 namespace Utilities.Security.Cryptography
 {
@@ -15,19 +14,11 @@ namespace Utilities.Security.Cryptography
         /// Generate private key and public key as a pair.
         /// </summary>
         /// <returns>Tuple of private and public key</returns>
-        public static RSACombination KeyGenerator()
+        public static (string PrivateKey, string PublicKey) KeyGenerator()
         {
-            //CspParameters cspParams = new CspParameters { ProviderType = 1 };
-
-            //RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(1024, cspParams);
-
-            //string publicKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(false));
-            //string privateKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(true));
-
-            //return (privateKey, publicKey);
             var privateKey = CreatePrivateKey();
             var publicKey = CreatePublicKey(privateKey);
-            return new RSACombination(privateKey, publicKey);
+            return (privateKey, publicKey);
         }
         /// <summary>
         /// Generate private key.
@@ -36,11 +27,8 @@ namespace Utilities.Security.Cryptography
         public static string CreatePrivateKey()
         {
             CspParameters cspParams = new CspParameters { ProviderType = 1 };
-
-            RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(1024, cspParams);
-
+            using RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(1024, cspParams);
             string privateKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(true));
-
             return privateKey;
         }
         /// <summary>
@@ -51,12 +39,9 @@ namespace Utilities.Security.Cryptography
         public static string CreatePublicKey(string privateKey)
         {
             CspParameters cspParams = new CspParameters { ProviderType = 1 };
-            RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(cspParams);
-
+            using RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(cspParams);
             rsaProvider.ImportCspBlob(Convert.FromBase64String(privateKey));
-
             string publicKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(false));
-
             return publicKey;
         }
         /// <summary>
@@ -68,7 +53,7 @@ namespace Utilities.Security.Cryptography
         public static byte[] Encrypt(string publicKey, string data)
         {
             CspParameters cspParams = new CspParameters { ProviderType = 1 };
-            RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(cspParams);
+            using RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(cspParams);
             rsaProvider.ImportCspBlob(Convert.FromBase64String(publicKey));
             byte[] plainBytes = Encoding.UTF8.GetBytes(data);
             byte[] encryptedBytes = rsaProvider.Encrypt(plainBytes, false);
@@ -83,7 +68,7 @@ namespace Utilities.Security.Cryptography
         public static string Decrypt(string privateKey, byte[] encryptedBytes)
         {
             CspParameters cspParams = new CspParameters { ProviderType = 1 };
-            RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(cspParams);
+            using RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider(cspParams);
             rsaProvider.ImportCspBlob(Convert.FromBase64String(privateKey));
             byte[] plainBytes = rsaProvider.Decrypt(encryptedBytes, false);
             string plainText = Encoding.UTF8.GetString(plainBytes, 0, plainBytes.Length);

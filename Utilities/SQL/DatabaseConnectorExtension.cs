@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Utilities.Interfaces;
 using Utilities.Shared;
 using Utilities.SQL.Translator;
-using Utilities.Structs;
 
 namespace Utilities.SQL
 {
@@ -353,24 +352,40 @@ namespace Utilities.SQL
             var result = this.ExecuteNonQuery(query);
             return result;
         }
-
-        public QueryParamsCombination<TParameterType> SelectQueryGenerate<T>(int? top = null) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(int? top = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var query = string.Format("SELECT {0} * FROM {1}", top.HasValue ? $"TOP({top.Value})" : "", tableName);
-            return new QueryParamsCombination<TParameterType>(query, null);
+            return (query, null);
         }
-
-        public QueryParamsCombination<TParameterType> SelectQueryGenerate<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
             var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
-            return new QueryParamsCombination<TParameterType>(query, translateResult.Parameters);
+            return (query, translateResult.Parameters);
         }
-
-        public QueryParamsCombination<TParameterType> SelectQueryGenerate<T>(object primaryKey) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(object primaryKey) where T : class, new()
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
@@ -381,10 +396,15 @@ namespace Utilities.SQL
                 ParameterName = primaryKeyAttribute.Name,
                 Value = primaryKey
             };
-            return new QueryParamsCombination<TParameterType>(query, new[] { parameter });
+            return (query, new[] { parameter });
         }
-
-        public QueryParamsCombination<TParameterType> InsertQueryGenerate<T>(T obj) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(T obj) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
@@ -397,10 +417,15 @@ namespace Utilities.SQL
                 ParameterName = $"@{field.Key}",
                 Value = field.Value
             });
-            return new QueryParamsCombination<TParameterType>(query, parameters);
+            return (query, parameters);
         }
-
-        public QueryParamsCombination<TParameterType> UpdateQueryGenerate<T>(T obj) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) UpdateQueryGenerate<T>(T obj) where T : class, new()
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
@@ -418,10 +443,15 @@ namespace Utilities.SQL
                 Value = x.Value
             }).ToList();
             parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-            return new QueryParamsCombination<TParameterType>(query, parametersArray);
+            return (query, parametersArray);
         }
-
-        public QueryParamsCombination<TParameterType> DeleteQueryGenerate<T>(T obj) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(T obj) where T : class, new()
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
@@ -434,10 +464,15 @@ namespace Utilities.SQL
                         ParameterName = primaryKey.Name,
                         Value = primaryKey.GetValue(obj)
                     } };
-            return new QueryParamsCombination<TParameterType>(query, parameters);
+            return (query, parameters);
         }
-
-        public QueryParamsCombination<TParameterType> DeleteQueryGenerate<T>(object primaryKey) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(object primaryKey) where T : class, new()
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
@@ -450,16 +485,21 @@ namespace Utilities.SQL
                         Value = primaryKey
                     }
                 };
-            return new QueryParamsCombination<TParameterType>(query, parameters);
+            return (query, parameters);
         }
-
-        public QueryParamsCombination<TParameterType> DeleteQueryGenerate<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
             var translateResult = translator.Translate(predicate);
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
-            return new QueryParamsCombination<TParameterType>(query, translateResult.Parameters);
+            return (query, translateResult.Parameters);
         }
     }
 }

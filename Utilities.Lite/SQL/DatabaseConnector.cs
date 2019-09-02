@@ -128,10 +128,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -176,7 +176,7 @@ namespace Utilities.SQL
                     }
                     using (var cursor = command.ExecuteReader())
                     {
-                        var columns = System.Linq.Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
+                        var columns = System.Linq.Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName);
                         while (cursor.Read())
                         {
                             result.Add(Data.RowBuilder(cursor, columns));
@@ -186,10 +186,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -225,10 +225,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -263,10 +263,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -298,9 +298,9 @@ namespace Utilities.SQL
                             command.Parameters.Add(parameter);
                         }
                     }
-                    using (var cursor = await command.ExecuteReaderAsync())
+                    using (var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false))
                     {
-                        while (await cursor.ReadAsync())
+                        while (await cursor.ReadAsync().ConfigureAwait(false))
                         {
                             result.Add(objectBuilder(cursor));
                         }
@@ -309,10 +309,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -355,10 +355,10 @@ namespace Utilities.SQL
                             command.Parameters.Add(parameter);
                         }
                     }
-                    using (var cursor = await command.ExecuteReaderAsync())
+                    using (var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false))
                     {
-                        var columns = System.Linq.Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName).ToList();
-                        while (await cursor.ReadAsync())
+                        var columns = cursor.GetColumns();
+                        while (await cursor.ReadAsync().ConfigureAwait(false))
                         {
                             result.Add(Data.RowBuilder(cursor, columns));
                         }
@@ -367,10 +367,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -401,15 +401,15 @@ namespace Utilities.SQL
                             command.Parameters.Add(parameter);
                         }
                     }
-                    result = (T)(await command.ExecuteScalarAsync());
+                    result = (T)(await command.ExecuteScalarAsync().ConfigureAwait(false));
                 }
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -439,15 +439,15 @@ namespace Utilities.SQL
                             command.Parameters.Add(parameter);
                         }
                     }
-                    result = await command.ExecuteNonQueryAsync();
+                    result = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
                 }
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -482,10 +482,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -515,16 +515,89 @@ namespace Utilities.SQL
                             command.Parameters.Add(parameter);
                         }
                     }
-                    result = (string)(await command.ExecuteScalarAsync());
+                    result = (string)(await command.ExecuteScalarAsync().ConfigureAwait(false));
                 }
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
+        /// <summary>
+        /// Execute SELECT SQL query and return DataTable
+        /// </summary>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns></returns>
+        public DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            try
+            {
+                using (var command = Connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    command.Transaction = transaction;
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.Add(parameter);
+                        }
+                    }
+                    var cursor = command.ExecuteReader();
+                    var dataTable = new DataTable();
+                    dataTable.Load(cursor);
+                    return dataTable;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Execute SELECT SQL query and return DataTable in an asynchronus manner
+        /// </summary>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns></returns>
+        public async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            try
+            {
+                using (var command = Connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    command.Transaction = transaction;
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.Add(parameter);
+                        }
+                    }
+                    var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                    var dataTable = new DataTable();
+                    dataTable.Load(cursor);
+                    return dataTable;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

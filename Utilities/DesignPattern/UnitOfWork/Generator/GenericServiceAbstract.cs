@@ -42,14 +42,8 @@ namespace Utilities.DesignPattern.UnitOfWork
         {
             generator.GenerateAllTable();
         }
-        protected virtual void GenerateRepository(Table tb)
-        {
-            throw new NotImplementedException();
-        }
-        protected virtual void GenerateService()
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract void GenerateRepository(Table tb);
+        protected abstract void GenerateService();
         public virtual void Generate()
         {
             System.IO.Directory.CreateDirectory(ModelDirectory);

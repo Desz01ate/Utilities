@@ -59,7 +59,7 @@ namespace Utilities
         {
             if (string.IsNullOrWhiteSpace(originalText)) throw new ArgumentException("Input string must not be null or empty.");
             var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={fromLanguage}&tl={toLanguage}&dt=t&q={WebUtility.UrlEncode(originalText)}";
-            var webClient = new WebClient
+            using var webClient = new WebClient
             {
                 Encoding = Encoding.UTF8
             };

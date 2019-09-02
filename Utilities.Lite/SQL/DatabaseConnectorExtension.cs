@@ -134,11 +134,11 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = await ExecuteReaderAsync<T>(query, transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
             }
             else
             {
-                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
             }
             return result;
         }
@@ -159,11 +159,11 @@ namespace Utilities.SQL
             T result;
             if (dataBuilder == null)
             {
-                result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction)).FirstOrDefault();
+                result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             }
             else
             {
-                result = (await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction)).FirstOrDefault();
+                result = (await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             }
             return result;
         }
@@ -179,7 +179,7 @@ namespace Utilities.SQL
             var preparer = InsertQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -195,7 +195,7 @@ namespace Utilities.SQL
             var preparer = UpdateQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -211,7 +211,7 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -272,11 +272,11 @@ namespace Utilities.SQL
             IEnumerable<T> result;
             if (dataBuilder == null)
             {
-                result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
             }
             else
             {
-                result = await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
+                result = await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
             }
             return result;
         }
@@ -292,7 +292,7 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -322,7 +322,7 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction);
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
         /// <summary>
@@ -352,14 +352,25 @@ namespace Utilities.SQL
             var result = this.ExecuteNonQuery(query);
             return result;
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="top"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(int? top = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var query = string.Format("SELECT {0} * FROM {1}", top.HasValue ? $"TOP({top.Value})" : "", tableName);
             return (query, null);
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -368,7 +379,12 @@ namespace Utilities.SQL
             var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
             return (query, translateResult.Parameters);
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(object primaryKey) where T : class, new()
         {
             var type = typeof(T);
@@ -382,7 +398,12 @@ namespace Utilities.SQL
             };
             return (query, new[] { parameter });
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(T obj) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -398,7 +419,12 @@ namespace Utilities.SQL
             });
             return (query, parameters);
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) UpdateQueryGenerate<T>(T obj) where T : class, new()
         {
             var type = typeof(T);
@@ -419,7 +445,12 @@ namespace Utilities.SQL
             parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
             return (query, parametersArray);
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(T obj) where T : class, new()
         {
             var type = typeof(T);
@@ -435,7 +466,12 @@ namespace Utilities.SQL
                     } };
             return (query, parameters);
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(object primaryKey) where T : class, new()
         {
             var type = typeof(T);
@@ -451,7 +487,12 @@ namespace Utilities.SQL
                 };
             return (query, parameters);
         }
-
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
