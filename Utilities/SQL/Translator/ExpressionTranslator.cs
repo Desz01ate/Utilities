@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Utilities.Enumerables;
 using Utilities.Shared;
-using Utilities.Structs;
 
 namespace Utilities.SQL.Translator
 {
@@ -72,12 +71,12 @@ namespace Utilities.SQL.Translator
         }
 
 
-        public ExpressionTranslateResult<TSqlParameter> Translate(Expression expression)
+        public (string Expression, IEnumerable<TSqlParameter> Parameters) Translate(Expression expression)
         {
             this.sb = new StringBuilder();
             this.Visit(expression);
             _whereClause = this.sb.ToString();
-            return new ExpressionTranslateResult<TSqlParameter>(_whereClause, _sqlParameters);
+            return (_whereClause, _sqlParameters);
         }
 
         private static Expression StripQuotes(Expression e)

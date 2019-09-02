@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Utilities.Structs;
 
 namespace Utilities.Shared
 {
@@ -64,11 +63,11 @@ namespace Utilities.Shared
         /// <param name="dataset">A base dataset.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns></returns>
-        public static EnumerablePartitionPair<T> Partition<T>(this IEnumerable<T> dataset, Func<T, bool> predicate)
+        public static (IEnumerable<T> Match, IEnumerable<T> Unmatch) Partition<T>(this IEnumerable<T> dataset, Func<T, bool> predicate)
         {
             var match = dataset.Where(predicate);
             var unmatch = dataset.Except(match);
-            return new EnumerablePartitionPair<T>(match, unmatch);
+            return (match, unmatch);
         }
     }
 }

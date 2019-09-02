@@ -128,10 +128,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -186,10 +186,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -225,10 +225,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -263,10 +263,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -309,10 +309,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -367,10 +367,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -406,10 +406,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -444,10 +444,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -482,10 +482,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
         /// <summary>
@@ -520,10 +520,10 @@ namespace Utilities.SQL
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
-                throw e;
+                throw;
             }
         }
     }

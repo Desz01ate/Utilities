@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Contains information of Utilities library versioning.
+    /// </summary>
     public static class Metadata
     {
         /// <summary>

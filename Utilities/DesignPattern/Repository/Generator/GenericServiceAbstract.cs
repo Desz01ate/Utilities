@@ -7,16 +7,12 @@ using Utilities.Interfaces;
 using Utilities.SQL.Generator;
 using Utilities.SQL.Generator.Model;
 
-namespace Utilities.DesignPattern.UnitOfWork
+namespace Utilities.DesignPattern.Repository
 {
-    /// <summary>
-    /// Abstract class which defined how the generator should work.
-    /// </summary>
-    /// <typeparam name="TDatabase"></typeparam>
     public abstract class GenericServiceAbstract<TDatabase> : IGeneratorStrategy
         where TDatabase : DbConnection, new()
     {
-        protected CSharpGenerator<TDatabase> generator;
+        protected ModelGenerator<TDatabase> generator;
 
         public string Directory { get; protected set; }
 
@@ -25,32 +21,33 @@ namespace Utilities.DesignPattern.UnitOfWork
         public string ConnectionString { get; protected set; }
         public string ModelDirectory => Path.Combine(Directory, "Models");
         public string RepositoryDirectory => Path.Combine(Directory, "Repositories");
-        public IEnumerable<string> Table { get; private set; }
-        private void GenerateRepositories(string targetNamespace)
+
+        protected virtual void GenerateRepositories(string targetNamespace)
         {
             //var files = Directory.EnumerateFiles(modelDirectory);
-            foreach (var table in Table)
+            foreach (var table in generator.Tables)
             {
-                generator.GenerateFromSpecificTable(table, GenerateRepository);
+                generator.GenerateFromTable(table, GenerateRepository);
             }
         }
         protected string TableNameCleanser(string tableName)
         {
             return tableName.Replace("-", "");
         }
-        protected virtual void GenerateModel()
+        protected virtual void GenerateRepository(Table tb)
         {
-            generator.GenerateAllTable();
+            throw new NotImplementedException();
         }
-        protected abstract void GenerateRepository(Table tb);
-        protected abstract void GenerateService();
+        protected virtual void GenerateService()
+        {
+            throw new NotImplementedException();
+        }
         public virtual void Generate()
         {
             System.IO.Directory.CreateDirectory(ModelDirectory);
             System.IO.Directory.CreateDirectory(RepositoryDirectory);
-            this.generator = new CSharpGenerator<TDatabase>(ConnectionString, ModelDirectory, $"{Namespace}.Models");
-            Table = generator.Tables;
-            generator.GenerateAllTable();
+            this.generator = new ModelGenerator<TDatabase>(ConnectionString, ModelDirectory, $"{Namespace}.Models");
+            generator.GenerateAllTables(SQL.Generator.Enumerable.TargetLanguage.CSharp);
             GenerateRepositories(Namespace);
             GenerateService();
         }

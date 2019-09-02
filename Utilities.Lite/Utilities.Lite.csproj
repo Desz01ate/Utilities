@@ -10,18 +10,26 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.3.1-beta-002</Version>
+    <Version>0.1.3.1</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>Changes to [SQL] Module
-+ Transaction now revamped to support older version by using optional parameter 'transaction' so user can fully control the transaction instead of internal handle.
-+ Query generator for DatabaseConnectorExtension, you can now observed what the internal engine CRUD generated before execute it.
-- Remove [BeginTransaction],[Commit] and [Rollback] from interface of previous dev-beta build
+    <PackageReleaseNotes>[General]
++ Code performance and reliability improved thanks to FxCop Analyzers.
++ Missing XML for some new modules added.
++ Replace structs by TupleValue to reduce load pressure on GC.
++ Add new dependencies [ExcelDataReader] for File module excel reader which should not bring any huge drawback since this library is lightweight as well as Utilities.
 
-Changes to [DesignPattern] Module
-+ Change signature of IUnitOfWork
-+ Rename some namespace
+[File]
++ Add excel file reader.
+- Remove generic constraint from all write-related methods.
+
+[Data.Enumerable]
++ Add Partition method which behavior similar to list.Partition in F#.
+
+[HttpRequest]
+- Remove some complex overload methods which often confuses on how to use, result in a little bit back-to-tradition way when consume the function.
+
 
 
 </PackageReleaseNotes>

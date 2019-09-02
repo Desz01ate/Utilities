@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Utilities.Structs;
 
 namespace Utilities
 {
@@ -108,13 +107,13 @@ namespace Utilities
         /// <param name="byteSize">Entropy size</param>
         /// <param name="iterations">Encryption iterations</param>
         /// <returns></returns>
-        public static HashCombination GenerateHash(string plainText, byte[] salt, int byteSize = 128, int iterations = 2000)
+        public static (string Hash, string Salt) GenerateHash(string plainText, byte[] salt, int byteSize = 128, int iterations = 2000)
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var rfc2898 = new Rfc2898DeriveBytes(plainTextBytes, salt, iterations))
             {
                 var hash = rfc2898.GetBytes(byteSize);
-                return new HashCombination(Convert.ToBase64String(hash), Convert.ToBase64String(salt));
+                return (Convert.ToBase64String(hash), Convert.ToBase64String(salt));
             }
         }
         /// <summary>
@@ -124,7 +123,7 @@ namespace Utilities
         /// <param name="byteSize">Entropy size</param>
         /// <param name="iterations">Encryption iterations</param>
         /// <returns></returns>
-        public static HashCombination GenerateHash(string plainText, int byteSize = 128, int iterations = 2000)
+        public static (string Hash, string Salt) GenerateHash(string plainText, int byteSize = 128, int iterations = 2000)
         {
             return GenerateHash(plainText, GenerateSalt(), byteSize, iterations);
         }
@@ -136,7 +135,7 @@ namespace Utilities
         /// <param name="byteSize">Entropy size</param>
         /// <param name="iterations">Encryption iterations</param>
         /// <returns></returns>
-        public static HashCombination GenerateHash(string plainText, string salt, int byteSize = 128, int iterations = 2000)
+        public static (string Hash, string Salt) GenerateHash(string plainText, string salt, int byteSize = 128, int iterations = 2000)
         {
             var saltBytes = Convert.FromBase64String(salt);
             return GenerateHash(plainText, saltBytes, byteSize, iterations);

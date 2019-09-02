@@ -9,13 +9,14 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
-    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Asp.Core\Utilities.Asp.Core.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="microsoft.aspnetcore" Version="2.2.0" />
     <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="2.2.0" />
     <PackageReference Include="microsoft.aspnetcore.mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.3" />
     <PackageReference Include="system.identitymodel.tokens.jwt" Version="5.5.0" />
   </ItemGroup>
 

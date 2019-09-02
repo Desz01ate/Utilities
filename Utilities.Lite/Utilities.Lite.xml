@@ -31,7 +31,7 @@
         </member>
         <member name="T:Utilities.Classes.InternalPropertyInfo">
             <summary>
-            Proxy for PropertyInfo for set-able PropertyInfo.Name
+            Proxy for PropertyInfo for customizable property for internal use.
             </summary>
         </member>
         <member name="T:Utilities.Interfaces.IGenericRepository`1">
@@ -40,9 +40,20 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="T:Utilities.Interfaces.ICSVReader">
+            <summary>
+            Interface required for CSV Reader.
+            </summary>
+        </member>
+        <member name="M:Utilities.Interfaces.ICSVReader.ReadFromCSV(System.String)">
+            <summary>
+            Content of csv data line in form of string. 
+            </summary>
+            <param name="content"></param>
+        </member>
         <member name="T:Utilities.Interfaces.IExcelReader">
             <summary>
-            Interface required for Excel Data Reader
+            Interface required for Excel Data Reader.
             </summary>
         </member>
         <member name="M:Utilities.Interfaces.IExcelReader.GetExternalColumnIndex(System.String)">
@@ -86,6 +97,61 @@
             <typeparam name="T"></typeparam>
             <typeparam name="TDatabase"></typeparam>
             <typeparam name="TParameter"></typeparam>
+        </member>
+        <member name="F:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.DatabaseConnector">
+            <summary>
+            Instance of database connector.
+            </summary>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.#ctor(Utilities.Interfaces.IDatabaseConnectorExtension{`1,`2})">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="databaseConnector">Instance of DatabaseConnector.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Delete(`0)">
+            <summary>
+            Delete data from repository.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Delete(System.Object)">
+            <summary>
+            Delete data from repository.
+            </summary>
+            <param name="key">Primary key of target object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(`0)">
+            <summary>
+            Insert data into repository.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Select">
+            <summary>
+            Get all data from repository.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Select(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Get data by specific condition from repository.
+            </summary>
+            <param name="predicate">Predicate condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Select(System.Object)">
+            <summary>
+            Get data from repository.
+            </summary>
+            <param name="key">Primary key of target object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Update(`0)">
+            <summary>
+            Update data in repository.
+            </summary>
+            <param name="obj">Generic object.</param>
         </member>
         <member name="T:Utilities.DesignPattern.UnitOfWork.GenericServiceAbstract`1">
             <summary>
@@ -143,9 +209,39 @@
             Express attribute exception throw for internal details.
             </summary>
         </member>
+        <member name="P:Utilities.Exceptions.AttributeException.CausedByAttribute">
+            <summary>
+            Type that cause the exception.
+            </summary>
+        </member>
+        <member name="P:Utilities.Exceptions.AttributeException.CallerClass">
+            <summary>
+            Occured on caller class.
+            </summary>
+        </member>
+        <member name="P:Utilities.Exceptions.AttributeException.InnerException">
+            <summary>
+            Inner exception details.
+            </summary>
+        </member>
         <member name="T:Utilities.Exceptions.InvalidMultipleAttributesException">
             <summary>
             Express non-multiple attribute exception throw for internal details.
+            </summary>
+        </member>
+        <member name="P:Utilities.Exceptions.InvalidMultipleAttributesException.CausedByAttribute">
+            <summary>
+            Type that cause the exception.
+            </summary>
+        </member>
+        <member name="P:Utilities.Exceptions.InvalidMultipleAttributesException.CallerClass">
+            <summary>
+            Occured on caller class.
+            </summary>
+        </member>
+        <member name="P:Utilities.Exceptions.InvalidMultipleAttributesException.InnerException">
+            <summary>
+            Inner exception details.
             </summary>
         </member>
         <member name="M:Utilities.File.ReadJsonAs``1(System.String,System.IO.FileMode)">
@@ -241,26 +337,6 @@
             <param name="hasHeader"></param>
             <param name="table"></param>
             <returns></returns>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
         </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
