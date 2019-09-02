@@ -526,5 +526,64 @@ namespace Utilities.SQL
                 throw;
             }
         }
+
+        public DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            try
+            {
+                using (var command = Connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    command.Transaction = transaction;
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.Add(parameter);
+                        }
+                    }
+                    var cursor = command.ExecuteReader();
+                    var dataTable = new DataTable();
+                    dataTable.Load(cursor);
+                    return dataTable;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) 
+        {
+            try
+            {
+                using (var command = Connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    command.Transaction = transaction;
+                    command.CommandType = commandType;
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.Add(parameter);
+                        }
+                    }
+                    var cursor = await command.ExecuteReaderAsync();
+                    var dataTable = new DataTable();
+                    dataTable.Load(cursor);
+                    return dataTable;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }
