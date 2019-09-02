@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Utilities.Structs;
 
 namespace Utilities.Shared
 {
@@ -58,17 +57,17 @@ namespace Utilities.Shared
             return source.ToList();
         }
         /// <summary>
-        /// Splits the collection into two collections, which is paired as Match and Unmatch in return EnumerablePartitionPair.
+        /// Splits the collection into two collections, which is paired as Match and Unmatch consider by predicate.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dataset">A base dataset.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns></returns>
-        public static EnumerablePartitionPair<T> Partition<T>(this IEnumerable<T> dataset, Func<T, bool> predicate)
+        public static (IEnumerable<T> Match, IEnumerable<T> Unmatch) Partition<T>(this IEnumerable<T> dataset, Func<T, bool> predicate)
         {
             var match = dataset.Where(predicate);
             var unmatch = dataset.Except(match);
-            return new EnumerablePartitionPair<T>(match, unmatch);
+            return (match, unmatch);
         }
     }
 }
