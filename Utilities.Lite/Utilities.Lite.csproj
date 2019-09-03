@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.3.2</Version>
+    <Version>0.1.4.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
@@ -46,6 +46,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DesignPattern\Repository\**" />
+    <Compile Remove="DesignPattern\UnitOfWork\Generator\**" />
+    <Compile Remove="DesignPattern\UnitOfWork\Strategy\**" />
+    <Compile Remove="SQL\Generator\**" />
+    <EmbeddedResource Remove="DesignPattern\Repository\**" />
+    <EmbeddedResource Remove="DesignPattern\UnitOfWork\Generator\**" />
+    <EmbeddedResource Remove="DesignPattern\UnitOfWork\Strategy\**" />
+    <EmbeddedResource Remove="SQL\Generator\**" />
+    <None Remove="DesignPattern\Repository\**" />
+    <None Remove="DesignPattern\UnitOfWork\Generator\**" />
+    <None Remove="DesignPattern\UnitOfWork\Strategy\**" />
+    <None Remove="SQL\Generator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DesignPattern\Interfaces\AbstractModelGenerator.cs" />
+    <Compile Remove="DesignPattern\Interfaces\IGeneratorStrategy.cs" />
+  </ItemGroup>
 
   <!-- <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>

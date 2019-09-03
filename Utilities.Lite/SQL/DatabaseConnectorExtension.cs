@@ -6,8 +6,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Classes;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Extension;
 using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
@@ -500,6 +502,12 @@ namespace Utilities.SQL
             var translateResult = translator.Translate(predicate);
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
             return (query, translateResult.Parameters);
+        }
+
+        public IEnumerable<TableSchema> GetSchema<T>() where T : class, new()
+        {
+            var tableName = typeof(T).TableNameAttributeValidate();
+            return Connection.GetSchemaOf(tableName);
         }
     }
 }

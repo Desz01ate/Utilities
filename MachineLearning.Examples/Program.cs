@@ -197,44 +197,6 @@ namespace MachineLearning.Examples
             IEnumerable<TaxiFare> testdata = null;
             IEnumerable<TaxiFare> traindata = null;
 
-
-            var result = Utilities.String.NumberFormat(1024m);
-
-
-
-
-
-
-
-
-
-
-
-
-            var generator = new Utilities.SQL.Generator.ModelGenerator<SqlConnection>(sqlConnection, @"D:\Documents\Test", "Fuck.You.AllDay");
-            generator.GenerateAllTables(TargetLanguage.CSharp);
-            generator.GenerateAllTables(TargetLanguage.VisualBasic);
-            generator.GenerateAllTables(TargetLanguage.TypeScript);
-            generator.GenerateAllTables(TargetLanguage.Python);
-            generator.GenerateAllTables(TargetLanguage.Python3_7);
-            generator.GenerateAllTables(TargetLanguage.Java);
-            generator.GenerateAllTables(TargetLanguage.PHP);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             using (var connection = new SQLServer(sqlConnection))
             {
                 testdata = await connection.SelectAsync<TaxiFareTest>(top: 10);
