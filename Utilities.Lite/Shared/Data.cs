@@ -38,7 +38,6 @@ namespace Utilities.Shared
                     {
                         property.SetValue(instance, value);
                     }
-
                 }
                 catch
                 {
@@ -55,7 +54,7 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static T RowBuilderStrict<T>(this DbDataReader row) where T : new()
         {
-            object instance = new T();
+            T instance = new T();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
                 try
@@ -132,10 +131,10 @@ namespace Utilities.Shared
                 }
                 catch
                 {
-                    continue; //skip error property
+                    throw;
                 }
             }
-            return (T)instance;
+            return instance;
         }
         /// <summary>
         /// Convert DbDataReader into dynamic object with specified column name

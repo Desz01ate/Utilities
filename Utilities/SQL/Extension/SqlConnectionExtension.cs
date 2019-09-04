@@ -9,13 +9,6 @@ namespace Utilities.SQL.Extension
 {
     public static class SqlConnectionExtension
     {
-        /// <summary>
-        /// Get table schema from current database connection.
-        /// </summary>
-        /// <typeparam name="TDatabaseConnection"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
         public static IEnumerable<TableSchema> GetSchemaOf<TDatabaseConnection>(this TDatabaseConnection connection, string tableName)
             where TDatabaseConnection : DbConnection, new()
         {

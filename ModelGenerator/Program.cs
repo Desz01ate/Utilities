@@ -23,16 +23,25 @@ namespace ModelGenerator
         public string Namespace { get; set; }
         [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages (optional).")]
         public bool Verbose { get; set; }
+        [Option('t', "type", Required = true, HelpText = "Set the generate output type (model,unitofwork).")]
+        public string Type { get; set; }
     }
     class Program
     {
         static void Main(string[] args)
         {
-
+            Dictionary<string, Action<Options>> AvailableType = new Dictionary<string, Action<Options>>()
+            {
+                { "model", GenerateModel },
+                { "unitofwork" , GenerateUnitOfWork }
+            };
             Parser.Default.ParseArguments<Options>(args).WithParsed(options =>
             {
-                Execute(options);
-
+                if (!AvailableType.TryGetValue(options.Type, out var action))
+                {
+                    Console.WriteLine("Input type not found.");
+                }
+                action(options);
             }).WithNotParsed<Options>(err =>
             {
                 Console.Write("Connection string : ");
@@ -41,20 +50,28 @@ namespace ModelGenerator
                 var outputDir = Console.ReadLine();
                 Console.Write("Target language : ");
                 var lang = Console.ReadLine();
+                Console.Write("Target output type : ");
+                var type = Console.ReadLine();
                 Console.Write("Namespace (optional) : ");
                 var @namespace = Console.ReadLine();
-                var option = new Options()
+
+                var options = new Options()
                 {
                     ConnectionString = conStr,
                     Directory = outputDir,
                     Language = lang,
-                    Namespace = @namespace
+                    Namespace = @namespace,
+                    Type = type
                 };
-                Execute(option);
+                if (!AvailableType.TryGetValue(options.Type, out var action))
+                {
+                    Console.WriteLine("Input type not found.");
+                }
+                action(options);
             });
         }
 
-        private static void Execute(Options options)
+        private static void GenerateModel(Options options)
         {
             var dotnetLang = new[] { "c#", "vb", "visualbasic" };
             var supportedLanguage = new Dictionary<string, Func<string, string, string, IModelGenerator>> {
@@ -82,27 +99,41 @@ namespace ModelGenerator
             {
                 throw new ArgumentNullException("Directory must not be null or empty.");
             }
-            if (dotnetLang.Contains(targetLanguage))
-            {
-                var generator = new UnitOfWorkGenerator<SqlConnection>();
-                IGeneratorStrategy<SqlConnection> strategy;
-                if (targetLanguage == "c#")
-                {
-                    strategy = new CSharpSingletonStrategy<SqlConnection>(options.ConnectionString, options.Directory, options.Namespace);
-                }
-                else
-                {
-                    strategy = new VisualBasicSingletonStrategy<SqlConnection>(options.ConnectionString, options.Directory, options.Namespace);
-                }
-                generator.UseStrategy(strategy);
-                generator.Generate();
-            }
-            else
-            {
-                var generator = generatorInjector(options.ConnectionString, options.Directory, options.Namespace);
-                generator.GenerateAllTable();
-            }
-
+            var generator = generatorInjector(options.ConnectionString, options.Directory, options.Namespace);
+            generator.GenerateAllTable();
         }
+        private static void GenerateUnitOfWork(Options options)
+        {
+            var supportedLanguage = new Dictionary<string, Func<string, string, string, IGeneratorStrategy<SqlConnection>>> {
+                { "c#", (c,o,n) => new CSharpSingletonStrategy<SqlConnection>(c,o,n) },
+                { "csharp",(c,o,n) => new CSharpSingletonStrategy<SqlConnection>(c,o,n) },
+                { "visualbasic", (c,o,n) => new VisualBasicSingletonStrategy<SqlConnection>(c,o,n) },
+                { "vb", (c,o,n) => new VisualBasicSingletonStrategy<SqlConnection>(c,o,n) }
+            };
+
+            var targetLanguage = options.Language?.ToLower();
+            if (!supportedLanguage.TryGetValue(targetLanguage, out var strategy))
+            {
+                throw new Exception($"Not supported language {targetLanguage} (currently support {string.Join(",", supportedLanguage.Select(x => x.Key))})");
+            }
+            if (string.IsNullOrWhiteSpace(options.ConnectionString))
+            {
+                throw new ArgumentNullException("Connection string must not be null or empty.");
+            }
+            if (string.IsNullOrWhiteSpace(options.Directory))
+            {
+                throw new ArgumentNullException("Directory must not be null or empty.");
+            }
+            if (string.IsNullOrWhiteSpace(options.Namespace))
+            {
+                options.Namespace = "MyNamespace";
+            }
+            //var generator = generatorInjector(options.ConnectionString, options.Directory, options.Namespace);
+            //generator.GenerateModel();
+            var generator = new UnitOfWorkGenerator<SqlConnection>();
+            generator.UseStrategy(strategy(options.ConnectionString, options.Directory, options.Namespace));
+            generator.Generate();
+        }
+
     }
 }

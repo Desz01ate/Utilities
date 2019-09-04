@@ -9,11 +9,9 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Utilities.SQL.Generator.Enumerable;
 
 namespace MachineLearning.Examples
 {

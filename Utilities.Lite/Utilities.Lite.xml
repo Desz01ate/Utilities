@@ -312,26 +312,6 @@
             <param name="table"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -562,6 +542,13 @@
             Check if the given input is matching the string-only (English and Thai alphabetics only)
             </summary>
             <param name="input">Input string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsValidThaiCitizenId(System.String)">
+            <summary>
+            Check if the given input is matching the Thai citizen id format.
+            </summary>
+            <param name="input"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.Cryptography">
@@ -1278,6 +1265,15 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchemaOf``1(``0,System.String)">
+            <summary>
+            Get table schema from current database connection.
+            </summary>
+            <typeparam name="TDatabaseConnection"></typeparam>
+            <param name="connection"></param>
+            <param name="tableName"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">

@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Utilities.SQL.Generator.Model
+namespace Utilities.Classes
 {
-    public class SqlColumn
+    public class TableSchema
     {
         public string ColumnName { get; set; }
         public string BaseColumnName { get; set; }
         public string BaseTableName { get; set; }
-        public string DataType { get; set; }
-        public string ProviderSpecificDataType { get; set; }
+        public Type DataType { get; set; }
+        public Type ProviderSpecificDataType { get; set; }
         public string DataTypeName { get; set; }
 
         public int ColumnOrdinal { get; set; }
@@ -32,4 +32,5 @@ namespace Utilities.SQL.Generator.Model
         public bool IsReadOnly { get; set; }
 
     }
+
 }
