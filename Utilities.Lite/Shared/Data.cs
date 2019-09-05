@@ -6,7 +6,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using Utilities.Attributes.SQL;
-using Utilities.Enumerables;
+using Utilities.Enum;
 using Utilities.Interfaces;
 
 namespace Utilities.Shared

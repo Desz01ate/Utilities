@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Utilities.Enumerables;
+using Utilities.Enum;
 using Utilities.Shared;
 
 namespace Utilities.SQL.Translator

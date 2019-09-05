@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Utilities.Enumerables;
+using Utilities.Enum;
 
 namespace Utilities.Interfaces
 {

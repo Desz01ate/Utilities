@@ -11,6 +11,7 @@ using Utilities.Interfaces;
 using Utilities.Shared;
 using Utilities.SQL.Extension;
 using Utilities.SQL.Translator;
+using Utilities.Enum;
 
 namespace Utilities.SQL
 {
@@ -409,7 +410,7 @@ namespace Utilities.SQL
         public (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(T obj) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
+            var kvMapper = Shared.Data.CRUDDataMapping(obj, SqlType.Insert);
             var query = $@"INSERT INTO {tableName}
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
@@ -433,7 +434,7 @@ namespace Utilities.SQL
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+            var parameters = Shared.Data.CRUDDataMapping(obj, SqlType.Update);
             parameters.Remove(primaryKey.Name);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
