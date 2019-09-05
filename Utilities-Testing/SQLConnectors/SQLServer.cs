@@ -13,7 +13,7 @@ namespace Utilities.Testing.SQLConnectors
     {
         public SQLServer(string connectionString) : base(connectionString)
         {
-            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LEN");
+            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LEN");
         }
 
     }
@@ -21,14 +21,14 @@ namespace Utilities.Testing.SQLConnectors
     {
         public MySQL(string connectionString) : base(connectionString)
         {
-            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LENGTH");
+            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
         }
     }
     class SQLite : DatabaseConnector<SQLiteConnection, SQLiteParameter>
     {
         public SQLite(string connectionString) : base(connectionString)
         {
-            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LENGTH");
+            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
         }
     }
 }

@@ -151,6 +151,15 @@ namespace Utilities.Shared
             }
             return rowInstance;
         }
+        public static dynamic RowBuilder(this DataRow row, IEnumerable<string> columns)
+        {
+            var rowInstance = new ExpandoObject() as IDictionary<string, object>;
+            for (var idx = 0; idx < columns.Count(); idx++)
+            {
+                rowInstance.Add(columns.ElementAt(idx), row?[idx]);
+            }
+            return rowInstance;
+        }
         /// <summary>
         /// Convert data row into POCO.
         /// </summary>

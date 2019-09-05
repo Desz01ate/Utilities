@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 
 namespace Utilities.Shared
@@ -13,12 +14,13 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ToList<T>(this DataTable data) where T : class, new()
+        public static IEnumerable<T> ToEnumerable<T>(this DataTable data, Func<DataTableReader, T> builder = null) where T : class, new()
         {
             using var dataReader = new DataTableReader(data);
+            var action = builder ?? Data.RowBuilder<T>;
             while (dataReader.Read())
             {
-                yield return Data.RowBuilder<T>(dataReader);
+                yield return action(dataReader);
             }
         }
         /// <summary>
@@ -26,7 +28,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IEnumerable<dynamic> ToList(this DataTable data)
+        public static IEnumerable<dynamic> ToEnumerable(this DataTable data)
         {
             using var dataReader = new DataTableReader(data);
             var columns = dataReader.GetColumns();
@@ -34,6 +36,11 @@ namespace Utilities.Shared
             {
                 yield return Data.RowBuilder(dataReader, columns);
             }
+        }
+
+        public static IEnumerable<string> GetColumns(this DataTable data)
+        {
+            return System.Linq.Enumerable.Range(0, data.Columns.Count).Select(x => data.Columns[x].ColumnName);
         }
     }
 }

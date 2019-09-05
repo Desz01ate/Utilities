@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Utilities.Security.Cryptography
+namespace Utilities.Security.CryptoProvider
 {
     /// <summary>
     /// Simple wrapper for Rivest–Shamir–Adleman method

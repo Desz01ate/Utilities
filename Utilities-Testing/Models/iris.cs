@@ -3,13 +3,32 @@ using Utilities.Interfaces;
 
 namespace Utilities.Testing.Models
 {
-    public class iris : ICSVReader
+    public class iris : ICSVReader, IExcelReader
     {
         public double? SepalLength { get; set; }
         public double SepalWidth { get; set; }
         public double PetalLength { get; set; }
         public double PetalWidth { get; set; }
         public string Label { get; set; }
+
+        public int GetExternalColumnIndex(string property)
+        {
+            switch (property)
+            {
+                case "Label":
+                    return 0;
+                case "SepalLength":
+                    return 1;
+                case "SepalWidth":
+                    return 2;
+                case "PetalLength":
+                    return 3;
+                case "PetalWidth":
+                    return 4;
+                default:
+                    return -1;
+            }
+        }
 
         public void ReadFromCSV(string content)
         {

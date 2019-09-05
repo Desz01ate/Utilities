@@ -26,7 +26,7 @@ namespace Utilities.SQL.Extension
             command.CommandText = query;
             using var reader = command.ExecuteReader();
             var schema = reader.GetSchemaTable();
-            var result = schema.ToList<TableSchema>();
+            var result = schema.ToEnumerable<TableSchema>();
             return result;
         }
     }

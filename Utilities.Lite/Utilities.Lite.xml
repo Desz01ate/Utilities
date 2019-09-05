@@ -302,15 +302,54 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
-        <member name="M:Utilities.File.ReadExcelAs``1(System.String,System.Boolean,System.String)">
+        <member name="M:Utilities.File.ReadExcelAs``1(System.String,System.Boolean,System.Int32)">
             <summary>
             Read excel file and convert to object.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="path"></param>
-            <param name="hasHeader"></param>
-            <param name="table"></param>
+            <param name="path">Path to excel file.</param>
+            <param name="hasHeader">Is the file has header.</param>
+            <param name="sheetIndex">Index of target sheet in excel file.</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadExcelAsDataTable(System.String,System.Int32,ExcelDataReader.ExcelDataSetConfiguration)">
+            <summary>
+            Read excel file and convert to data table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="path">Path to excel file.</param>
+            <param name="sheetIndex">Index of target sheet in excel file.</param>
+            <param name="configuration">Dataset configuration, see details at https://github.com/ExcelDataReader/ExcelDataReader</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadExcel(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Read excel file and convert to dynamic object.
+            </summary>
+            <param name="path">Path to excel file.</param>
+            <param name="hasHeader">Is the file has header.</param>
+            <param name="sheetIndex">Index of target sheet in excel file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
         </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
@@ -551,12 +590,12 @@
             <param name="input"></param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Cryptography">
+        <member name="T:Utilities.Security.Cryptography">
             <summary>
             Simple wrapper for cryptography methods
             </summary>
         </member>
-        <member name="M:Utilities.Cryptography.Encrypt(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Utilities.Security.Cryptography.Encrypt(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Encrypt given plain text into hash string with specific salt
             </summary>
@@ -566,7 +605,7 @@
             <param name="iterations">Encryption iterations</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.Decrypt(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Utilities.Security.Cryptography.Decrypt(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Decrypt given hash string into plain text with specific salt
             </summary>
@@ -576,7 +615,7 @@
             <param name="iterations">Decryption iterations</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.GenerateHash(System.String,System.Byte[],System.Int32,System.Int32)">
+        <member name="M:Utilities.Security.Cryptography.GenerateHash(System.String,System.Byte[],System.Int32,System.Int32)">
             <summary>
             Generate combination of hash string and salt string from given plain text and salt byte array
             </summary>
@@ -586,7 +625,7 @@
             <param name="iterations">Encryption iterations</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.GenerateHash(System.String,System.Int32,System.Int32)">
+        <member name="M:Utilities.Security.Cryptography.GenerateHash(System.String,System.Int32,System.Int32)">
             <summary>
             Generate combination of hash string and salt string from given plain text
             </summary>
@@ -595,7 +634,7 @@
             <param name="iterations">Encryption iterations</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.GenerateHash(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Utilities.Security.Cryptography.GenerateHash(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Generate combination of hash string and salt string from given plain text and salt base64 string
             </summary>
@@ -605,7 +644,7 @@
             <param name="iterations">Encryption iterations</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.Verify(System.String,System.String,System.String,System.Int32)">
+        <member name="M:Utilities.Security.Cryptography.Verify(System.String,System.String,System.String,System.Int32)">
             <summary>
             Compare the plain text with given hash and salt
             </summary>
@@ -615,13 +654,13 @@
             <param name="iterations">Iterations to compute while comparing</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.GenerateSalt">
+        <member name="M:Utilities.Security.Cryptography.GenerateSalt">
             <summary>
             Randomly generate salt byte array
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Cryptography.SecureRandomString(System.Int32,System.String)">
+        <member name="M:Utilities.Security.Cryptography.SecureRandomString(System.Int32,System.String)">
             <summary>
             Provide statistically random string generate with customizable length and combination.
             </summary>
@@ -629,12 +668,12 @@
             <param name="combination">Combination of string.</param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Security.Cryptography.AES">
+        <member name="T:Utilities.Security.CryptoProvider.AES">
             <summary>
             Simple wrapper for Advance Encryption Standard.
             </summary>
         </member>
-        <member name="M:Utilities.Security.Cryptography.AES.Encrypt(System.String,System.String)">
+        <member name="M:Utilities.Security.CryptoProvider.AES.Encrypt(System.String,System.String)">
             <summary>
             Encrypt data by given key using Advance Encryption Standard.
             </summary>
@@ -642,7 +681,7 @@
             <param name="data">raw data to encrypt</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.AES.Decrypt(System.String,System.String)">
+        <member name="M:Utilities.Security.CryptoProvider.AES.Decrypt(System.String,System.String)">
             <summary>
             Decrypt data by given key using Advance Encryption Standard.
             </summary>
@@ -650,31 +689,31 @@
             <param name="data">encrypted data to decrypt</param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Security.Cryptography.RSA">
+        <member name="T:Utilities.Security.CryptoProvider.RSA">
             <summary>
             Simple wrapper for Rivest–Shamir–Adleman method
             </summary>
         </member>
-        <member name="M:Utilities.Security.Cryptography.RSA.KeyGenerator">
+        <member name="M:Utilities.Security.CryptoProvider.RSA.KeyGenerator">
             <summary>
             Generate private key and public key as a pair.
             </summary>
             <returns>Tuple of private and public key</returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.RSA.CreatePrivateKey">
+        <member name="M:Utilities.Security.CryptoProvider.RSA.CreatePrivateKey">
             <summary>
             Generate private key.
             </summary>
             <returns>private key as string</returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.RSA.CreatePublicKey(System.String)">
+        <member name="M:Utilities.Security.CryptoProvider.RSA.CreatePublicKey(System.String)">
             <summary>
             Generate public key using private key.
             </summary>
             <param name="privateKey">Private key as string</param>
             <returns>public key as string</returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.RSA.Encrypt(System.String,System.String)">
+        <member name="M:Utilities.Security.CryptoProvider.RSA.Encrypt(System.String,System.String)">
             <summary>
             Encrypt raw data using public key
             </summary>
@@ -682,7 +721,7 @@
             <param name="data">Raw data to encrypt</param>
             <returns>Encrypted data as byte array</returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.RSA.Decrypt(System.String,System.Byte[])">
+        <member name="M:Utilities.Security.CryptoProvider.RSA.Decrypt(System.String,System.Byte[])">
             <summary>
             Decrypt encrypted byte array using private key
             </summary>
@@ -734,7 +773,7 @@
             <param name="dataReader"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.DataTableExtension.ToList``1(System.Data.DataTable)">
+        <member name="M:Utilities.Shared.DataTableExtension.ToEnumerable``1(System.Data.DataTable,System.Func{System.Data.DataTableReader,``0})">
             <summary>
             Convert DataTable into IEnumerable of specific type.
             </summary>
@@ -742,7 +781,7 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.DataTableExtension.ToList(System.Data.DataTable)">
+        <member name="M:Utilities.Shared.DataTableExtension.ToEnumerable(System.Data.DataTable)">
             <summary>
             Convert DataTable into IEnumerable of dynamic.
             </summary>
@@ -818,6 +857,14 @@
             <typeparam name="T"></typeparam>
             <param name="dataset"></param>
             <exception cref="T:System.ArgumentNullException"/>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Convert IEnumerable to DataTable
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dataset"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
