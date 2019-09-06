@@ -562,7 +562,7 @@ namespace Utilities.SQL
             return Connection.GetSchemaOf(tableName);
         }
         /// <summary>
-        /// Provide converter to convert data type from CLR to underlying SQL type.
+        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is support by SQL Server and can be override when neccessary.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>

@@ -331,26 +331,6 @@
             <param name="sheetIndex">Index of target sheet in excel file.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -788,6 +768,13 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.DataTableExtension.GetColumns(System.Data.DataTable)">
+            <summary>
+            Get columns of DataTable.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.Shared.Enumerable">
             <summary>
             Collection of Emnumerable extension methods
@@ -1112,6 +1099,15 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">IEnumrable to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Update``1(``0,System.Data.Common.DbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -1282,6 +1278,14 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertQueryGenerate``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateQueryGenerate``1(``0)">
             <summary>
             Generate SQL query with sql parameters.
@@ -1312,6 +1316,20 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.GetSchema``1">
+            <summary>
+            Get table schema from current database connection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
+            <summary>
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is support by SQL Server and can be override when neccessary.
+            </summary>
+            <param name="type"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchemaOf``1(``0,System.String)">
@@ -1412,6 +1430,30 @@
         <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
             <summary>
             Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
+ormat.
             </summary>
             <param name="value">Value</param>
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>

@@ -37,7 +37,11 @@ namespace Utilities.Shared
                 yield return Data.RowBuilder(dataReader, columns);
             }
         }
-
+        /// <summary>
+        /// Get columns of DataTable.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IEnumerable<string> GetColumns(this DataTable data)
         {
             return System.Linq.Enumerable.Range(0, data.Columns.Count).Select(x => data.Columns[x].ColumnName);

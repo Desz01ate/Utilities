@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.4.0-b5</Version>
+    <Version>0.1.4.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
@@ -22,15 +22,17 @@
 [SQL]
 + Add ExecuteReader as DataTable.
 + Add extension method [GetSchemaOf&lt;T&gt;] for table schema reader.
++ Add Insert(IEnumerable&lt;T&gt;) overload for DataConnectorExtension
 
 [Data.Enumerable]
-+ Add new methods [ToQueue&lt;T&gt;] and [ToStack&lt;T&gt;].
++ New methods [ToQueue&lt;T&gt;], [ToStack&lt;T&gt;] and [ToDataTable]
 
 [Data.DataReaderExtension](New Module)
 + New method [GetColumns] which is return column name of given DbDataReader.
 
 [Data.DataTableExtension](New Module)
-+ New methods [ToList] and [ToList&lt;T&gt;] which are convert DataTable into IEnumerable&lt;dynamic&gt; and IEnumerable&lt;T&gt; respectively.
++ New methods [ToEnumerable] and [ToEnumerable&lt;T&gt;] which are convert DataTable into IEnumerable&lt;dynamic&gt; and IEnumerable&lt;T&gt; respectively.
++ New method GetColumns for DataTable column reader.
 </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
