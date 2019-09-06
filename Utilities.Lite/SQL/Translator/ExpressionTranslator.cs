@@ -22,9 +22,9 @@ namespace Utilities.SQL.Translator
         private int? _take = null;
         private string _whereClause = string.Empty;
         private string _previousVisitField;
-        private Dictionary<SqlFunction, string> _platformFunctionConfig;
-        private Dictionary<string, string> _fieldsConfiguration;
-        private List<TSqlParameter> _sqlParameters;
+        private readonly Dictionary<SqlFunction, string> _platformFunctionConfig;
+        private readonly Dictionary<string, string> _fieldsConfiguration;
+        private readonly List<TSqlParameter> _sqlParameters;
         public int? Skip
         {
             get
@@ -142,11 +142,37 @@ namespace Utilities.SQL.Translator
                 return m;
 
             }
+            else if (m.Method.Name == "StartsWith")
+            {
+                var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
+                var expression = m.Arguments[0].ToString().Replace("\"", "");
+                _sqlParameters.Add(new TSqlParameter()
+                {
+                    ParameterName = field,
+                    Value = expression
+                });
+                sb.Append($@"({field} LIKE @{field} + '%')");
+                return m;
+
+            }
+            else if (m.Method.Name == "EndsWith")
+            {
+                var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
+                var expression = m.Arguments[0].ToString().Replace("\"", "");
+                _sqlParameters.Add(new TSqlParameter()
+                {
+                    ParameterName = field,
+                    Value = expression
+                });
+                sb.Append($@"({field} LIKE '%' + @{field})");
+                return m;
+
+            }
             else if (m.Method.Name == "IsNullOrEmpty" || m.Method.Name == "IsNullOrWhitespace")
             {
                 var node = ((MemberExpression)m.Arguments[0]).Member.Name;
                 var field = _fieldsConfiguration[node];
-                sb.Append($"({field} IS NULL AND {field} = '')");
+                sb.Append($"({field} IS NULL OR {field} = '')");
                 return m;
             }
 

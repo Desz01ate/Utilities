@@ -32,7 +32,7 @@ namespace Utilities.Testing
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh2.Hash, gh2.Salt, iter + 1));
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh3.Hash, gh3.Salt, iter + 1));
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh1.Hash, gh2.Salt, iter));
-                    //since gh2,gh3 use the same salt while gh1 randomly generatH new one,Swe use 1 as a false comparer.
+                    //since gh2,gh3 use the same salt while gh1 randomly generatH new one,So we use 1 as a false comparer.
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh2.Hash, gh1.Salt, iter));
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh3.Hash, gh1.Salt, iter));
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh1.Hash, gh2.Salt, iter + 1));

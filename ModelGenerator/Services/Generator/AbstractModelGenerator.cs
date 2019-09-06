@@ -34,15 +34,31 @@ namespace ModelGenerator.Services.Generator
                 ConnectionString = connectionString
             };
             connection.Open();
-            var dataTable = connection.GetSchema("Tables");
-            foreach (DataRow row in dataTable.Rows)
+            var tables = connection.GetSchema("Tables");
+
+            foreach (DataRow row in tables.Rows)
             {
                 var database = row[0].ToString();
                 var schema = row[1].ToString();
                 var name = row[2].ToString();
                 var type = row[3].ToString();
+
                 Tables.Add(name);
             }
+            //List<string> ls = new List<string>();
+            //foreach (DataRow row in indexes.Rows)
+            //{
+            //    var constraint_catalog = row[0].ToString();
+            //    var constraint_schema = row[1].ToString();
+            //    var constraint_name = row[2].ToString();
+            //    var table_catalog = row[3].ToString();
+            //    var table_schema = row[4].ToString();
+            //    var table_name = row[5].ToString();
+            //    var index_name = row[6].ToString();
+            //    var type_desc = row[7].ToString();
+            //}
+            tables.Dispose();
+            //indexes.Dispose();
         }
         public void GenerateAllTable()
         {
@@ -80,10 +96,22 @@ namespace ModelGenerator.Services.Generator
             {
                 connection.Open();
                 var columns = connection.GetSchemaOf(TableNameCleanser(tableName));
+                string primaryKey = null;
+                using (var indexes = connection.GetSchema("IndexColumns", new string[] { null, null, tableName }))
+                {
+                    if (indexes != null)
+                    {
+                        foreach (DataRow rowInfo in indexes.Rows)
+                        {
+                            primaryKey = rowInfo["column_name"].ToString();
+                        }
+                    }
+                }
                 var table = new Table()
                 {
                     Name = tableName,
-                    Columns = columns
+                    Columns = columns,
+                    PrimaryKey = primaryKey
                 };
                 connection.Close();
                 parser(table);

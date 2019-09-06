@@ -1,6 +1,7 @@
 ﻿using ModelGenerator.Services.Generator.Model;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Utilities.Classes;
 
@@ -29,11 +30,17 @@ namespace ModelGenerator.Services.Generator
                 sb.AppendLine($@"namespace {Namespace}");
                 sb.AppendLine("{");
             }
+            sb.AppendLine("//You can get Utilities package via nuget : Install-Package Deszolate.Utilities.Lite");
+            sb.AppendLine($"//[Utilities.Attributes.SQL.Table(\"[{table.Name}]\")]");
             sb.AppendLine($@"public class {table.Name.Replace("-", "")}");
             sb.AppendLine("{");
             foreach (var column in table.Columns)
             {
                 var col = ColumnNameCleanser(column.ColumnName);
+                if (column.ColumnName == table.PrimaryKey)
+                {
+                    sb.AppendLine($"    //[Utilities.Attributes.SQL.PrimaryKey]");
+                }
                 sb.AppendLine($"    public {GetNullableDataType(column)} {col} {{ get; set; }}");
             }
             sb.AppendLine("}");

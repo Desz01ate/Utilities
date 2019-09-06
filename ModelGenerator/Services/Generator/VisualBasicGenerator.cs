@@ -32,15 +32,22 @@ namespace ModelGenerator.Services.Generator
             {
                 sb.AppendLine($@"Namespace {Namespace}");
             }
+            sb.AppendLine("'You can get Utilities package via nuget : Install-Package Deszolate.Utilities.Lite");
+            sb.AppendLine($"'<Utilities.Attributes.SQL.Table(\"[{table.Name}]\")>");
             sb.AppendLine($@"Public Class {table.Name.Replace("-", "")}");
             foreach (var column in table.Columns)
             {
                 sb.AppendLine();
                 var type = String.ToLeadingUpper(GetNullableDataType(column));
                 var col = ColumnNameCleanser(column.ColumnName);
+
                 sb.AppendLine($"    Private _{col} As {type}");
                 sb.AppendLine();
-                sb.AppendLine($"    Public Property {col} As {type}");
+                if (column.ColumnName == table.PrimaryKey)
+                {
+                    sb.AppendLine($"    '<Utilities.Attributes.SQL.PrimaryKey>");
+                }
+                sb.AppendLine($"    Public Property [{col}] As {type}");
                 sb.AppendLine($"      Get");
                 sb.AppendLine($"         Return _{col}");
                 sb.AppendLine($"      End Get");

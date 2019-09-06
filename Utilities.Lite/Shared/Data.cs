@@ -209,8 +209,10 @@ namespace Utilities.Shared
             return values;
         }
 
-        internal static IEnumerable<string> GenerateSQLCreteFieldStatement<T>()
+        internal static IEnumerable<string> GenerateSQLCreteFieldStatement<T1, T2, T>(this IDatabaseConnectorExtension<T1, T2> connector)
             where T : class, new()
+            where T1 : DbConnection, new()
+            where T2 : DbParameter, new()
         {
             List<string> converter = new List<string>();
             var properties = typeof(T).PropertiesBindingFlagsAttributeValidate();
@@ -219,63 +221,12 @@ namespace Utilities.Shared
             {
                 try
                 {
-                    var propertyType = property.PropertyType;
                     var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
                     var IsNotNull = AttributeExtension.NotNullAttributeValidate(property);
                     var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
                     var notNullPostfix = IsNotNull ? " NOT NULL " : "";
-                    if (propertyType == typeof(string))
-                    {
-                        converter.Add($"{propertyName} NVARCHAR(1024) {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(char) || propertyType == typeof(char?))
-                    {
-                        converter.Add($"{propertyName} NCHAR(1) {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(short) || propertyType == typeof(short?) || propertyType == typeof(ushort) || propertyType == typeof(ushort?))
-                    {
-                        converter.Add($"{propertyName} SMALLINT {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(int) || propertyType == typeof(int?) || propertyType == typeof(uint) || propertyType == typeof(uint?))
-                    {
-                        converter.Add($"{propertyName} INT {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(long) || propertyType == typeof(long?) || propertyType == typeof(ulong) || propertyType == typeof(ulong?))
-                    {
-                        converter.Add($"{propertyName} BIGINT {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(float) || propertyType == typeof(float?))
-                    {
-                        converter.Add($"{propertyName} REAL {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(double) || propertyType == typeof(double?))
-                    {
-                        converter.Add($"{propertyName} FLOAT {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
-                    {
-                        converter.Add($"{propertyName} BIT {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(decimal) || propertyType == typeof(decimal?))
-                    {
-                        converter.Add($"{propertyName} MONEY {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
-                    {
-                        converter.Add($"{propertyName} DATETIME {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
-                    {
-                        converter.Add($"{propertyName} UNIQUEIDENTIFIER {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(byte) || propertyType == typeof(byte?) || propertyType == typeof(sbyte) || propertyType == typeof(sbyte?))
-                    {
-                        converter.Add($"{propertyName} TINYINT {primaryKeyPostfix} {notNullPostfix}");
-                    }
-                    else if (propertyType == typeof(byte[]))
-                    {
-                        converter.Add($"{propertyName} VARBINARY {primaryKeyPostfix} {notNullPostfix}");
-                    }
+                    var sqlType = connector.MapCLRTypeToSQLType(property.PropertyType);
+                    converter.Add($"{propertyName} {sqlType} {primaryKeyPostfix} {notNullPostfix}");
                 }
                 catch
                 {
