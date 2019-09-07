@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Utilities.Interfaces
 {
     /// <summary>
-    /// Provide methods for wrapper operation on DbConnection class
+    /// Provide extension set of operations on top of IDatabaseConnector
     /// </summary>
     /// <typeparam name="TDatabaseType">DbConnection type</typeparam>
     /// <typeparam name="TParameter">DbParameter type</typeparam>
@@ -39,6 +39,7 @@ namespace Utilities.Interfaces
         #region DDL
         int CreateTable<T>() where T : class, new();
         int DROP_TABLE_USE_WITH_CAUTION<T>() where T : class, new();
+        IEnumerable<Classes.TableSchema> GetSchema<T>() where T : class, new();
         #endregion
         #region query_translator
         (string query, IEnumerable<TParameter> parameters) SelectQueryGenerate<T>(int? top = null) where T : class, new();

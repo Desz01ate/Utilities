@@ -47,7 +47,7 @@ namespace Utilities
         {
             if (action == null) return (0, 0, 0);
             long beforeExecution = GC.GetTotalMemory(false) / 1024;
-            await action();
+            await action().ConfigureAwait(false);
             long afterExecution = GC.GetTotalMemory(false) / 1024;
             return (beforeExecution, afterExecution, beforeExecution - afterExecution);
 

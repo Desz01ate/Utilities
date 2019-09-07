@@ -14,7 +14,7 @@ namespace MachineLearning.Examples.DataConnector
         }
         private void SetFunctions()
         {
-            this.SQLFunctionConfiguration.Add(Utilities.Enumerables.SqlFunction.Length, "LEN");
+            this.SQLFunctionConfiguration.Add(Utilities.Enum.SqlFunction.Length, "LEN");
         }
     }
 }

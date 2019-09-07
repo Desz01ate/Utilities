@@ -1,55 +1,41 @@
 ﻿using NUnit.Framework;
-using System.Data.SqlClient;
-using Utilities.DesignPattern.UnitOfWork.Strategy.NonSingleton;
-using Utilities.DesignPattern.UnitOfWork.Strategy.Singleton;
+using System;
+using System.Text;
+using Utilities.Testing.Models;
 using Utilities.Shared;
+using System.Linq;
+using System.Data;
+using Utilities.Interfaces;
+using Utilities.Testing.SQLConnectors;
 
 namespace Utilities.Testing
 {
     class UnrelatedTest
     {
+
         [Test]
         public void Playground()
         {
-            var connectionString = "Server=localhost;Database=Local;User=sa;Password=qweQWE123;";
+            var msCon = "Server=localhost;Database=Local;User=sa;Password=sa";
+            var npgCon = "User Id=postgres;Password=sa;Host=localhost;Port=5432;Database=postgres";
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            var csharpStrategy = new CSharpSingletonStrategy<SqlConnection>(connectionString, @"C:\Users\kunvu\source\repos\Playground\Playground\Singleton", "PlaygroundS");
-            var visualBasicStrategy = new VisualBasicSingletonStrategy<SqlConnection>(connectionString, @"C:\Users\kunvu\source\repos\Playground\PlaygroundVB\Singleton", "TestS");
-            var csharpStrategy2 = new CSharpNonSingletonStrategy<SqlConnection>(connectionString, @"C:\Users\kunvu\source\repos\Playground\Playground\NonSingleton", "PlaygroundNS");
-            var visualBasicStrategy2 = new VisualBasicNonSingletonStrategy<SqlConnection>(connectionString, @"C:\Users\kunvu\source\repos\Playground\PlaygroundVB\NonSingleton", "TestNS");
-
-
-            var generator = new Utilities.DesignPattern.UnitOfWork.Generator.UnitOfWorkGenerator<SqlConnection>();
-            generator.UseStrategy(csharpStrategy);
-            generator.Generate();
-            generator.UseStrategy(csharpStrategy2);
-            generator.Generate();
-            generator.UseStrategy(visualBasicStrategy);
-            generator.Generate();
-            generator.UseStrategy(visualBasicStrategy2);
-            generator.Generate();
+            var affectedRow = 0;
+            using (var mssqlConnector = new SQLServer(msCon))
+            {
+                var tx = mssqlConnector.ExecuteReader<iris>($"SELECT * FROM [iris]");
+                using (var postgresConnector = new PostgreSQL(npgCon))
+                {
+                    postgresConnector.DROP_TABLE_USE_WITH_CAUTION<iris>();
+                    postgresConnector.CreateTable<iris>();
+                    affectedRow = postgresConnector.Insert(tx);
+                    postgresConnector.DROP_TABLE_USE_WITH_CAUTION<iris>();
+                }
+            }
         }
     }
-
 }

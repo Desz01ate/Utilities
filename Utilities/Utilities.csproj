@@ -9,24 +9,27 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.6.4</Version>
+    <Version>0.0.7.0</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
-+ Code performance and reliability improved thanks to FxCop Analyzers.
-+ Missing XML for some new modules added.
-+ Replace structs by TupleValue to reduce load pressure on GC.
-+ Add new dependencies [ExcelDataReader] for File module excel reader which should not bring any huge drawback since this library is lightweight as well as Utilities.
+- Remove all boilerplate generator out of Utilities and replace it with seperate console program for generator-related task instead. Result in significant file size reduce.
++ Add new module [DataReaderExtension] and [DataTableExtension].
++ Some class model has been renamed.
 
-[File]
-+ Add excel file reader.
-- Remove generic constraint from all write-related methods.
+[SQL]
++ Add ExecuteReader as DataTable.
++ Add extension method [GetSchemaOf&lt;T&gt;] for table schema reader.
 
 [Data.Enumerable]
-+ Add Partition method which behavior similar to list.Partition in F#.
++ Add new methods [ToQueue&lt;T&gt;] and [ToStack&lt;T&gt;].
 
-[HttpRequest]
-- Remove some complex overload methods which often confuses on how to use, result in a little bit back-to-tradition way when consume the function.</PackageReleaseNotes>
+[Data.DataReaderExtension](New Module)
++ New method [GetColumns] which is return column name of given DbDataReader.
+
+[Data.DataTableExtension](New Module)
++ New methods [ToList] and [ToList&lt;T&gt;] which are convert DataTable into IEnumerable&lt;dynamic&gt; and IEnumerable&lt;T&gt; respectively.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace Utilities.Shared
 {
@@ -130,6 +130,31 @@ namespace Utilities.Shared
                 queue.Enqueue(data);
             }
             return queue;
+        }
+        /// <summary>
+        /// Convert IEnumerable to DataTable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataset"></param>
+        /// <returns></returns>
+        public static DataTable ToDataTable<T>(this IEnumerable<T> dataset)
+        {
+            var properties = typeof(T).GetProperties();
+            var dt = new DataTable();
+            foreach (var property in properties)
+            {
+                dt.Columns.Add(property.Name, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+            }
+            foreach (var item in dataset)
+            {
+                DataRow dr = dt.NewRow();
+                foreach (var property in properties)
+                {
+                    dr[property.Name] = property.GetValue(item) ?? DBNull.Value;
+                }
+                dt.Rows.Add(dr);
+            }
+            return dt;
         }
     }
 }

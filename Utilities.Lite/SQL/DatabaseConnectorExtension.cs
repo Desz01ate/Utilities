@@ -6,8 +6,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Classes;
+using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Extension;
 using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
@@ -80,7 +83,25 @@ namespace Utilities.SQL
         public int Insert<T>(T obj, DbTransaction transaction = null)
             where T : class, new()
         {
+            if (obj == null) return -1;
             var preparer = InsertQueryGenerate<T>(obj);
+            var query = preparer.query;
+            var parameters = preparer.parameters;
+            var result = ExecuteNonQuery(query, parameters, transaction: transaction);
+            return result;
+        }
+        /// <summary>
+        /// Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">IEnumrable to insert.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Affected row after an insert.</returns>
+        public int Insert<T>(IEnumerable<T> obj, DbTransaction transaction = null)
+            where T : class, new()
+        {
+            if (obj == null || !obj.Any()) return -1;
+            var preparer = InsertQueryGenerate(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -333,7 +354,7 @@ namespace Utilities.SQL
         public int CreateTable<T>() where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = Data.GenerateSQLCreteFieldStatement<T>();
+            var fields = Data.GenerateSQLCreteFieldStatement<TDatabaseConnection, TParameterType, T>(this);
             var query = $@"CREATE TABLE {tableName}({string.Join(",", fields)})";
             var result = this.ExecuteNonQuery(query);
             return result;
@@ -407,7 +428,7 @@ namespace Utilities.SQL
         public (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(T obj) where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Insert);
+            var kvMapper = Shared.Data.CRUDDataMapping(obj, SqlType.Insert);
             var query = $@"INSERT INTO {tableName}
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
@@ -425,13 +446,42 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
+        public (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(IEnumerable<T> obj) where T : class, new()
+        {
+            var tableName = typeof(T).TableNameAttributeValidate();
+            var kvMapper = Shared.Data.CRUDDataMapping(obj.First(), SqlType.Insert);
+            var query = new StringBuilder($@"INSERT INTO {tableName}({string.Join(",", kvMapper.Select(field => field.Key))}) VALUES");
+            var values = new List<string>();
+            var parameters = new List<TParameterType>();
+            for (var idx = 0; idx < obj.Count(); idx++)
+            {
+                var o = obj.ElementAt(idx);
+                var map = Shared.Data.CRUDDataMapping(o, SqlType.Insert);
+
+                values.Add($"({ string.Join(",", map.Select(field => $"@{field.Key}{idx}"))})");
+                parameters.AddRange(map.Select(field => new TParameterType()
+                {
+                    ParameterName = $"@{field.Key}{idx}",
+                    Value = field.Value
+                }));
+            }
+            var joinedValue = string.Join(",", values);
+            query.Append(joinedValue);
+            return (query.ToString(), parameters);
+        }
+        /// <summary>
+        /// Generate SQL query with sql parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public (string query, IEnumerable<TParameterType> parameters) UpdateQueryGenerate<T>(T obj) where T : class, new()
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.Data.CRUDDataMapping(obj, Enumerables.SqlType.Update);
+            var parameters = Shared.Data.CRUDDataMapping(obj, SqlType.Update);
             parameters.Remove(primaryKey.Name);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
@@ -500,6 +550,80 @@ namespace Utilities.SQL
             var translateResult = translator.Translate(predicate);
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
             return (query, translateResult.Parameters);
+        }
+        /// <summary>
+        /// Get table schema from current database connection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IEnumerable<TableSchema> GetSchema<T>() where T : class, new()
+        {
+            var tableName = typeof(T).TableNameAttributeValidate();
+            return Connection.GetSchemaOf(tableName);
+        }
+        /// <summary>
+        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is support by SQL Server and can be override when neccessary.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public virtual string MapCLRTypeToSQLType(Type type)
+        {
+            if (type == typeof(string))
+            {
+                return "NVARCHAR(1024)";
+            }
+            else if (type == typeof(char) || type == typeof(char?))
+            {
+                return "NCHAR(1)";
+            }
+            else if (type == typeof(short) || type == typeof(short?) || type == typeof(ushort) || type == typeof(ushort?))
+            {
+                return "SMALLINT";
+            }
+            else if (type == typeof(int) || type == typeof(int?) || type == typeof(uint) || type == typeof(uint?))
+            {
+                return "INT";
+            }
+            else if (type == typeof(long) || type == typeof(long?) || type == typeof(ulong) || type == typeof(ulong?))
+            {
+                return "BIGINT";
+            }
+            else if (type == typeof(float) || type == typeof(float?))
+            {
+                return "REAL";
+            }
+            else if (type == typeof(double) || type == typeof(double?))
+            {
+                return "FLOAT";
+            }
+            else if (type == typeof(bool) || type == typeof(bool?))
+            {
+                return "BIT";
+            }
+            else if (type == typeof(decimal) || type == typeof(decimal?))
+            {
+                return "MONEY";
+            }
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                return "DATETIME";
+            }
+            else if (type == typeof(Guid) || type == typeof(Guid?))
+            {
+                return "UNIQUEIDENTIFIER";
+            }
+            else if (type == typeof(byte) || type == typeof(byte?) || type == typeof(sbyte) || type == typeof(sbyte?))
+            {
+                return "TINYINT";
+            }
+            else if (type == typeof(byte[]))
+            {
+                return "VARBINARY";
+            }
+            else
+            {
+                throw new NotSupportedException($"Unable to map type {type.FullName} to {this.GetType().FullName} SQL Type");
+            }
         }
     }
 }
