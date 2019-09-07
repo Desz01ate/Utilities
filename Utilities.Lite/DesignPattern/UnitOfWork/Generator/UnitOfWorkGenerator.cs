@@ -7,6 +7,10 @@ using Utilities.SQL.Generator;
 
 namespace Utilities.DesignPattern.UnitOfWork.Generator
 {
+    /// <summary>
+    /// Unit of Work generator factory.
+    /// </summary>
+    /// <typeparam name="TDatabase"></typeparam>
     public class UnitOfWorkGenerator<TDatabase> where TDatabase : DbConnection, new()
     {
         IGeneratorStrategy<TDatabase> _strategy;
