@@ -90,5 +90,7 @@
     </Reference>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-
+    <ItemGroup Condition="'$(TargetFramework)' == 'net452' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="System.Memory" Version="4.5.3" />
+  </ItemGroup>
 </Project>

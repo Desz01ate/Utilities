@@ -145,39 +145,6 @@
             </summary>
             <param name="obj">Generic object.</param>
         </member>
-        <member name="T:Utilities.Diagnostics">
-            <summary>
-            Simple diagnostic methods
-            </summary>
-        </member>
-        <member name="M:Utilities.Diagnostics.RuntimeEstimation(System.Action)">
-            <summary>
-            Execute given function and return an execution time in milliseconds
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>An execution time in milliseconds</returns>
-        </member>
-        <member name="M:Utilities.Diagnostics.MemeryEstimation(System.Action)">
-            <summary>
-            Execute given function and return total memory usage during an execution
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>Total memory usage</returns>
-        </member>
-        <member name="M:Utilities.Diagnostics.MemeryEstimationAsync(System.Func{System.Threading.Tasks.Task})">
-            <summary>
-            Execute given function and return total memory usage during an execution
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>Total memory usage</returns>
-        </member>
-        <member name="M:Utilities.Diagnostics.RuntimeEstimationAsync(System.Func{System.Threading.Tasks.Task})">
-            <summary>
-            Execute given function and return an execution time in milliseconds
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>An execution time in milliseconds</returns>
-        </member>
         <member name="T:Utilities.Exceptions.AttributeException">
             <summary>
             Express attribute exception throw for internal details.
@@ -811,14 +778,6 @@
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Enumerable.AsList``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Convert given collection to list **only if** enumerable is currently not a list, otherwise return data without mutable.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source"></param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.Shared.Enumerable.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -1379,6 +1338,15 @@
             Collection of extension method for string datatype
             </summary>
         </member>
+        <member name="M:Utilities.String.ToLeadingUpper(System.ReadOnlySpan{System.Char},System.Boolean,System.Char)">
+            <summary>
+            Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="seperator"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.String.ToLeadingUpper(System.String,System.Boolean,System.Char)">
             <summary>
             Convert input string to upper case just first character (for the whole input or for each word)
@@ -1386,6 +1354,20 @@
             <param name="input"></param>
             <param name="upperAllWords"></param>
             <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.TrimSpan(System.ReadOnlySpan{System.Char})">
+            <summary>
+            High performance version of string.Trim using Span.
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.TrimSpan(System.String)">
+            <summary>
+            High performance version of string.Trim using Span.
+            </summary>
+            <param name="input"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.ToBase64String(System.String)">
@@ -1404,7 +1386,7 @@
         </member>
         <member name="M:Utilities.String.Translate(System.String,System.String,System.String)">
             <summary>
-            Translate original text from given language to target language, supported language can be found in Utilities.Enumerables.Language.
+            Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
             </summary>
             <param name="originalText">Original text.</param>
             <param name="fromLanguage">From language.</param>
@@ -1430,30 +1412,6 @@
         <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
             <summary>
             Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
-            <summary>
-            Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
-            <summary>
-            Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-    </members>
-</doc>
-ormat.
             </summary>
             <param name="value">Value</param>
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>

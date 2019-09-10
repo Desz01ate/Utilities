@@ -19,12 +19,59 @@ namespace Utilities
         /// <param name="upperAllWords"></param>
         /// <param name="seperator"></param>
         /// <returns></returns>
+        public static string ToLeadingUpper(this ReadOnlySpan<char> input, bool upperAllWords = false, char seperator = ' ')
+        {
+            if (input.IsEmpty)
+            {
+                throw new ArgumentException("Input string must not be null or empty.");
+            }
+            bool upperNextChar = true;
+            if (upperAllWords)
+            {
+                var sb = new StringBuilder();
+                foreach (var chr in input)
+                {
+                    if (chr == seperator)
+                    {
+                        upperNextChar = true;
+                        sb.Append(seperator);
+                        continue;
+                    }
+                    if (upperNextChar)
+                    {
+                        upperNextChar = false;
+                        sb.Append(char.ToUpper(chr));
+                    }
+                    else
+                    {
+                        sb.Append(chr);
+                    }
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return $@"{char.ToUpper(input[0])}{input.Slice(1).ToString()}";
+            }
+        }
+        /// <summary>
+        /// Convert input string to upper case just first character (for the whole input or for each word)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="upperAllWords"></param>
+        /// <param name="seperator"></param>
+        /// <returns></returns>
         public static string ToLeadingUpper(this string input, bool upperAllWords = false, char seperator = ' ')
         {
-            if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException("Input string must not be null or empty.");
-            if (upperAllWords)
-                return string.Join(seperator.ToString(), input.Split(seperator).ToList().Select(word => $@"{word.First().ToString().ToUpper()}{word.Substring(1)}"));
-            return $@"{input.First().ToString().ToUpper()}{input.Substring(1)}";
+            return ToLeadingUpper(input.AsSpan(), upperAllWords, seperator);
+        }
+        public static ReadOnlySpan<char> Slice(this string input, int startIndex)
+        {
+            return input.AsSpan().Slice(startIndex);
+        }
+        public static ReadOnlySpan<char> Slice(this string input, int startIndex, int count)
+        {
+            return input.AsSpan().Slice(startIndex, count);
         }
         /// <summary>
         /// Convert input string to base64 format string
@@ -49,7 +96,7 @@ namespace Utilities
             return Encoding.UTF8.GetString(charArray);
         }
         /// <summary>
-        /// Translate original text from given language to target language, supported language can be found in Utilities.Enumerables.Language.
+        /// Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
         /// </summary>
         /// <param name="originalText">Original text.</param>
         /// <param name="fromLanguage">From language.</param>
