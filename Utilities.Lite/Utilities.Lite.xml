@@ -298,6 +298,26 @@
             <param name="sheetIndex">Index of target sheet in excel file.</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -760,7 +780,7 @@
             Create new enumerable from given enumerable, start index and count
             </summary>
             <typeparam name="T">type of enumerable</typeparam>
-            <param name="baseEnumerable">base enumerable</param>
+            <param name="source">base enumerable</param>
             <param name="startIndex">starting index</param>
             <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentNullException"/>
@@ -773,7 +793,7 @@
             Take last element out of given enumerable
             </summary>
             <typeparam name="T">type of enumerable</typeparam>
-            <param name="baseEnumerable">base enumerable</param>
+            <param name="source">base enumerable</param>
             <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <returns></returns>
@@ -783,7 +803,7 @@
             Splits the collection into two collections, which is paired as Match and Unmatch.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset">A base dataset.</param>
+            <param name="source">A base dataset.</param>
             <param name="predicate">A function to test each element for a condition.</param>
             <returns></returns>
         </member>
@@ -792,7 +812,7 @@
             Convert IEnuemrable into Stack.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset"></param>
+            <param name="source"></param>
             <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
@@ -801,7 +821,7 @@
             Convert IEnumerable into Queue.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset"></param>
+            <param name="source"></param>
             <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
@@ -810,7 +830,7 @@
             Convert IEnumerable to DataTable
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset"></param>
+            <param name="source"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -1354,20 +1374,6 @@
             <param name="input"></param>
             <param name="upperAllWords"></param>
             <param name="seperator"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.TrimSpan(System.ReadOnlySpan{System.Char})">
-            <summary>
-            High performance version of string.Trim using Span.
-            </summary>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.TrimSpan(System.String)">
-            <summary>
-            High performance version of string.Trim using Span.
-            </summary>
-            <param name="input"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.ToBase64String(System.String)">

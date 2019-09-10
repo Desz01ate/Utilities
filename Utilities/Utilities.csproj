@@ -16,12 +16,18 @@
 - Remove all boilerplate generator out of Utilities and replace it with seperate console program for generator-related task instead. Result in significant file size reduce.
 + Add new module [DataReaderExtension] and [DataTableExtension].
 + Some class model has been renamed.
+- Remove Diagnostics module.
+
+
+[String]
++ Reimplement [ToLeadingUpper] by using Span&lt;char&gt; instead of string, result in significantly less heap allocation and quick execution speed gained.
 
 [SQL]
 + Add ExecuteReader as DataTable.
 + Add extension method [GetSchemaOf&lt;T&gt;] for table schema reader.
 
 [Data.Enumerable]
++ Reimplement [SubEnumerable] by using Span&lt;T&gt; instead of Copy the whole array via marshal, result in significantly less memory footprint on object allocation and very quick execution speed gained.
 + Add new methods [ToQueue&lt;T&gt;] and [ToStack&lt;T&gt;].
 
 [Data.DataReaderExtension](New Module)

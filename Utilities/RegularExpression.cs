@@ -41,5 +41,24 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <returns></returns>
         public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+$").Success;
+        /// <summary>
+        /// Check if the given input is matching the Thai citizen id format.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsValidThaiCitizenId(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return false;
+            if (input.Length != 13) return false;
+            if (!IsOnlyDigit(input)) return false;
+            var sum = 0d;
+            for (var idx = 0; idx < 12; idx++)
+            {
+                sum += double.Parse(input[idx].ToString()) * (13 - idx);
+            }
+            var formulaSummation = (11 - sum % 11) % 10;
+            var lastDigit = double.Parse(input[12].ToString());
+            return formulaSummation == lastDigit;
+        }
     }
 }

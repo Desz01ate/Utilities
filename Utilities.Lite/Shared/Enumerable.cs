@@ -43,12 +43,7 @@ namespace Utilities.Shared
             {
                 throw new ArgumentOutOfRangeException("Count must not exceed total element of source.");
             }
-            Span<T> span = new T[count];
-            for (var idx = 0; idx < count; idx++)
-            {
-                span[idx] = source.ElementAt(idx + startIndex);
-            }
-            return span.ToArray();
+            return source.Skip(startIndex).Take(count);
         }
         /// <summary>
         /// Take last element out of given enumerable

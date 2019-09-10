@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Utilities.Security.Cryptography
+namespace Utilities.Security.CryptoProvider
 {
     /// <summary>
     /// Simple wrapper for Advance Encryption Standard.

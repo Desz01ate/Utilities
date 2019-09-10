@@ -12,7 +12,7 @@ namespace Utilities.SQL
     {
         public SQLite(string connectionString) : base(connectionString)
         {
-            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LENGTH");
+            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
 
         }
     }

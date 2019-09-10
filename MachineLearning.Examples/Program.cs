@@ -198,10 +198,9 @@ namespace MachineLearning.Examples
             using (var connection = new SQLServer(sqlConnection))
             {
                 testdata = await connection.SelectAsync<TaxiFareTest>(top: 10);
-                var stw = await Utilities.Diagnostics.RuntimeEstimationAsync(async () =>
-                {
-                    traindata = await connection.SelectAsync<TaxiFareTrain>();
-                });
+
+                traindata = await connection.SelectAsync<TaxiFareTrain>();
+
                 var context = new MLContext(1);
                 var dataframe = context.Data.LoadFromEnumerable(traindata);
                 var crossValidatePreparer = context.Transforms.Concatenate("Features", new[] { "rate_code", "passenger_count", "trip_time_in_secs", "trip_distance" }).

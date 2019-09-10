@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Utilities.Enumerables
+namespace Utilities.Enum
 {
     //reference to https://ctrlq.org/code/19899-google-translate-languages as of 11/08/2019
     public class Lauguage
