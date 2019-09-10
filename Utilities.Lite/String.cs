@@ -28,26 +28,28 @@ namespace Utilities
             bool upperNextChar = true;
             if (upperAllWords)
             {
-                var sb = new StringBuilder();
-                foreach (var chr in input)
+                var length = input.Length;
+                Span<char> span = input.Length < 1024 ? stackalloc char[length] : new char[length];
+                for (var idx = 0; idx < length; idx++)
                 {
+                    var chr = input[idx];
                     if (chr == seperator)
                     {
                         upperNextChar = true;
-                        sb.Append(seperator);
+                        span[idx] = chr;
                         continue;
                     }
                     if (upperNextChar)
                     {
                         upperNextChar = false;
-                        sb.Append(char.ToUpper(chr));
+                        span[idx] = char.ToUpper(chr);
                     }
                     else
                     {
-                        sb.Append(chr);
+                        span[idx] = chr;
                     }
                 }
-                return sb.ToString();
+                return span.ToString();
             }
             else
             {

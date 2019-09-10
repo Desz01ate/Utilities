@@ -10,30 +10,15 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.4.0</Version>
+    <Version>0.1.4.1</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-- Remove all boilerplate generator out of Utilities and replace it with seperate console program for generator-related task instead. Result in significant file size reduce.
-+ Add new module [DataReaderExtension] and [DataTableExtension].
-+ Some class model has been renamed.
+Add 'System.Memory' to .NET 4.5,4.6 and .NETSTANDARD 2.0
 
-[SQL]
-+ Add ExecuteReader as DataTable.
-+ Add extension method [GetSchemaOf&lt;T&gt;] for table schema reader.
-+ Add Insert(IEnumerable&lt;T&gt;) overload for DataConnectorExtension
-
-[Data.Enumerable]
-+ New methods [ToQueue&lt;T&gt;], [ToStack&lt;T&gt;] and [ToDataTable]
-
-[Data.DataReaderExtension](New Module)
-+ New method [GetColumns] which is return column name of given DbDataReader.
-
-[Data.DataTableExtension](New Module)
-+ New methods [ToEnumerable] and [ToEnumerable&lt;T&gt;] which are convert DataTable into IEnumerable&lt;dynamic&gt; and IEnumerable&lt;T&gt; respectively.
-+ New method GetColumns for DataTable column reader.
-</PackageReleaseNotes>
+[String]
++ Reimplement</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
