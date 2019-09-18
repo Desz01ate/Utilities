@@ -25,8 +25,10 @@ namespace Utilities.Shared
         public static T RowBuilder<T>(this DbDataReader row) where T : new()
         {
             T instance = new T();
+            var cols = row.GetColumns();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
+                if (!cols.Contains(property.Name)) continue;
                 try
                 {
                     var value = row?[property.Name];
@@ -55,15 +57,16 @@ namespace Utilities.Shared
         public static T RowBuilderStrict<T>(this DbDataReader row) where T : new()
         {
             T instance = new T();
+            var cols = row.GetColumns();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
+                if (!cols.Contains(property.Name)) continue;
                 try
                 {
                     var propertyType = property.PropertyType;
-                    var propertyName = property.Name;
                     //this one generally slow down the overall performance compare to dynamic method but can
                     //safely sure that all value is going the right way
-                    var value = Convert.ToString(row?[propertyName]);
+                    var value = Convert.ToString(row?[property.Name]);
                     if (propertyType == typeof(string))
                     {
                         property.SetValue(instance, value);

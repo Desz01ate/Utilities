@@ -9,26 +9,23 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.7.0</Version>
+    <Version>0.0.7.1</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
-- Remove all boilerplate generator out of Utilities and replace it with seperate console program for generator-related task instead. Result in significant file size reduce.
-+ Add new module [DataReaderExtension] and [DataTableExtension].
-+ Some class model has been renamed.
+- Obsolete 'HttpRequest' module, you should switch to RestSharp instead.
+- Expression translator now support IEnumerable&lt;T&gt;.Contains method (equivalent to WHERE a IN (x,y,z)).
 
-[SQL]
-+ Add ExecuteReader as DataTable.
-+ Add extension method [GetSchemaOf&lt;T&gt;] for table schema reader.
+[Shared.Data]
++ 'RowBuilder' and 'RowBuilderStrict' performance improvement.
 
-[Data.Enumerable]
-+ Add new methods [ToQueue&lt;T&gt;] and [ToStack&lt;T&gt;].
 
-[Data.DataReaderExtension](New Module)
-+ New method [GetColumns] which is return column name of given DbDataReader.
+[SqlConnectionExtension]
++ Rename 'GetSchemaOf' to 'GetTableSchema'.
++ Add 'GetStoredProcedures' methods, which is return information of stored procedures related to database connection.
++ Add 'GetSchema(SchemaRestriction restriction,string[] param)' overload as an extension to DbConnection for safe-access to existing schema restriction of SQL Server.
 
-[Data.DataTableExtension](New Module)
-+ New methods [ToList] and [ToList&lt;T&gt;] which are convert DataTable into IEnumerable&lt;dynamic&gt; and IEnumerable&lt;T&gt; respectively.
+
 </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>

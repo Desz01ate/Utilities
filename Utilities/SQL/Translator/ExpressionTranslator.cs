@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Utilities.Enumerables;
+using Utilities.Enum;
 using Utilities.Shared;
 
 namespace Utilities.SQL.Translator
@@ -22,9 +22,9 @@ namespace Utilities.SQL.Translator
         private int? _take = null;
         private string _whereClause = string.Empty;
         private string _previousVisitField;
-        private Dictionary<SqlFunction, string> _platformFunctionConfig;
-        private Dictionary<string, string> _fieldsConfiguration;
-        private List<TSqlParameter> _sqlParameters;
+        private readonly Dictionary<SqlFunction, string> _platformFunctionConfig;
+        private readonly Dictionary<string, string> _fieldsConfiguration;
+        private readonly List<TSqlParameter> _sqlParameters;
         public int? Skip
         {
             get
@@ -131,14 +131,62 @@ namespace Utilities.SQL.Translator
             }
             else if (m.Method.Name == "Contains")
             {
+                if (m.Method.DeclaringType == typeof(System.Linq.Enumerable))
+                {
+                    var fieldName = (m.Arguments[1] as MemberExpression).Member.Name;
+                    var field = _fieldsConfiguration[fieldName];
+                    var values = (IEnumerable<object>)CompileExpression(m.Arguments[0]);
+                    var paramArray = new string[values.Count()];
+                    for (var idx = 0; idx < values.Count(); idx++)
+                    {
+                        var paramName = $@"@cepr{idx}";
+                        paramArray[idx] = paramName;
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = paramName,
+                            Value = values.ElementAt(idx)
+                        });
+                    }
+                    sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
+                    return m;
+                }
+                else if (m.Method.DeclaringType == typeof(string))
+                {
+                    var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
+                    var expression = CompileExpression(m.Arguments[0]);//m.Arguments[0].ToString().Replace("\"", "");
+                    _sqlParameters.Add(new TSqlParameter()
+                    {
+                        ParameterName = field,
+                        Value = expression
+                    });
+                    sb.Append($@"({field} LIKE '%' + @{field} + '%')");
+                    return m;
+                }
+
+            }
+            else if (m.Method.Name == "StartsWith")
+            {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
-                var expression = m.Arguments[0].ToString().Replace("\"", "");
+                var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
                 _sqlParameters.Add(new TSqlParameter()
                 {
                     ParameterName = field,
                     Value = expression
                 });
-                sb.Append($@"({field} LIKE '%' + @{field} + '%')");
+                sb.Append($@"({field} LIKE @{field} + '%')");
+                return m;
+
+            }
+            else if (m.Method.Name == "EndsWith")
+            {
+                var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
+                var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
+                _sqlParameters.Add(new TSqlParameter()
+                {
+                    ParameterName = field,
+                    Value = expression
+                });
+                sb.Append($@"({field} LIKE '%' + @{field})");
                 return m;
 
             }
@@ -146,7 +194,7 @@ namespace Utilities.SQL.Translator
             {
                 var node = ((MemberExpression)m.Arguments[0]).Member.Name;
                 var field = _fieldsConfiguration[node];
-                sb.Append($"({field} IS NULL AND {field} = '')");
+                sb.Append($"({field} IS NULL OR {field} = '')");
                 return m;
             }
 
@@ -334,11 +382,11 @@ namespace Utilities.SQL.Translator
                                 sb.Append($"{lengthFunction}({member})");
                                 break;
                             default:
-                                object invokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
+                                var value = CompileExpression(m);
                                 _sqlParameters.Add(new TSqlParameter()
                                 {
                                     ParameterName = _previousVisitField,
-                                    Value = invokedValue
+                                    Value = value
                                 });
                                 sb.Append($"@{_previousVisitField}");
                                 break;
@@ -415,6 +463,10 @@ namespace Utilities.SQL.Translator
             }
 
             return false;
+        }
+        private object CompileExpression(Expression expression)
+        {
+            return Expression.Lambda(expression).Compile().DynamicInvoke();
         }
     }
 }

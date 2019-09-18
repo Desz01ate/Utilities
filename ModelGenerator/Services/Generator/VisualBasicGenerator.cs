@@ -16,7 +16,7 @@ namespace ModelGenerator.Services.Generator
 
         protected override string GetNullableDataType(TableSchema column)
         {
-            var typevb = DataTypeMapper(column);
+            var typevb = DataTypeMapper(column.DataTypeName);
             if (column.AllowDBNull && typevb != "String")
             {
                 return $"Nullable(Of {typevb})";
@@ -65,9 +65,9 @@ namespace ModelGenerator.Services.Generator
             var filePath = Path.Combine(Directory, $@"{table.Name}.vb");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
-        protected override string DataTypeMapper(TableSchema TableSchema)
+        protected override string DataTypeMapper(string columnType)
         {
-            switch (TableSchema.DataTypeName)
+            switch (columnType)
             {
                 case "bit":
                     return "Boolean";
@@ -130,7 +130,7 @@ namespace ModelGenerator.Services.Generator
 
                 default:
                     // Fallback to be manually handled by user
-                    return TableSchema.DataTypeName;
+                    return columnType;
             };
         }
     }

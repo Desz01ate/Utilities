@@ -15,30 +15,49 @@ namespace ModelGenerator.Services.Generator
 
         protected override string GetNullableDataType(TableSchema column)
         {
-            var typets = DataTypeMapper(column);
+            var typets = DataTypeMapper(column.DataTypeName);
             if (column.AllowDBNull)
             {
-                return $"{typets} | null";
+                return $"{typets} | undefined | null";
             }
             return typets;
         }
         protected override void GenerateCodeFile(Table table)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine($@"class {table.Name.Replace("-", "")}");
-            sb.AppendLine("{");
+            var classesDir = Path.Combine(Directory, "TS_Classes");
+            System.IO.Directory.CreateDirectory(classesDir);
+            var interfaceDir = Path.Combine(Directory, "TS_Interfaces");
+            System.IO.Directory.CreateDirectory(interfaceDir);
+
+            var classSb = new StringBuilder();
+            var interfaceSb = new StringBuilder();
+            var propertyCode = new StringBuilder();
             foreach (var column in table.Columns)
             {
                 var col = ColumnNameCleanser(column.ColumnName);
-                sb.AppendLine($"    {col} : {GetNullableDataType(column)};");
+                propertyCode.AppendLine($"    {col} : {GetNullableDataType(column)};");
             }
-            sb.AppendLine("}");
-            var filePath = Path.Combine(Directory, $@"{table.Name}.ts");
-            System.IO.File.WriteAllText(filePath, sb.ToString());
+            var ppcString = propertyCode.ToString();
+
+
+            classSb.AppendLine($@"class {table.Name.Replace("-", "")}");
+            classSb.AppendLine("{");
+            classSb.Append(ppcString);
+            classSb.AppendLine("}");
+            classSb.AppendLine();
+            var filePath = Path.Combine(classesDir, $@"{table.Name}.ts");
+            System.IO.File.WriteAllText(filePath, classSb.ToString());
+
+            interfaceSb.AppendLine($@"interface I{table.Name.Replace("-", "")}");
+            interfaceSb.AppendLine("{");
+            interfaceSb.Append(ppcString);
+            interfaceSb.AppendLine("}");
+            var filePathInterface = Path.Combine(interfaceDir, $@"I{table.Name}.ts");
+            System.IO.File.WriteAllText(filePathInterface, interfaceSb.ToString());
         }
-        protected override string DataTypeMapper(TableSchema TableSchema)
+        protected override string DataTypeMapper(string columnType)
         {
-            switch (TableSchema.DataTypeName)
+            switch (columnType)
             {
                 case "bit":
                     return "boolean";

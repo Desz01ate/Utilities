@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Utilities.Interfaces;
+using Utilities.Shared;
 
 namespace Utilities
 {
@@ -196,28 +197,90 @@ namespace Utilities
         /// Read excel file and convert to object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="path"></param>
-        /// <param name="hasHeader"></param>
-        /// <param name="table"></param>
+        /// <param name="path">Path to excel file.</param>
+        /// <param name="hasHeader">Is the file has header.</param>
+        /// <param name="sheetIndex">Index of target sheet in excel file.</param>
         /// <returns></returns>
-        public static IEnumerable<T> ReadExcelAs<T>(string path, bool hasHeader = true, string table = null) where T : IExcelReader, new()
+        public static IEnumerable<T> ReadExcelAs<T>(string path, bool hasHeader = true, int sheetIndex = 0) where T : IExcelReader, new()
         {
             if (string.IsNullOrWhiteSpace(path) || !path.Contains(".xls"))
             {
                 throw new FormatException("It seem that the path is not ending with .xls/.xlsx, please verify the path.");
             }
-            var tableType = table ?? typeof(T).Name;
             List<T> dataset = new List<T>();
             using (var stream = System.IO.File.Open(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     var result = reader.AsDataSet();
-                    var dt = result.Tables[tableType];
+                    var dt = result.Tables[sheetIndex];
                     var skipBy = hasHeader ? 1 : 0;
                     foreach (DataRow row in dt.Rows.Cast<DataRow>().Skip(skipBy))
                     {
                         dataset.Add(Utilities.Shared.Data.ConvertDataRowTo<T>(row));
+                    }
+                }
+            }
+            return dataset;
+        }
+        /// <summary>
+        /// Read excel file and convert to data table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path">Path to excel file.</param>
+        /// <param name="sheetIndex">Index of target sheet in excel file.</param>
+        /// <param name="configuration">Dataset configuration, see details at https://github.com/ExcelDataReader/ExcelDataReader</param>
+        /// <returns></returns>
+        public static DataTable ReadExcelAsDataTable(string path, int sheetIndex = 0, ExcelDataSetConfiguration configuration = null)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !path.Contains(".xls"))
+            {
+                throw new FormatException("It seem that the path is not ending with .xls/.xlsx, please verify the path.");
+            }
+            using (var stream = System.IO.File.Open(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(configuration);
+                    var dt = result.Tables[sheetIndex];
+                    return dt;
+                }
+            }
+        }
+        /// <summary>
+        /// Read excel file and convert to dynamic object.
+        /// </summary>
+        /// <param name="path">Path to excel file.</param>
+        /// <param name="hasHeader">Is the file has header.</param>
+        /// <param name="sheetIndex">Index of target sheet in excel file.</param>
+        /// <returns></returns>
+        public static IEnumerable<dynamic> ReadExcel(string path, int sheetIndex = 0, bool hasHeader = true)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !path.Contains(".xls"))
+            {
+                throw new FormatException("It seem that the path is not ending with .xls/.xlsx, please verify the path.");
+            }
+            List<dynamic> dataset = new List<dynamic>();
+            using (var stream = System.IO.File.Open(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet();
+                    var dt = result.Tables[sheetIndex];
+                    var skipBy = 0;
+                    IEnumerable<string> columns = null;
+                    if (hasHeader)
+                    {
+                        skipBy = 1;
+                        columns = dt.Rows[0].ItemArray.Select(x => x.ToString().Replace(' ', '_'));
+                    }
+                    else
+                    {
+                        columns = dt.GetColumns();
+                    }
+                    foreach (DataRow row in dt.Rows.Cast<DataRow>().Skip(skipBy))
+                    {
+                        dataset.Add(Utilities.Shared.Data.RowBuilder(row, columns));
                     }
                 }
             }

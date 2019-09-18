@@ -13,6 +13,11 @@ namespace ModelGenerator.Services.Generator
         {
         }
 
+        protected override string DataTypeMapper(string column)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override void GenerateCodeFile(Table table)
         {
             var sb = new StringBuilder();
@@ -34,6 +39,11 @@ namespace ModelGenerator.Services.Generator
             sb.AppendLine("?>");
             var filePath = Path.Combine(Directory, $@"{table.Name}.php");
             System.IO.File.WriteAllText(filePath, sb.ToString());
+        }
+
+        protected override string GetNullableDataType(TableSchema column)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Utilities.Enumerables;
 
 namespace Utilities
 {
     /// <summary>
     /// Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
     /// </summary>
-    public static partial class HttpRequest
+    [Obsolete("This class is obsolete, you should switch to RestSharp instead.")]
+    public static class HttpRequest
     {
         /// <summary>
         /// Send a GET request to the specified Uri.
@@ -31,7 +31,7 @@ namespace Utilities
                     }
                 }
                 var request = httpClient.GetAsync(url).Result;
-                request.EnsureSuccessStatusCode();
+                //request.EnsureSuccessStatusCode();
                 return request;
             }
         }
@@ -65,8 +65,8 @@ namespace Utilities
                         httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
                     }
                 }
-                var request = await httpClient.GetAsync(url);
-                request.EnsureSuccessStatusCode();
+                var request = await httpClient.GetAsync(url).ConfigureAwait(false);
+                //request.EnsureSuccessStatusCode();
                 return request;
             }
         }
@@ -78,8 +78,8 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> GetAsyncFor<T>(string url, Dictionary<string, string> headers = null) where T : class, new()
         {
-            var response = await GetAsync(url, headers);
-            var json = await response.Content.ReadAsStringAsync();
+            var response = await GetAsync(url, headers).ConfigureAwait(false);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
@@ -101,7 +101,7 @@ namespace Utilities
                     }
                 }
                 var request = httpClient.DeleteAsync(url).Result;
-                request.EnsureSuccessStatusCode();
+                //request.EnsureSuccessStatusCode();
                 return request;
             }
         }
@@ -135,8 +135,8 @@ namespace Utilities
                         httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
                     }
                 }
-                var request = await httpClient.DeleteAsync(url);
-                request.EnsureSuccessStatusCode();
+                var request = await httpClient.DeleteAsync(url).ConfigureAwait(false);
+                //request.EnsureSuccessStatusCode();
                 return request;
             }
         }
@@ -148,17 +148,12 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> DeleteAsyncFor<T>(string url, Dictionary<string, string> headers = null)
         {
-            HttpResponseMessage response = await DeleteAsync(url, headers);
-            var json = await response.Content.ReadAsStringAsync();
+            HttpResponseMessage response = await DeleteAsync(url, headers).ConfigureAwait(false);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
-    }
-    /// <summary>
-    /// Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
-    /// </summary>
-    public static partial class HttpRequest
-    {
+
         /// <summary>
         /// Send a POST request to the specified Uri.
         /// </summary>
@@ -177,8 +172,8 @@ namespace Utilities
                 }
             }
             var request = httpClient.PostAsync(url, body).Result;
-            body.Dispose();
-            request.EnsureSuccessStatusCode();
+            body?.Dispose();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         /// <summary>
@@ -213,9 +208,9 @@ namespace Utilities
                     httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
                 }
             }
-            var request = await httpClient.PostAsync(url, body);
-            body.Dispose();
-            request.EnsureSuccessStatusCode();
+            var request = await httpClient.PostAsync(url, body).ConfigureAwait(false);
+            body?.Dispose();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         /// <summary>
@@ -229,8 +224,8 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> PostAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
         {
-            HttpResponseMessage response = await PostAsync(url, body, headers);
-            var json = await response.Content.ReadAsStringAsync();
+            HttpResponseMessage response = await PostAsync(url, body, headers).ConfigureAwait(false);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
@@ -253,7 +248,7 @@ namespace Utilities
             }
             var request = httpClient.PutAsync(url, body).Result;
             body.Dispose();
-            request.EnsureSuccessStatusCode();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         /// <summary>
@@ -287,9 +282,9 @@ namespace Utilities
                     httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
                 }
             }
-            var request = await httpClient.PutAsync(url, body);
-            body.Dispose();
-            request.EnsureSuccessStatusCode();
+            var request = await httpClient.PutAsync(url, body).ConfigureAwait(false);
+            body?.Dispose();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         /// <summary>
@@ -301,8 +296,8 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> PutAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
         {
-            HttpResponseMessage response = await PutAsync(url, body, headers);
-            var json = await response.Content.ReadAsStringAsync();
+            HttpResponseMessage response = await PutAsync(url, body, headers).ConfigureAwait(false);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
@@ -329,8 +324,8 @@ namespace Utilities
             };
             var request = httpClient.SendAsync(message).Result;
             message.Dispose();
-            body.Dispose();
-            request.EnsureSuccessStatusCode();
+            body?.Dispose();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         /// <summary>
@@ -368,10 +363,10 @@ namespace Utilities
             {
                 Content = body
             };
-            var request = await httpClient.SendAsync(message);
+            var request = await httpClient.SendAsync(message).ConfigureAwait(false);
             message.Dispose();
-            body.Dispose();
-            request.EnsureSuccessStatusCode();
+            body?.Dispose();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         /// <summary>
@@ -383,8 +378,8 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> DeleteAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
         {
-            HttpResponseMessage response = await DeleteAsync(url, body, headers);
-            var json = await response.Content.ReadAsStringAsync();
+            HttpResponseMessage response = await DeleteAsync(url, body, headers).ConfigureAwait(false);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
@@ -411,7 +406,7 @@ namespace Utilities
             }
             var request = await httpClient.PatchAsync(url, body);
             body.Dispose();
-            request.EnsureSuccessStatusCode();
+            //request.EnsureSuccessStatusCode();
             return request;
         }
         public static async Task<T> PatchAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : new()

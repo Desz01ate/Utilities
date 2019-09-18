@@ -16,7 +16,7 @@ namespace Utilities.SQL
     {
         public Oracle(string connectionString) : base(connectionString)
         {
-            SQLFunctionConfiguration.Add(Enumerables.SqlFunction.Length, "LENGTH");
+            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
 
         }
     }

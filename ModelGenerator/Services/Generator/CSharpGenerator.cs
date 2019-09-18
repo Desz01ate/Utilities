@@ -1,4 +1,5 @@
 ﻿using ModelGenerator.Services.Generator.Model;
+using System;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace ModelGenerator.Services.Generator
 
         protected override string GetNullableDataType(TableSchema column)
         {
-            var typecs = DataTypeMapper(column);
+            var typecs = DataTypeMapper(column.DataTypeName);
             var addNullability = column.AllowDBNull && typecs != "string" && typecs != "byte[]";
             return addNullability ? typecs + "?" : typecs;
         }
@@ -49,11 +50,12 @@ namespace ModelGenerator.Services.Generator
                 sb.AppendLine("}");
             }
             var filePath = Path.Combine(Directory, $@"{table.Name}.cs");
+            Console.Title = $"Generating {filePath}";
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
-        protected override string DataTypeMapper(TableSchema TableSchema)
+        protected override string DataTypeMapper(string columnType)
         {
-            switch (TableSchema.DataTypeName)
+            switch (columnType)
             {
                 case "bit":
                     return "bool";
@@ -116,7 +118,7 @@ namespace ModelGenerator.Services.Generator
 
                 default:
                     // Fallback to be manually handled by user
-                    return TableSchema.DataTypeName;
+                    return columnType;
             };
         }
     }

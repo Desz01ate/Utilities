@@ -15,7 +15,7 @@ namespace ModelGenerator.Services.Generator
 
         protected override string GetNullableDataType(TableSchema column)
         {
-            var typejava = DataTypeMapper(column);
+            var typejava = DataTypeMapper(column.DataTypeName);
             return typejava;
         }
         protected override void GenerateCodeFile(Table table)
@@ -36,9 +36,9 @@ namespace ModelGenerator.Services.Generator
             var filePath = Path.Combine(Directory, $@"{table.Name}.class");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
-        protected override string DataTypeMapper(TableSchema TableSchema)
+        protected override string DataTypeMapper(string columnType)
         {
-            switch (TableSchema.DataTypeName)
+            switch (columnType)
             {
                 case "bit":
                     return "boolean";
@@ -87,7 +87,7 @@ namespace ModelGenerator.Services.Generator
                     return "UDID";
                 default:
                     // Fallback to be manually handled by user
-                    return TableSchema.DataTypeName;
+                    return columnType;
             };
         }
     }

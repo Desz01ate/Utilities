@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Utilities.Enumerables
+namespace Utilities.Enum
 {
     public enum SqlType
     {

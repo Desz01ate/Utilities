@@ -21,6 +21,7 @@ namespace Utilities.Interfaces
         IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
         T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
         int Insert<T>(T obj, DbTransaction transaction = null) where T : class, new();
+        int Insert<T>(IEnumerable<T> obj, DbTransaction transaction = null) where T : class, new();
         int Update<T>(T obj, DbTransaction transaction = null) where T : class, new();
         //int Update<T>(T obj, Expression<Func<T, bool>> predicate,DbTransaction transaction = null) where T : class, new();
         int Delete<T>(T obj, DbTransaction transaction = null) where T : class, new();
@@ -40,6 +41,7 @@ namespace Utilities.Interfaces
         int CreateTable<T>() where T : class, new();
         int DROP_TABLE_USE_WITH_CAUTION<T>() where T : class, new();
         IEnumerable<Classes.TableSchema> GetSchema<T>() where T : class, new();
+        string MapCLRTypeToSQLType(Type type);
         #endregion
         #region query_translator
         (string query, IEnumerable<TParameter> parameters) SelectQueryGenerate<T>(int? top = null) where T : class, new();

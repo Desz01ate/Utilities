@@ -131,21 +131,43 @@ namespace Utilities.SQL.Translator
             }
             else if (m.Method.Name == "Contains")
             {
-                var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
-                var expression = m.Arguments[0].ToString().Replace("\"", "");
-                _sqlParameters.Add(new TSqlParameter()
+                if (m.Method.DeclaringType == typeof(System.Linq.Enumerable))
                 {
-                    ParameterName = field,
-                    Value = expression
-                });
-                sb.Append($@"({field} LIKE '%' + @{field} + '%')");
-                return m;
+                    var fieldName = (m.Arguments[1] as MemberExpression).Member.Name;
+                    var field = _fieldsConfiguration[fieldName];
+                    var values = (IEnumerable<object>)CompileExpression(m.Arguments[0]);
+                    var paramArray = new string[values.Count()];
+                    for (var idx = 0; idx < values.Count(); idx++)
+                    {
+                        var paramName = $@"@cepr{idx}";
+                        paramArray[idx] = paramName;
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = paramName,
+                            Value = values.ElementAt(idx)
+                        });
+                    }
+                    sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
+                    return m;
+                }
+                else if (m.Method.DeclaringType == typeof(string))
+                {
+                    var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
+                    var expression = CompileExpression(m.Arguments[0]);//m.Arguments[0].ToString().Replace("\"", "");
+                    _sqlParameters.Add(new TSqlParameter()
+                    {
+                        ParameterName = field,
+                        Value = expression
+                    });
+                    sb.Append($@"({field} LIKE '%' + @{field} + '%')");
+                    return m;
+                }
 
             }
             else if (m.Method.Name == "StartsWith")
             {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
-                var expression = m.Arguments[0].ToString().Replace("\"", "");
+                var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
                 _sqlParameters.Add(new TSqlParameter()
                 {
                     ParameterName = field,
@@ -158,7 +180,7 @@ namespace Utilities.SQL.Translator
             else if (m.Method.Name == "EndsWith")
             {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
-                var expression = m.Arguments[0].ToString().Replace("\"", "");
+                var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
                 _sqlParameters.Add(new TSqlParameter()
                 {
                     ParameterName = field,
@@ -360,11 +382,11 @@ namespace Utilities.SQL.Translator
                                 sb.Append($"{lengthFunction}({member})");
                                 break;
                             default:
-                                object invokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
+                                var value = CompileExpression(m);
                                 _sqlParameters.Add(new TSqlParameter()
                                 {
                                     ParameterName = _previousVisitField,
-                                    Value = invokedValue
+                                    Value = value
                                 });
                                 sb.Append($"@{_previousVisitField}");
                                 break;
@@ -441,6 +463,10 @@ namespace Utilities.SQL.Translator
             }
 
             return false;
+        }
+        private object CompileExpression(Expression expression)
+        {
+            return Expression.Lambda(expression).Compile().DynamicInvoke();
         }
     }
 }

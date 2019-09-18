@@ -22,16 +22,16 @@ namespace ModelGenerator.Services.Generator
             sb.AppendLine($@"class {table.Name}:");
             foreach (var column in table.Columns)
             {
-                var type = DataTypeMapper(column);
+                var type = DataTypeMapper(column.DataTypeName);
                 var col = ColumnNameCleanser(column.ColumnName);
                 sb.AppendLine($@"    {col}: {type}");
             }
             var filePath = Path.Combine(Directory, $@"{table.Name}_37.py");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
-        protected override string DataTypeMapper(TableSchema TableSchema)
+        protected override string DataTypeMapper(string columnType)
         {
-            switch (TableSchema.DataTypeName)
+            switch (columnType)
             {
                 case "bit":
                     return "bool";
@@ -74,8 +74,13 @@ namespace ModelGenerator.Services.Generator
                     return "bytes";
                 default:
                     // Fallback to be manually handled by user
-                    return TableSchema.DataTypeName;
+                    return columnType;
             };
+        }
+
+        protected override string GetNullableDataType(TableSchema column)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using ModelGenerator.Services.DesignPattern.Interfaces;
 using ModelGenerator.Services.Generator;
 using ModelGenerator.Services.Generator.Model;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -59,6 +61,7 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             sb.AppendLine("    }");
             sb.AppendLine("}");
             var outputFile = Path.Combine(RepositoryDirectory, $"{repositoryName}.cs");
+            Console.Title = $"Generating {outputFile}";
             System.IO.File.WriteAllText(outputFile, sb.ToString(), Encoding.UTF8);
         }
 
@@ -70,13 +73,14 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             sb.AppendLine("using Utilities.SQL;");
             sb.AppendLine("using System.Data.Common;");
             sb.AppendLine("using Utilities.Interfaces;");
+            sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine($"using {Namespace}.Repositories;");
             sb.AppendLine();
             sb.AppendLine($@"namespace {Namespace}");
             sb.AppendLine("{");
             sb.AppendLine($"    public sealed class Service : IUnitOfWork");
             sb.AppendLine("    {");
-            sb.AppendLine("        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service());");
+            sb.AppendLine("        private readonly static Lazy<Service> _lazyInstant = new Lazy<Service>(()=> new Service(),true);");
             sb.AppendLine("        public readonly static Service Context = _lazyInstant.Value;");
             sb.AppendLine("        private readonly IDatabaseConnectorExtension<SqlConnection,SqlParameter> _connection;");
             sb.AppendLine("        Service()");
@@ -115,9 +119,35 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             sb.AppendLine("            {");
             sb.AppendLine($"                _connection.Dispose();");
             sb.AppendLine("            }");
+            sb.AppendLine("#region Stored Procedure");
+            foreach (var sp in Generator.StoredProcedures)
+            {
+                sb.Append($"            public dynamic {sp.SPECIFIC_NAME}(");
+                List<string> paramArgs = new List<string>();
+                List<string> paramFunc = new List<string>();
+                foreach (var param in sp.Parameters)
+                {
+                    paramArgs.Add($"{param.DATA_TYPE} {param.PARAMETER_NAME}");
+                    paramFunc.Add($"                     parameters.Add(new SqlParameter(\"{param.PARAMETER_NAME}\",{param.PARAMETER_NAME}));");
+                }
+                sb.Append(string.Join(",", paramArgs));
+                sb.AppendLine(")");
+                sb.AppendLine("            {");
+                sb.AppendLine($"                     var command = \"{sp.SPECIFIC_NAME}\";");
+                sb.AppendLine($"                     var parameters = new List<SqlParameter>();");
+                foreach (var p in paramFunc)
+                {
+                    sb.AppendLine(p);
+                }
+                sb.AppendLine("                      var result = _connection.ExecuteReader(command,parameters, commandType: System.Data.CommandType.StoredProcedure);");
+                sb.AppendLine("                      return result;");
+                sb.AppendLine("            }");
+            }
+            sb.AppendLine("#endregion");
             sb.AppendLine("    }");
             sb.AppendLine("}");
             var outputPath = Path.Combine(Directory, "Service.cs");
+            Console.Title = $"Generating {outputPath}";
             System.IO.File.WriteAllText(outputPath, sb.ToString(), Encoding.UTF8);
         }
     }

@@ -113,9 +113,27 @@
             </summary>
             <param name="key">Primary key of target object.</param>
         </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.DeleteAsync(`0)">
+            <summary>
+            Delete data from repository in an asynchronous manner.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.DeleteAsync(System.Object)">
+            <summary>
+            Delete data from repository in an asynchronous manner.
+            </summary>
+            <param name="key">Primary key of target object.</param>
+        </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(`0)">
             <summary>
             Insert data into repository.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertAsync(`0)">
+            <summary>
+            Insert data into repository in an asynchronous manner.
             </summary>
             <param name="obj">Generic object.</param>
         </member>
@@ -139,44 +157,42 @@
             <param name="key">Primary key of target object.</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.SelectAsync">
+            <summary>
+            Get all data from repository in an asynchronous manner.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.SelectAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Get data by specific condition from repository in an asynchronous manner.
+            </summary>
+            <param name="predicate">Predicate condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.SelectAsync(System.Object)">
+            <summary>
+            Get data from repository.
+            </summary>
+            <param name="key">Primary key of target object.</param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Update(`0)">
             <summary>
             Update data in repository.
             </summary>
             <param name="obj">Generic object.</param>
         </member>
-        <member name="T:Utilities.Diagnostics">
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.UpdateAsync(`0)">
             <summary>
-            Simple diagnostic methods
+            Update data in repository in an asynchronous manner.
             </summary>
+            <param name="obj">Generic object.</param>
         </member>
-        <member name="M:Utilities.Diagnostics.RuntimeEstimation(System.Action)">
+        <member name="T:Utilities.Enum.SchemaRestriction">
             <summary>
-            Execute given function and return an execution time in milliseconds
+            Provide schema restrictions type for SQL Server (https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/schema-restrictions)
             </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>An execution time in milliseconds</returns>
-        </member>
-        <member name="M:Utilities.Diagnostics.MemeryEstimation(System.Action)">
-            <summary>
-            Execute given function and return total memory usage during an execution
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>Total memory usage</returns>
-        </member>
-        <member name="M:Utilities.Diagnostics.MemeryEstimationAsync(System.Func{System.Threading.Tasks.Task})">
-            <summary>
-            Execute given function and return total memory usage during an execution
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>Total memory usage</returns>
-        </member>
-        <member name="M:Utilities.Diagnostics.RuntimeEstimationAsync(System.Func{System.Threading.Tasks.Task})">
-            <summary>
-            Execute given function and return an execution time in milliseconds
-            </summary>
-            <param name="action">Any given function to execute</param>
-            <returns>An execution time in milliseconds</returns>
         </member>
         <member name="T:Utilities.Exceptions.AttributeException">
             <summary>
@@ -332,9 +348,6 @@
             <returns></returns>
         </member>
         <member name="T:Utilities.HttpRequest">
-            <summary>
-            Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
-            </summary>
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
             </summary>
@@ -563,7 +576,7 @@
             <param name="input">Input string</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.RegularExpression.IsValidThaiCitizenId(System.String)">
+        <member name="F:Utilities.RegularExpression.THAI_ID_LENGTH">
             <summary>
             Check if the given input is matching the Thai citizen id format.
             </summary>
@@ -793,7 +806,27 @@
             Create new enumerable from given enumerable, start index and count
             </summary>
             <typeparam name="T">type of enumerable</typeparam>
-            <param name="baseEnumerable">base enumerable</param>
+            <param name="source">base enumerable</param>
+            <param name="startIndex">starting index</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentNullException"/>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <exception cref="T:System.Exception"/>
+            <returns></returns>
+ able.Merge``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
+            <summary>
+            Combine 2 or more enumerable of the same type into new enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="enumerables">enumerables to combine</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Create new enumerable from given enumerable, start index and count
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
             <param name="startIndex">starting index</param>
             <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentNullException"/>
@@ -806,17 +839,9 @@
             Take last element out of given enumerable
             </summary>
             <typeparam name="T">type of enumerable</typeparam>
-            <param name="baseEnumerable">base enumerable</param>
+            <param name="source">base enumerable</param>
             <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.Enumerable.AsList``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Convert given collection to list **only if** enumerable is currently not a list, otherwise return data without mutable.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Enumerable.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
@@ -824,7 +849,7 @@
             Splits the collection into two collections, which is paired as Match and Unmatch.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset">A base dataset.</param>
+            <param name="source">A base dataset.</param>
             <param name="predicate">A function to test each element for a condition.</param>
             <returns></returns>
         </member>
@@ -833,7 +858,7 @@
             Convert IEnuemrable into Stack.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset"></param>
+            <param name="source"></param>
             <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
@@ -842,7 +867,7 @@
             Convert IEnumerable into Queue.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset"></param>
+            <param name="source"></param>
             <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
@@ -851,7 +876,7 @@
             Convert IEnumerable to DataTable
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="dataset"></param>
+            <param name="source"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -1327,18 +1352,33 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
             <summary>
-            Provide converter to convert data type from CLR to underlying SQL type, default mapper is support by SQL Server and can be override when neccessary.
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when neccessary.
             </summary>
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchemaOf``1(``0,System.String)">
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchema(System.Data.Common.DbConnection,Utilities.Enum.SchemaRestriction,System.String[])">
+            <summary>
+            Provide a safe-access to available schema restrictions on SQL Server.
+            </summary>
+            <param name="connection"></param>
+            <param name="restriction"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetTableSchema(System.Data.Common.DbConnection,System.String)">
             <summary>
             Get table schema from current database connection.
             </summary>
-            <typeparam name="TDatabaseConnection"></typeparam>
             <param name="connection"></param>
             <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetStoredProcedures(System.Data.Common.DbConnection)">
+            <summary>
+            Get user-defined stored procedure from current database connection.
+            </summary>
+            <param name="connection"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
@@ -1379,6 +1419,15 @@
             Collection of extension method for string datatype
             </summary>
         </member>
+        <member name="M:Utilities.String.ToLeadingUpper(System.ReadOnlySpan{System.Char},System.Boolean,System.Char)">
+            <summary>
+            Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="seperator"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.String.ToLeadingUpper(System.String,System.Boolean,System.Char)">
             <summary>
             Convert input string to upper case just first character (for the whole input or for each word)
@@ -1404,7 +1453,7 @@
         </member>
         <member name="M:Utilities.String.Translate(System.String,System.String,System.String)">
             <summary>
-            Translate original text from given language to target language, supported language can be found in Utilities.Enumerables.Language.
+            Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
             </summary>
             <param name="originalText">Original text.</param>
             <param name="fromLanguage">From language.</param>
@@ -1430,30 +1479,6 @@
         <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
             <summary>
             Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
-            <summary>
-            Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
-            <summary>
-            Convert given value into a number format.
-            </summary>
-            <param name="value">Value</param>
-            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
-            <returns></returns>
-        </member>
-    </members>
-</doc>
-ormat.
             </summary>
             <param name="value">Value</param>
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
