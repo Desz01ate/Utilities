@@ -298,26 +298,6 @@
             <param name="sheetIndex">Index of target sheet in excel file.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE

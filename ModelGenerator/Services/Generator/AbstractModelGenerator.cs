@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Utilities.Classes;
 using Utilities.SQL.Extension;
-
+using Utilities.Shared;
 namespace ModelGenerator.Services.Generator
 {
     public abstract class AbstractModelGenerator<TDatabase> : IModelGenerator
@@ -23,6 +23,8 @@ namespace ModelGenerator.Services.Generator
         public string Namespace { get; protected set; }
 
         public List<string> Tables { get; } = new List<string>();
+        public List<StoredProcedureSchema> StoredProcedures { get; private set; }
+
         public AbstractModelGenerator(string connectionString, string directory, string @namespace)
         {
             ConnectionString = connectionString;
@@ -45,21 +47,25 @@ namespace ModelGenerator.Services.Generator
 
                 Tables.Add(name);
             }
-            //List<string> ls = new List<string>();
-            //foreach (DataRow row in indexes.Rows)
-            //{
-            //    var constraint_catalog = row[0].ToString();
-            //    var constraint_schema = row[1].ToString();
-            //    var constraint_name = row[2].ToString();
-            //    var table_catalog = row[3].ToString();
-            //    var table_schema = row[4].ToString();
-            //    var table_name = row[5].ToString();
-            //    var index_name = row[6].ToString();
-            //    var type_desc = row[7].ToString();
-            //}
             tables.Dispose();
-            //indexes.Dispose();
+
+
+            var restrictions = new string[] { null, null, null, "PROCEDURE" };
+            using var procedures = connection.GetSchema("Procedures", restrictions);
+            StoredProcedures = connection.GetStoredProcedures().ToList();
+            //StoredProcedures = procedures.ToEnumerable(x => Data.RowBuilderStrict<StoredProcedureSchema>(x)).ToList();
+            //foreach (var sp in StoredProcedures)
+            //{
+            //    using var spParams = connection.GetSchema("ProcedureParameters", new[] { null, null, sp.SPECIFIC_NAME, null });
+            //    var param = spParams.ToEnumerable<StoredProcedureParameter>().ToArray();
+            //    foreach (var p in param)
+            //    {
+            //        p.DATA_TYPE = DataTypeMapper(p.DATA_TYPE);
+            //    }
+            //    sp.Parameters = param;
+            //}
         }
+
         public void GenerateAllTable()
         {
             foreach (var table in Tables)
@@ -69,11 +75,7 @@ namespace ModelGenerator.Services.Generator
         }
         private string TableNameCleanser(string tableName)
         {
-            if (tableName.Contains("-"))
-            {
-                return $"[{tableName}]";
-            }
-            return tableName;
+            return $"[{tableName}]";
         }
         protected string ColumnNameCleanser(string value)
         {
@@ -95,7 +97,7 @@ namespace ModelGenerator.Services.Generator
             })
             {
                 connection.Open();
-                var columns = connection.GetSchemaOf(TableNameCleanser(tableName));
+                var columns = connection.GetTableSchema(TableNameCleanser(tableName));
                 string primaryKey = null;
                 using (var indexes = connection.GetSchema("IndexColumns", new string[] { null, null, tableName }))
                 {
@@ -118,13 +120,7 @@ namespace ModelGenerator.Services.Generator
             }
         }
         protected abstract void GenerateCodeFile(Table table);
-        protected virtual string GetNullableDataType(TableSchema column)
-        {
-            throw new NotImplementedException();
-        }
-        protected virtual string DataTypeMapper(TableSchema column)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract string GetNullableDataType(TableSchema column);
+        protected abstract string DataTypeMapper(string column);
     }
 }

@@ -27,14 +27,9 @@ namespace Utilities.Testing
             var affectedRow = 0;
             using (var mssqlConnector = new SQLServer(msCon))
             {
-                var tx = mssqlConnector.ExecuteReader<iris>($"SELECT * FROM [iris]");
-                using (var postgresConnector = new PostgreSQL(npgCon))
-                {
-                    postgresConnector.DROP_TABLE_USE_WITH_CAUTION<iris>();
-                    postgresConnector.CreateTable<iris>();
-                    affectedRow = postgresConnector.Insert(tx);
-                    postgresConnector.DROP_TABLE_USE_WITH_CAUTION<iris>();
-                }
+                var d1 = mssqlConnector.Select<iris>(x => x.Label.Contains("set"));
+                var labels = new[] { "A", "B", "Iris-setosa" };
+                var data = mssqlConnector.Select<iris>(x => labels.Contains(x.Label));
             }
         }
     }

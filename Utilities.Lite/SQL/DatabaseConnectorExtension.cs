@@ -559,10 +559,10 @@ namespace Utilities.SQL
         public IEnumerable<TableSchema> GetSchema<T>() where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            return Connection.GetSchemaOf(tableName);
+            return Connection.GetTableSchema(tableName);
         }
         /// <summary>
-        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is support by SQL Server and can be override when neccessary.
+        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when neccessary.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>

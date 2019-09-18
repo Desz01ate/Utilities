@@ -7,6 +7,7 @@ using ModelGenerator.Services.Generator.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ModelGenerator
@@ -101,6 +102,8 @@ namespace ModelGenerator
             }
             var generator = generatorInjector(options.ConnectionString, options.Directory, options.Namespace);
             generator.GenerateAllTable();
+            Console.WriteLine($"\rAll files has been generated.\t\t\t\t\t\t\t\t\t\t");
+            Process.Start("explorer.exe", options.Directory);
         }
         private static void GenerateUnitOfWork(Options options)
         {
@@ -133,6 +136,8 @@ namespace ModelGenerator
             var generator = new UnitOfWorkGenerator<SqlConnection>();
             generator.UseStrategy(strategy(options.ConnectionString, options.Directory, options.Namespace));
             generator.Generate();
+            Console.WriteLine($"\rAll files has been generated.\t\t\t\t\t\t\t\t\t\t");
+            Process.Start("explorer.exe", options.Directory);
         }
 
     }
