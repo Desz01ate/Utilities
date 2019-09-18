@@ -113,9 +113,27 @@
             </summary>
             <param name="key">Primary key of target object.</param>
         </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.DeleteAsync(`0)">
+            <summary>
+            Delete data from repository in an asynchronous manner.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.DeleteAsync(System.Object)">
+            <summary>
+            Delete data from repository in an asynchronous manner.
+            </summary>
+            <param name="key">Primary key of target object.</param>
+        </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(`0)">
             <summary>
             Insert data into repository.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertAsync(`0)">
+            <summary>
+            Insert data into repository in an asynchronous manner.
             </summary>
             <param name="obj">Generic object.</param>
         </member>
@@ -139,11 +157,42 @@
             <param name="key">Primary key of target object.</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.SelectAsync">
+            <summary>
+            Get all data from repository in an asynchronous manner.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.SelectAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Get data by specific condition from repository in an asynchronous manner.
+            </summary>
+            <param name="predicate">Predicate condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.SelectAsync(System.Object)">
+            <summary>
+            Get data from repository.
+            </summary>
+            <param name="key">Primary key of target object.</param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Update(`0)">
             <summary>
             Update data in repository.
             </summary>
             <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.UpdateAsync(`0)">
+            <summary>
+            Update data in repository in an asynchronous manner.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="T:Utilities.Enum.SchemaRestriction">
+            <summary>
+            Provide schema restrictions type for SQL Server (https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/schema-restrictions)
+            </summary>
         </member>
         <member name="T:Utilities.Exceptions.AttributeException">
             <summary>
@@ -299,9 +348,6 @@
             <returns></returns>
         </member>
         <member name="T:Utilities.HttpRequest">
-            <summary>
-            Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
-            </summary>
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
             </summary>
@@ -530,7 +576,7 @@
             <param name="input">Input string</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.RegularExpression.IsValidThaiCitizenId(System.String)">
+        <member name="F:Utilities.RegularExpression.THAI_ID_LENGTH">
             <summary>
             Check if the given input is matching the Thai citizen id format.
             </summary>
@@ -1286,18 +1332,33 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
             <summary>
-            Provide converter to convert data type from CLR to underlying SQL type, default mapper is support by SQL Server and can be override when neccessary.
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when neccessary.
             </summary>
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchemaOf``1(``0,System.String)">
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchema(System.Data.Common.DbConnection,Utilities.Enum.SchemaRestriction,System.String[])">
+            <summary>
+            Provide a safe-access to available schema restrictions on SQL Server.
+            </summary>
+            <param name="connection"></param>
+            <param name="restriction"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetTableSchema(System.Data.Common.DbConnection,System.String)">
             <summary>
             Get table schema from current database connection.
             </summary>
-            <typeparam name="TDatabaseConnection"></typeparam>
             <param name="connection"></param>
             <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetStoredProcedures(System.Data.Common.DbConnection)">
+            <summary>
+            Get user-defined stored procedure from current database connection.
+            </summary>
+            <param name="connection"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.MySQL">

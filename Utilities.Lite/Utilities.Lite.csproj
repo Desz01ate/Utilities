@@ -10,15 +10,25 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.4.1</Version>
+    <Version>0.1.4.2</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-Add 'System.Memory' to .NET 4.5,4.6 and .NETSTANDARD 2.0
+- Obsolete 'HttpRequest' module, you should switch to RestSharp instead.
+- Expression translator now support IEnumerable&lt;T&gt;.Contains method (equivalent to WHERE a IN (x,y,z)).
 
-[String]
-+ Reimplement</PackageReleaseNotes>
+[Shared.Data]
++ 'RowBuilder' and 'RowBuilderStrict' performance improvement.
+
+
+[SqlConnectionExtension]
++ Rename 'GetSchemaOf' to 'GetTableSchema'.
++ Add 'GetStoredProcedures' methods, which is return information of stored procedures related to database connection.
++ Add 'GetSchema(SchemaRestriction restriction,string[] param)' overload as an extension to DbConnection for safe-access to existing schema restriction of SQL Server.
+
+
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -46,18 +46,17 @@ namespace Utilities
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        private const int THAI_ID_LENGTH = 13;
         public static bool IsValidThaiCitizenId(string input)
         {
-            if (string.IsNullOrWhiteSpace(input)) return false;
-            if (input.Length != 13) return false;
-            if (!IsOnlyDigit(input)) return false;
+            if (string.IsNullOrWhiteSpace(input) || input.Length != THAI_ID_LENGTH || !IsOnlyDigit(input)) return false;
             var sum = 0d;
-            for (var idx = 0; idx < 12; idx++)
+            for (var idx = 0; idx < THAI_ID_LENGTH - 1; idx++)
             {
-                sum += double.Parse(input[idx].ToString()) * (13 - idx);
+                sum += double.Parse(input[idx].ToString()) * (THAI_ID_LENGTH - idx);
             }
-            var formulaSummation = (11 - sum % 11) % 10;
-            var lastDigit = double.Parse(input[12].ToString());
+            var formulaSummation = ((THAI_ID_LENGTH - 2) - sum % (THAI_ID_LENGTH - 2)) % 10;
+            var lastDigit = double.Parse(input[THAI_ID_LENGTH - 1].ToString());
             return formulaSummation == lastDigit;
         }
     }
