@@ -63,6 +63,25 @@
             <param name="property">Property name per implemented class</param>
             <returns></returns>
         </member>
+        <member name="T:Utilities.Interfaces.IMongoDBProperties">
+            <summary>
+            Provide an essential properties to MongoDB connector interface
+            </summary>
+        </member>
+        <member name="T:Utilities.Interfaces.INoSQLConnector">
+            <summary>
+            Provide methods for wrapper operation on DbConnection class
+            </summary>
+            <typeparam name="TDatabaseType">DbConnection type</typeparam>
+            <typeparam name="TParameter">DbParameter type</typeparam>
+        </member>
+        <member name="T:Utilities.Interfaces.INoSQLConnectorExtension">
+            <summary>
+            Provide extension set of operations on top of INoSQLConnector
+            </summary>
+            <typeparam name="TDatabaseType">DbConnection type</typeparam>
+            <typeparam name="TParameter">DbParameter type</typeparam>
+        </member>
         <member name="T:Utilities.Interfaces.IDatabaseConnector`2">
             <summary>
             Provide methods for wrapper operation on DbConnection class
@@ -539,6 +558,68 @@
         <member name="P:Utilities.Metadata.TargetFramework">
             <summary>
             Build target framework version.
+            </summary>
+        </member>
+        <member name="T:Utilities.NoSQL.MongoDB">
+            <summary>
+            Wrapper class for MongoClient instance.
+            </summary>
+        </member>
+        <member name="P:Utilities.NoSQL.MongoDB.Connection">
+            <summary>
+            Instance of underlying MongoClient.
+            </summary>
+        </member>
+        <member name="P:Utilities.NoSQL.MongoDB.Databases">
+            <summary>
+            Active database found by internal worker.
+            </summary>
+        </member>
+        <member name="P:Utilities.NoSQL.MongoDB.ConnectionString">
+            <summary>
+            Connection string of current connection.
+            </summary>
+        </member>
+        <member name="P:Utilities.NoSQL.MongoDB.ActiveDatabase">
+            <summary>
+            Active database proposed by user.
+            </summary>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.UseDatabase(System.String,MongoDB.Driver.MongoDatabaseSettings)">
+            <summary>
+            Tell the instance on what database should be active.
+            </summary>
+            <param name="databaseName"></param>
+            <param name="mongoDatabaseSettings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.CreateTable``1">
+            <summary>
+            Create collection on active database.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="database"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Dispose(System.Boolean)">
+            <summary>
+            Object disposer which release managed resources of this object.
+            </summary>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Dispose">
+            <summary>
+            Object disposer which release managed resources of this object.
+            </summary>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.VerifyActiveDatabase">
+            <summary>
+            Verify if active database is available.
             </summary>
         </member>
         <member name="T:Utilities.RegularExpression">
