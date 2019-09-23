@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Asp.Core", "Utili
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Lite", "Utilities.Lite\Utilities.Lite.csproj", "{903A0D68-EDE6-4095-8B20-B434E5D52980}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelGenerator", "ModelGenerator\ModelGenerator.csproj", "{A5E0C2D1-4E61-4FBE-983B-ADBFA9CCCF4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelGeneratorWPF", "ModelGeneratorWPF\ModelGeneratorWPF.csproj", "{8842918B-72AE-4B57-85E0-FCCFD17F0984}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{903A0D68-EDE6-4095-8B20-B434E5D52980}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{903A0D68-EDE6-4095-8B20-B434E5D52980}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{903A0D68-EDE6-4095-8B20-B434E5D52980}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5E0C2D1-4E61-4FBE-983B-ADBFA9CCCF4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5E0C2D1-4E61-4FBE-983B-ADBFA9CCCF4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5E0C2D1-4E61-4FBE-983B-ADBFA9CCCF4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5E0C2D1-4E61-4FBE-983B-ADBFA9CCCF4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8842918B-72AE-4B57-85E0-FCCFD17F0984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8842918B-72AE-4B57-85E0-FCCFD17F0984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8842918B-72AE-4B57-85E0-FCCFD17F0984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8842918B-72AE-4B57-85E0-FCCFD17F0984}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

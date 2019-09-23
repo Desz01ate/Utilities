@@ -66,7 +66,7 @@ namespace Utilities.NoSQL
         /// <typeparam name="T"></typeparam>
         /// <param name="database"></param>
         /// <returns></returns>
-        public int CreateTable<T>() where T : class, new()
+        public int CreateCollection<T>() where T : class, new()
         {
             var tableName = Utilities.Shared.AttributeExtension.TableNameAttributeValidate(typeof(T));
             ActiveDatabase.CreateCollection(tableName);
@@ -100,7 +100,7 @@ namespace Utilities.NoSQL
         {
             if (ActiveDatabase == null)
             {
-                throw new NullReferenceException("Active database is not set, you must call 'UseDatabase' before attempt to execute any action");
+                throw new NullReferenceException("Active database is not set, you must call 'UseDatabase' before attempt to execute any action.");
             }
         }
 
@@ -151,10 +151,11 @@ namespace Utilities.NoSQL
         public async Task<DeleteResult> DeleteAsync<T>(object primaryKey) where T : class, new()
         {
             VerifyActiveDatabase();
-            var pk = typeof(T).PrimaryKeyAttributeValidate();
+            var type = typeof(T);
+            var pk = type.PrimaryKeyAttributeValidate();
             var field = pk.Name;
             var value = primaryKey;
-            var table = typeof(T).TableNameAttributeValidate();
+            var table = type.TableNameAttributeValidate();
             var collection = ActiveDatabase.GetCollection<T>(table);
             var filter = Builders<T>.Filter.Eq(field, value);
             return await collection.DeleteOneAsync(filter);
@@ -168,8 +169,12 @@ namespace Utilities.NoSQL
             return await collection.DeleteOneAsync(predicate);
         }
 
-
-        public int DROP_TABLE_USE_WITH_CAUTION<T>() where T : class, new()
+        /// <summary>
+        /// Drop collection on active database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public int DropCollection<T>() where T : class, new()
         {
             VerifyActiveDatabase();
             var table = typeof(T).TableNameAttributeValidate();
@@ -229,9 +234,10 @@ namespace Utilities.NoSQL
         public T Select<T>(object primaryKey) where T : class, new()
         {
             VerifyActiveDatabase();
-            var table = typeof(T).TableNameAttributeValidate();
+            var type = typeof(T);
+            var table = type.TableNameAttributeValidate();
             var collection = ActiveDatabase.GetCollection<T>(table);
-            var filter = Builders<T>.Filter.Eq(typeof(T).PrimaryKeyAttributeValidate().Name, primaryKey);
+            var filter = Builders<T>.Filter.Eq(type.PrimaryKeyAttributeValidate().Name, primaryKey);
             var buffer = collection.Find<T>(filter);
             return buffer.FirstOrDefault();
         }
@@ -239,9 +245,10 @@ namespace Utilities.NoSQL
         public ReplaceOneResult Update<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
-            var table = typeof(T).TableNameAttributeValidate();
+            var type = typeof(T);
+            var table = type.TableNameAttributeValidate();
             var collection = ActiveDatabase.GetCollection<T>(table);
-            var primaryKey = typeof(T).PrimaryKeyAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
             var filter = Builders<T>.Filter.Eq(primaryKey.Name, primaryKey.GetValue(obj));
             var result = collection.ReplaceOne(filter, obj);
             return result;
@@ -250,9 +257,10 @@ namespace Utilities.NoSQL
         public async Task<ReplaceOneResult> UpdateAsync<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
-            var table = typeof(T).TableNameAttributeValidate();
+            var type = typeof(T);
+            var table = type.TableNameAttributeValidate();
             var collection = ActiveDatabase.GetCollection<T>(table);
-            var primaryKey = typeof(T).PrimaryKeyAttributeValidate();
+            var primaryKey = type.PrimaryKeyAttributeValidate();
             var filter = Builders<T>.Filter.Eq(primaryKey.Name, primaryKey.GetValue(obj));
             var result = await collection.ReplaceOneAsync(filter, obj);
             return result;
