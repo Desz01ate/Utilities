@@ -17,14 +17,24 @@ namespace Utilities.Asp.Core.Based
     [ApiController]
     public abstract class JwtAuthorizationBasedController : ControllerBase
     {
-        protected static string _jwtIssuer { get; set; }
-        protected static string _jwtAudience { get; set; }
-        protected static string _jwtKey { get; set; }
-        protected static double _jwtExpiresMinute { get; set; }
-        protected readonly IConfiguration _configuration;
+        protected string _jwtIssuer { get; set; }
+        protected string _jwtAudience { get; set; }
+        protected string _jwtKey { get; set; }
+        protected double _jwtExpiresMinute { get; set; }
         public JwtAuthorizationBasedController(IConfiguration configuration)
         {
-            _configuration = configuration;
+            if (configuration == null)
+            {
+                throw new NullReferenceException($"IConfiguration instant must not be null on {this.GetType().FullName}");
+            }
+            var jwtIssuer = configuration["JwtIssuer"];
+            var jwtAudience = configuration["JwtAudience"];
+            var jwtKey = configuration["JwtKey"];
+            var jwtExpiresMinute = Convert.ToDouble(configuration["JwtExpireMinutes"]);
+            this._jwtIssuer = jwtIssuer;
+            this._jwtAudience = jwtAudience;
+            this._jwtKey = jwtKey;
+            this._jwtExpiresMinute = jwtExpiresMinute;
         }
         /// <summary>
         /// Get method for request JWT with given user id
@@ -62,63 +72,6 @@ namespace Utilities.Asp.Core.Based
         /// </summary>
         /// <param name="id">User ID</param>
         /// <returns>boolean which indicate whether the user is allow to get the JWT or not</returns>
-        protected virtual bool VerifyAuthentication(string id)
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
-        /// </summary>
-        /// <param name="services">instance of IServiceCollection</param>
-        /// <param name="configuration">configuration read from appsettings.json with 'JwtIssuer','JwtAudience' and 'JwtKey' properties.</param>
-        public static void SetPreconfiguration(ref IServiceCollection services, IConfiguration configuration)
-        {
-            var jwtIssuer = configuration["JwtIssuer"];
-            var jwtAudience = configuration["JwtAudience"];
-            var jwtKey = configuration["JwtKey"];
-            var jwtExpiresMinute = Convert.ToDouble(configuration["JwtExpireMinutes"]);
-            SetPreconfiguration(ref services, jwtIssuer, jwtAudience, jwtKey, jwtExpiresMinute);
-        }
-        /// <summary>
-        /// Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
-        /// </summary>
-        /// <param name="services">instance of IServiceCollection</param>
-        /// <param name="validIssuer">issuer of JWT</param>
-        /// <param name="validAudience">audience of JWT</param>
-        /// <param name="jwtKey">key of JWT</param>
-        public static void SetPreconfiguration(ref IServiceCollection services, string validIssuer, string validAudience, string jwtKey, double jwtExpiresMinute)
-        {
-            _jwtIssuer = validIssuer;
-            _jwtAudience = validAudience;
-            _jwtKey = jwtKey;
-            _jwtExpiresMinute = jwtExpiresMinute;
-            services.
-                AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                }).
-                AddJwtBearer(config =>
-                {
-                    config.RequireHttpsMetadata = false;
-                    config.SaveToken = true;
-                    config.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = validIssuer,
-                        ValidAudience = validAudience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
-                    };
-                });
-        }
-        /// <summary>
-        /// (optional) You can use app.UserAuthentication(); in Startup.Configure.
-        /// </summary>
-        /// <param name="application"></param>
-        public static void SetAppUseAuthentication(ref IApplicationBuilder application)
-        {
-            application.UseAuthentication();
-        }
+        protected abstract bool VerifyAuthentication(string id);
     }
 }

@@ -813,26 +813,6 @@
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <exception cref="T:System.Exception"/>
             <returns></returns>
- able.Merge``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
-            <summary>
-            Combine 2 or more enumerable of the same type into new enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="enumerables">enumerables to combine</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.Enumerable.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
-            <summary>
-            Create new enumerable from given enumerable, start index and count
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="startIndex">starting index</param>
-            <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentNullException"/>
-            <exception cref="T:System.ArgumentOutOfRangeException"/>
-            <exception cref="T:System.Exception"/>
-            <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Enumerable.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
             <summary>

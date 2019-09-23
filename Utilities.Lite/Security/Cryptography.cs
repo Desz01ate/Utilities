@@ -194,7 +194,7 @@ namespace Utilities.Security
                 byte[] uintBuffer = new byte[sizeof(uint)];
                 while (result.Length < length)
                 {
-#if NET452
+#if NET45
                     rng.GetBytes(uintBuffer);
                     uint num = BitConverter.ToUInt32(uintBuffer, 0);
                     result.Append(combination[(int)(num % combination.Length)]);

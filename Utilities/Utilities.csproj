@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.7.1</Version>
+    <Version>0.0.7.2-alpha-001</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
@@ -43,6 +43,8 @@
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.9.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
     <PackageReference Include="MySql.Data" Version="8.0.16" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
     <PackageReference Include="Npgsql" Version="4.0.7" />
