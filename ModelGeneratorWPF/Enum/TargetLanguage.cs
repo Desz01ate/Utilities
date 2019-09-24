@@ -30,7 +30,9 @@ namespace ModelGeneratorWPF.Enum
         [Description("Python 3.7")]
         Python37 = 5,
         [Description("Java")]
-        Java = 6
+        Java = 6,
+        [Description("C++")]
+        CPP = 7
     }
     public static class LangaugesData
     {
@@ -127,6 +129,19 @@ namespace ModelGeneratorWPF.Enum
                             return new JavaGenerator<MySqlConnection>(connectionString, directory, @namespace);
                         case TargetDatabaseConnector.PostgreSQL:
                             return new JavaGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                    }
+                    break;
+                case TargetLanguage.CPP:
+                    switch (targetDatabaseConnector)
+                    {
+                        case TargetDatabaseConnector.SQLServer:
+                            return new CPPGenerator<SqlConnection>(connectionString, directory, @namespace);
+                        case TargetDatabaseConnector.Oracle:
+                            return new CPPGenerator<OracleConnection>(connectionString, directory, @namespace);
+                        case TargetDatabaseConnector.MySQL:
+                            return new CPPGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                        case TargetDatabaseConnector.PostgreSQL:
+                            return new CPPGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
                     }
                     break;
             }

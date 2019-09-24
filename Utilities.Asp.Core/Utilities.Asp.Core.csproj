@@ -5,7 +5,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.0.16.4</Version>
-    <PackageReleaseNotes>Move all design pattern related to Utilities.Lite but still keep support for .NET Standard 2.0, 2.1 and .NET Core 2.0, 2.1, 2.2, 3.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Add Swagger support.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
