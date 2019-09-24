@@ -1,6 +1,7 @@
 ﻿using ModelGenerator.Services.DesignPattern.Interfaces;
 using ModelGenerator.Services.Generator;
 using ModelGenerator.Services.Generator.Model;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -76,14 +77,14 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             sb.AppendLine("{");
             sb.AppendLine($"    public sealed class Service : IUnitOfWork");
             sb.AppendLine("    {");
-            sb.AppendLine("        private readonly IDatabaseConnectorExtension<SqlConnection,SqlParameter> _connection;");
+            sb.AppendLine("        public readonly IDatabaseConnectorExtension<SqlConnection,SqlParameter> Connector;");
             sb.AppendLine("        public Service(IDatabaseConnectorExtension<SqlConnection,SqlParameter> connector)");
             sb.AppendLine("        {");
-            sb.AppendLine($"                _connection = connector;");
+            sb.AppendLine($"                Connector = connector;");
             sb.AppendLine("        }");
             sb.AppendLine("        public Service()");
             sb.AppendLine("        {");
-            sb.AppendLine($"                _connection = new DatabaseConnector<SqlConnection,SqlParameter>(\"***YOUR DATABASE CREDENTIAL***\");");
+            sb.AppendLine($"                Connector = new DatabaseConnector<SqlConnection,SqlParameter>(\"***YOUR DATABASE CREDENTIAL***\");");
             sb.AppendLine("        }");
             foreach (var table in Generator.Tables)
             {
@@ -96,7 +97,7 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
                 sb.AppendLine($"            {{");
                 sb.AppendLine($"                if(_{tableName} == null)");
                 sb.AppendLine($"                {{");
-                sb.AppendLine($"                    _{tableName} = new {repositoryName}(_connection);");
+                sb.AppendLine($"                    _{tableName} = new {repositoryName}(Connector);");
                 sb.AppendLine($"                }}");
                 sb.AppendLine($"                return _{tableName};");
                 sb.AppendLine($"            }}");
@@ -115,8 +116,37 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             }
             sb.AppendLine($"            public void Dispose()");
             sb.AppendLine("            {");
-            sb.AppendLine($"                _connection.Dispose();");
+            sb.AppendLine($"                Connector.Dispose();");
             sb.AppendLine("            }");
+            sb.AppendLine("#region Stored Procedure");
+            foreach (var sp in Generator.StoredProcedures)
+            {
+                if (sp.SPECIFIC_NAME.StartsWith("sp") && sp.SPECIFIC_NAME.Contains("diagram"))
+                {
+                    sb.AppendLine("//This method might be a system stored procedure, maybe you might want to consider remove it.");
+                }
+                sb.Append($"            public dynamic {sp.SPECIFIC_NAME}(");
+                List<string> paramArgs = new List<string>();
+                List<string> paramFunc = new List<string>();
+                foreach (var param in sp.Parameters)
+                {
+                    paramArgs.Add($"{param.DATA_TYPE} {param.PARAMETER_NAME}");
+                    paramFunc.Add($"                     parameters.Add(new SqlParameter(\"{param.PARAMETER_NAME}\",{param.PARAMETER_NAME}));");
+                }
+                sb.Append(string.Join(",", paramArgs));
+                sb.AppendLine(")");
+                sb.AppendLine("            {");
+                sb.AppendLine($"                     var command = \"{sp.SPECIFIC_NAME}\";");
+                sb.AppendLine($"                     var parameters = new List<SqlParameter>();");
+                foreach (var p in paramFunc)
+                {
+                    sb.AppendLine(p);
+                }
+                sb.AppendLine("                      var result = Connector.ExecuteReader(command,parameters, commandType: System.Data.CommandType.StoredProcedure);");
+                sb.AppendLine("                      return result;");
+                sb.AppendLine("            }");
+            }
+            sb.AppendLine("#endregion");
             sb.AppendLine("    }");
             sb.AppendLine("}");
             var outputPath = Path.Combine(Directory, "Service.cs");

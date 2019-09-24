@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.Shared;
-using Utilities.SQL;
-
+﻿#if NETSTANDARD2_0
+    using System.Data.SqlClient;
+#elif NETSTANDARD2_1
+    using Microsoft.Data.SqlClient;
+#endif
 namespace Utilities.SQL
 {
     /// <summary>

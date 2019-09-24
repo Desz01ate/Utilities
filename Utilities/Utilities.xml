@@ -63,11 +63,6 @@
             <param name="property">Property name per implemented class</param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Interfaces.IMongoDBProperties">
-            <summary>
-            Provide an essential properties to MongoDB connector interface
-            </summary>
-        </member>
         <member name="T:Utilities.Interfaces.INoSQLConnector">
             <summary>
             Provide methods for wrapper operation on DbConnection class
@@ -599,7 +594,7 @@
             <param name="mongoDatabaseSettings"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.NoSQL.MongoDB.CreateTable``1">
+        <member name="M:Utilities.NoSQL.MongoDB.CreateCollection``1">
             <summary>
             Create collection on active database.
             </summary>
@@ -621,6 +616,13 @@
             <summary>
             Verify if active database is available.
             </summary>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.DropCollection``1">
+            <summary>
+            Drop collection on active database.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
         </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
@@ -1508,6 +1510,33 @@
         <member name="M:Utilities.String.ToLeadingUpper(System.ReadOnlySpan{System.Char},System.Boolean,System.Char)">
             <summary>
             Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.ToLeadingUpper(System.String,System.Boolean,System.Char)">
+            <summary>
+            Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.ToBase64String(System.String)">
+            <summary>
+            Convert input string to base64 format string
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.FromBase64String(System.String)">
+            <summary>
+            Convert base64 string to original string
+            </summary>
+            <param name="base64Strinord)
             </summary>
             <param name="input"></param>
             <param name="upperAllWords"></param>

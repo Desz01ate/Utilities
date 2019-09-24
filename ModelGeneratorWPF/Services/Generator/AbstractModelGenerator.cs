@@ -24,6 +24,7 @@ namespace ModelGenerator.Services.Generator
 
         public List<string> Tables { get; } = new List<string>();
         public List<StoredProcedureSchema> StoredProcedures { get; private set; }
+        public Func<string, string> TableNameCleanser { get; private set; } = (x) => x;
 
         public AbstractModelGenerator(string connectionString, string directory, string @namespace)
         {
@@ -51,8 +52,22 @@ namespace ModelGenerator.Services.Generator
 
 
             var restrictions = new string[] { null, null, null, "PROCEDURE" };
-            using var procedures = connection.GetSchema("Procedures", restrictions);
-            StoredProcedures = connection.GetStoredProcedures().ToList();
+            try
+            {
+                using var procedures = connection.GetSchema("Procedures", restrictions);
+                StoredProcedures = connection.GetStoredProcedures().ToList();
+                foreach (var sp in StoredProcedures)
+                {
+                    foreach (var param in sp.Parameters)
+                    {
+                        param.DATA_TYPE = DataTypeMapper(param.DATA_TYPE);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
             //StoredProcedures = procedures.ToEnumerable(x => Data.RowBuilderStrict<StoredProcedureSchema>(x)).ToList();
             //foreach (var sp in StoredProcedures)
             //{
@@ -65,17 +80,16 @@ namespace ModelGenerator.Services.Generator
             //    sp.Parameters = param;
             //}
         }
-
+        public void SetCleanser(Func<string, string> func)
+        {
+            this.TableNameCleanser = func;
+        }
         public void GenerateAllTable()
         {
             foreach (var table in Tables)
             {
                 GenerateFromSpecificTable(table);
             }
-        }
-        private string TableNameCleanser(string tableName)
-        {
-            return $"[{tableName}]";
         }
         protected string ColumnNameCleanser(string value)
         {

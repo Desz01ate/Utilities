@@ -19,13 +19,8 @@
         <Label Content="Generate Mode :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="117"/>
         <Label Content="Language :" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top" Width="117"/>
         <Label Content="Database :" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" Width="117"/>
-        <RichTextBox Margin="0,127,21,0" Height="72" VerticalAlignment="Top" HorizontalAlignment="Right" Width="385">
-            <FlowDocument>
-                <Paragraph>
-                    <Run  x:Name="txt_connectionString" Text=""/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
+        <TextBox x:Name="txt_connectionString" Margin="170,127,0,0" Height="72" VerticalAlignment="Top" HorizontalAlignment="Left" Width="347" TextWrapping="Wrap">
+        </TextBox>
         <Label Content="Connection string :" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" Width="117"/>
         <Button x:Name="txt_outputDir" HorizontalAlignment="Left" Margin="170,213,0,0" Content="Click to select output directory" VerticalAlignment="Top" Width="347" Click="Txt_outputDir_Click"/>
         <Label Content="Output Directory:" HorizontalAlignment="Left" Margin="10,209,0,0" VerticalAlignment="Top" Width="117"/>

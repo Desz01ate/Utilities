@@ -11,7 +11,7 @@ namespace Utilities.Interfaces
     /// </summary>
     /// <typeparam name="TDatabaseType">DbConnection type</typeparam>
     /// <typeparam name="TParameter">DbParameter type</typeparam>
-    public interface INoSQLConnector : IDisposable, IMongoDBProperties
+    public interface INoSQLConnector : IDisposable
     {
         IEnumerable<T> ExecuteReader<T>(string sql, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text) where T : class, new();
         IEnumerable<T> ExecuteReader<T>(string sql, CommandType commandType = CommandType.Text) where T : class, new();

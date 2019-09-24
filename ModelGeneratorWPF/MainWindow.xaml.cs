@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -107,7 +108,7 @@ namespace ModelGeneratorWPF
                     txt_connectionString.Text = "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password = myPassword;";
                     break;
                 case TargetDatabaseConnector.Oracle:
-                    txt_connectionString.Text = "Data Source=MyOracleDB;User Id=myUsername;Password=myPassword;Integrated Security = no;";
+                    txt_connectionString.Text = "Data Source=MyOracleDB;User Id=myUsername;Password=myPassword;";
                     break;
                 case TargetDatabaseConnector.MySQL:
                     txt_connectionString.Text = "Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;";
@@ -120,19 +121,31 @@ namespace ModelGeneratorWPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var outputDir = txt_outputDir.Content.ToString();
+            if (!Directory.Exists(outputDir))
+            {
+                MessageBox.Show("You must select an output directory before trying to generate!");
+                return;
+            }
             btn_Generate.IsEnabled = false;
             btn_Generate.Content = "Generating...";
-            switch (generatorType)
+            try
             {
-                case TargetGeneratorType.Model:
-                    var generator = LangaugesData.GetSpecificGenerator(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, txt_outputDir.Content.ToString(), txt_namespace.Text);
-                    generator.GenerateAllTable();
-                    break;
-                case TargetGeneratorType.UnitOfWork:
-                    LangaugesData.PerformStrategyGenerate(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, txt_outputDir.Content.ToString(), txt_namespace.Text);
-                    break;
+                switch (generatorType)
+                {
+                    case TargetGeneratorType.Model:
+                        LangaugesData.PerformModelGenerate(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, outputDir, txt_namespace.Text);
+                        break;
+                    case TargetGeneratorType.UnitOfWork:
+                        LangaugesData.PerformStrategyGenerate(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, outputDir, txt_namespace.Text);
+                        break;
+                }
+                Process.Start("explorer.exe", outputDir);
             }
-            Process.Start("explorer.exe", txt_outputDir.Content.ToString());
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             btn_Generate.Content = "Generate";
             btn_Generate.IsEnabled = true;
         }
@@ -153,6 +166,8 @@ namespace ModelGeneratorWPF
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 txt_outputDir.Content = dialog.FileName;
+                var predictedNamespace = dialog.FileName.Split(@"\").Last();
+                txt_namespace.Text = predictedNamespace;
             }
         }
     }

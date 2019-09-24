@@ -210,5 +210,13 @@ namespace Utilities.Security
             }
             return result.ToString();
         }
+        internal static byte[] SecureGetBytes(this string key)
+        {
+            Encoding enc = Encoding.UTF8;
+            using SHA256 sha2 = new SHA256CryptoServiceProvider();
+            byte[] rawKey = enc.GetBytes(key);
+            byte[] hashKey = sha2.ComputeHash(rawKey);
+            return hashKey;
+        }
     }
 }

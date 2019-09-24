@@ -266,6 +266,9 @@ namespace Utilities.NoSQL
             return result;
         }
     }
+    /// <summary>
+    /// Extension set of methods which integrated with native MongoDB Driver.
+    /// </summary>
     public static class MongoDBDatabaseExtension
     {
 
