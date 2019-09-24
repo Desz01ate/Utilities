@@ -1,17 +1,11 @@
-﻿using ModelGenerator.Services.DesignPattern.Interfaces;
-using ModelGenerator.Services.DesignPattern.UnitOfWork.Generator;
+﻿using ModelGenerator.Services.DesignPattern.UnitOfWork.Generator;
 using ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton;
 using ModelGenerator.Services.Generator;
-using ModelGenerator.Services.Generator.Interfaces;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.Common;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace ModelGeneratorWPF.Enum
 {
@@ -36,7 +30,7 @@ namespace ModelGeneratorWPF.Enum
     }
     public static class LangaugesData
     {
-        public static IModelGenerator GetSpecificGenerator(TargetLanguage targetLanguage, TargetDatabaseConnector targetDatabaseConnector, string connectionString, string directory, string @namespace)
+        public static void PerformModelGenerate(TargetLanguage targetLanguage, TargetDatabaseConnector targetDatabaseConnector, string connectionString, string directory, string @namespace)
         {
             switch (targetLanguage)
             {
@@ -44,108 +38,140 @@ namespace ModelGeneratorWPF.Enum
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new CSharpGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new CSharpGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new CSharpGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new CSharpGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new CSharpGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new CSharpGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new CSharpGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new CSharpGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.VisualBasic:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new VisualBasicGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new VisualBasicGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new VisualBasicGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new VisualBasicGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new VisualBasicGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new VisualBasicGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new VisualBasicGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new VisualBasicGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.TypeScript:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new TypeScriptGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new TypeScriptGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new TypeScriptGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new TypeScriptGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new TypeScriptGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new TypeScriptGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new TypeScriptGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new TypeScriptGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.PHP:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new PHPGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new PHPGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new PHPGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new PHPGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new PHPGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new PHPGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new PHPGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new PHPGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.Python:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new PythonGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new PythonGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new PythonGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new PythonGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new PythonGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new PythonGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new PythonGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new PythonGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.Python37:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new Python37Generator<SqlConnection>(connectionString, directory, @namespace);
+                            new Python37Generator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new Python37Generator<OracleConnection>(connectionString, directory, @namespace);
+                            new Python37Generator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new Python37Generator<MySqlConnection>(connectionString, directory, @namespace);
+                            new Python37Generator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new Python37Generator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new Python37Generator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.Java:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new JavaGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new JavaGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new JavaGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new JavaGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new JavaGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new JavaGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new JavaGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new JavaGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
                 case TargetLanguage.CPP:
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            return new CPPGenerator<SqlConnection>(connectionString, directory, @namespace);
+                            new CPPGenerator<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]").GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.Oracle:
-                            return new CPPGenerator<OracleConnection>(connectionString, directory, @namespace);
+                            new CPPGenerator<OracleConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.MySQL:
-                            return new CPPGenerator<MySqlConnection>(connectionString, directory, @namespace);
+                            new CPPGenerator<MySqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                         case TargetDatabaseConnector.PostgreSQL:
-                            return new CPPGenerator<NpgsqlConnection>(connectionString, directory, @namespace);
+                            new CPPGenerator<NpgsqlConnection>(connectionString, directory, @namespace).GenerateAllTable();
+                            return;
                     }
                     break;
             }
-            return null;
         }
         public static void PerformStrategyGenerate(TargetLanguage targetLanguage, TargetDatabaseConnector targetDatabaseConnector, string connectionString, string directory, string @namespace)
         {
@@ -155,7 +181,7 @@ namespace ModelGeneratorWPF.Enum
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            var strategy1 = new CSharpSingletonStrategy<SqlConnection>(connectionString, directory, @namespace);
+                            var strategy1 = new CSharpSingletonStrategy<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]");
                             var generator1 = new UnitOfWorkGenerator<SqlConnection>();
                             generator1.UseStrategy(strategy1);
                             generator1.Generate();
@@ -184,7 +210,7 @@ namespace ModelGeneratorWPF.Enum
                     switch (targetDatabaseConnector)
                     {
                         case TargetDatabaseConnector.SQLServer:
-                            var strategy1 = new VisualBasicSingletonStrategy<SqlConnection>(connectionString, directory, @namespace);
+                            var strategy1 = new VisualBasicSingletonStrategy<SqlConnection>(connectionString, directory, @namespace, (x) => $"[{x}]");
                             var generator1 = new UnitOfWorkGenerator<SqlConnection>();
                             generator1.UseStrategy(strategy1);
                             generator1.Generate();

@@ -11,8 +11,9 @@ namespace ModelGenerator.Services.Generator
     public class CSharpGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
         where TDatabase : DbConnection, new()
     {
-        public CSharpGenerator(string connectionString, string directory, string @namespace) : base(connectionString, directory, @namespace)
+        public CSharpGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
         {
+            if (func != null) this.SetCleanser(func);
         }
 
         protected override string GetNullableDataType(TableSchema column)
@@ -32,7 +33,7 @@ namespace ModelGenerator.Services.Generator
                 sb.AppendLine("{");
             }
             sb.AppendLine("//You can get Utilities package via nuget : Install-Package Deszolate.Utilities.Lite");
-            sb.AppendLine($"//[Utilities.Attributes.SQL.Table(\"[{table.Name}]\")]");
+            sb.AppendLine($"//[Utilities.Attributes.SQL.Table(\"{TableNameCleanser(table.Name)}\")]");
             sb.AppendLine($@"public class {table.Name.Replace("-", "")}");
             sb.AppendLine("{");
             foreach (var column in table.Columns)

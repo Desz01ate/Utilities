@@ -1,4 +1,5 @@
 ﻿using ModelGenerator.Services.Generator.Model;
+using System;
 using System.Data.Common;
 using System.IO;
 using System.Text;
@@ -9,10 +10,10 @@ namespace ModelGenerator.Services.Generator
     public class PHPGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
         where TDatabase : DbConnection, new()
     {
-        public PHPGenerator(string connectionString, string directory, string @namespace) : base(connectionString, directory, @namespace)
+        public PHPGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
         {
+            if (func != null) this.SetCleanser(func);
         }
-
         protected override string DataTypeMapper(string column)
         {
             throw new System.NotImplementedException();

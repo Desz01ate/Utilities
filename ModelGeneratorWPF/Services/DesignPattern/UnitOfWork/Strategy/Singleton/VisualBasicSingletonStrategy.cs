@@ -1,6 +1,7 @@
 ﻿using ModelGenerator.Services.DesignPattern.Interfaces;
 using ModelGenerator.Services.Generator;
 using ModelGenerator.Services.Generator.Model;
+using System;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -11,12 +12,16 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
 {
     public class VisualBasicSingletonStrategy<TDatabase> : IGeneratorStrategy<TDatabase> where TDatabase : DbConnection, new()
     {
-        public VisualBasicSingletonStrategy(string connectionString, string directory, string @namespace)
+        public VisualBasicSingletonStrategy(string connectionString, string directory, string @namespace, Func<string, string> func = null)
         {
             ConnectionString = connectionString;
             Directory = directory;
             Namespace = @namespace;
             Generator = new VisualBasicGenerator<TDatabase>(connectionString, ModelDirectory, $"{@namespace}");
+            if (func != null)
+            {
+                Generator.SetCleanser(func);
+            }
         }
         public string Directory { get; }
 

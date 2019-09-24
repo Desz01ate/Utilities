@@ -134,8 +134,7 @@ namespace ModelGeneratorWPF
                 switch (generatorType)
                 {
                     case TargetGeneratorType.Model:
-                        var generator = LangaugesData.GetSpecificGenerator(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, outputDir, txt_namespace.Text);
-                        generator.GenerateAllTable();
+                        LangaugesData.PerformModelGenerate(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, outputDir, txt_namespace.Text);
                         break;
                     case TargetGeneratorType.UnitOfWork:
                         LangaugesData.PerformStrategyGenerate(targetLanguage, targetDatabaseConnector, txt_connectionString.Text, outputDir, txt_namespace.Text);
@@ -167,6 +166,8 @@ namespace ModelGeneratorWPF
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 txt_outputDir.Content = dialog.FileName;
+                var predictedNamespace = dialog.FileName.Split(@"\").Last();
+                txt_namespace.Text = predictedNamespace;
             }
         }
     }

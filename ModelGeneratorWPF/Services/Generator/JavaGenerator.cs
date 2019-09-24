@@ -9,8 +9,9 @@ namespace ModelGenerator.Services.Generator
     public class JavaGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
         where TDatabase : DbConnection, new()
     {
-        public JavaGenerator(string connectionString, string directory, string @namespace) : base(connectionString, directory, @namespace)
+        public JavaGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
         {
+            if (func != null) this.SetCleanser(func);
         }
 
         protected override string GetNullableDataType(TableSchema column)
@@ -33,7 +34,7 @@ namespace ModelGenerator.Services.Generator
                 sb.AppendLine();
             }
             sb.AppendLine("}");
-            var filePath = Path.Combine(Directory, $@"{table.Name}.class");
+            var filePath = Path.Combine(Directory, $@"{table.Name}.java");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
         protected override string DataTypeMapper(string columnType)

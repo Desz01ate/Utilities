@@ -11,15 +11,15 @@ namespace ModelGenerator.Services.Generator
     public class CPPGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
         where TDatabase : DbConnection, new()
     {
-        public CPPGenerator(string connectionString, string directory, string @namespace) : base(connectionString, directory, @namespace)
+        public CPPGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
         {
+            if (func != null) this.SetCleanser(func);
         }
 
         protected override string GetNullableDataType(TableSchema column)
         {
             var typecpp = DataTypeMapper(column.DataTypeName);
-            var addNullability = column.AllowDBNull && typecpp != "string" && typecpp != "byte[]";
-            return addNullability ? typecpp + "?" : typecpp;
+            return typecpp;
         }
         protected override void GenerateCodeFile(Table table)
         {
