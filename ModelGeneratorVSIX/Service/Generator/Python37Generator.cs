@@ -7,35 +7,28 @@ using Utilities.Classes;
 
 namespace ModelGenerator.Services.Generator
 {
-    public class JavaGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
+    public class Python37Generator<TDatabase> : AbstractModelGenerator<TDatabase>
         where TDatabase : DbConnection, new()
     {
-        public JavaGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
+        public Python37Generator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
         {
             if (func != null) this.SetCleanser(func);
         }
 
-        protected override string GetNullableDataType(TableSchema column)
-        {
-            var typejava = DataTypeMapper(column.DataTypeName);
-            return typejava;
-        }
         protected override void GenerateCodeFile(Table table)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"public class {table.Name}");
-            sb.AppendLine("{");
+            sb.AppendLine($@"import datetime");
+            sb.AppendLine();
+            sb.AppendLine($@"@dataclass");
+            sb.AppendLine($@"class {table.Name}:");
             foreach (var column in table.Columns)
             {
-                var type = GetNullableDataType(column);
+                var type = DataTypeMapper(column.DataTypeName);
                 var col = ColumnNameCleanser(column.ColumnName);
-                sb.AppendLine($@"    private {type} {col};");
-                sb.AppendLine($@"    public {type} get{col}() {{ return this.{col}; }}");
-                sb.AppendLine($@"    public void set{col}({type} value) {{ this.{col} = value; }}");
-                sb.AppendLine();
+                sb.AppendLine($@"    {col}: {type}");
             }
-            sb.AppendLine("}");
-            var filePath = Path.Combine(Directory, $@"{table.Name}.java");
+            var filePath = Path.Combine(Directory, $@"{table.Name}_37.py");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
         protected override string DataTypeMapper(string columnType)
@@ -43,24 +36,20 @@ namespace ModelGenerator.Services.Generator
             switch (columnType)
             {
                 case "bit":
-                    return "boolean";
+                    return "bool";
 
                 case "tinyint":
-                    return "byte";
                 case "smallint":
-                    return "short";
                 case "int":
-                    return "int";
                 case "bigint":
-                    return "long";
+                    return "int";
 
                 case "real":
-                    return "float";
+                case "float":
                 case "decimal":
                 case "money":
                 case "smallmoney":
-                case "float":
-                    return "double";
+                    return "float";
 
                 case "time":
                 case "date":
@@ -68,7 +57,7 @@ namespace ModelGenerator.Services.Generator
                 case "datetime2":
                 case "smalldatetime":
                 case "datetimeoffset":
-                    return "Date";
+                    return "datetime.datetime";
 
                 case "char":
                 case "varchar":
@@ -77,20 +66,23 @@ namespace ModelGenerator.Services.Generator
                 case "text":
                 case "ntext":
                 case "xml":
-                    return "String";
+                case "uniqueidentifier":
+                    return "str";
 
                 case "binary":
                 case "image":
                 case "varbinary":
                 case "timestamp":
-                    return "byte[]";
-
-                case "uniqueidentifier":
-                    return "UDID";
+                    return "bytes";
                 default:
                     // Fallback to be manually handled by user
                     return columnType;
             };
+        }
+
+        protected override string GetNullableDataType(TableSchema column)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

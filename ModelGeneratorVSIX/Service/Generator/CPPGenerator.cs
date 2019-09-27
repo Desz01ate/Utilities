@@ -2,40 +2,48 @@
 using System;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Utilities.Classes;
 
 namespace ModelGenerator.Services.Generator
 {
-    public class JavaGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
+    public class CPPGenerator<TDatabase> : AbstractModelGenerator<TDatabase>
         where TDatabase : DbConnection, new()
     {
-        public JavaGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
+        public CPPGenerator(string connectionString, string directory, string @namespace, Func<string, string> func = null) : base(connectionString, directory, @namespace)
         {
             if (func != null) this.SetCleanser(func);
         }
 
         protected override string GetNullableDataType(TableSchema column)
         {
-            var typejava = DataTypeMapper(column.DataTypeName);
-            return typejava;
+            var typecpp = DataTypeMapper(column.DataTypeName);
+            return typecpp;
         }
         protected override void GenerateCodeFile(Table table)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"public class {table.Name}");
+            sb.AppendLine($"#include <string>");
+            if (!string.IsNullOrWhiteSpace(Namespace))
+            {
+                sb.AppendLine($@"namespace {Namespace}");
+                sb.AppendLine("{");
+            }
+            sb.AppendLine($@"class {table.Name.Replace("-", "")}");
             sb.AppendLine("{");
+            sb.AppendLine("    public:");
             foreach (var column in table.Columns)
             {
-                var type = GetNullableDataType(column);
                 var col = ColumnNameCleanser(column.ColumnName);
-                sb.AppendLine($@"    private {type} {col};");
-                sb.AppendLine($@"    public {type} get{col}() {{ return this.{col}; }}");
-                sb.AppendLine($@"    public void set{col}({type} value) {{ this.{col} = value; }}");
-                sb.AppendLine();
+                sb.AppendLine($"    {GetNullableDataType(column)} {col};");
             }
             sb.AppendLine("}");
-            var filePath = Path.Combine(Directory, $@"{table.Name}.java");
+            if (!string.IsNullOrWhiteSpace(Namespace))
+            {
+                sb.AppendLine("}");
+            }
+            var filePath = Path.Combine(Directory, $@"{table.Name}.cpp");
             System.IO.File.WriteAllText(filePath, sb.ToString());
         }
         protected override string DataTypeMapper(string columnType)
@@ -43,7 +51,7 @@ namespace ModelGenerator.Services.Generator
             switch (columnType)
             {
                 case "bit":
-                    return "boolean";
+                    return "bool";
 
                 case "tinyint":
                     return "byte";
@@ -56,19 +64,22 @@ namespace ModelGenerator.Services.Generator
 
                 case "real":
                     return "float";
+                case "float":
+                    return "double";
                 case "decimal":
                 case "money":
                 case "smallmoney":
-                case "float":
-                    return "double";
+                    return "decimal";
 
                 case "time":
+                    return "TimeSpan";
                 case "date":
                 case "datetime":
                 case "datetime2":
                 case "smalldatetime":
+                    return "DateTime";
                 case "datetimeoffset":
-                    return "Date";
+                    return "DateTimeOffset";
 
                 case "char":
                 case "varchar":
@@ -77,7 +88,7 @@ namespace ModelGenerator.Services.Generator
                 case "text":
                 case "ntext":
                 case "xml":
-                    return "String";
+                    return "string";
 
                 case "binary":
                 case "image":
@@ -86,7 +97,18 @@ namespace ModelGenerator.Services.Generator
                     return "byte[]";
 
                 case "uniqueidentifier":
-                    return "UDID";
+                    return "Guid";
+
+                case "variant":
+                case "Udt":
+                    return "object";
+
+                case "Structured":
+                    return "DataTable";
+
+                case "geography":
+                    return "geography";
+
                 default:
                     // Fallback to be manually handled by user
                     return columnType;

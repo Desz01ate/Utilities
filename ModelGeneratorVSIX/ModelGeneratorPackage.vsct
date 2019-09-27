@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Commands package="guidModelGeneratorPackage">
+    <Groups>
+      <Group guid="guidModelGeneratorPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <!--<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>-->
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidModelGeneratorPackageCmdSet" id="GenerateRepositoryId" priority="0x0100" type="Button">
+        <Parent guid="guidModelGeneratorPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="addicon" />
+        <Strings>
+          <ButtonText>Generate Unit of Work...</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\addicon.bmp" usedList="addicon"/>
+    </Bitmaps>
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidModelGeneratorPackage" value="{8bd75b36-e10b-4874-9377-d4a503fdb443}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidModelGeneratorPackageCmdSet" value="{afdef772-1399-4bab-801b-f635202e043e}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="GenerateRepositoryId" value="0x0100" />
+    </GuidSymbol>
+    <GuidSymbol name="guidImages" value="{2faecdb6-2d2b-4901-be06-074d7111032b}" >
+      <IDSymbol name="addicon" value="1"/>
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
