@@ -82,6 +82,20 @@
             Provide an essential properties to database connector interface
             </summary>
         </member>
+        <member name="T:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3">
+            <summary>
+            Repository class with IEnumerable functionality.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TDatabase"></typeparam>
+            <typeparam name="TParameter"></typeparam>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3.#ctor(Utilities.Interfaces.IDatabaseConnectorExtension{`1,`2})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="databaseConnector"></param>
+        </member>
         <member name="T:Utilities.DesignPattern.UnitOfWork.Components.Repository`3">
             <summary>
             Example implementation of IGenericRepository with dependency injection of DAL

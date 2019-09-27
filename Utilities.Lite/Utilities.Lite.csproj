@@ -23,6 +23,9 @@
 [SqlConnector]
 + Fix missing method in IDatabaseConnectorExtension interface.
 
+[UnitOfWork Designer]
++ Add EnumeratableRepository.
+
 
 </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
