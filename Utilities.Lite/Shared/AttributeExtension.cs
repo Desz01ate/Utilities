@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Utilities.Attributes.SQL;
 using Utilities.Classes;
 using Utilities.Exceptions;
@@ -16,6 +15,7 @@ namespace Utilities.Shared
             var properties = type.GetProperties();
             return PrimaryKeyAttributeValidate(properties, type);
         }
+
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
             var primaryKeyProperty = properties.Where(property => property.GetCustomAttribute<PrimaryKeyAttribute>(true) != null);
@@ -24,28 +24,33 @@ namespace Utilities.Shared
             var property = new InternalPropertyInfo(primaryKeyProperty.First());
             return property;
         }
+
         internal static bool IsSQLPrimaryKeyAttribute(this PropertyInfo property)
         {
             var attrib = property.GetCustomAttribute<PrimaryKeyAttribute>(true);
             return attrib != null;
         }
+
         internal static string FieldNameAttributeValidate(this PropertyInfo propertyInfo)
         {
             var attribute = propertyInfo.GetCustomAttribute<FieldAttribute>(true);
             if (attribute == null) return propertyInfo.Name;
             return attribute.FieldName;
         }
+
         internal static string TableNameAttributeValidate(this Type type)
         {
             var attribute = type.GetCustomAttribute<TableAttribute>(true);
             if (attribute == null) return type.Name;
             return attribute.TableName;
         }
+
         internal static bool NotNullAttributeValidate(this PropertyInfo propertyInfo)
         {
             var attribute = propertyInfo.GetCustomAttribute<NotNullAttribute>();
             return attribute != null;
         }
+
         internal static IEnumerable<InternalPropertyInfo> PropertiesBindingFlagsAttributeValidate(this Type type)
         {
             var attribute = type.GetCustomAttribute<BindingFlagsAttribute>(true);
@@ -65,6 +70,7 @@ namespace Utilities.Shared
             });
             return internalProperties;
         }
+
         internal static IEnumerable<InternalPropertyInfo> ForeignKeyAttributeValidate(this Type type)
         {
             List<InternalPropertyInfo> properties = new List<InternalPropertyInfo>();
@@ -82,7 +88,6 @@ namespace Utilities.Shared
                     var refKey = attribute.ReferenceKeyProperty;
                     refKey.ForeignKeyName = property.Name;
                     properties.Add(refKey);
-
                 }
             }
             return properties;

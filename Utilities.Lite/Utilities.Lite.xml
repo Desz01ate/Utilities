@@ -47,7 +47,7 @@
         </member>
         <member name="M:Utilities.Interfaces.ICSVReader.ReadFromCSV(System.String)">
             <summary>
-            Content of csv data line in form of string. 
+            Content of csv data line in form of string.
             </summary>
             <param name="content"></param>
         </member>
@@ -245,10 +245,10 @@
         </member>
         <member name="M:Utilities.File.ReadXmlAs``1(System.String,System.IO.FileMode,System.Boolean)">
             <summary>
-            Read xml file and deserialize to object.
+            Read XML file and deserialize to object.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="path">Path to target xml file.</param>
+            <param name="path">Path to target XML file.</param>
             <param name="fileMode">A constant that determines how to open or create the file.</param>
             <param name="omitRootObject">Omits writing the root object.</param>
             <returns></returns>
@@ -528,7 +528,7 @@
         </member>
         <member name="T:Utilities.Metadata">
             <summary>
-            Contains information of Utilities library versioning.
+            Contains information of Utilities library version.
             </summary>
         </member>
         <member name="P:Utilities.Metadata.Version">
@@ -859,6 +859,21 @@
             <param name="source"></param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.Generic.IsGenericList(System.Object)">
+            <summary>
+            Verify if the object is a generic list.
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Generic.Cast(System.Object,System.Type)">
+            <summary>
+            Internally convert object to target type.
+            </summary>
+            <param name="obj"></param>
+            <param name="targetType"></param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
             <summary>
             Abstract class that is contains the implementation of the generic database connector.
@@ -883,7 +898,7 @@
         </member>
         <member name="P:Utilities.SQL.DatabaseConnector`2.IsOpen">
             <summary>
-            Determine wheter the connection is open or not.
+            Determine whether the connection is open or not.
             </summary>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String)">
@@ -1067,7 +1082,7 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
             <summary>
-            Execute SELECT SQL query and return DataTable in an asynchronus manner
+            Execute SELECT SQL query and return DataTable in an asynchronous manner
             </summary>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
             <param name="parameters">SQL parameters according to the sql parameter.</param>
@@ -1160,6 +1175,15 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -1185,6 +1209,7 @@
             <typeparam name="T"></typeparam>
             <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
             <param name="dataBuilder">Row builder template.</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
@@ -1245,7 +1270,7 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.DROP_TABLE_USE_WITH_CAUTION``1">
             <summary>
-            
+            Drop specific table.
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
@@ -1332,7 +1357,7 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
             <summary>
-            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when neccessary.
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
             </summary>
             <param name="type"></param>
             <returns></returns>
@@ -1388,11 +1413,11 @@
             </summary>
         </member>
         <member name="M:Utilities.SQL.Translator.ExpressionTranslator`2.VisitBinary(System.Linq.Expressions.BinaryExpression)">
-            <summary>
+             <summary>
             
-            </summary>
-            <param name="b"></param>
-            <returns></returns>
+             </summary>
+             <param name="b"></param>
+             <returns></returns>
         </member>
         <member name="T:Utilities.String">
             <summary>
@@ -1415,6 +1440,23 @@
             <param name="input"></param>
             <param name="upperAllWords"></param>
             <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Slice(System.String,System.Int32)">
+            <summary>
+            Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+            </summary>
+            <param name="input">Input string to slice.</param>
+            <param name="startIndex">Start index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Slice(System.String,System.Int32,System.Int32)">
+            <summary>
+            Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+            </summary>
+            <param name="input">Input string to slice.</param>
+            <param name="startIndex">Start index.</param>
+            <param name="count">Count character.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.ToBase64String(System.String)">

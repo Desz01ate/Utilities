@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Utilities.Interfaces;
-using Utilities.SQL;
 
 namespace Utilities.DesignPattern.UnitOfWork.Components
 {
@@ -24,6 +22,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// Instance of database connector.
         /// </summary>
         protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> DatabaseConnector;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -32,6 +31,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             DatabaseConnector = databaseConnector;
         }
+
         /// <summary>
         /// Delete data from repository.
         /// </summary>
@@ -40,6 +40,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             DatabaseConnector.Delete(obj);
         }
+
         /// <summary>
         /// Delete data from repository.
         /// </summary>
@@ -48,6 +49,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             DatabaseConnector.Delete<T>(key);
         }
+
         /// <summary>
         /// Delete data from repository in an asynchronous manner.
         /// </summary>
@@ -56,6 +58,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             await DatabaseConnector.DeleteAsync(obj).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Delete data from repository in an asynchronous manner.
         /// </summary>
@@ -64,6 +67,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             await DatabaseConnector.DeleteAsync<T>(key).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Insert data into repository.
         /// </summary>
@@ -72,6 +76,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             DatabaseConnector.Insert(obj);
         }
+
         /// <summary>
         /// Insert data into repository in an asynchronous manner.
         /// </summary>
@@ -80,6 +85,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             await DatabaseConnector.InsertAsync(obj).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Get all data from repository.
         /// </summary>
@@ -88,6 +94,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             return DatabaseConnector.Select<T>();
         }
+
         /// <summary>
         /// Get data by specific condition from repository.
         /// </summary>
@@ -97,6 +104,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             return DatabaseConnector.Select<T>(predicate);
         }
+
         /// <summary>
         /// Get data from repository.
         /// </summary>
@@ -106,6 +114,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             return DatabaseConnector.Select<T>(key);
         }
+
         /// <summary>
         /// Get all data from repository in an asynchronous manner.
         /// </summary>
@@ -114,6 +123,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             return await DatabaseConnector.SelectAsync<T>().ConfigureAwait(false);
         }
+
         /// <summary>
         /// Get data by specific condition from repository in an asynchronous manner.
         /// </summary>
@@ -123,6 +133,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             return await DatabaseConnector.SelectAsync<T>(predicate).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Get data from repository.
         /// </summary>
@@ -132,6 +143,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             return await DatabaseConnector.SelectAsync<T>(key).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Update data in repository.
         /// </summary>
@@ -140,6 +152,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         {
             DatabaseConnector.Update(obj);
         }
+
         /// <summary>
         /// Update data in repository in an asynchronous manner.
         /// </summary>

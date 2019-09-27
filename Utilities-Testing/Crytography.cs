@@ -1,12 +1,10 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Testing
 {
     [TestFixture]
-    class Crytography
+    internal class Crytography
     {
         [Test]
         public void EncAndDec()
@@ -40,7 +38,6 @@ namespace Utilities.Testing
                     Assert.IsFalse(Security.Cryptography.Verify(plainText, gh3.Hash, gh1.Salt, iter + 1));
                 }
             }
-
 
             Assert.Pass();
         }

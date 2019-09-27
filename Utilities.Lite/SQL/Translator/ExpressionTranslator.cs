@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using Utilities.Enum;
 using Utilities.Shared;
 
@@ -25,6 +23,7 @@ namespace Utilities.SQL.Translator
         private readonly Dictionary<SqlFunction, string> _platformFunctionConfig;
         private readonly Dictionary<string, string> _fieldsConfiguration;
         private readonly List<TSqlParameter> _sqlParameters;
+
         public int? Skip
         {
             get
@@ -69,7 +68,6 @@ namespace Utilities.SQL.Translator
                 _fieldsConfiguration.Add(key, value);
             }
         }
-
 
         public (string Expression, IEnumerable<TSqlParameter> Parameters) Translate(Expression expression)
         {
@@ -135,16 +133,35 @@ namespace Utilities.SQL.Translator
                 {
                     var fieldName = (m.Arguments[1] as MemberExpression).Member.Name;
                     var field = _fieldsConfiguration[fieldName];
-                    var values = (IEnumerable<object>)CompileExpression(m.Arguments[0]);
-                    var paramArray = new string[values.Count()];
-                    for (var idx = 0; idx < values.Count(); idx++)
+                    var values = CompileExpression(m.Arguments[0]) as dynamic;
+                    var paramArray = new string[values.Length];
+                    for (var idx = 0; idx < values.Length; idx++)
                     {
                         var paramName = $@"@cepr{idx}";
                         paramArray[idx] = paramName;
                         _sqlParameters.Add(new TSqlParameter()
                         {
                             ParameterName = paramName,
-                            Value = values.ElementAt(idx)
+                            Value = values[idx]
+                        });
+                    }
+                    sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
+                    return m;
+                }
+                else if (m.Method.DeclaringType.Name == "List`1")
+                {
+                    var fieldName = (m.Arguments[0] as MemberExpression).Member.Name;
+                    var field = _fieldsConfiguration[fieldName];
+                    var values = CompileExpression(m.Object) as dynamic;
+                    var paramArray = new string[values.Count];
+                    for (var idx = 0; idx < values.Count; idx++)
+                    {
+                        var paramName = $@"@cepr{idx}";
+                        paramArray[idx] = paramName;
+                        _sqlParameters.Add(new TSqlParameter()
+                        {
+                            ParameterName = paramName,
+                            Value = values[idx]
                         });
                     }
                     sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
@@ -162,7 +179,6 @@ namespace Utilities.SQL.Translator
                     sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                     return m;
                 }
-
             }
             else if (m.Method.Name == "StartsWith")
             {
@@ -175,7 +191,6 @@ namespace Utilities.SQL.Translator
                 });
                 sb.Append($@"({field} LIKE @{field} + '%')");
                 return m;
-
             }
             else if (m.Method.Name == "EndsWith")
             {
@@ -188,7 +203,6 @@ namespace Utilities.SQL.Translator
                 });
                 sb.Append($@"({field} LIKE '%' + @{field})");
                 return m;
-
             }
             else if (m.Method.Name == "IsNullOrEmpty" || m.Method.Name == "IsNullOrWhitespace")
             {
@@ -209,18 +223,19 @@ namespace Utilities.SQL.Translator
                     sb.Append(" NOT ");
                     this.Visit(u.Operand);
                     break;
+
                 case ExpressionType.Convert:
                     this.Visit(u.Operand);
                     break;
+
                 default:
                     throw new NotSupportedException(string.Format("The unary operator '{0}' is not supported", u.NodeType));
             }
             return u;
         }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
@@ -284,21 +299,25 @@ namespace Utilities.SQL.Translator
                 case ExpressionType.GreaterThanOrEqual:
                     sb.Append(" >= ");
                     break;
+
                 case ExpressionType.Add:
                     sb.Append(" + ");
                     break;
+
                 case ExpressionType.Subtract:
                     sb.Append(" - ");
                     break;
+
                 case ExpressionType.Divide:
                     sb.Append(" / ");
                     break;
+
                 case ExpressionType.Multiply:
                     sb.Append(" * ");
                     break;
+
                 default:
                     throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
-
             }
 
             this.Visit(b.Right);
@@ -321,6 +340,7 @@ namespace Utilities.SQL.Translator
                     case TypeCode.Boolean:
                         sb.Append(((bool)c.Value) ? 1 : 0);
                         break;
+
                     case TypeCode.DateTime:
                     case TypeCode.String:
                         _sqlParameters.Add(new TSqlParameter()
@@ -362,6 +382,7 @@ namespace Utilities.SQL.Translator
                         _previousVisitField = _fieldsConfiguration[m.Member.Name];
                         sb.Append(_previousVisitField);
                         return m;
+
                     case ExpressionType.Constant:
                         var constantInvokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
                         _sqlParameters.Add(new TSqlParameter()
@@ -381,6 +402,7 @@ namespace Utilities.SQL.Translator
                                 var lengthFunction = _platformFunctionConfig[SqlFunction.Length];
                                 sb.Append($"{lengthFunction}({member})");
                                 break;
+
                             default:
                                 var value = CompileExpression(m);
                                 _sqlParameters.Add(new TSqlParameter()
@@ -396,6 +418,7 @@ namespace Utilities.SQL.Translator
             }
             throw new NotSupportedException($"Expression contains unsupported statement ({m}).");
         }
+
         private bool IsQuoteNeeded(Type propertyType)
         {
             return
@@ -407,6 +430,7 @@ namespace Utilities.SQL.Translator
                propertyType == typeof(Guid) ||
                propertyType == typeof(Guid?);
         }
+
         protected bool IsNullConstant(Expression exp)
         {
             return (exp.NodeType == ExpressionType.Constant && ((ConstantExpression)exp).Value == null);
@@ -464,6 +488,7 @@ namespace Utilities.SQL.Translator
 
             return false;
         }
+
         private object CompileExpression(Expression expression)
         {
             return Expression.Lambda(expression).Compile().DynamicInvoke();

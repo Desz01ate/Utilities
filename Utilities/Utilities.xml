@@ -361,6 +361,26 @@
             <param name="sheetIndex">Index of target sheet in excel file.</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -623,6 +643,11 @@
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
+        </member>
+        <member name="T:Utilities.NoSQL.MongoDBDatabaseExtension">
+            <summary>
+            Extension set of methods which integrated with native MongoDB Driver.
+            </summary>
         </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
@@ -1510,33 +1535,6 @@
         <member name="M:Utilities.String.ToLeadingUpper(System.ReadOnlySpan{System.Char},System.Boolean,System.Char)">
             <summary>
             Convert input string to upper case just first character (for the whole input or for each word)
-            </summary>
-            <param name="input"></param>
-            <param name="upperAllWords"></param>
-            <param name="seperator"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.ToLeadingUpper(System.String,System.Boolean,System.Char)">
-            <summary>
-            Convert input string to upper case just first character (for the whole input or for each word)
-            </summary>
-            <param name="input"></param>
-            <param name="upperAllWords"></param>
-            <param name="seperator"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.ToBase64String(System.String)">
-            <summary>
-            Convert input string to base64 format string
-            </summary>
-            <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.String.FromBase64String(System.String)">
-            <summary>
-            Convert base64 string to original string
-            </summary>
-            <param name="base64Strinord)
             </summary>
             <param name="input"></param>
             <param name="upperAllWords"></param>

@@ -40,7 +40,7 @@ namespace ModelGenerator.Services.Generator
             foreach (var column in table.Columns)
             {
                 sb.AppendLine();
-                var type = String.ToLeadingUpper(GetNullableDataType(column));
+                var type = Utilities.String.ToLeadingUpper(GetNullableDataType(column));
                 var col = ColumnNameCleanser(column.ColumnName);
 
                 sb.AppendLine($"    Private _{col} As {type}");

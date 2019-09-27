@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Exceptions
 {
@@ -13,17 +11,19 @@ namespace Utilities.Exceptions
         /// Type that cause the exception.
         /// </summary>
         public Type CausedByAttribute { get; }
+
         /// <summary>
         /// Occured on caller class.
         /// </summary>
         public string CallerClass { get; }
+
         /// <summary>
         /// Inner exception details.
         /// </summary>
         public new Exception InnerException { get; }
+
         //public AttributeException(string attributeName, string callerClass) : base($"Can't find attribute [{attributeName}] in {callerClass} class.")
         //{
-
         //}
         public AttributeException(Type attribute, string callerClass, Exception innerException) : base($"Can't find attribute [{attribute?.Name}] in {callerClass} class.")
         {
@@ -32,6 +32,7 @@ namespace Utilities.Exceptions
             InnerException = innerException;
         }
     }
+
     /// <summary>
     /// Express non-multiple attribute exception throw for internal details.
     /// </summary>
@@ -41,14 +42,17 @@ namespace Utilities.Exceptions
         /// Type that cause the exception.
         /// </summary>
         public Type CausedByAttribute { get; }
+
         /// <summary>
         /// Occured on caller class.
         /// </summary>
         public string CallerClass { get; }
+
         /// <summary>
         /// Inner exception details.
         /// </summary>
         public new Exception InnerException { get; }
+
         public InvalidMultipleAttributesException(Type attribute, string callerClass, Exception innerException) : base($"The attribute [{attribute?.Name}] must specific one and only one. (error in {callerClass} class)")
         {
             CausedByAttribute = attribute;

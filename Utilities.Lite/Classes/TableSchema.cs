@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Classes
 {
@@ -30,7 +28,5 @@ namespace Utilities.Classes
         public bool IsRowVersion { get; set; }
         public bool IsLong { get; set; }
         public bool IsReadOnly { get; set; }
-
     }
-
 }

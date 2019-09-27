@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.Interfaces
+﻿namespace Utilities.Interfaces
 {
     /// <summary>
     /// Interface required for Excel Data Reader.

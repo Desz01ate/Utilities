@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.Enum
+﻿namespace Utilities.Enum
 {
     public enum SqlType
     {

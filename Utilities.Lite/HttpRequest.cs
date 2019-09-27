@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Utilities
@@ -35,6 +34,7 @@ namespace Utilities
                 return request;
             }
         }
+
         /// <summary>
         /// Send a GET request to the specified Uri.
         /// </summary>
@@ -48,6 +48,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a GET request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -70,6 +71,7 @@ namespace Utilities
                 return request;
             }
         }
+
         /// <summary>
         /// Send a GET request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -83,6 +85,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri.
         /// </summary>
@@ -105,6 +108,7 @@ namespace Utilities
                 return request;
             }
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri.
         /// </summary>
@@ -118,6 +122,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -140,6 +145,7 @@ namespace Utilities
                 return request;
             }
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -176,6 +182,7 @@ namespace Utilities
             //request.EnsureSuccessStatusCode();
             return request;
         }
+
         /// <summary>
         /// Send a POST request to the specified Uri.
         /// </summary>
@@ -190,6 +197,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a POST request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -199,7 +207,6 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<HttpResponseMessage> PostAsync(string url, HttpContent body, Dictionary<string, string> headers = null)
         {
-
             using var httpClient = new HttpClient();
             if (headers != null)
             {
@@ -213,6 +220,7 @@ namespace Utilities
             //request.EnsureSuccessStatusCode();
             return request;
         }
+
         /// <summary>
         /// Send a POST request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -229,6 +237,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a PUT request to the specified Uri.
         /// </summary>
@@ -251,6 +260,7 @@ namespace Utilities
             //request.EnsureSuccessStatusCode();
             return request;
         }
+
         /// <summary>
         /// Send a PUT request to the specified Uri.
         /// </summary>
@@ -265,6 +275,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a PUT request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -287,6 +298,7 @@ namespace Utilities
             //request.EnsureSuccessStatusCode();
             return request;
         }
+
         /// <summary>
         /// Send a PUT request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -301,6 +313,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri.
         /// </summary>
@@ -328,6 +341,7 @@ namespace Utilities
             //request.EnsureSuccessStatusCode();
             return request;
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri.
         /// </summary>
@@ -342,6 +356,7 @@ namespace Utilities
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -369,6 +384,7 @@ namespace Utilities
             //request.EnsureSuccessStatusCode();
             return request;
         }
+
         /// <summary>
         /// Send a DELETE request to the specified Uri as an asynchronous operation.
         /// </summary>
@@ -418,5 +434,4 @@ namespace Utilities
         }
 #endif
     }
-
 }

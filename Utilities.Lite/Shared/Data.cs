@@ -48,6 +48,7 @@ namespace Utilities.Shared
             }
             return instance;
         }
+
         /// <summary>
         /// Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
         /// </summary>
@@ -139,6 +140,7 @@ namespace Utilities.Shared
             }
             return instance;
         }
+
         /// <summary>
         /// Convert DbDataReader into dynamic object with specified column name
         /// </summary>
@@ -154,6 +156,7 @@ namespace Utilities.Shared
             }
             return rowInstance;
         }
+
         public static dynamic RowBuilder(this DataRow row, IEnumerable<string> columns)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
@@ -163,6 +166,7 @@ namespace Utilities.Shared
             }
             return rowInstance;
         }
+
         /// <summary>
         /// Convert data row into POCO.
         /// </summary>

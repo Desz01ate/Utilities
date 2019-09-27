@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Utilities.Attributes.SQL;
+﻿using Utilities.Attributes.SQL;
 
 namespace Utilities.Testing.Models
 {
@@ -9,6 +6,7 @@ namespace Utilities.Testing.Models
     {
         [PrimaryKey]
         public int id { get; set; }
+
         public string value { get; set; }
     }
 }

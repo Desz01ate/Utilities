@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,6 +30,7 @@ namespace Utilities.Security.CryptoProvider
 
             return encrypted;
         }
+
         /// <summary>
         /// Decrypt data by given key using Advance Encryption Standard.
         /// </summary>

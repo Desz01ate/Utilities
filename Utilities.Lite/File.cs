@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Serialization;
 using Utilities.Interfaces;
 using Utilities.Shared;
 
@@ -34,11 +33,12 @@ namespace Utilities
             var content = sr.ReadToEnd();
             return JsonConvert.DeserializeObject<T>(content);
         }
+
         /// <summary>
-        /// Read xml file and deserialize to object.
+        /// Read XML file and deserialize to object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="path">Path to target xml file.</param>
+        /// <param name="path">Path to target XML file.</param>
         /// <param name="fileMode">A constant that determines how to open or create the file.</param>
         /// <param name="omitRootObject">Omits writing the root object.</param>
         /// <returns></returns>
@@ -55,6 +55,7 @@ namespace Utilities
             var json = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.None, omitRootObject);
             return JsonConvert.DeserializeObject<T>(json);
         }
+
         /// <summary>
         /// Read json file and deserialize to object.
         /// </summary>
@@ -73,6 +74,7 @@ namespace Utilities
             var content = await sr.ReadToEndAsync().ConfigureAwait(false);
             return JsonConvert.DeserializeObject<T>(content);
         }
+
         /// <summary>
         /// Read xml file and deserialize to object.
         /// </summary>
@@ -94,6 +96,7 @@ namespace Utilities
             var json = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.None, omitRootObject);
             return JsonConvert.DeserializeObject<T>(json);
         }
+
         /// <summary>
         /// Read csv file and transform input into given CSV (you still need to manually give custom implement via ICSVReader)
         /// </summary>
@@ -115,6 +118,7 @@ namespace Utilities
                 yield return obj;
             }
         }
+
         /// <summary>
         /// Serialize given object and write to json file.
         /// </summary>
@@ -136,6 +140,7 @@ namespace Utilities
             var json = JsonConvert.SerializeObject(obj);
             System.IO.File.WriteAllText(path, json, encoding);
         }
+
         /// <summary>
         /// Serialize given object and write to json file.
         /// </summary>
@@ -148,6 +153,7 @@ namespace Utilities
         {
             WriteAsJson(new[] { obj }, path, encoding);
         }
+
         /// <summary>
         /// Serialize given object and write to csv file.
         /// </summary>
@@ -182,6 +188,7 @@ namespace Utilities
             }
             System.IO.File.WriteAllText(path, content.ToString(), encoding);
         }
+
         /// <summary>
         /// Serialize given object and write to csv file.
         /// </summary>
@@ -193,6 +200,7 @@ namespace Utilities
         {
             WriteAsCsv(new[] { data }, path, encoding, fileMode);
         }
+
         /// <summary>
         /// Read excel file and convert to object.
         /// </summary>
@@ -223,6 +231,7 @@ namespace Utilities
             }
             return dataset;
         }
+
         /// <summary>
         /// Read excel file and convert to data table.
         /// </summary>
@@ -247,6 +256,7 @@ namespace Utilities
                 }
             }
         }
+
         /// <summary>
         /// Read excel file and convert to dynamic object.
         /// </summary>
@@ -286,6 +296,7 @@ namespace Utilities
             }
             return dataset;
         }
+
 #if NETSTANDARD2_1
         /// <summary>
         /// Serialize given object and write to json file.
@@ -299,7 +310,7 @@ namespace Utilities
         {
             if (obj == null && obj.Count() == 0)
             {
-                throw new ArgumentNullException("Object must not be null and must contains atleast one element.");
+                throw new ArgumentNullException("Object must not be null and must contains at least one element.");
             }
             if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("json"))
             {
@@ -321,6 +332,5 @@ namespace Utilities
             await WriteAsJsonAsync(new[] { obj }, path, encoding, fileMode).ConfigureAwait(false);
         }
 #endif
-
     }
 }

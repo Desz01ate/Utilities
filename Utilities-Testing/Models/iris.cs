@@ -1,5 +1,3 @@
-using System;
-
 namespace Utilities.Testing.Models
 {
     //You can get Utilities package via nuget : Install-Package Deszolate.Utilities.Lite

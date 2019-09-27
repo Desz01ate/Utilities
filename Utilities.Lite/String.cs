@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Text;
 
@@ -56,6 +53,7 @@ namespace Utilities
                 return $@"{char.ToUpper(input[0])}{input.Slice(1).ToString()}";
             }
         }
+
         /// <summary>
         /// Convert input string to upper case just first character (for the whole input or for each word)
         /// </summary>
@@ -67,14 +65,30 @@ namespace Utilities
         {
             return ToLeadingUpper(input.AsSpan(), upperAllWords, seperator);
         }
+
+        /// <summary>
+        /// Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+        /// </summary>
+        /// <param name="input">Input string to slice.</param>
+        /// <param name="startIndex">Start index.</param>
+        /// <returns></returns>
         public static ReadOnlySpan<char> Slice(this string input, int startIndex)
         {
             return input.AsSpan().Slice(startIndex);
         }
+
+        /// <summary>
+        /// Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+        /// </summary>
+        /// <param name="input">Input string to slice.</param>
+        /// <param name="startIndex">Start index.</param>
+        /// <param name="count">Count character.</param>
+        /// <returns></returns>
         public static ReadOnlySpan<char> Slice(this string input, int startIndex, int count)
         {
             return input.AsSpan().Slice(startIndex, count);
         }
+
         /// <summary>
         /// Convert input string to base64 format string
         /// </summary>
@@ -86,6 +100,7 @@ namespace Utilities
             var charArray = Encoding.UTF8.GetBytes(input);
             return Convert.ToBase64String(charArray);
         }
+
         /// <summary>
         /// Convert base64 string to original string
         /// </summary>
@@ -97,6 +112,7 @@ namespace Utilities
             var charArray = Convert.FromBase64String(base64String);
             return Encoding.UTF8.GetString(charArray);
         }
+
         /// <summary>
         /// Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
         /// </summary>
@@ -118,6 +134,7 @@ namespace Utilities
             var result = response.Substring(startExtractIndex + 1, endExtractIndex - 3);
             return result;
         }
+
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
@@ -128,6 +145,7 @@ namespace Utilities
         {
             return string.Format("{0:" + numericFormat + "}", value);
         }
+
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
@@ -135,6 +153,7 @@ namespace Utilities
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
         public static string NumberFormat(int value, string numericFormat = "N") => NumberFormat((decimal)value, numericFormat);
+
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
@@ -142,6 +161,7 @@ namespace Utilities
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
         public static string NumberFormat(double value, string numericFormat = "N") => NumberFormat((decimal)value, numericFormat);
+
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
@@ -149,6 +169,7 @@ namespace Utilities
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
         public static string NumberFormat(float value, string numericFormat = "N") => NumberFormat((decimal)value, numericFormat);
+
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
@@ -162,8 +183,6 @@ namespace Utilities
             if (!success)
                 throw new FormatException("String value is not a valid numeric value.");
             return NumberFormat(result, numericFormat);
-
         }
-
     }
 }
