@@ -96,9 +96,15 @@
             </summary>
             <param name="databaseConnector"></param>
         </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3.GetEnumerator">
+            <summary>
+            Get enumerator of data repository.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.DesignPattern.UnitOfWork.Components.Repository`3">
             <summary>
-            Example implementation of IGenericRepository with dependency injection of DAL
+            Repository class designed for IDatabaseConnectorExtension.
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TDatabase"></typeparam>
@@ -140,6 +146,18 @@
             <param name="key">Primary key of target object.</param>
         </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(`0)">
+            <summary>
+            Insert data into repository.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Insert data into repository in an asynchronous manner.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             Insert data into repository.
             </summary>
@@ -360,6 +378,26 @@
             <param name="hasHeader">Is the file has header.</param>
             <param name="sheetIndex">Index of target sheet in excel file.</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
         </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
@@ -741,7 +779,7 @@
             This class contains a generic way to build data from specific source such as DbDataReader or from object itself
             </summary>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.IDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
             </summary>
@@ -749,7 +787,7 @@
             <param name="row"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilderStrict``1(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.Data.RowBuilderStrict``1(System.Data.IDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
             </summary>
@@ -757,7 +795,7 @@
             <param name="row">data reader to convert to POCO object</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.IDataReader,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Convert DbDataReader into dynamic object with specified column name
             </summary>
@@ -773,7 +811,7 @@
             <param name="dr"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.IDataReader)">
             <summary>
             Get underlying column name of the DbDataReader.
             </summary>
@@ -886,6 +924,188 @@
             </summary>
             <param name="obj"></param>
             <param name="targetType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.SQL.DapperConnector`2">
+            <summary>
+            Connector which internally combine the original DatabaseConnector and override some methods to use Dapper for high performance workload.
+            </summary>
+            <typeparam name="TDatabaseConnection"></typeparam>
+            <typeparam name="TParameterType"></typeparam>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of specific row</param>
+            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select data from table using predicate (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate condition of data</param>
+            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Insert``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">IEnumrable to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Update``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to update.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an update.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Delete``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Delete``1(System.Object,System.Data.Common.DbTransaction)">
+            <summary>
+            Delete given object from table by given primary key. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of target row.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
+            <summary>
+            Delete data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of object</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.SelectAsync``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of specific row</param>
+            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.InsertAsync``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to update.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an update.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.DeleteAsync``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.DeleteAsync``1(System.Object,System.Data.Common.DbTransaction)">
+            <summary>
+            Delete given object from table by given primary key. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of target row.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
+            <summary>
+            Delete data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -1398,6 +1618,14 @@
             Get user-defined stored procedure from current database connection.
             </summary>
             <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Convert vanilla sql parameters to dapper-supported parameters;
+            </summary>
+            <typeparam name="TParameter"></typeparam>
+            <param name="parameters"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">

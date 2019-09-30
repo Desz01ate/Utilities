@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,7 +18,6 @@ namespace Utilities.SQL
     where TDatabaseConnection : DbConnection, new()
     where TParameterType : DbParameter, new()
     {
-
         /// <summary>
         /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -44,6 +42,7 @@ namespace Utilities.SQL
             }
             return result;
         }
+
         /// <summary>
         /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -55,10 +54,6 @@ namespace Utilities.SQL
         public T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
             where T : class, new()
         {
-            //var type = typeof(T);
-            //var tableName = type.TableNameAttributeValidate();
-            //var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
-            //var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var preparer = SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
@@ -73,6 +68,7 @@ namespace Utilities.SQL
             }
             return result;
         }
+
         /// <summary>
         /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -90,6 +86,7 @@ namespace Utilities.SQL
             var result = ExecuteNonQuery(query, parameters, transaction: transaction);
             return result;
         }
+
         /// <summary>
         /// Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -107,6 +104,7 @@ namespace Utilities.SQL
             var result = ExecuteNonQuery(query, parameters, transaction: transaction);
             return result;
         }
+
         /// <summary>
         /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -123,6 +121,7 @@ namespace Utilities.SQL
             var value = ExecuteNonQuery(query, parameters, transaction: transaction);
             return value;
         }
+
         /// <summary>
         /// Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -139,6 +138,7 @@ namespace Utilities.SQL
             var result = ExecuteNonQuery(query, parameters);
             return result;
         }
+
         /// <summary>
         /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -163,6 +163,7 @@ namespace Utilities.SQL
             }
             return result;
         }
+
         /// <summary>
         /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -188,6 +189,7 @@ namespace Utilities.SQL
             }
             return result;
         }
+
         /// <summary>
         /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -203,6 +205,23 @@ namespace Utilities.SQL
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
+
+        /// <summary>
+        /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">Object to insert.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Affected row after an insert.</returns>
+        public async Task<int> InsertAsync<T>(IEnumerable<T> obj, DbTransaction transaction = null) where T : class, new()
+        {
+            var preparer = InsertQueryGenerate<T>(obj);
+            var query = preparer.query;
+            var parameters = preparer.parameters;
+            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            return result;
+        }
+
         /// <summary>
         /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -219,6 +238,7 @@ namespace Utilities.SQL
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
+
         /// <summary>
         /// Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -235,12 +255,14 @@ namespace Utilities.SQL
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
+
         /// <summary>
         /// Select data from table by using matched predicate
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="top">Specified TOP(n) rows.</param>
+        /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
@@ -273,9 +295,9 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = ExecuteNonQuery(query, parameters, transaction: transaction);
-            return result;
+            return ExecuteNonQuery(query, parameters, transaction: transaction);
         }
+
         /// <summary>
         /// Select data from table by using matched predicate
         /// </summary>
@@ -301,6 +323,7 @@ namespace Utilities.SQL
             }
             return result;
         }
+
         /// <summary>
         /// Select data from table by using matched predicate
         /// </summary>
@@ -313,9 +336,9 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
-            return result;
+            return await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Select data from table by using primary key
         /// </summary>
@@ -328,9 +351,9 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = ExecuteNonQuery(query, parameters, transaction: transaction);
-            return result;
+            return ExecuteNonQuery(query, parameters, transaction: transaction);
         }
+
         /// <summary>
         /// Select data from table by using primary key
         /// </summary>
@@ -343,9 +366,9 @@ namespace Utilities.SQL
             var preparer = DeleteQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
-            return result;
+            return await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
         }
+
         /// <summary>
         /// Create table from given model
         /// </summary>
@@ -356,12 +379,11 @@ namespace Utilities.SQL
             var tableName = typeof(T).TableNameAttributeValidate();
             var fields = Data.GenerateSQLCreteFieldStatement<TDatabaseConnection, TParameterType, T>(this);
             var query = $@"CREATE TABLE {tableName}({string.Join(",", fields)})";
-            var result = this.ExecuteNonQuery(query);
-            return result;
+            return this.ExecuteNonQuery(query);
         }
 
         /// <summary>
-        /// 
+        /// Drop specific table.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -370,9 +392,9 @@ namespace Utilities.SQL
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var query = $@"DROP TABLE {tableName}";
-            var result = this.ExecuteNonQuery(query);
-            return result;
+            return this.ExecuteNonQuery(query);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -385,6 +407,7 @@ namespace Utilities.SQL
             var query = string.Format("SELECT {0} * FROM {1}", top.HasValue ? $"TOP({top.Value})" : "", tableName);
             return (query, null);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -400,6 +423,7 @@ namespace Utilities.SQL
             var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
             return (query, translateResult.Parameters);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -419,6 +443,7 @@ namespace Utilities.SQL
             };
             return (query, new[] { parameter });
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -440,6 +465,7 @@ namespace Utilities.SQL
             });
             return (query, parameters);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -469,6 +495,7 @@ namespace Utilities.SQL
             query.Append(joinedValue);
             return (query.ToString(), parameters);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -485,7 +512,7 @@ namespace Utilities.SQL
             parameters.Remove(primaryKey.Name);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-                                WHERE 
+                                WHERE
                                {primaryKey.Name} = @{primaryKey.Name}";
             var parametersArray = parameters.Select(x => new TParameterType()
             {
@@ -495,6 +522,7 @@ namespace Utilities.SQL
             parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
             return (query, parametersArray);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -516,6 +544,7 @@ namespace Utilities.SQL
                     } };
             return (query, parameters);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -537,6 +566,7 @@ namespace Utilities.SQL
                 };
             return (query, parameters);
         }
+
         /// <summary>
         /// Generate SQL query with sql parameters.
         /// </summary>
@@ -551,6 +581,7 @@ namespace Utilities.SQL
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
             return (query, translateResult.Parameters);
         }
+
         /// <summary>
         /// Get table schema from current database connection.
         /// </summary>
@@ -561,8 +592,9 @@ namespace Utilities.SQL
             var tableName = typeof(T).TableNameAttributeValidate();
             return Connection.GetTableSchema(tableName);
         }
+
         /// <summary>
-        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when neccessary.
+        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>

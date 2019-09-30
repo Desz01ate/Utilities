@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq.Expressions;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Utilities.Interfaces
 {
@@ -13,8 +9,11 @@ namespace Utilities.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         IEnumerable<T> Select();
+
         void Insert(T obj);
+
         void Update(T obj);
+
         void Delete(T obj);
     }
 }

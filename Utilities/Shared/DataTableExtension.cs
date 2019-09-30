@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace Utilities.Shared
 {
@@ -23,6 +22,7 @@ namespace Utilities.Shared
                 yield return action(dataReader);
             }
         }
+
         /// <summary>
         /// Convert DataTable into IEnumerable of dynamic.
         /// </summary>
@@ -37,6 +37,7 @@ namespace Utilities.Shared
                 yield return Data.RowBuilder(dataReader, columns);
             }
         }
+
         /// <summary>
         /// Get columns of DataTable.
         /// </summary>

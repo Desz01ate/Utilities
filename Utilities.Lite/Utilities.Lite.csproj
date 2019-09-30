@@ -10,24 +10,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.4.3</Version>
+    <Version>0.1.5.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-+ Simplify the dependencies framework by moved .NET Framework 4.6.1 to .NET Standard 2.0 build instead.
-
-[ExpressionTranslator]
-+ Fix bugs for IEnumerable&lt;T&gt;.Contains translator.
-
-[SqlConnector]
-+ Fix missing method in IDatabaseConnectorExtension interface.
-
-[UnitOfWork Designer]
-+ Add EnumeratableRepository.
-
-
-</PackageReleaseNotes>
++ Add support for Dapper connector  for high performance scenario (available for .net standard 2.0 and 2.1).</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -85,4 +73,14 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netstandard2.0'">
       <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="Dapper">
+        <Version>2.0.30</Version>
+      </PackageReference>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+      <PackageReference Include="Dapper">
+        <Version>2.0.30</Version>
+      </PackageReference>
+    </ItemGroup>
 </Project>

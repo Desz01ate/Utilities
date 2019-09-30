@@ -8,7 +8,7 @@ using Utilities.Interfaces;
 namespace Utilities.DesignPattern.UnitOfWork.Components
 {
     /// <summary>
-    /// Example implementation of IGenericRepository with dependency injection of DAL
+    /// Repository class designed for IDatabaseConnectorExtension.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDatabase"></typeparam>
@@ -73,6 +73,24 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// </summary>
         /// <param name="obj">Generic object.</param>
         public virtual void Insert(T obj)
+        {
+            DatabaseConnector.Insert(obj);
+        }
+
+        /// <summary>
+        /// Insert data into repository in an asynchronous manner.
+        /// </summary>
+        /// <param name="obj">Generic object.</param>
+        public virtual async Task InsertAsync(IEnumerable<T> obj)
+        {
+            await DatabaseConnector.InsertAsync(obj).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Insert data into repository.
+        /// </summary>
+        /// <param name="obj">Generic object.</param>
+        public virtual void Insert(IEnumerable<T> obj)
         {
             DatabaseConnector.Insert(obj);
         }
