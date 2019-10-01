@@ -17,6 +17,7 @@ namespace Utilities.Shared
         /// <param name="enumerables">enumerables to combine</param>
         /// <returns></returns>
         public static IEnumerable<T> Merge<T>(this IEnumerable<T> source, params IEnumerable<T>[] enumerables) => source.Concat(enumerables.SelectMany(x => x));
+
         /// <summary>
         /// Create new enumerable from given enumerable, start index and count
         /// </summary>
@@ -45,6 +46,7 @@ namespace Utilities.Shared
             }
             return source.Skip(startIndex).Take(count);
         }
+
         /// <summary>
         /// Take last element out of given enumerable
         /// </summary>
@@ -62,6 +64,7 @@ namespace Utilities.Shared
             }
             return source.Skip(Math.Max(0, totalElement - count));
         }
+
         /// <summary>
         /// Splits the collection into two collections, which is paired as Match and Unmatch.
         /// </summary>
@@ -75,6 +78,7 @@ namespace Utilities.Shared
             var unmatch = source.Except(match);
             return (match, unmatch);
         }
+
         /// <summary>
         /// Convert IEnuemrable into Stack.
         /// </summary>
@@ -95,6 +99,7 @@ namespace Utilities.Shared
             }
             return stack;
         }
+
         /// <summary>
         /// Convert IEnumerable into Queue.
         /// </summary>
@@ -115,6 +120,7 @@ namespace Utilities.Shared
             }
             return queue;
         }
+
         /// <summary>
         /// Convert IEnumerable to DataTable
         /// </summary>

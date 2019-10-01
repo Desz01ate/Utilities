@@ -13,17 +13,16 @@
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
-- Obsolete 'HttpRequest' module, you should switch to RestSharp instead.
-- Expression translator now support IEnumerable&lt;T&gt;.Contains method (equivalent to WHERE a IN (x,y,z)).
++ Simplify the dependencies framework by moved .NET Framework 4.6.1 to .NET Standard 2.0 build instead.
++ Add MongoDB support with 'similar interface' as of the current SQL connector.
+[ExpressionTranslator]
++ Fix bugs for IEnumerable&lt;T&gt;.Contains translator.
 
-[Shared.Data]
-+ 'RowBuilder' and 'RowBuilderStrict' performance improvement.
+[SqlConnector]
++ Fix missing method in IDatabaseConnectorExtension interface.
 
-
-[SqlConnectionExtension]
-+ Rename 'GetSchemaOf' to 'GetTableSchema'.
-+ Add 'GetStoredProcedures' methods, which is return information of stored procedures related to database connection.
-+ Add 'GetSchema(SchemaRestriction restriction,string[] param)' overload as an extension to DbConnection for safe-access to existing schema restriction of SQL Server.
+[UnitOfWork Designer]
++ Add EnumeratableRepository.
 
 
 </PackageReleaseNotes>

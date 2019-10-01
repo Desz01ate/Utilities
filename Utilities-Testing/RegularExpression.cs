@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+
 namespace Utilities.Testing
 {
     [TestFixture]
@@ -34,6 +35,7 @@ namespace Utilities.Testing
             }
             Assert.Pass();
         }
+
         [Test]
         public void Email()
         {
@@ -49,6 +51,7 @@ namespace Utilities.Testing
             Assert.IsFalse(emailFalse3);
             Assert.Pass();
         }
+
         [Test]
         public void Digit()
         {
@@ -61,6 +64,7 @@ namespace Utilities.Testing
             }
             Assert.Pass();
         }
+
         [Test]
         public void Text()
         {
@@ -74,6 +78,7 @@ namespace Utilities.Testing
             Assert.IsTrue(Utilities.RegularExpression.IsOnlyText("สวัสดี"));
             Assert.Pass();
         }
+
         [Test]
         public void CitizenId_Length13_ValidCase()
         {
@@ -91,6 +96,7 @@ namespace Utilities.Testing
             }
             Assert.Pass();
         }
+
         [Test]
         public void CitizenId_Length13_InvalidCase()
         {
@@ -108,6 +114,7 @@ namespace Utilities.Testing
             }
             Assert.Pass();
         }
+
         [Test]
         public void CitizenId_NullEmpty_InvalidCase()
         {
@@ -117,6 +124,7 @@ namespace Utilities.Testing
             Assert.AreEqual(false, result2);
             Assert.Pass();
         }
+
         [Test]
         public void CitizenId_LengthNotEqualTo13_InvalidCase()
         {

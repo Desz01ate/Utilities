@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -20,6 +19,7 @@ namespace Utilities.Security.CryptoProvider
             var publicKey = CreatePublicKey(privateKey);
             return (privateKey, publicKey);
         }
+
         /// <summary>
         /// Generate private key.
         /// </summary>
@@ -31,6 +31,7 @@ namespace Utilities.Security.CryptoProvider
             string privateKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(true));
             return privateKey;
         }
+
         /// <summary>
         /// Generate public key using private key.
         /// </summary>
@@ -44,6 +45,7 @@ namespace Utilities.Security.CryptoProvider
             string publicKey = Convert.ToBase64String(rsaProvider.ExportCspBlob(false));
             return publicKey;
         }
+
         /// <summary>
         /// Encrypt raw data using public key
         /// </summary>
@@ -59,6 +61,7 @@ namespace Utilities.Security.CryptoProvider
             byte[] encryptedBytes = rsaProvider.Encrypt(plainBytes, false);
             return encryptedBytes;
         }
+
         /// <summary>
         /// Decrypt encrypted byte array using private key
         /// </summary>
@@ -74,6 +77,5 @@ namespace Utilities.Security.CryptoProvider
             string plainText = Encoding.UTF8.GetString(plainBytes, 0, plainBytes.Length);
             return plainText;
         }
-
     }
 }

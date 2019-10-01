@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Utilities.Attributes.SQL
 {
@@ -12,6 +10,7 @@ namespace Utilities.Attributes.SQL
     public class BindingFlagsAttribute : Attribute
     {
         public BindingFlags BindingFlags;
+
         public BindingFlagsAttribute(BindingFlags bindingFlags)
         {
             this.BindingFlags = bindingFlags;

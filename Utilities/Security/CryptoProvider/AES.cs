@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,6 +30,7 @@ namespace Utilities.Security.CryptoProvider
 
             return encrypted;
         }
+
         /// <summary>
         /// Decrypt data by given key using Advance Encryption Standard.
         /// </summary>
@@ -46,13 +46,9 @@ namespace Utilities.Security.CryptoProvider
             {
                 decrypted = DecryptStringFromBytes_Aes(data, keys[0], keys[1]);
             }
-            catch (CryptographicException ce)
+            catch
             {
-                throw ce;
-            }
-            catch (ArgumentNullException ae)
-            {
-                throw ae;
+                throw;
             }
             return decrypted;
         }
@@ -62,7 +58,7 @@ namespace Utilities.Security.CryptoProvider
             byte[][] result = new byte[2][];
             Encoding enc = Encoding.UTF8;
 
-            SHA256 sha2 = new SHA256CryptoServiceProvider();
+            using SHA256 sha2 = new SHA256CryptoServiceProvider();
 
             byte[] rawKey = enc.GetBytes(key);
             byte[] rawIV = enc.GetBytes(key);
@@ -148,6 +144,5 @@ namespace Utilities.Security.CryptoProvider
             }
             return plaintext;
         }
-
     }
 }

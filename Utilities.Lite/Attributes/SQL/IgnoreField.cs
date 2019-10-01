@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Attributes.SQL
 {
@@ -12,6 +10,7 @@ namespace Utilities.Attributes.SQL
     {
         public bool IgnoreInsert { get; }
         public bool IgnoreUpdate { get; }
+
         public IgnoreFieldAttribute(bool insert, bool update)
         {
             IgnoreInsert = insert;

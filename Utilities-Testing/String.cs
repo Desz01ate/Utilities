@@ -1,12 +1,9 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Testing
 {
     [TestFixture]
-    class String
+    internal class String
     {
         [Test]
         public void LeadingUpper()
@@ -22,6 +19,7 @@ namespace Utilities.Testing
             Assert.AreEqual("This is a string, I do not want to work with it!", result3);
             Assert.Pass();
         }
+
         [Test]
         public void LeadingUpper_AllWords()
         {
@@ -36,6 +34,7 @@ namespace Utilities.Testing
             Assert.AreEqual("This Is A String, I Do Not Want To Work With It!", result3);
             Assert.Pass();
         }
+
         [Test]
         public void LeadingUpper_AllWords_CustomSeperator()
         {

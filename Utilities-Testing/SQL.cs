@@ -1,26 +1,22 @@
 ﻿using MySql.Data.MySqlClient;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.Attributes.SQL;
-using Utilities.SQL;
 using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 
 namespace Utilities.Testing
 {
     [TestFixture]
-    class SQL
+    internal class SQL
     {
         private string _msSqlConnection;
         private string _mySqlConnection;
         private string _sqliteConnection;
+
         [SetUp]
         public void Setup()
         {
@@ -28,6 +24,7 @@ namespace Utilities.Testing
             _mySqlConnection = @"Server=localhost;Database=Local;Uid=root;Pwd=;";
             _sqliteConnection = $@"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files\Local.db")};Version=3;";
         }
+
         [Test]
         public void SQLServerConnectorCRUD()
         {
@@ -50,7 +47,7 @@ namespace Utilities.Testing
                         var selectedAll = connection.Select<TestTable>();
                         Assert.AreEqual(selectedAll.First().id, iter);
                         Assert.AreEqual(selectedAll.First().value, "test");
-                        testTable.value = "updated";
+                        testTable.value = null;//"updated";
                         var affectedUpdate = connection.Update(testTable);
                         Assert.AreEqual(affectedUpdate, 1);
                         var affectedDeleteLambdaInvalid = connection.Delete<TestTable>(x => x.id == iter + 1);
@@ -68,6 +65,7 @@ namespace Utilities.Testing
                 }
             }
         }
+
         [Test]
         public void SQLServerConnector()
         {
@@ -101,6 +99,7 @@ namespace Utilities.Testing
                 }
             }
         }
+
         public void MySQLConnector()
         {
             using (var connection = new MySQL(_mySqlConnection))
@@ -133,6 +132,7 @@ namespace Utilities.Testing
                 }
             }
         }
+
         [Test]
         public void SQLiteConnector()
         {

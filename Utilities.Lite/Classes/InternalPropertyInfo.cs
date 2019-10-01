@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using Utilities.Shared;
 
 namespace Utilities.Classes
@@ -14,10 +12,12 @@ namespace Utilities.Classes
     {
         private string _innerName = null;
         internal readonly PropertyInfo _basePropertyInfo;
+
         public InternalPropertyInfo(PropertyInfo property)
         {
             _basePropertyInfo = property;
         }
+
         public override PropertyAttributes Attributes => _basePropertyInfo.Attributes;
 
         public override bool CanRead => _basePropertyInfo.CanRead;
@@ -40,6 +40,7 @@ namespace Utilities.Classes
                 return _innerName;
             }
         }
+
         public string OriginalName => _basePropertyInfo.Name;
         public override Type ReflectedType => _basePropertyInfo.ReflectedType;
 

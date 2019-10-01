@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.Enum
+﻿namespace Utilities.Enum
 {
     /// <summary>
     /// Provide schema restrictions type for SQL Server (https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/schema-restrictions)

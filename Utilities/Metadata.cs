@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
-using System.Text;
 
 namespace Utilities
 {
     /// <summary>
-    /// Contains information of Utilities library versioning.
+    /// Contains information of Utilities library version.
     /// </summary>
     public static class Metadata
     {
@@ -16,6 +14,7 @@ namespace Utilities
         /// Library version.
         /// </summary>
         public static string Version => ((AssemblyFileVersionAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(), typeof(AssemblyFileVersionAttribute), false)).Version;
+
         /// <summary>
         /// Build target framework version.
         /// </summary>

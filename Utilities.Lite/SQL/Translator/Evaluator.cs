@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
+
 namespace Utilities.SQL.Translator
 {
     internal static class Evaluator
@@ -16,6 +16,7 @@ namespace Utilities.SQL.Translator
         {
             return new SubtreeEvaluator(new Nominator(fnCanBeEvaluated).Nominate(expression)).Eval(expression);
         }
+
         /// <summary>
         /// Performs evaluation and replacement of independent sub-trees
         /// </summary>
@@ -25,24 +26,29 @@ namespace Utilities.SQL.Translator
         {
             return PartialEval(expression, Evaluator.CanBeEvaluatedLocally);
         }
+
         private static bool CanBeEvaluatedLocally(Expression expression)
         {
             return expression.NodeType != ExpressionType.Parameter;
         }
+
         /// <summary>
         /// Evaluates and replaces sub-trees when first candidate is reached (top-down)
         /// </summary>
-        class SubtreeEvaluator : ExpressionVisitor
+        private class SubtreeEvaluator : ExpressionVisitor
         {
-            HashSet<Expression> candidates;
+            private HashSet<Expression> candidates;
+
             internal SubtreeEvaluator(HashSet<Expression> candidates)
             {
                 this.candidates = candidates;
             }
+
             internal Expression Eval(Expression exp)
             {
                 return this.Visit(exp);
             }
+
             public override Expression Visit(Expression exp)
             {
                 if (exp == null)
@@ -55,6 +61,7 @@ namespace Utilities.SQL.Translator
                 }
                 return base.Visit(exp);
             }
+
             private Expression Evaluate(Expression e)
             {
                 if (e.NodeType == ExpressionType.Constant)
@@ -66,25 +73,29 @@ namespace Utilities.SQL.Translator
                 return Expression.Constant(fn.DynamicInvoke(null), e.Type);
             }
         }
+
         /// <summary>
         /// Performs bottom-up analysis to determine which nodes can possibly
         /// be part of an evaluated sub-tree.
         /// </summary>
-        class Nominator : ExpressionVisitor
+        private class Nominator : ExpressionVisitor
         {
-            Func<Expression, bool> fnCanBeEvaluated;
-            HashSet<Expression> candidates;
-            bool cannotBeEvaluated;
+            private Func<Expression, bool> fnCanBeEvaluated;
+            private HashSet<Expression> candidates;
+            private bool cannotBeEvaluated;
+
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
                 this.fnCanBeEvaluated = fnCanBeEvaluated;
             }
+
             internal HashSet<Expression> Nominate(Expression expression)
             {
                 this.candidates = new HashSet<Expression>();
                 this.Visit(expression);
                 return this.candidates;
             }
+
             public override Expression Visit(Expression expression)
             {
                 if (expression != null)

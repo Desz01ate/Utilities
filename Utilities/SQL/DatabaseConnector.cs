@@ -23,19 +23,24 @@ namespace Utilities.SQL
         /// Instance of object that hold information of the connection.
         /// </summary>
         public TDatabaseConnection Connection { get; }
+
         private bool Disposed { get; set; }
+
         /// <summary>
         /// SQL-function configuration for LINQ usage.
         /// </summary>
         public Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
+
         /// <summary>
         /// Connection string of this object.
         /// </summary>
         public virtual string ConnectionString => Connection.ConnectionString;
+
         /// <summary>
-        /// Determine wheter the connection is open or not.
+        /// Determine whether the connection is open or not.
         /// </summary>
         public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -49,6 +54,7 @@ namespace Utilities.SQL
             };
             Connection.Open();
         }
+
         /// <summary>
         /// Protected implementation of dispose pattern
         /// </summary>
@@ -62,6 +68,7 @@ namespace Utilities.SQL
             }
             Disposed = true;
         }
+
         /// <summary>
         /// Object disposer which close the connection related to this object.
         /// </summary>
@@ -70,6 +77,7 @@ namespace Utilities.SQL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         /// <summary>
         /// Shortcut for this.Connection.BeginTransaction()
         /// </summary>
@@ -78,6 +86,7 @@ namespace Utilities.SQL
         {
             return Connection.BeginTransaction();
         }
+
         /// <summary>
         /// Shortcut for this.Connection.BeginTransaction(isolationLevel)
         /// </summary>
@@ -130,10 +139,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -148,6 +157,7 @@ namespace Utilities.SQL
         {
             return ExecuteReader(sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType, transaction);
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -188,10 +198,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
@@ -227,10 +237,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
@@ -265,10 +275,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -311,10 +321,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -329,6 +339,7 @@ namespace Utilities.SQL
         {
             return await ExecuteReaderAsync<T>(sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType, transaction);
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -369,10 +380,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
@@ -408,10 +419,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
@@ -446,10 +457,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return a string
         /// </summary>
@@ -484,10 +495,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return a string in asynchronous manner
         /// </summary>
@@ -522,10 +533,10 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
         /// <summary>
         /// Execute SELECT SQL query and return DataTable
         /// </summary>
@@ -558,13 +569,12 @@ namespace Utilities.SQL
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
 
         /// <summary>
-        /// Execute SELECT SQL query and return DataTable in an asynchronus manner
+        /// Execute SELECT SQL query and return DataTable in an asynchronous manner
         /// </summary>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
@@ -598,6 +608,5 @@ namespace Utilities.SQL
                 throw;
             }
         }
-
     }
 }

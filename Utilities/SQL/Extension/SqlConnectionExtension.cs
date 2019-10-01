@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using Utilities.Classes;
 using Utilities.Enum;
 using Utilities.Shared;
@@ -23,6 +22,7 @@ namespace Utilities.SQL.Extension
         {
             return connection?.GetSchema(restriction.ToString(), parameters);
         }
+
         /// <summary>
         /// Get table schema from current database connection.
         /// </summary>
@@ -41,6 +41,7 @@ namespace Utilities.SQL.Extension
             var result = schema.ToEnumerable<TableSchema>();
             return result;
         }
+
         /// <summary>
         /// Get user-defined stored procedure from current database connection.
         /// </summary>

@@ -2,33 +2,20 @@
 
   <PropertyGroup>
     <!-- <TargetFrameworks>netstandard2.0;net472</TargetFrameworks> -->
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net45;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net45</TargetFrameworks>
     <Authors>Chanvut Booneid</Authors>
     <Company>Deszolate_C</Company>
     <Copyright>Copyright © Chanvut Booneid 2019</Copyright>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.4.2</Version>
+    <Version>0.1.5.2-beta-001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-- Obsolete 'HttpRequest' module, you should switch to RestSharp instead.
-- Expression translator now support IEnumerable&lt;T&gt;.Contains method (equivalent to WHERE a IN (x,y,z)).
-
-[Shared.Data]
-+ 'RowBuilder' and 'RowBuilderStrict' performance improvement.
-
-
-[SqlConnectionExtension]
-+ Rename 'GetSchemaOf' to 'GetTableSchema'.
-+ Add 'GetStoredProcedures' methods, which is return information of stored procedures related to database connection.
-+ Add 'GetSchema(SchemaRestriction restriction,string[] param)' overload as an extension to DbConnection for safe-access to existing schema restriction of SQL Server.
-
-
-</PackageReleaseNotes>
++ Provide optimization for Dapper connector.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -68,8 +55,8 @@
   </PropertyGroup> -->
 
   <ItemGroup>
-    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <!-- <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" /> -->
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -79,13 +66,21 @@
 
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net461'">
-    <Reference Include="System.Net.Http">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Net.Http.dll</HintPath>
-    </Reference>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netstandard2.0'">
       <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="Dapper">
+        <Version>2.0.30</Version>
+      </PackageReference>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+      <PackageReference Include="Dapper">
+        <Version>2.0.30</Version>
+      </PackageReference>
+    </ItemGroup>
 </Project>

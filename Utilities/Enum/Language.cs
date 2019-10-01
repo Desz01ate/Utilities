@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.Enum
+﻿namespace Utilities.Enum
 {
     //reference to https://ctrlq.org/code/19899-google-translate-languages as of 11/08/2019
-    public class Lauguage
+    public static class Language
     {
         public const string Afrikaans = "af";
         public const string Albanian = "sq";
@@ -71,8 +67,5 @@ namespace Utilities.Enum
         public const string Vietnamese = "vi";
         public const string Welsh = "cy";
         public const string Yiddish = "yi";
-
-
-
     }
 }

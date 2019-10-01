@@ -47,7 +47,7 @@
         </member>
         <member name="M:Utilities.Interfaces.ICSVReader.ReadFromCSV(System.String)">
             <summary>
-            Content of csv data line in form of string. 
+            Content of csv data line in form of string.
             </summary>
             <param name="content"></param>
         </member>
@@ -82,9 +82,29 @@
             Provide an essential properties to database connector interface
             </summary>
         </member>
+        <member name="T:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3">
+            <summary>
+            Repository class with IEnumerable functionality.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TDatabase"></typeparam>
+            <typeparam name="TParameter"></typeparam>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3.#ctor(Utilities.Interfaces.IDatabaseConnectorExtension{`1,`2})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="databaseConnector"></param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3.GetEnumerator">
+            <summary>
+            Get enumerator of data repository.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.DesignPattern.UnitOfWork.Components.Repository`3">
             <summary>
-            Example implementation of IGenericRepository with dependency injection of DAL
+            Repository class designed for IDatabaseConnectorExtension.
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TDatabase"></typeparam>
@@ -126,6 +146,18 @@
             <param name="key">Primary key of target object.</param>
         </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(`0)">
+            <summary>
+            Insert data into repository.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Insert data into repository in an asynchronous manner.
+            </summary>
+            <param name="obj">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             Insert data into repository.
             </summary>
@@ -234,6 +266,11 @@
             Inner exception details.
             </summary>
         </member>
+        <member name="T:Utilities.File">
+            <summary>
+            Contains File I/O operation over Json,Csv,Xml file type.
+            </summary>
+        </member>
         <member name="M:Utilities.File.ReadJsonAs``1(System.String,System.IO.FileMode)">
             <summary>
             Read json file and deserialize to object.
@@ -245,10 +282,10 @@
         </member>
         <member name="M:Utilities.File.ReadXmlAs``1(System.String,System.IO.FileMode,System.Boolean)">
             <summary>
-            Read xml file and deserialize to object.
+            Read XML file and deserialize to object.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="path">Path to target xml file.</param>
+            <param name="path">Path to target XML file.</param>
             <param name="fileMode">A constant that determines how to open or create the file.</param>
             <param name="omitRootObject">Omits writing the root object.</param>
             <returns></returns>
@@ -280,16 +317,6 @@
             <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsJson(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.File.WriteAsJson(System.Object,System.String,System.Text.Encoding)">
             <summary>
             Serialize given object and write to json file.
@@ -317,35 +344,6 @@
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.ReadExcelAs``1(System.String,System.Boolean,System.Int32)">
-            <summary>
-            Read excel file and convert to object.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="path">Path to excel file.</param>
-            <param name="hasHeader">Is the file has header.</param>
-            <param name="sheetIndex">Index of target sheet in excel file.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.File.ReadExcelAsDataTable(System.String,System.Int32,ExcelDataReader.ExcelDataSetConfiguration)">
-            <summary>
-            Read excel file and convert to data table.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="path">Path to excel file.</param>
-            <param name="sheetIndex">Index of target sheet in excel file.</param>
-            <param name="configuration">Dataset configuration, see details at https://github.com/ExcelDataReader/ExcelDataReader</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.File.ReadExcel(System.String,System.Int32,System.Boolean)">
-            <summary>
-            Read excel file and convert to dynamic object.
-            </summary>
-            <param name="path">Path to excel file.</param>
-            <param name="hasHeader">Is the file has header.</param>
-            <param name="sheetIndex">Index of target sheet in excel file.</param>
-            <returns></returns>
         </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
@@ -528,7 +526,7 @@
         </member>
         <member name="T:Utilities.Metadata">
             <summary>
-            Contains information of Utilities library versioning.
+            Contains information of Utilities library version.
             </summary>
         </member>
         <member name="P:Utilities.Metadata.Version">
@@ -727,7 +725,7 @@
             This class contains a generic way to build data from specific source such as DbDataReader or from object itself
             </summary>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.Data.RowBuilder``1(System.Data.IDataReader)">
             <summary>
             Convert DbDataReader into POCO object using reflection with unsafe operation (superior in speed but had no consistency guaruntee)
             </summary>
@@ -735,20 +733,42 @@
             <param name="row"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilderStrict``1(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.Data.RowBuilderStrict``1(System.Data.IDataReader)">
             <summary>
-            Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
+            Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slow down the building process)
             </summary>
             <typeparam name="T">typeof specific PO</typeparam>
             <param name="row">data reader to convert to POCO object</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.IDataReader,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Convert DbDataReader into dynamic object with specified column name
+            Convert DbDataReader into dynamic object with specified column name.
             </summary>
             <param name="row">data reader to convert to dynamic object</param>
             <param name="columns">column name container</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.DataRow,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Convert DataRow into dynamic object with specified column name.
+            </summary>
+            <param name="row">data reader to convert to dynamic object</param>
+            <param name="columns">column name container</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.IDataReader)">
+            <summary>
+            Convert DbDataReader into dynamic object.
+            </summary>
+            <param name="row">data reader to convert to dynamic object</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.DataRow)">
+            <summary>
+            Convert DataRow into dynamic object.
+            </summary>
+            <param name="row"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Data.ConvertDataRowTo``1(System.Data.DataRow)">
@@ -759,7 +779,7 @@
             <param name="dr"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.Common.DbDataReader)">
+        <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.IDataReader)">
             <summary>
             Get underlying column name of the DbDataReader.
             </summary>
@@ -815,6 +835,7 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Enumerable.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
             <summary>
             Take last element out of given enumerable
             </summary>
@@ -831,6 +852,7 @@
             <typeparam name="T"></typeparam>
             <param name="source">A base dataset.</param>
             <param name="predicate">A function to test each element for a condition.</param>
+            <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Enumerable.ToStack``1(System.Collections.Generic.IEnumerable{``0})">
@@ -849,7 +871,7 @@
             <typeparam name="T"></typeparam>
             <param name="source"></param>
             <exception cref="T:System.ArgumentNullException"/>
-            <returns></returns>
+            <returns></returns>        
         </member>
         <member name="M:Utilities.Shared.Enumerable.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -857,6 +879,31 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.Shuffle``1(System.Collections.Generic.IEnumerable{``0},System.Random)">
+            <summary>
+            Shuffle dataset inside source enumerable with each equally chance using Fisher-Yates-Durstenfeld shuffle.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="random"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
+        <member name="M:Utilities.Shared.Generic.IsGenericList(System.Object)">
+            <summary>
+            Verify if the object is a generic list.
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Generic.Cast(System.Object,System.Type)">
+            <summary>
+            Internally convert object to target type.
+            </summary>
+            <param name="obj"></param>
+            <param name="targetType"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -883,7 +930,7 @@
         </member>
         <member name="P:Utilities.SQL.DatabaseConnector`2.IsOpen">
             <summary>
-            Determine wheter the connection is open or not.
+            Determine whether the connection is open or not.
             </summary>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.#ctor(System.String)">
@@ -1067,7 +1114,7 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
             <summary>
-            Execute SELECT SQL query and return DataTable in an asynchronus manner
+            Execute SELECT SQL query and return DataTable in an asynchronous manner
             </summary>
             <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
             <param name="parameters">SQL parameters according to the sql parameter.</param>
@@ -1160,6 +1207,15 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -1185,6 +1241,319 @@
             <typeparam name="T"></typeparam>
             <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
+            <summary>
+            Delete data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(ccording to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception"/>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute any non-DML SQL Query
+            </summary>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception"/>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of POCO</returns>
+            <exception cref="T:System.Exception"/>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of POCO</returns>
+            <exception cref="T:System.Exception"/>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object
+            </summary>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <returns>IEnumerable of dynamic object</returns>
+            <exception cref="T:System.Exception"/>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.Comman      <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteQueryGenerate``1(``0)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteQueryGenerate``1(System.Object)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteQueryGenerate``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.GetSchema``1">
+            <summary>
+            Get table schema from current database connection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
+            <summary>
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetSchema(System.Data.Common.DbConnection,Utilities.Enum.SchemaRestriction,System.String[])">
+            <summary>
+            Provide a safe-access to available schema restrictions on SQL Server.
+            </summary>
+            <param name="connection"></param>
+            <param name="restriction"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetTableSchema(System.Data.Common.DbConnection,System.String)">
+            <summary>
+            Get table schema from current database connection.
+            </summary>
+            <param name="connection"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetStoredProcedures(System.Data.Common.DbConnection)">
+            <summary>
+            Get user-defined stored procedure from current database connection.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
+            <summary>
+            Performs evaluation and replacement of independent sub-trees
+            </summary>
+            <param name="expression">The root of the expression tree.</param>
+            <param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>
+            <returns>A new tree with sub-trees evaluated and replaced.</returns>
+        </member>
+        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)">
+            <summary>
+            Performs evaluation and replacement of independent sub-trees
+            </summary>
+            <param name="expression">The root of the expression tree.</param>
+            <returns>A new tree with sub-trees evaluated and replaced.</returns>
+        </member>
+        <member name="T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator">
+            <summary>
+            Evaluates and replaces sub-trees when first candidate is reached (top-down)
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.Translator.Evaluator.Nominator">
+            <summary>
+            Performs bottom-up analysis to determine which nodes can possibly
+            be part of an evaluated sub-tree.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.Translator.ExpressionTranslator`2.VisitBinary(System.Linq.Expressions.BinaryExpression)">
+             <summary>
+            
+             </summary>
+             <param name="b"></param>
+             <returns></returns>
+        </member>
+        <member name="T:Utilities.String">
+            <summary>
+            Collection of extension method for string datatype
+            </summary>
+        </member>
+        <member name="M:Utilities.String.ToLeadingUpper(System.ReadOnlySpan{System.Char},System.Boolean,System.Char)">
+            <summary>
+            Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.ToLeadingUpper(System.String,System.Boolean,System.Char)">
+            <summary>
+            Convert input string to upper case just first character (for the whole input or for each word)
+            </summary>
+            <param name="input"></param>
+            <param name="upperAllWords"></param>
+            <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Slice(System.String,System.Int32)">
+            <summary>
+            Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+            </summary>
+            <param name="input">Input string to slice.</param>
+            <param name="startIndex">Start index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Slice(System.String,System.Int32,System.Int32)">
+            <summary>
+            Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+            </summary>
+            <param name="input">Input string to slice.</param>
+            <param name="startIndex">Start index.</param>
+            <param name="count">Count character.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.ToBase64String(System.String)">
+            <summary>
+            Convert input string to base64 format string
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.FromBase64String(System.String)">
+            <summary>
+            Convert base64 string to original string
+            </summary>
+            <param name="base64String"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Translate(System.String,System.String,System.String)">
+            <summary>
+            Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
+            </summary>
+            <param name="originalText">Original text.</param>
+            <param name="fromLanguage">From language.</param>
+            <param name="toLanguage">To language.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Decimal,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of object</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey">Primary key of specific row</param>
+            <param name="dataBuilder">Row builder template.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to insert.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an insert.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Object to update.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Affected row after an update.</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(``0,System.Data.Common.DbTransaction)">
+            <summary>
+            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
+            <summary>
+            Select data from table by using matched predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="top">Specified TOP(n) rows.</param>
+            <param name="dataBuilder">Row builder template.</param>
             <param name="dataBuilder">Row builder template.</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
@@ -1245,7 +1614,7 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.DROP_TABLE_USE_WITH_CAUTION``1">
             <summary>
-            
+            Drop specific table.
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
@@ -1332,7 +1701,7 @@
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
             <summary>
-            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when neccessary.
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
             </summary>
             <param name="type"></param>
             <returns></returns>
@@ -1359,6 +1728,27 @@
             Get user-defined stored procedure from current database connection.
             </summary>
             <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.SQL.Extension.SqlParameterExtension">
+            <summary>
+            Contains extension method for sql parameter.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Convert sql parameters to Dapper-supported parameters;
+            </summary>
+            <typeparam name="TParameter"></typeparam>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(``0)">
+            <summary>
+            Convert sql parameter to Dapper-supported parameter;
+            </summary>
+            <typeparam name="TParameter"></typeparam>
+            <param name="parameters"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
@@ -1388,11 +1778,11 @@
             </summary>
         </member>
         <member name="M:Utilities.SQL.Translator.ExpressionTranslator`2.VisitBinary(System.Linq.Expressions.BinaryExpression)">
-            <summary>
+             <summary>
             
-            </summary>
-            <param name="b"></param>
-            <returns></returns>
+             </summary>
+             <param name="b"></param>
+             <returns></returns>
         </member>
         <member name="T:Utilities.String">
             <summary>
@@ -1415,6 +1805,23 @@
             <param name="input"></param>
             <param name="upperAllWords"></param>
             <param name="seperator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Slice(System.String,System.Int32)">
+            <summary>
+            Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+            </summary>
+            <param name="input">Input string to slice.</param>
+            <param name="startIndex">Start index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Slice(System.String,System.Int32,System.Int32)">
+            <summary>
+            Slice given string, perform identical to SubString with very-low-to-no memory allocation.
+            </summary>
+            <param name="input">Input string to slice.</param>
+            <param name="startIndex">Start index.</param>
+            <param name="count">Count character.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.ToBase64String(System.String)">

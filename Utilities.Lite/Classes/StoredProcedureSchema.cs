@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Classes
 {
@@ -17,6 +15,7 @@ namespace Utilities.Classes
         public string SPECIFIC_SCHEMA { get; set; }
         public StoredProcedureParameter[] Parameters { get; set; }
     }
+
     public class StoredProcedureParameter
     {
         public string AS_LOCATOR { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -14,6 +13,7 @@ namespace Utilities.Security
     public static class Cryptography
     {
         #region Simple Encryption - Decryption Method
+
         /// <summary>
         /// Encrypt given plain text into hash string with specific salt
         /// </summary>
@@ -55,6 +55,7 @@ namespace Utilities.Security
                 }
             }
         }
+
         /// <summary>
         /// Decrypt given hash string into plain text with specific salt
         /// </summary>
@@ -96,9 +97,11 @@ namespace Utilities.Security
                 }
             }
         }
-        #endregion
+
+        #endregion Simple Encryption - Decryption Method
 
         #region Simple Hash/Salt Generator and Verification
+
         /// <summary>
         /// Generate combination of hash string and salt string from given plain text and salt byte array
         /// </summary>
@@ -116,6 +119,7 @@ namespace Utilities.Security
                 return (Convert.ToBase64String(hash), Convert.ToBase64String(salt));
             }
         }
+
         /// <summary>
         /// Generate combination of hash string and salt string from given plain text
         /// </summary>
@@ -127,6 +131,7 @@ namespace Utilities.Security
         {
             return GenerateHash(plainText, GenerateSalt(), byteSize, iterations);
         }
+
         /// <summary>
         /// Generate combination of hash string and salt string from given plain text and salt base64 string
         /// </summary>
@@ -140,6 +145,7 @@ namespace Utilities.Security
             var saltBytes = Convert.FromBase64String(salt);
             return GenerateHash(plainText, saltBytes, byteSize, iterations);
         }
+
         /// <summary>
         /// Compare the plain text with given hash and salt
         /// </summary>
@@ -153,7 +159,9 @@ namespace Utilities.Security
             var inputHash = GenerateHash(plainText, salt, iterations: iterations);
             return inputHash.Hash == hash;
         }
-        #endregion
+
+        #endregion Simple Hash/Salt Generator and Verification
+
         /// <summary>
         /// Randomly generate salt byte array
         /// </summary>
@@ -167,6 +175,7 @@ namespace Utilities.Security
                 return salt;
             }
         }
+
         private static byte[] GenerateRandomEntropy(int blockSize)
         {
             var randomBytes = new byte[blockSize / 8];
@@ -194,7 +203,7 @@ namespace Utilities.Security
                 byte[] uintBuffer = new byte[sizeof(uint)];
                 while (result.Length < length)
                 {
-#if NET452
+#if NET45
                     rng.GetBytes(uintBuffer);
                     uint num = BitConverter.ToUInt32(uintBuffer, 0);
                     result.Append(combination[(int)(num % combination.Length)]);
@@ -209,6 +218,15 @@ namespace Utilities.Security
                 }
             }
             return result.ToString();
+        }
+
+        internal static byte[] SecureGetBytes(this string key)
+        {
+            Encoding enc = Encoding.UTF8;
+            using SHA256 sha2 = new SHA256CryptoServiceProvider();
+            byte[] rawKey = enc.GetBytes(key);
+            byte[] hashKey = sha2.ComputeHash(rawKey);
+            return hashKey;
         }
     }
 }

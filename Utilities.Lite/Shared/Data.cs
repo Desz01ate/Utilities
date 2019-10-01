@@ -22,7 +22,7 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="row"></param>
         /// <returns></returns>
-        public static T RowBuilder<T>(this DbDataReader row) where T : new()
+        public static T RowBuilder<T>(this IDataReader row) where T : new()
         {
             T instance = new T();
             var cols = row.GetColumns();
@@ -48,13 +48,14 @@ namespace Utilities.Shared
             }
             return instance;
         }
+
         /// <summary>
-        /// Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
+        /// Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slow down the building process)
         /// </summary>
         /// <typeparam name="T">typeof specific PO</typeparam>
         /// <param name="row">data reader to convert to POCO object</param>
         /// <returns></returns>
-        public static T RowBuilderStrict<T>(this DbDataReader row) where T : new()
+        public static T RowBuilderStrict<T>(this IDataReader row) where T : new()
         {
             T instance = new T();
             var cols = row.GetColumns();
@@ -139,13 +140,14 @@ namespace Utilities.Shared
             }
             return instance;
         }
+
         /// <summary>
-        /// Convert DbDataReader into dynamic object with specified column name
+        /// Convert DbDataReader into dynamic object with specified column name.
         /// </summary>
         /// <param name="row">data reader to convert to dynamic object</param>
         /// <param name="columns">column name container</param>
         /// <returns></returns>
-        public static dynamic RowBuilder(this DbDataReader row, IEnumerable<string> columns)
+        public static dynamic RowBuilder(this IDataReader row, IEnumerable<string> columns)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             foreach (var column in columns)
@@ -154,12 +156,48 @@ namespace Utilities.Shared
             }
             return rowInstance;
         }
+        /// <summary>
+        /// Convert DataRow into dynamic object with specified column name.
+        /// </summary>
+        /// <param name="row">data reader to convert to dynamic object</param>
+        /// <param name="columns">column name container</param>
+        /// <returns></returns>
         public static dynamic RowBuilder(this DataRow row, IEnumerable<string> columns)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             for (var idx = 0; idx < columns.Count(); idx++)
             {
                 rowInstance.Add(columns.ElementAt(idx), row?[idx]);
+            }
+            return rowInstance;
+        }
+        /// <summary>
+        /// Convert DbDataReader into dynamic object.
+        /// </summary>
+        /// <param name="row">data reader to convert to dynamic object</param>
+        /// <returns></returns>
+        public static dynamic RowBuilder(this IDataReader row)
+        {
+            var rowInstance = new ExpandoObject() as IDictionary<string, object>;
+            var columns = row.GetColumns();
+            foreach (var column in columns)
+            {
+                rowInstance.Add(column, row?[column]);
+            }
+            return rowInstance;
+        }
+        /// <summary>
+        /// Convert DataRow into dynamic object.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public static dynamic RowBuilder(this DataRow row)
+        {
+            var rowInstance = new ExpandoObject() as IDictionary<string, object>;
+            var columns = row.Table.Columns;
+            foreach (DataColumn column in columns)
+            {
+                rowInstance.Add(column.ColumnName, row?[column]);
             }
             return rowInstance;
         }
