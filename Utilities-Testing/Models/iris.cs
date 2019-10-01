@@ -1,4 +1,5 @@
 using System;
+using Utilities.Attributes.SQL;
 
 namespace Utilities.Testing.Models
 {
@@ -8,8 +9,12 @@ namespace Utilities.Testing.Models
     {
         public double SepalLength { get; set; }
         public double SepalWidth { get; set; }
+        [IgnoreField(true, true)]
         public double PetalLength { get; set; }
+        [IgnoreField(true, true)]
+
         public double PetalWidth { get; set; }
+        [IgnoreField(true, true)]
         public string Label { get; set; }
     }
 }

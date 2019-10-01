@@ -35,6 +35,13 @@ namespace Utilities.Shared
             if (attribute == null) return propertyInfo.Name;
             return attribute.FieldName;
         }
+        internal static IEnumerable<string> FieldNameAttributeValidate(this IEnumerable<PropertyInfo> propertyInfos)
+        {
+            foreach (var property in propertyInfos)
+            {
+                yield return FieldNameAttributeValidate(property);
+            }
+        }
         internal static string TableNameAttributeValidate(this Type type)
         {
             var attribute = type.GetCustomAttribute<TableAttribute>(true);

@@ -39,8 +39,8 @@ namespace ModelGenerator.Services.Generator
             sb.AppendLine($@"Public Class {table.Name.Replace("-", "")}");
             foreach (var column in table.Columns)
             {
-                sb.AppendLine();
-                var type = String.ToLeadingUpper(GetNullableDataType(column));
+                sb.AppendLine(); 
+                var type = Utilities.String.ToLeadingUpper(GetNullableDataType(column));
                 var col = ColumnNameCleanser(column.ColumnName);
 
                 sb.AppendLine($"    Private _{col} As {type}");
