@@ -47,7 +47,7 @@ namespace Utilities.Testing
                         var selectedAll = connection.Select<TestTable>();
                         Assert.AreEqual(selectedAll.First().id, iter);
                         Assert.AreEqual(selectedAll.First().value, "test");
-                        testTable.value = "updated";
+                        testTable.value = null;//"updated";
                         var affectedUpdate = connection.Update(testTable);
                         Assert.AreEqual(affectedUpdate, 1);
                         var affectedDeleteLambdaInvalid = connection.Delete<TestTable>(x => x.id == iter + 1);

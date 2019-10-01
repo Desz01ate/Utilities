@@ -266,6 +266,11 @@
             Inner exception details.
             </summary>
         </member>
+        <member name="T:Utilities.File">
+            <summary>
+            Contains File I/O operation over Json,Csv,Xml file type.
+            </summary>
+        </member>
         <member name="M:Utilities.File.ReadJsonAs``1(System.String,System.IO.FileMode)">
             <summary>
             Read json file and deserialize to object.
@@ -312,16 +317,6 @@
             <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsJson(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.File.WriteAsJson(System.Object,System.String,System.Text.Encoding)">
             <summary>
             Serialize given object and write to json file.
@@ -349,35 +344,6 @@
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.ReadExcelAs``1(System.String,System.Boolean,System.Int32)">
-            <summary>
-            Read excel file and convert to object.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="path">Path to excel file.</param>
-            <param name="hasHeader">Is the file has header.</param>
-            <param name="sheetIndex">Index of target sheet in excel file.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.File.ReadExcelAsDataTable(System.String,System.Int32,ExcelDataReader.ExcelDataSetConfiguration)">
-            <summary>
-            Read excel file and convert to data table.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="path">Path to excel file.</param>
-            <param name="sheetIndex">Index of target sheet in excel file.</param>
-            <param name="configuration">Dataset configuration, see details at https://github.com/ExcelDataReader/ExcelDataReader</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.File.ReadExcel(System.String,System.Int32,System.Boolean)">
-            <summary>
-            Read excel file and convert to dynamic object.
-            </summary>
-            <param name="path">Path to excel file.</param>
-            <param name="hasHeader">Is the file has header.</param>
-            <param name="sheetIndex">Index of target sheet in excel file.</param>
-            <returns></returns>
         </member>
         <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
             <summary>
@@ -789,7 +755,7 @@
         </member>
         <member name="M:Utilities.Shared.Data.RowBuilderStrict``1(System.Data.IDataReader)">
             <summary>
-            Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slower down the building process)
+            Convert DbDataReader into POCO object using reflection using implicit inference (torelance for mismatch data type but slow down the building process)
             </summary>
             <typeparam name="T">typeof specific PO</typeparam>
             <param name="row">data reader to convert to POCO object</param>
@@ -797,10 +763,32 @@
         </member>
         <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.IDataReader,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Convert DbDataReader into dynamic object with specified column name
+            Convert DbDataReader into dynamic object with specified column name.
             </summary>
             <param name="row">data reader to convert to dynamic object</param>
             <param name="columns">column name container</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.DataRow,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Convert DataRow into dynamic object with specified column name.
+            </summary>
+            <param name="row">data reader to convert to dynamic object</param>
+            <param name="columns">column name container</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.IDataReader)">
+            <summary>
+            Convert DbDataReader into dynamic object.
+            </summary>
+            <param name="row">data reader to convert to dynamic object</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Data.RowBuilder(System.Data.DataRow)">
+            <summary>
+            Convert DataRow into dynamic object.
+            </summary>
+            <param name="row"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Data.ConvertDataRowTo``1(System.Data.DataRow)">
@@ -866,16 +854,6 @@
             <exception cref="T:System.Exception"/>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.Enumerable.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Take last element out of given enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentOutOfRangeException"/>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.Shared.Enumerable.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -883,6 +861,7 @@
             <typeparam name="T"></typeparam>
             <param name="source">A base dataset.</param>
             <param name="predicate">A function to test each element for a condition.</param>
+            <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.Enumerable.ToStack``1(System.Collections.Generic.IEnumerable{``0})">
@@ -901,7 +880,7 @@
             <typeparam name="T"></typeparam>
             <param name="source"></param>
             <exception cref="T:System.ArgumentNullException"/>
-            <returns></returns>
+            <returns></returns>        
         </member>
         <member name="M:Utilities.Shared.Enumerable.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -910,6 +889,16 @@
             <typeparam name="T"></typeparam>
             <param name="source"></param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.Enumerable.Shuffle``1(System.Collections.Generic.IEnumerable{``0},System.Random)">
+            <summary>
+            Shuffle dataset inside source enumerable with each equally chance using Fisher-Yates-Durstenfeld shuffle.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="random"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
         </member>
         <member name="M:Utilities.Shared.Generic.IsGenericList(System.Object)">
             <summary>
@@ -928,7 +917,7 @@
         </member>
         <member name="T:Utilities.SQL.DapperConnector`2">
             <summary>
-            Connector which internally combine the original DatabaseConnector and override some methods to use Dapper for high performance workload.
+            Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario.
             </summary>
             <typeparam name="TDatabaseConnection"></typeparam>
             <typeparam name="TParameterType"></typeparam>
@@ -938,6 +927,112 @@
             Constructor
             </summary>
             <param name="connectionString"></param>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute a command asynchronously using Task.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL and return an IEnumerable of dynamic.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL and return an IEnumerable of T.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL and return an IEnumerable of T.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="objectBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL and return an IEnumerable of dynamic.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL and return an IEnumerable of T.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Func{System.Data.Common.DbDataReader,``0},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL and return an IEnumerable of T.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="objectBuilder">This parameter had no effect in Dapper environment.</param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL that selects a single value.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+            <summary>
+            Execute parameterized SQL that selects a single value.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <param name="commandType"></param>
+            <param name="transaction"></param>
+            <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Nullable{System.Int32},System.Func{System.Data.Common.DbDataReader,``0},System.Data.Common.DbTransaction)">
             <summary>
@@ -1620,9 +1715,22 @@
             <param name="connection"></param>
             <returns></returns>
         </member>
+        <member name="T:Utilities.SQL.Extension.SqlParameterExtension">
+            <summary>
+            Contains extension method for sql parameter.
+            </summary>
+        </member>
         <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
-            Convert vanilla sql parameters to dapper-supported parameters;
+            Convert sql parameters to Dapper-supported parameters;
+            </summary>
+            <typeparam name="TParameter"></typeparam>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(``0)">
+            <summary>
+            Convert sql parameter to Dapper-supported parameter;
             </summary>
             <typeparam name="TParameter"></typeparam>
             <param name="parameters"></param>

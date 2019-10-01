@@ -7,7 +7,7 @@ using Utilities.SQL;
 
 namespace Utilities.Testing.SQLConnectors
 {
-    internal class SQLServer : Utilities.SQL.DatabaseConnector<SqlConnection, SqlParameter>
+    internal class SQLServer : Utilities.SQL.DapperConnector<SqlConnection, SqlParameter>
     {
         public SQLServer(string connectionString) : base(connectionString)
         {

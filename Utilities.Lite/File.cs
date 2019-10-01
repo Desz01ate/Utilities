@@ -1,4 +1,4 @@
-﻿using ExcelDataReader;
+﻿//using ExcelDataReader;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,9 @@ using Utilities.Shared;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Contains File I/O operation over Json,Csv,Xml file type.
+    /// </summary>
     public static class File
     {
         /// <summary>
@@ -127,11 +130,11 @@ namespace Utilities
         /// <param name="path">Path to target json file.</param>
         /// <param name="encoding">The encoding to apply to the string.</param>
         /// <returns></returns>
-        public static void WriteAsJson(IEnumerable<object> obj, string path, Encoding encoding)
+        public static void WriteAsJson(object obj, string path, Encoding encoding)
         {
-            if (obj == null && obj.Count() == 0)
+            if (obj == null)
             {
-                throw new ArgumentNullException("Object must not be null and must contains atleast one element.");
+                throw new ArgumentNullException("Object must not be null.");
             }
             if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("json"))
             {
@@ -139,19 +142,6 @@ namespace Utilities
             }
             var json = JsonConvert.SerializeObject(obj);
             System.IO.File.WriteAllText(path, json, encoding);
-        }
-
-        /// <summary>
-        /// Serialize given object and write to json file.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj">Target object.</param>
-        /// <param name="path">Path to target json file.</param>
-        /// <param name="encoding">The encoding to apply to the string.</param>
-        /// <returns></returns>
-        public static void WriteAsJson(object obj, string path, Encoding encoding)
-        {
-            WriteAsJson(new[] { obj }, path, encoding);
         }
 
         /// <summary>
@@ -200,7 +190,7 @@ namespace Utilities
         {
             WriteAsCsv(new[] { data }, path, encoding, fileMode);
         }
-
+#if false
         /// <summary>
         /// Read excel file and convert to object.
         /// </summary>
@@ -296,7 +286,7 @@ namespace Utilities
             }
             return dataset;
         }
-
+#endif
 #if NETSTANDARD2_1
         /// <summary>
         /// Serialize given object and write to json file.

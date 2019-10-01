@@ -11,11 +11,12 @@ using Dapper;
 using Utilities.SQL.Extension;
 using System.Linq;
 using System.Linq.Expressions;
+using Utilities.Shared;
 
 namespace Utilities.SQL
 {
     /// <summary>
-    /// Connector which internally combine the original DatabaseConnector and override some methods to use Dapper for high performance scenario.
+    /// Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario.
     /// </summary>
     /// <typeparam name="TDatabaseConnection"></typeparam>
     /// <typeparam name="TParameterType"></typeparam>
@@ -29,6 +30,160 @@ namespace Utilities.SQL
         /// <param name="connectionString"></param>
         public DapperConnector(string connectionString) : base(connectionString)
         {
+        }
+        /// <summary>
+        /// Execute parameterized SQL.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            return this.Connection.Execute(sql, parameters.ToDapperParameters(), commandType: commandType, transaction: transaction);
+        }
+        /// <summary>
+        /// Execute a command asynchronously using Task.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            return await this.Connection.ExecuteAsync(sql, parameters.ToDapperParameters(), commandType: commandType, transaction: transaction).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Execute parameterized SQL and return an IEnumerable of dynamic.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            List<dynamic> data = new List<dynamic>();
+            using var result = this.Connection.ExecuteReader(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
+            var columns = result.GetColumns();
+            while (result.Read())
+            {
+                data.Add(Utilities.Shared.Data.RowBuilder(result, columns));
+            }
+            return data;
+        }
+        /// <summary>
+        /// Execute parameterized SQL and return an IEnumerable of T.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            List<T> data = new List<T>();
+            using var result = this.Connection.ExecuteReader(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
+            var columns = result.GetColumns();
+            while (result.Read())
+            {
+                data.Add(Data.RowBuilder<T>(result));
+            }
+            return data;
+        }
+        /// <summary>
+        /// Execute parameterized SQL and return an IEnumerable of T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="objectBuilder">This parameter had no effect in Dapper environment.</param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            return this.ExecuteReader<T>(sql, parameters, commandType, transaction);
+        }
+        /// <summary>
+        /// Execute parameterized SQL and return an IEnumerable of dynamic.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            using var result = await this.Connection.ExecuteReaderAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
+            var columns = result.GetColumns();
+            var data = new List<dynamic>();
+            while (result.Read())
+            {
+                data.Add(Utilities.Shared.Data.RowBuilder(result, columns));
+            }
+            return data;
+        }
+        /// <summary>
+        /// Execute parameterized SQL and return an IEnumerable of T.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            using var result = await this.Connection.ExecuteReaderAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
+            var columns = result.GetColumns();
+            var data = new List<T>();
+            while (result.Read())
+            {
+                data.Add(Data.RowBuilder<T>(result));
+            }
+            return data;
+        }
+        /// <summary>
+        /// Execute parameterized SQL and return an IEnumerable of T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="objectBuilder">This parameter had no effect in Dapper environment.</param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            return await this.ExecuteReaderAsync<T>(sql, parameters, commandType, transaction);
+        }
+        /// <summary>
+        /// Execute parameterized SQL that selects a single value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            return this.Connection.ExecuteScalar<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
+        }
+        /// <summary>
+        /// Execute parameterized SQL that selects a single value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public override async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
+        {
+            return await this.Connection.ExecuteScalarAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
         }
         /// <summary>
         /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
