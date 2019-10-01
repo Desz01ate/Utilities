@@ -10,12 +10,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.5.1</Version>
+    <Version>0.1.5.2-beta-001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-+ Provide hotfix for Dapper connector.</PackageReleaseNotes>
++ Provide optimization for Dapper connector.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

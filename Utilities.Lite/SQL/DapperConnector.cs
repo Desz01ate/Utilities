@@ -65,14 +65,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public override IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
         {
-            List<dynamic> data = new List<dynamic>();
-            using var result = this.Connection.ExecuteReader(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
-            var columns = result.GetColumns();
-            while (result.Read())
-            {
-                data.Add(Utilities.Shared.Data.RowBuilder(result, columns));
-            }
-            return data;
+            return this.Connection.Query(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
         }
         /// <summary>
         /// Execute parameterized SQL and return an IEnumerable of T.
@@ -84,14 +77,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public override IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
         {
-            List<T> data = new List<T>();
-            using var result = this.Connection.ExecuteReader(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
-            var columns = result.GetColumns();
-            while (result.Read())
-            {
-                data.Add(Data.RowBuilder<T>(result));
-            }
-            return data;
+            return this.Connection.Query<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
         }
         /// <summary>
         /// Execute parameterized SQL and return an IEnumerable of T.
@@ -117,14 +103,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public override async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
         {
-            using var result = await this.Connection.ExecuteReaderAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
-            var columns = result.GetColumns();
-            var data = new List<dynamic>();
-            while (result.Read())
-            {
-                data.Add(Utilities.Shared.Data.RowBuilder(result, columns));
-            }
-            return data;
+            return await this.Connection.QueryAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
         }
         /// <summary>
         /// Execute parameterized SQL and return an IEnumerable of T.
@@ -136,14 +115,8 @@ namespace Utilities.SQL
         /// <returns></returns>
         public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
         {
-            using var result = await this.Connection.ExecuteReaderAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
-            var columns = result.GetColumns();
-            var data = new List<T>();
-            while (result.Read())
-            {
-                data.Add(Data.RowBuilder<T>(result));
-            }
-            return data;
+            return await this.Connection.QueryAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
+
         }
         /// <summary>
         /// Execute parameterized SQL and return an IEnumerable of T.
@@ -157,7 +130,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
         {
-            return await this.ExecuteReaderAsync<T>(sql, parameters, commandType, transaction);
+            return await this.ExecuteReaderAsync<T>(sql, parameters, commandType, transaction).ConfigureAwait(false);
         }
         /// <summary>
         /// Execute parameterized SQL that selects a single value.
@@ -183,7 +156,7 @@ namespace Utilities.SQL
         /// <returns></returns>
         public override async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
         {
-            return await this.Connection.ExecuteScalarAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
+            return await this.Connection.ExecuteScalarAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
         }
         /// <summary>
         /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
