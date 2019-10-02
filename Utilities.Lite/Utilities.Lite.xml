@@ -918,7 +918,7 @@
             </summary>
             <param name="connectionString"></param>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL.
             </summary>
@@ -928,7 +928,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute a command asynchronously using Task.
             </summary>
@@ -938,7 +938,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL and return an IEnumerable of dynamic.
             </summary>
@@ -948,7 +948,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL and return an IEnumerable of T.
             </summary>
@@ -958,7 +958,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL and return an IEnumerable of dynamic.
             </summary>
@@ -968,7 +968,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL and return an IEnumerable of T.
             </summary>
@@ -978,7 +978,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL that selects a single value.
             </summary>
@@ -989,7 +989,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL that selects a single value.
             </summary>
@@ -998,175 +998,6 @@
             <param name="parameters"></param>
             <param name="commandType"></param>
             <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
-            <summary>
-            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="top">Specified TOP(n) rows.</param>
-            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Object,System.Data.Common.DbTransaction)">
-            <summary>
-            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="primaryKey">Primary key of specific row</param>
-            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Object of given class</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
-            <summary>
-            Select data from table using predicate (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate">Predicate condition of data</param>
-            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Object of given class</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Insert``1(``0,System.Data.Common.DbTransaction)">
-            <summary>
-            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Object to insert.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Affected row after an insert.</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
-            <summary>
-            Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">IEnumrable to insert.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Affected row after an insert.</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Update``1(``0,System.Data.Common.DbTransaction)">
-            <summary>
-            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Object to update.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Affected row after an update.</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Delete``1(``0,System.Data.Common.DbTransaction)">
-            <summary>
-            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj"></param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Delete``1(System.Object,System.Data.Common.DbTransaction)">
-            <summary>
-            Delete given object from table by given primary key. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="primaryKey">Primary key of target row.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
-            <summary>
-            Delete data from table by using matched predicate
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate">Predicate of data in LINQ manner</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
-            <summary>
-            Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="top">Specified TOP(n) rows.</param>
-            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of object</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.SelectAsync``1(System.Object,System.Data.Common.DbTransaction)">
-            <summary>
-            Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="primaryKey">Primary key of specific row</param>
-            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Object of given class</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
-            <summary>
-            Select data from table by using matched predicate
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate">Predicate of data in LINQ manner</param>
-            <param name="top">Specified TOP(n) rows.</param>
-            <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.InsertAsync``1(``0,System.Data.Common.DbTransaction)">
-            <summary>
-            Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Object to insert.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Affected row after an insert.</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
-            <summary>
-            Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Object to insert.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Affected row after an insert.</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
-            <summary>
-            Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Object to update.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>Affected row after an update.</returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.DeleteAsync``1(``0,System.Data.Common.DbTransaction)">
-            <summary>
-            Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj"></param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.DeleteAsync``1(System.Object,System.Data.Common.DbTransaction)">
-            <summary>
-            Delete given object from table by given primary key. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="primaryKey">Primary key of target row.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
-            <summary>
-            Delete data from table by using matched predicate
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate">Predicate of data in LINQ manner</param>
-            <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -1226,7 +1057,7 @@
             <param name="isolationLevel">Specified isolation level.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1239,7 +1070,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -1250,7 +1081,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -1262,7 +1093,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -1273,7 +1104,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1286,7 +1117,7 @@
             <returns>IEnumerable of POCO</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -1296,7 +1127,7 @@
             <returns>IEnumerable of dynamic object</returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -1308,7 +1139,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -1319,7 +1150,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a string
             </summary>
@@ -1330,7 +1161,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a string in asynchronous manner
             </summary>
@@ -1341,7 +1172,7 @@
             <returns></returns>
             <exception cref="T:System.Exception"/>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsDataTable(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsDataTable(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return DataTable
             </summary>
@@ -1351,7 +1182,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.CommandType,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return DataTable in an asynchronous manner
             </summary>
@@ -1361,7 +1192,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1371,7 +1202,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Object,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1381,7 +1212,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(``0,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(``0,System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1390,7 +1221,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
             <summary>
             Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1399,7 +1230,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Update``1(``0,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Update``1(``0,System.Data.IDbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1408,7 +1239,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an update.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(``0,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(``0,System.Data.IDbTransaction)">
             <summary>
             Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1417,7 +1248,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1427,7 +1258,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of object</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1437,7 +1268,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(``0,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1446,7 +1277,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1455,7 +1286,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1464,7 +1295,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an update.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(``0,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
             Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1473,7 +1304,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Select``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -1485,7 +1316,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Delete data from table by using matched predicate
             </summary>
@@ -1494,7 +1325,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -1505,7 +1336,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -1514,7 +1345,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Object,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Delete``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Select data from table by using primary key
             </summary>
@@ -1523,7 +1354,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Object,System.Data.Common.DbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteAsync``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Select data from table by using primary key
             </summary>
@@ -1546,86 +1377,6 @@
             <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectQueryGenerate``1(System.Nullable{System.Int32})">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="top"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectQueryGenerate``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate"></param>
-            <param name="top"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.SelectQueryGenerate``1(System.Object)">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="primaryKey"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertQueryGenerate``1(``0)">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertQueryGenerate``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.UpdateQueryGenerate``1(``0)">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteQueryGenerate``1(``0)">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteQueryGenerate``1(System.Object)">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="primaryKey"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DeleteQueryGenerate``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
-            <summary>
-            Generate SQL query with sql parameters.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="predicate"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.GetSchema``1">
-            <summary>
-            Get table schema from current database connection.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
             <summary>
             Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
@@ -1642,7 +1393,7 @@
             <param name="parameters"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetTableSchema(System.Data.Common.DbConnection,System.String)">
+        <member name="M:Utilities.SQL.Extension.SqlConnectionExtension.GetTableSchema(System.Data.IDbConnection,System.String)">
             <summary>
             Get table schema from current database connection.
             </summary>
@@ -1676,6 +1427,79 @@
             </summary>
             <typeparam name="TParameter"></typeparam>
             <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``2(System.Nullable{System.Int32})">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``2(Utilities.Interfaces.IDatabaseConnectorProperty,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``2(System.Object)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.InsertQueryGenerate``2(``0)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.InsertQueryGenerate``2(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.UpdateQueryGenerate``2(``0)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``2(``0)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``2(System.Object)">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``2(Utilities.Interfaces.IDatabaseConnectorProperty,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Generate SQL query with sql parameters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">

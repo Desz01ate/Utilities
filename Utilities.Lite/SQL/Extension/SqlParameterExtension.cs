@@ -1,4 +1,5 @@
 ﻿#if !NET45
+
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Utilities.SQL.Extension
             }
             return dapperParameters;
         }
+
         /// <summary>
         /// Convert sql parameter to Dapper-supported parameter;
         /// </summary>
@@ -51,4 +53,5 @@ namespace Utilities.SQL.Extension
         }
     }
 }
+
 #endif
