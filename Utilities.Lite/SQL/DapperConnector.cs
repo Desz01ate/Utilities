@@ -80,20 +80,6 @@ namespace Utilities.SQL
             return this.Connection.Query<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
         }
         /// <summary>
-        /// Execute parameterized SQL and return an IEnumerable of T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="objectBuilder">This parameter had no effect in Dapper environment.</param>
-        /// <param name="commandType"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public override IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
-        {
-            return this.ExecuteReader<T>(sql, parameters, commandType, transaction);
-        }
-        /// <summary>
         /// Execute parameterized SQL and return an IEnumerable of dynamic.
         /// </summary>
         /// <param name="sql"></param>
@@ -117,20 +103,6 @@ namespace Utilities.SQL
         {
             return await this.Connection.QueryAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
 
-        }
-        /// <summary>
-        /// Execute parameterized SQL and return an IEnumerable of T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="objectBuilder">This parameter had no effect in Dapper environment.</param>
-        /// <param name="commandType"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null)
-        {
-            return await this.ExecuteReaderAsync<T>(sql, parameters, commandType, transaction).ConfigureAwait(false);
         }
         /// <summary>
         /// Execute parameterized SQL that selects a single value.
@@ -166,7 +138,7 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public override IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public override IEnumerable<T> Select<T>(int? top = null, DbTransaction transaction = null)
         {
             var preparer = SelectQueryGenerate<T>(top);
             var query = preparer.query;
@@ -180,7 +152,7 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public override T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public override T Select<T>(object primaryKey, DbTransaction transaction = null)
         {
             var preparer = SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
@@ -196,7 +168,7 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public override IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public override IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, DbTransaction transaction = null)
         {
             var preparer = SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
@@ -302,7 +274,7 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of object</returns>
-        public override async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public override async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, DbTransaction transaction = null)
         {
             var preparer = SelectQueryGenerate<T>(top);
             var query = preparer.query;
@@ -317,7 +289,7 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public override async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public override async Task<T> SelectAsync<T>(object primaryKey, DbTransaction transaction = null)
         {
             var preparer = SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
@@ -334,7 +306,7 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">This parameter had no effect in Dapper environment.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public override async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public override async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, DbTransaction transaction = null)
         {
             var preparer = SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;

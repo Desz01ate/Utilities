@@ -26,20 +26,12 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual IEnumerable<T> Select<T>(int? top = null, DbTransaction transaction = null)
             where T : class, new()
         {
             var preparer = SelectQueryGenerate<T>(top);
             var query = preparer.query;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = ExecuteReader<T>(query, transaction: transaction);
-            }
-            else
-            {
-                result = ExecuteReader<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
-            }
+            IEnumerable<T> result = ExecuteReader<T>(query, transaction: transaction);
             return result;
         }
 
@@ -51,21 +43,13 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual T Select<T>(object primaryKey, DbTransaction transaction = null)
             where T : class, new()
         {
             var preparer = SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            T result;
-            if (dataBuilder == null)
-            {
-                result = ExecuteReader<T>(query, parameters, transaction: transaction).FirstOrDefault();
-            }
-            else
-            {
-                result = ExecuteReader<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).FirstOrDefault();
-            }
+            T result = ExecuteReader<T>(query, parameters, transaction: transaction).FirstOrDefault();
             return result;
         }
 
@@ -147,20 +131,12 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of object</returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, DbTransaction transaction = null)
             where T : class, new()
         {
             var preparer = SelectQueryGenerate<T>(top);
             var query = preparer.query;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
-            }
-            else
-            {
-                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
-            }
+            var result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -172,21 +148,13 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual async Task<T> SelectAsync<T>(object primaryKey, DbTransaction transaction = null)
             where T : class, new()
         {
             var preparer = SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            T result;
-            if (dataBuilder == null)
-            {
-                result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
-            }
-            else
-            {
-                result = (await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
-            }
+            var result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
 
@@ -266,20 +234,12 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new()
+        public virtual IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, DbTransaction transaction = null) where T : class, new()
         {
             var preparer = SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = ExecuteReader<T>(query, parameters, transaction: transaction);
-            }
-            else
-            {
-                result = ExecuteReader<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
-            }
+            var result = ExecuteReader<T>(query, parameters, transaction: transaction);
             return result;
         }
 
@@ -307,20 +267,12 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new()
+        public virtual async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, DbTransaction transaction = null) where T : class, new()
         {
             var preparer = SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
-            }
-            else
-            {
-                result = await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
-            }
+            var result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 

@@ -17,11 +17,11 @@ namespace Utilities.Interfaces
     {
         #region DML
 
-        IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
+        IEnumerable<T> Select<T>(int? top = null, DbTransaction transaction = null) where T : class, new();
 
-        IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
+        IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, DbTransaction transaction = null) where T : class, new();
 
-        T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
+        T Select<T>(object primaryKey, DbTransaction transaction = null) where T : class, new();
 
         int Insert<T>(T obj, DbTransaction transaction = null) where T : class, new();
 
@@ -36,11 +36,11 @@ namespace Utilities.Interfaces
 
         int Delete<T>(Expression<Func<T, bool>> predicate, DbTransaction transaction = null) where T : class, new();
 
-        Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
+        Task<IEnumerable<T>> SelectAsync<T>(int? top = null, DbTransaction transaction = null) where T : class, new();
 
-        Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
+        Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, DbTransaction transaction = null) where T : class, new();
 
-        Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new();
+        Task<T> SelectAsync<T>(object primaryKey, DbTransaction transaction = null) where T : class, new();
 
         Task<int> InsertAsync<T>(T obj, DbTransaction transaction = null) where T : class, new();
 

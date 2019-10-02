@@ -108,56 +108,26 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
-        public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
-        {
-            try
-            {
-                List<T> result = new List<T>();
-
-                using (var command = Connection.CreateCommand())
-                {
-                    command.CommandText = sql;
-                    command.Transaction = transaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
-                    {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
-                    }
-                    using (var cursor = command.ExecuteReader())
-                    {
-                        while (cursor.Read())
-                        {
-                            result.Add(objectBuilder(cursor));
-                        }
-                    }
-                }
-
-                return result;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        /// <exception cref="Exception"/>
         public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
         {
-            return ExecuteReader(sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType, transaction);
+            using var command = Connection.CreateCommand();
+            command.CommandText = sql;
+            command.Transaction = transaction;
+            command.CommandType = commandType;
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+            }
+            using var cursor = command.ExecuteReader();
+            var converter = new Converter<T>(cursor);
+            while (cursor.Read())
+            {
+                yield return converter.CreateItemFromRow();
+            }
         }
-
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -290,54 +260,33 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
         /// <exception cref="Exception"/>
-        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters, Func<DbDataReader, T> objectBuilder, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
-        {
-            try
-            {
-                List<T> result = new List<T>();
-
-                using (var command = Connection.CreateCommand())
-                {
-                    command.CommandText = sql;
-                    command.Transaction = transaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
-                    {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
-                    }
-                    using (var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false))
-                    {
-                        while (await cursor.ReadAsync().ConfigureAwait(false))
-                        {
-                            result.Add(objectBuilder(cursor));
-                        }
-                    }
-                }
-
-                return result;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        /// <exception cref="Exception"/>
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, CommandType commandType = CommandType.Text, DbTransaction transaction = null) where T : class, new()
         {
-            return await ExecuteReaderAsync<T>(sql, parameters, (cursor) => Data.RowBuilder<T>(cursor), commandType, transaction);
+
+            List<T> result = new List<T>();
+
+            using (var command = Connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction;
+                command.CommandType = commandType;
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                var converter = new Converter<T>(cursor);
+                while (await cursor.ReadAsync().ConfigureAwait(false))
+                {
+                    result.Add(converter.CreateItemFromRow());
+                }
+            }
+
+            return result;
+
         }
 
         /// <summary>
