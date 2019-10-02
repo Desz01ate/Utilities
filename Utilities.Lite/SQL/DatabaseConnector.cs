@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
 {

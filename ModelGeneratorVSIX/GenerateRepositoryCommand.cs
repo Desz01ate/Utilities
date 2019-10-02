@@ -1,17 +1,13 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Globalization;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TextManager.Interop;
 using ModelGenerator.Enum;
+using System;
+using System.ComponentModel.Design;
+using System.IO;
+using System.Runtime.InteropServices;
 using Task = System.Threading.Tasks.Task;
 
 namespace ModelGenerator
@@ -123,7 +119,7 @@ namespace ModelGenerator
             }
             catch
             {
-                
+
             }
             switch (lang)
             {

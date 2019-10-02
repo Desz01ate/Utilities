@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MachineLearning.Examples.Interfaces
+﻿namespace MachineLearning.Examples.Interfaces
 {
     public interface IConstraint
     {

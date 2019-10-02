@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Utilities.Interfaces;
-using Utilities.Shared;
 
 namespace Utilities
 {

@@ -1,8 +1,6 @@
 ﻿using MachineLearning.Shared.Model.Tensorflow;
 using Microsoft.ML;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MachineLearning
 {

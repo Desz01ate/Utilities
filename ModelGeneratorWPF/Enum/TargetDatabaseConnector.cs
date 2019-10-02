@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ModelGeneratorWPF.Enum
+﻿namespace ModelGeneratorWPF.Enum
 {
     public enum TargetDatabaseConnector
     {

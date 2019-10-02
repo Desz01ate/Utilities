@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.Asp.Core.Models
+﻿namespace Utilities.Asp.Core.Models
 {
     public class Response
     {

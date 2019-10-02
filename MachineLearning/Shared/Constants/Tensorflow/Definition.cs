@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MachineLearning.Shared.Constants.Tensorflow
+﻿namespace MachineLearning.Shared.Constants.Tensorflow
 {
     public struct TfImage
     {

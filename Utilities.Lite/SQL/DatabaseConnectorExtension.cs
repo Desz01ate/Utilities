@@ -4,14 +4,10 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using Utilities.Classes;
-using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
 using Utilities.SQL.Extension;
-using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
 {

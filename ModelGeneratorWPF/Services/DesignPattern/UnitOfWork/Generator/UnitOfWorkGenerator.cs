@@ -1,9 +1,6 @@
 ﻿using ModelGenerator.Services.DesignPattern.Interfaces;
-using ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton;
-using ModelGeneratorWPF.Enum;
 using System;
 using System.Data.Common;
-using System.Data.SqlClient;
 
 namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Generator
 {

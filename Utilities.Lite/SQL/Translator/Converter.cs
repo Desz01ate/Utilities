@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
+using Utilities.Shared;
 
-namespace Utilities.Shared
+namespace Utilities.SQL.Translator
 {
     /// <summary>
-    /// alternative to reflection builder with MUCH better on performance, taking implementation from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
+    /// alternative to reflection builder with MUCH better on performance, implementation taken from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
     /// </summary>
     /// <typeparam name="T"></typeparam>
     internal class Converter<T>
@@ -33,9 +32,10 @@ namespace Utilities.Shared
                                         .Select(i => new { i, name = dataReader.GetName(i) });
             foreach (var column in columnNames)
             {
-                var property = targetExp.Type.GetProperty(
-                    column.name,
-                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                //var property = targetExp.Type.GetProperty(
+                //    column.name,
+                //    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                var property = targetExp.Type.GetUnderlyingPropertyByName(column.name);
                 if (property == null)
                     continue;
 

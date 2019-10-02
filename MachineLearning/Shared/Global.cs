@@ -1,13 +1,8 @@
-﻿using MachineLearning.Shared.DataStructures;
-using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Trainers;
-using Microsoft.ML.Transforms;
+﻿using Microsoft.ML;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace MachineLearning

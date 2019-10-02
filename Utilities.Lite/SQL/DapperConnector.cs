@@ -17,7 +17,7 @@ using Utilities.SQL.Extension;
 namespace Utilities.SQL
 {
     /// <summary>
-    /// Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario.
+    /// Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario, however some functionality might not fully cover for Dapper connector like attributes, internal mapper etc.
     /// </summary>
     /// <typeparam name="TDatabaseConnection"></typeparam>
     /// <typeparam name="TParameterType"></typeparam>

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
 using Utilities.Interfaces;
 
 namespace Utilities.DesignPattern.UnitOfWork.Components

@@ -1,10 +1,27 @@
-﻿using Microsoft.ML;
+﻿
+/* Unmerged change from project 'MachineLearning (netstandard2.1)'
+Before:
+using Microsoft.ML;
+After:
+using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
+using Microsoft.ML;
+*/
+
+/* Unmerged change from project 'MachineLearning (net461)'
+Before:
+using Microsoft.ML;
+After:
+using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
+using Microsoft.ML;
+*/
+using MachineLearning.Shared;
+using Microsoft.ML;
 using Microsoft.ML.Trainers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MachineLearning.Shared;
-using MachineLearning.Shared.Attributes;
 
 namespace MachineLearning
 {

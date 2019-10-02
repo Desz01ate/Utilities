@@ -4,7 +4,6 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Asp.Core.Configurations
 {

@@ -29,6 +29,14 @@
             Attribute for table name customization
             </summary>
         </member>
+        <member name="T:Utilities.Classes.Dictionary`3">
+            <summary>
+            Represents a collection of multi-keys and values.
+            </summary>
+            <typeparam name="TKey1"></typeparam>
+            <typeparam name="TKey2"></typeparam>
+            <typeparam name="TValue"></typeparam>
+        </member>
         <member name="T:Utilities.Classes.InternalPropertyInfo">
             <summary>
             Proxy for PropertyInfo for customizable property for internal use.
@@ -341,26 +349,6 @@
             Serialize given object and write to csv file.
             </summary>
             <param name="data">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
@@ -740,12 +728,6 @@
             <param name="encryptedBytes">Encrypted byte array</param>
             <returns>Raw data of encrypted byte array</returns>
         </member>
-        <member name="T:Utilities.Shared.Converter`1">
-            <summary>
-            alternative to reflection builder with MUCH better on performance, taking implementation from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
         <member name="T:Utilities.Shared.Data">
             <summary>
             This class contains a generic way to build data from specific source such as DbDataReader or from object itself
@@ -844,6 +826,17 @@
             <exception cref="T:System.Exception"/>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.Enumerable.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.Shared.Enumerable.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -907,7 +900,7 @@
         </member>
         <member name="T:Utilities.SQL.DapperConnector`2">
             <summary>
-            Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario.
+            Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario, however some functionality might not fully cover for Dapper connector like attributes, internal mapper etc.
             </summary>
             <typeparam name="TDatabaseConnection"></typeparam>
             <typeparam name="TParameterType"></typeparam>
@@ -1501,6 +1494,12 @@
             <typeparam name="T"></typeparam>
             <param name="predicate"></param>
             <returns></returns>
+        </member>
+        <member name="T:Utilities.SQL.Translator.Converter`1">
+            <summary>
+            alternative to reflection builder with MUCH better on performance, implementation taken from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
             <summary>

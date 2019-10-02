@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MachineLearning.Shared.Model.Interfaces
+﻿namespace MachineLearning.Shared.Model.Interfaces
 {
     public interface IMLConstraint
     {

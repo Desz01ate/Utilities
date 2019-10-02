@@ -1,13 +1,61 @@
-﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Trainers;
+﻿
+/* Unmerged change from project 'MachineLearning (netstandard2.1)'
+Before:
+using Microsoft.ML;
+After:
+using MachineLearning.ML;
+*/
+
+/* Unmerged change from project 'MachineLearning (net461)'
+Before:
+using Microsoft.ML;
+After:
+using MachineLearning.ML;
+*/
+using MachineLearning.Shared;
+using Microsoft.Shared;
+using MachineLearning.Shared.Attributes;
+using Microsoft.ML;
+
+/* Unmerged change from project 'MachineLearning (netstandard2.1)'
+Before:
 using Microsoft.ML.Transforms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+After:
+using Microsoft.ML.Data;
+*/
+
+/* Unmerged change from project 'MachineLearning (net461)'
+Before:
+using Microsoft.ML.Transforms;
+After:
+using Microsoft.ML.Data;
+*/
+using Microsoft.ML.Trainers.FastTree;
+using Microsoft.ML.Trainers;
+using Microsoft.ML.Trainers.FastTree;
+using Microsoft.ML.Transforms;
+/* Unmerged change from project 'MachineLearning (netstandard2.1)'
+Before:
 using MachineLearning.Shared;
 using MachineLearning.Shared.Attributes;
 using Microsoft.ML.Trainers.FastTree;
+After:
+using System;
+using System.Collections.Generic;
+using System.Linq;
+*/
+
+/* Unmerged change from project 'MachineLearning (net461)'
+Before:
+using MachineLearning.Shared;
+using MachineLearning.Shared.Attributes;
+using Microsoft.ML.Trainers.FastTree;
+After:
+using System;
+using System.Collections.Generic;
+using System.Linq;
+*/
+
 
 namespace MachineLearning
 {

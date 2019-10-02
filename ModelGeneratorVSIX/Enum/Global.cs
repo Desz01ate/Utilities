@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace ModelGenerator.Enum
 {
@@ -12,7 +8,7 @@ namespace ModelGenerator.Enum
         {
             var fi = source.GetType().GetField(source.ToString());
             var attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
-            if (attributes != null && attributes.Length > 0) 
+            if (attributes != null && attributes.Length > 0)
                 return attributes[0].Description;
             return source.ToString();
         }

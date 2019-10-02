@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MachineLearning.Shared.DataStructures
+﻿namespace MachineLearning.Shared.DataStructures
 {
     public class CombinedFeature
     {

@@ -3,7 +3,6 @@ using System;
 using System.Data.Common;
 using System.IO;
 using System.Text;
-using Utilities;
 using Utilities.Classes;
 
 namespace ModelGenerator.Services.Generator

@@ -1,10 +1,6 @@
-﻿using MachineLearning.Examples.Classes;
-using MachineLearning.Examples.Interfaces;
-using MachineLearning.Shared.Attributes;
+﻿using MachineLearning.Shared.Attributes;
 using MachineLearning.Shared.Model;
 using Microsoft.ML.Data;
-using System;
-using System.Data.Common;
 using Utilities.Attributes.SQL;
 
 namespace MachineLearning.Examples.POCO

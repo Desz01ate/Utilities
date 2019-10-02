@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
-using System.Text;
 using Utilities.Interfaces;
-using Utilities.SQL;
 
 namespace Utilities.DesignPattern.UnitOfWork.Components
 {
