@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -26,20 +27,11 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual IEnumerable<T> Select<T>(int? top = null, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = SelectQueryGenerate<T>(top);
-            var query = preparer.query;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = ExecuteReader<T>(query, transaction: transaction);
-            }
-            else
-            {
-                result = ExecuteReader<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
-            }
+            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
+            IEnumerable<T> result = ExecuteReader<T>(query, transaction: transaction);
             return result;
         }
 
@@ -51,21 +43,13 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual T Select<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual T Select<T>(object primaryKey, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = SelectQueryGenerate<T>(primaryKey);
+            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            T result;
-            if (dataBuilder == null)
-            {
-                result = ExecuteReader<T>(query, parameters, transaction: transaction).FirstOrDefault();
-            }
-            else
-            {
-                result = ExecuteReader<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).FirstOrDefault();
-            }
+            T result = ExecuteReader<T>(query, parameters, transaction: transaction).FirstOrDefault();
             return result;
         }
 
@@ -76,11 +60,11 @@ namespace Utilities.SQL
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual int Insert<T>(T obj, DbTransaction transaction = null)
+        public virtual int Insert<T>(T obj, IDbTransaction transaction = null)
             where T : class, new()
         {
             if (obj == null) return -1;
-            var preparer = InsertQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -94,11 +78,11 @@ namespace Utilities.SQL
         /// <param name="obj">IEnumrable to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual int Insert<T>(IEnumerable<T> obj, DbTransaction transaction = null)
+        public virtual int Insert<T>(IEnumerable<T> obj, IDbTransaction transaction = null)
             where T : class, new()
         {
             if (obj == null || !obj.Any()) return -1;
-            var preparer = InsertQueryGenerate(obj);
+            var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -112,10 +96,10 @@ namespace Utilities.SQL
         /// <param name="obj">Object to update.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an update.</returns>
-        public virtual int Update<T>(T obj, DbTransaction transaction = null)
+        public virtual int Update<T>(T obj, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = UpdateQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.UpdateQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var value = ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -129,10 +113,10 @@ namespace Utilities.SQL
         /// <param name="obj"></param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual int Delete<T>(T obj, DbTransaction transaction = null)
+        public virtual int Delete<T>(T obj, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = DeleteQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -147,20 +131,11 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of object</returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = SelectQueryGenerate<T>(top);
-            var query = preparer.query;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
-            }
-            else
-            {
-                result = await ExecuteReaderAsync<T>(query, null, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
-            }
+            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
+            var result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -172,21 +147,13 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> SelectAsync<T>(object primaryKey, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null)
+        public virtual async Task<T> SelectAsync<T>(object primaryKey, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = SelectQueryGenerate<T>(primaryKey);
+            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            T result;
-            if (dataBuilder == null)
-            {
-                result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
-            }
-            else
-            {
-                result = (await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
-            }
+            var result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
 
@@ -197,9 +164,9 @@ namespace Utilities.SQL
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual async Task<int> InsertAsync<T>(T obj, DbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> InsertAsync<T>(T obj, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = InsertQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
@@ -213,9 +180,9 @@ namespace Utilities.SQL
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual async Task<int> InsertAsync<T>(IEnumerable<T> obj, DbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> InsertAsync<T>(IEnumerable<T> obj, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = InsertQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
@@ -229,10 +196,10 @@ namespace Utilities.SQL
         /// <param name="obj">Object to update.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an update.</returns>
-        public virtual async Task<int> UpdateAsync<T>(T obj, DbTransaction transaction = null)
+        public virtual async Task<int> UpdateAsync<T>(T obj, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = UpdateQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.UpdateQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
@@ -246,10 +213,10 @@ namespace Utilities.SQL
         /// <param name="obj"></param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(T obj, DbTransaction transaction = null)
+        public virtual async Task<int> DeleteAsync<T>(T obj, IDbTransaction transaction = null)
             where T : class, new()
         {
-            var preparer = DeleteQueryGenerate<T>(obj);
+            var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
             var result = await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
@@ -266,20 +233,12 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new()
+        public virtual IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = SelectQueryGenerate<T>(predicate, top);
+            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = ExecuteReader<T>(query, parameters, transaction: transaction);
-            }
-            else
-            {
-                result = ExecuteReader<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction);
-            }
+            var result = ExecuteReader<T>(query, parameters, transaction: transaction);
             return result;
         }
 
@@ -290,9 +249,9 @@ namespace Utilities.SQL
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual int Delete<T>(Expression<Func<T, bool>> predicate, DbTransaction transaction = null) where T : class, new()
+        public virtual int Delete<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = DeleteQueryGenerate<T>(predicate);
+            var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(this, predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
             return ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -307,20 +266,12 @@ namespace Utilities.SQL
         /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, Func<DbDataReader, T> dataBuilder = null, DbTransaction transaction = null) where T : class, new()
+        public virtual async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = SelectQueryGenerate<T>(predicate, top);
+            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            IEnumerable<T> result;
-            if (dataBuilder == null)
-            {
-                result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
-            }
-            else
-            {
-                result = await ExecuteReaderAsync<T>(query, parameters, objectBuilder: (cursor) => dataBuilder(cursor), transaction: transaction).ConfigureAwait(false);
-            }
+            var result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -331,9 +282,9 @@ namespace Utilities.SQL
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate, DbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = DeleteQueryGenerate<T>(predicate);
+            var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(this, predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
             return await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
@@ -346,9 +297,9 @@ namespace Utilities.SQL
         /// <param name="primaryKey">Specified primary key.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual int Delete<T>(object primaryKey, DbTransaction transaction = null) where T : class, new()
+        public virtual int Delete<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = DeleteQueryGenerate<T>(primaryKey);
+            var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
             return ExecuteNonQuery(query, parameters, transaction: transaction);
@@ -361,9 +312,9 @@ namespace Utilities.SQL
         /// <param name="primaryKey">Specified primary key.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(object primaryKey, DbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> DeleteAsync<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new()
         {
-            var preparer = DeleteQueryGenerate<T>(primaryKey);
+            var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
             return await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
@@ -393,204 +344,6 @@ namespace Utilities.SQL
             var tableName = typeof(T).TableNameAttributeValidate();
             var query = $@"DROP TABLE {tableName}";
             return this.ExecuteNonQuery(query);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="top"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(int? top = null) where T : class, new()
-        {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var query = string.Format("SELECT {0} * FROM {1}", top.HasValue ? $"TOP({top.Value})" : "", tableName);
-            return (query, null);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate"></param>
-        /// <param name="top"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
-        {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-            var translateResult = translator.Translate(predicate);
-            var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
-            return (query, translateResult.Parameters);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="primaryKey"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T>(object primaryKey) where T : class, new()
-        {
-            var type = typeof(T);
-            var tableName = type.TableNameAttributeValidate();
-            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
-            var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
-            var parameter = new TParameterType()
-            {
-                ParameterName = primaryKeyAttribute.Name,
-                Value = primaryKey
-            };
-            return (query, new[] { parameter });
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(T obj) where T : class, new()
-        {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.Data.CRUDDataMapping(obj, SqlType.Insert);
-            var query = $@"INSERT INTO {tableName}
-                              ({string.Join(",", kvMapper.Select(field => field.Key))})
-                              VALUES
-                              ({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})";
-            var parameters = kvMapper.Select(field => new TParameterType()
-            {
-                ParameterName = $"@{field.Key}",
-                Value = field.Value
-            });
-            return (query, parameters);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T>(IEnumerable<T> obj) where T : class, new()
-        {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.Data.CRUDDataMapping(obj.First(), SqlType.Insert);
-            var query = new StringBuilder($@"INSERT INTO {tableName}({string.Join(",", kvMapper.Select(field => field.Key))}) VALUES");
-            var values = new List<string>();
-            var parameters = new List<TParameterType>();
-            for (var idx = 0; idx < obj.Count(); idx++)
-            {
-                var o = obj.ElementAt(idx);
-                var map = Shared.Data.CRUDDataMapping(o, SqlType.Insert);
-
-                values.Add($"({ string.Join(",", map.Select(field => $"@{field.Key}{idx}"))})");
-                parameters.AddRange(map.Select(field => new TParameterType()
-                {
-                    ParameterName = $"@{field.Key}{idx}",
-                    Value = field.Value
-                }));
-            }
-            var joinedValue = string.Join(",", values);
-            query.Append(joinedValue);
-            return (query.ToString(), parameters);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) UpdateQueryGenerate<T>(T obj) where T : class, new()
-        {
-            var type = typeof(T);
-            var tableName = type.TableNameAttributeValidate();
-            var primaryKey = type.PrimaryKeyAttributeValidate();
-            var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.Data.CRUDDataMapping(obj, SqlType.Update);
-            parameters.Remove(primaryKey.Name);
-            var query = $@"UPDATE {tableName} SET
-                               {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-                                WHERE
-                               {primaryKey.Name} = @{primaryKey.Name}";
-            var parametersArray = parameters.Select(x => new TParameterType()
-            {
-                ParameterName = $"@{x.Key}",
-                Value = x.Value
-            }).ToList();
-            parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-            return (query, parametersArray);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(T obj) where T : class, new()
-        {
-            var type = typeof(T);
-            var tableName = type.TableNameAttributeValidate();
-            var primaryKey = type.PrimaryKeyAttributeValidate();
-
-            var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
-            var parameters = new[] {
-                    new TParameterType()
-                    {
-                        ParameterName = primaryKey.Name,
-                        Value = primaryKey.GetValue(obj)
-                    } };
-            return (query, parameters);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="primaryKey"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(object primaryKey) where T : class, new()
-        {
-            var type = typeof(T);
-            var tableName = type.TableNameAttributeValidate();
-            var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
-            var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
-            var parameters = new[] {
-                    new TParameterType()
-                    {
-                        ParameterName = primaryKeyAttribute.Name,
-                        Value = primaryKey
-                    }
-                };
-            return (query, parameters);
-        }
-
-        /// <summary>
-        /// Generate SQL query with sql parameters.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public virtual (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T>(Expression<Func<T, bool>> predicate) where T : class, new()
-        {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            var translator = new ExpressionTranslator<T, TParameterType>(SQLFunctionConfiguration);
-            var translateResult = translator.Translate(predicate);
-            var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
-            return (query, translateResult.Parameters);
-        }
-
-        /// <summary>
-        /// Get table schema from current database connection.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public virtual IEnumerable<TableSchema> GetSchema<T>() where T : class, new()
-        {
-            var tableName = typeof(T).TableNameAttributeValidate();
-            return Connection.GetTableSchema(tableName);
         }
 
         /// <summary>

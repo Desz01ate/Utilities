@@ -10,12 +10,17 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.1.5.2-beta-001</Version>
+    <Version>0.2.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-+ Provide optimization for Dapper connector.</PackageReleaseNotes>
++ Welcome to version 0.2.0 this version is drastically improvement (and breaking things too!) read changes log below
+
+[SQL]
++ Simplify the interface by lower tight coupling and remove some method out to lower the need for customize implementation.
++ New way to build data from IDataReader which is very very significant improvement on both execution speed and memory efficient, result in remove Func&lt;IDataReader,T&gt; from all IDatabaseConnector interface!
++ All query-generate methods has been moved to Utilities.SQL.Extension.SqlQueryExtension</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

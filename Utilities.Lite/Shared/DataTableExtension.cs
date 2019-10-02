@@ -13,13 +13,13 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ToEnumerable<T>(this DataTable data, Func<DataTableReader, T> builder = null) where T : class, new()
+        public static IEnumerable<T> ToEnumerable<T>(this DataTable data) where T : class, new()
         {
             using var dataReader = new DataTableReader(data);
-            var action = builder ?? Data.RowBuilder<T>;
+            var converter = new Converter<T>(dataReader);
             while (dataReader.Read())
             {
-                yield return action(dataReader);
+                yield return converter.CreateItemFromRow();
             }
         }
 

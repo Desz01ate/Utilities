@@ -74,6 +74,7 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             sb.AppendLine("using System.Data.Common;");
             sb.AppendLine("using Utilities.Interfaces;");
             sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine($"using System.Data;");
             sb.AppendLine($"using {Namespace}.Repositories;");
             sb.AppendLine();
             sb.AppendLine($@"namespace {Namespace}");
