@@ -9,22 +9,28 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.0.7.2</Version>
+    <Version>0.2.0</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
-+ Simplify the dependencies framework by moved .NET Framework 4.6.1 to .NET Standard 2.0 build instead.
-+ Add MongoDB support with 'similar interface' as of the current SQL connector.
-[ExpressionTranslator]
-+ Fix bugs for IEnumerable&lt;T&gt;.Contains translator.
-
-[SqlConnector]
-+ Fix missing method in IDatabaseConnectorExtension interface.
-
-[UnitOfWork Designer]
-+ Add EnumeratableRepository.
++ Package version has been push up to 0.2.0 to reflect both Utilities and Utilities.Lite in the same development branch.
++ Welcome to version 0.2.0 this version is drastically improvement (and breaking things too!) read changes log below.
+- Remove Exceptions as it only use just for one specific reason and not worth increasing the overall library size.
++ Utilities.Shared.Data renamed to Utilities.Shared.DataExtension
++ Utilities.Shared.Enumerable renamed to Utilities.Shared.EnumerableExtension
 
 
+[Interfaces]
++ All interfaces now documented.
+
+[SQL]
++ Simplify the interface by lower tight coupling and remove some method out to lower the need for customize implementation.
++ New way to build data from IDataReader which is very very significant improvement on both execution speed and memory efficient, result in remove Func&lt;IDataReader,T&gt; from all IDatabaseConnector interface!
++ All query-generate methods has been moved to Utilities.SQL.Extension.SqlQueryExtension.
++ Select / SelectAsync renamed to Query / QueryAsync.
+
+[DesignPattern - Repository]
++ Select / SelectAsync renamed to Query / QueryAsync.
 </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
@@ -39,8 +45,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.9.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
@@ -52,6 +56,6 @@
     <PackageReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="system.data.sqlclient" Version="4.6.0" />
     <PackageReference Condition="'$(TargetFramework)' == 'netstandard2.1'" Include="Microsoft.Data.SqlClient" Version="1.0.19249.1" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
   </ItemGroup>
-
 </Project>

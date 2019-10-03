@@ -8,7 +8,7 @@ namespace Utilities.Shared
     /// <summary>
     /// Collection of Emnumerable extension methods
     /// </summary>
-    public static class Enumerable
+    public static class EnumerableExtension
     {
         /// <summary>
         /// Combine 2 or more enumerable of the same type into new enumerable
@@ -46,6 +46,8 @@ namespace Utilities.Shared
             }
             return source.Skip(startIndex).Take(count);
         }
+#if !NETSTANDARD2_1
+        /// This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
 
         /// <summary>
         /// Take last element out of given enumerable
@@ -62,18 +64,21 @@ namespace Utilities.Shared
             {
                 throw new ArgumentOutOfRangeException($"Count must not exceed total element of source.");
             }
-            return source.Skip(Math.Max(0, totalElement - count));
+            return count <= 0 ? System.Linq.Enumerable.Empty<T>() : source.Skip(Math.Max(0, totalElement - count));
         }
-
+#endif
         /// <summary>
         /// Splits the collection into two collections, which is paired as Match and Unmatch.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">A base dataset.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <exception cref="ArgumentNullException"/>
         /// <returns></returns>
         public static (IEnumerable<T> Match, IEnumerable<T> Unmatch) Partition<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
+            if (source == null)
+                throw new ArgumentNullException("source must not be null");
             var match = source.Where(predicate);
             var unmatch = source.Except(match);
             return (match, unmatch);
@@ -90,13 +95,9 @@ namespace Utilities.Shared
         {
             if (source == null)
             {
-                throw new ArgumentNullException("Dataset must not be null");
+                throw new ArgumentNullException("source must not be null");
             }
-            var stack = new Stack<T>();
-            foreach (var data in source)
-            {
-                stack.Push(data);
-            }
+            var stack = new Stack<T>(source);
             return stack;
         }
 
@@ -106,18 +107,14 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <exception cref="ArgumentNullException"/>
-        /// <returns></returns>
+        /// <returns></returns>        
         public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
         {
             if (source == null)
             {
-                throw new ArgumentNullException("Dataset must not be null");
+                throw new ArgumentNullException("source must not be null");
             }
-            var queue = new Queue<T>();
-            foreach (var data in source)
-            {
-                queue.Enqueue(data);
-            }
+            var queue = new Queue<T>(source);
             return queue;
         }
 
@@ -145,6 +142,28 @@ namespace Utilities.Shared
                 dt.Rows.Add(dr);
             }
             return dt;
+        }
+        /// <summary>
+        /// Shuffle dataset inside source enumerable with each equally chance using Fisher-Yates-Durstenfeld shuffle.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="random"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"/>
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random random = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source must not be null.");
+            var buffer = source.ToList();
+            if (random == null)
+                random = new Random();
+            for (var idx = 0; idx < buffer.Count; idx++)
+            {
+                int tempIdx = random.Next(idx, buffer.Count);
+                yield return buffer[tempIdx];
+                buffer[tempIdx] = buffer[idx];
+            }
         }
     }
 }

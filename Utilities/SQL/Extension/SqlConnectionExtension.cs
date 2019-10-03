@@ -9,6 +9,9 @@ using Utilities.Shared;
 
 namespace Utilities.SQL.Extension
 {
+    /// <summary>
+    /// Provide extension for DbConnection.
+    /// </summary>
     public static class SqlConnectionExtension
     {
         /// <summary>
@@ -29,7 +32,7 @@ namespace Utilities.SQL.Extension
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public static IEnumerable<TableSchema> GetTableSchema(this DbConnection connection, string tableName)
+        public static IEnumerable<TableSchema> GetTableSchema(this IDbConnection connection, string tableName)
         {
             if (connection == null) throw new ArgumentNullException("Connection must not be null");
             if (connection.State != ConnectionState.Open) throw new Exception("Connection is not open.");

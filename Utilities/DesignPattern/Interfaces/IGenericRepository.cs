@@ -8,12 +8,25 @@ namespace Utilities.Interfaces
     /// <typeparam name="T"></typeparam>
     public interface IGenericRepository<T> where T : class
     {
-        IEnumerable<T> Select();
-
-        void Insert(T obj);
-
-        void Update(T obj);
-
-        void Delete(T obj);
+        /// <summary>
+        /// Select data from repository.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<T> Query();
+        /// <summary>
+        /// Insert data to repository;
+        /// </summary>
+        /// <param name="data"></param>
+        void Insert(T data);
+        /// <summary>
+        /// Update data to repostiory;
+        /// </summary>
+        /// <param name="data"></param>
+        void Update(T data);
+        /// <summary>
+        /// Delete data from repository;
+        /// </summary>
+        /// <param name="data"></param>
+        void Delete(T data);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.Data;
 using System.Linq;
 
 namespace Utilities.Shared
@@ -12,7 +12,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <param name="dataReader"></param>
         /// <returns></returns>
-        public static IEnumerable<string> GetColumns(this DbDataReader dataReader)
+        internal static IEnumerable<string> GetColumns(this IDataReader dataReader)
         {
             if (dataReader == null) throw new ArgumentNullException($"{nameof(dataReader)} must not be null.");
             return System.Linq.Enumerable.Range(0, dataReader.FieldCount).Select(dataReader.GetName);
