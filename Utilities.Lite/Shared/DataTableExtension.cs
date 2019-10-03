@@ -5,6 +5,9 @@ using Utilities.SQL.Translator;
 
 namespace Utilities.Shared
 {
+    /// <summary>
+    /// Provide extensions for DataTable.
+    /// </summary>
     public static class DataTableExtension
     {
         /// <summary>
@@ -31,10 +34,9 @@ namespace Utilities.Shared
         public static IEnumerable<dynamic> ToEnumerable(this DataTable data)
         {
             using var dataReader = new DataTableReader(data);
-            var columns = dataReader.GetColumns();
             while (dataReader.Read())
             {
-                yield return Data.RowBuilder(dataReader, columns);
+                yield return DataExtension.RowBuilder(dataReader);
             }
         }
 

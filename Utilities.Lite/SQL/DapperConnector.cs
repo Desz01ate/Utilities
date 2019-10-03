@@ -1,17 +1,10 @@
 ﻿#if !NET45
 
 using Dapper;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using Utilities.Enum;
-using Utilities.Interfaces;
-using Utilities.Shared;
 using Utilities.SQL.Extension;
 
 namespace Utilities.SQL
@@ -137,6 +130,32 @@ namespace Utilities.SQL
         public override async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
             return await this.Connection.ExecuteScalarAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Execute parameterized SQL that selects a single value.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandType"></param>
+        /// <returns></returns>
+        public override object ExecuteScalar(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        {
+            return this.Connection.ExecuteScalar(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
+        }
+
+        /// <summary>
+        /// Execute parameterized SQL that selects a single value.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandType"></param>
+        /// <returns></returns>
+        public override async Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        {
+            return await this.Connection.ExecuteScalarAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
         }
     }
 }

@@ -9,6 +9,9 @@ using Utilities.Shared;
 
 namespace Utilities.SQL.Extension
 {
+    /// <summary>
+    /// Provide extension for DbConnection.
+    /// </summary>
     public static class SqlConnectionExtension
     {
         /// <summary>

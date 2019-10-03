@@ -10,6 +10,11 @@ using Utilities.Shared;
 namespace Utilities.SQL.Translator
 {
     //implementation taken from https://stackoverflow.com/questions/7731905/how-to-convert-an-expression-tree-to-a-partial-sql-query with some customized
+    /// <summary>
+    /// Provide expression tree translation service using visitor pattern.
+    /// </summary>
+    /// <typeparam name="TObject"></typeparam>
+    /// <typeparam name="TSqlParameter"></typeparam>
     public class ExpressionTranslator<TObject, TSqlParameter> : ExpressionVisitor
         where TObject : class, new()
         where TSqlParameter : DbParameter, new()

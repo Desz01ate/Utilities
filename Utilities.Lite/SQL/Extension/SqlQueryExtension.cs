@@ -11,6 +11,9 @@ using Utilities.SQL.Translator;
 
 namespace Utilities.SQL.Extension
 {
+    /// <summary>
+    /// Provide extension for SQL generate.
+    /// </summary>
     public static class SqlQueryExtension
     {
         /// <summary>
@@ -79,7 +82,7 @@ namespace Utilities.SQL.Extension
             where TParameterType : DbParameter, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.Data.CRUDDataMapping(obj, SqlType.Insert);
+            var kvMapper = Shared.DataExtension.CRUDDataMapping(obj, SqlType.Insert);
             var query = $@"INSERT INTO {tableName}
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
@@ -103,14 +106,14 @@ namespace Utilities.SQL.Extension
             where TParameterType : DbParameter, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.Data.CRUDDataMapping(obj.First(), SqlType.Insert);
+            var kvMapper = Shared.DataExtension.CRUDDataMapping(obj.First(), SqlType.Insert);
             var query = new StringBuilder($@"INSERT INTO {tableName}({string.Join(",", kvMapper.Select(field => field.Key))}) VALUES");
             var values = new List<string>();
             var parameters = new List<TParameterType>();
             for (var idx = 0; idx < obj.Count(); idx++)
             {
                 var o = obj.ElementAt(idx);
-                var map = Shared.Data.CRUDDataMapping(o, SqlType.Insert);
+                var map = Shared.DataExtension.CRUDDataMapping(o, SqlType.Insert);
 
                 values.Add($"({ string.Join(",", map.Select(field => $"@{field.Key}{idx}"))})");
                 parameters.AddRange(map.Select(field => new TParameterType()
@@ -138,7 +141,7 @@ namespace Utilities.SQL.Extension
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.Data.CRUDDataMapping(obj, SqlType.Update);
+            var parameters = Shared.DataExtension.CRUDDataMapping(obj, SqlType.Update);
             parameters.Remove(primaryKey.Name);
             var query = $@"UPDATE {tableName} SET
                                {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}

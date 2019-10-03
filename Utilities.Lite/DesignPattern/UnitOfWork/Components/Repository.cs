@@ -21,7 +21,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <summary>
         /// Instance of database connector.
         /// </summary>
-        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> DatabaseConnector;
+        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> Database;
 
         /// <summary>
         /// Constructor.
@@ -29,16 +29,16 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="databaseConnector">Instance of DatabaseConnector.</param>
         public Repository(IDatabaseConnectorExtension<TDatabase, TParameter> databaseConnector)
         {
-            DatabaseConnector = databaseConnector;
+            Database = databaseConnector;
         }
 
         /// <summary>
         /// Delete data from repository.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual void Delete(T obj)
+        /// <param name="data">Generic object.</param>
+        public virtual void Delete(T data)
         {
-            DatabaseConnector.Delete(obj);
+            Database.Delete(data);
         }
 
         /// <summary>
@@ -47,16 +47,16 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="key">Primary key of target object.</param>
         public virtual void Delete(object key)
         {
-            DatabaseConnector.Delete<T>(key);
+            Database.Delete<T>(key);
         }
 
         /// <summary>
         /// Delete data from repository in an asynchronous manner.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual async Task DeleteAsync(T obj)
+        /// <param name="data">Generic object.</param>
+        public virtual async Task DeleteAsync(T data)
         {
-            await DatabaseConnector.DeleteAsync(obj).ConfigureAwait(false);
+            await Database.DeleteAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -65,52 +65,52 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="key">Primary key of target object.</param>
         public virtual async Task DeleteAsync(object key)
         {
-            await DatabaseConnector.DeleteAsync<T>(key).ConfigureAwait(false);
+            await Database.DeleteAsync<T>(key).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Insert data into repository.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual void Insert(T obj)
+        /// <param name="data">Generic object.</param>
+        public virtual void Insert(T data)
         {
-            DatabaseConnector.Insert(obj);
+            Database.Insert(data);
         }
 
         /// <summary>
         /// Insert data into repository in an asynchronous manner.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual async Task InsertAsync(IEnumerable<T> obj)
+        /// <param name="data">Generic object.</param>
+        public virtual async Task InsertAsync(IEnumerable<T> data)
         {
-            await DatabaseConnector.InsertAsync(obj).ConfigureAwait(false);
+            await Database.InsertAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Insert data into repository.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual void Insert(IEnumerable<T> obj)
+        /// <param name="data">Generic object.</param>
+        public virtual void Insert(IEnumerable<T> data)
         {
-            DatabaseConnector.Insert(obj);
+            Database.Insert(data);
         }
 
         /// <summary>
         /// Insert data into repository in an asynchronous manner.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual async Task InsertAsync(T obj)
+        /// <param name="data">Generic object.</param>
+        public virtual async Task InsertAsync(T data)
         {
-            await DatabaseConnector.InsertAsync(obj).ConfigureAwait(false);
+            await Database.InsertAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Get all data from repository.
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select()
+        public virtual IEnumerable<T> Query()
         {
-            return DatabaseConnector.Select<T>();
+            return Database.Query<T>();
         }
 
         /// <summary>
@@ -118,9 +118,9 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// </summary>
         /// <param name="predicate">Predicate condition.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select(Expression<Func<T, bool>> predicate)
+        public virtual IEnumerable<T> Query(Expression<Func<T, bool>> predicate)
         {
-            return DatabaseConnector.Select<T>(predicate);
+            return Database.Query<T>(predicate);
         }
 
         /// <summary>
@@ -128,18 +128,18 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// </summary>
         /// <param name="key">Primary key of target object.</param>
         /// <returns></returns>
-        public virtual T Select(object key)
+        public virtual T Query(object key)
         {
-            return DatabaseConnector.Select<T>(key);
+            return Database.Query<T>(key);
         }
 
         /// <summary>
         /// Get all data from repository in an asynchronous manner.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync()
+        public virtual async Task<IEnumerable<T>> QueryAsync()
         {
-            return await DatabaseConnector.SelectAsync<T>().ConfigureAwait(false);
+            return await Database.QueryAsync<T>().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -147,9 +147,9 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// </summary>
         /// <param name="predicate">Predicate condition.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> QueryAsync(Expression<Func<T, bool>> predicate)
         {
-            return await DatabaseConnector.SelectAsync<T>(predicate).ConfigureAwait(false);
+            return await Database.QueryAsync<T>(predicate).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -157,27 +157,27 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// </summary>
         /// <param name="key">Primary key of target object.</param>
         /// <returns></returns>
-        public virtual async Task<T> SelectAsync(object key)
+        public virtual async Task<T> QueryAsync(object key)
         {
-            return await DatabaseConnector.SelectAsync<T>(key).ConfigureAwait(false);
+            return await Database.QueryAsync<T>(key).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Update data in repository.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual void Update(T obj)
+        /// <param name="data">Generic object.</param>
+        public virtual void Update(T data)
         {
-            DatabaseConnector.Update(obj);
+            Database.Update(data);
         }
 
         /// <summary>
         /// Update data in repository in an asynchronous manner.
         /// </summary>
-        /// <param name="obj">Generic object.</param>
-        public virtual async Task UpdateAsync(T obj)
+        /// <param name="data">Generic object.</param>
+        public virtual async Task UpdateAsync(T data)
         {
-            await DatabaseConnector.UpdateAsync(obj).ConfigureAwait(false);
+            await Database.UpdateAsync(data).ConfigureAwait(false);
         }
     }
 }

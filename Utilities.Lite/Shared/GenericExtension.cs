@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Utilities.Shared
 {
-    internal static class Generic
+    internal static class GenericExtension
     {
         /// <summary>
         /// Verify if the object is a generic list.

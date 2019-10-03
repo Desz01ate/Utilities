@@ -8,7 +8,7 @@ namespace Utilities.Shared
     /// <summary>
     /// Collection of Emnumerable extension methods
     /// </summary>
-    public static class Enumerable
+    public static class EnumerableExtension
     {
         /// <summary>
         /// Combine 2 or more enumerable of the same type into new enumerable
