@@ -29,14 +29,6 @@
             Attribute for table name customization
             </summary>
         </member>
-        <member name="T:Utilities.Classes.Dictionary`3">
-            <summary>
-            Represents a collection of multi-keys and values.
-            </summary>
-            <typeparam name="TKey1"></typeparam>
-            <typeparam name="TKey2"></typeparam>
-            <typeparam name="TValue"></typeparam>
-        </member>
         <member name="T:Utilities.Classes.InternalPropertyInfo">
             <summary>
             Proxy for PropertyInfo for customizable property for internal use.
