@@ -8,8 +8,8 @@
         /// <summary>
         /// Map object property name to its index inside excel file.
         /// </summary>
-        /// <param name="property">Property name per implemented class</param>
+        /// <param name="columnName">Property name per implemented class</param>
         /// <returns></returns>
-        public int GetExternalColumnIndex(string property);
+        public int GetExternalColumnIndex(string columnName);
     }
 }

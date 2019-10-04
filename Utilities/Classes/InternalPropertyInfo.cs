@@ -6,7 +6,7 @@ using Utilities.Shared;
 namespace Utilities.Classes
 {
     /// <summary>
-    /// Proxy for PropertyInfo for customizable property for internal use.
+    /// Proxy for PropertyInfo for customizable property for internal use only.
     /// </summary>
     internal class InternalPropertyInfo : PropertyInfo
     {

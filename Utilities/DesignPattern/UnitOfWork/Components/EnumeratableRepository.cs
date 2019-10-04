@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
 using Utilities.Interfaces;
 
 namespace Utilities.DesignPattern.UnitOfWork.Components
@@ -32,7 +30,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual IEnumerator<T> GetEnumerator()
         {
-            foreach (var data in Select())
+            foreach (var data in Query())
             {
                 yield return data;
             }

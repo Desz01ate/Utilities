@@ -30,7 +30,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual IEnumerator<T> GetEnumerator()
         {
-            foreach (var data in Select())
+            foreach (var data in Query())
             {
                 yield return data;
             }

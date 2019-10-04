@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Utilities.SQL.Translator;
 
 namespace Utilities.Shared
 {
+    /// <summary>
+    /// Provide extensions for DataTable.
+    /// </summary>
     public static class DataTableExtension
     {
         /// <summary>
@@ -13,13 +16,13 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ToEnumerable<T>(this DataTable data, Func<DataTableReader, T> builder = null) where T : class, new()
+        public static IEnumerable<T> ToEnumerable<T>(this DataTable data) where T : class, new()
         {
             using var dataReader = new DataTableReader(data);
-            var action = builder ?? Data.RowBuilder<T>;
+            var converter = new Converter<T>(dataReader);
             while (dataReader.Read())
             {
-                yield return action(dataReader);
+                yield return converter.CreateItemFromRow();
             }
         }
 
@@ -31,10 +34,9 @@ namespace Utilities.Shared
         public static IEnumerable<dynamic> ToEnumerable(this DataTable data)
         {
             using var dataReader = new DataTableReader(data);
-            var columns = dataReader.GetColumns();
             while (dataReader.Read())
             {
-                yield return Data.RowBuilder(dataReader, columns);
+                yield return DataExtension.RowBuilder(dataReader);
             }
         }
 

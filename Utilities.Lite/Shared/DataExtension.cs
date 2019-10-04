@@ -14,23 +14,8 @@ namespace Utilities.Shared
     /// <summary>
     /// This class contains a generic way to build data from specific source such as DbDataReader or from object itself
     /// </summary>
-    public static class Data
+    public static class DataExtension
     {
-        /// <summary>
-        /// Convert DbDataReader into dynamic object with specified column name.
-        /// </summary>
-        /// <param name="row">data reader to convert to dynamic object</param>
-        /// <param name="columns">column name container</param>
-        /// <returns></returns>
-        public static dynamic RowBuilder(this IDataReader row, IEnumerable<string> columns)
-        {
-            var rowInstance = new ExpandoObject() as IDictionary<string, object>;
-            foreach (var column in columns)
-            {
-                rowInstance.Add(column, row?[column]);
-            }
-            return rowInstance;
-        }
         /// <summary>
         /// Convert DataRow into dynamic object with specified column name.
         /// </summary>
@@ -47,17 +32,16 @@ namespace Utilities.Shared
             return rowInstance;
         }
         /// <summary>
-        /// Convert DbDataReader into dynamic object.
+        /// Convert IDataReader into dynamic object.
         /// </summary>
         /// <param name="row">data reader to convert to dynamic object</param>
         /// <returns></returns>
         public static dynamic RowBuilder(this IDataReader row)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
-            var columns = row.GetColumns();
-            foreach (var column in columns)
+            for (var idx = 0; idx < row.FieldCount; idx++)
             {
-                rowInstance.Add(column, row?[column]);
+                rowInstance.Add(row.GetName(idx), row[idx]);
             }
             return rowInstance;
         }
@@ -103,24 +87,17 @@ namespace Utilities.Shared
             var values = new Dictionary<string, object>();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
-                try
+                var pIns = property.GetCustomAttribute<IgnoreFieldAttribute>(true);
+                if (pIns != null)
                 {
-                    var pIns = property.GetCustomAttribute<IgnoreFieldAttribute>(true);
-                    if (pIns != null)
+                    if ((pIns.IgnoreInsert && type == SqlType.Insert) || (pIns.IgnoreUpdate && type == SqlType.Update))
                     {
-                        if ((pIns.IgnoreInsert && type == SqlType.Insert) || (pIns.IgnoreUpdate && type == SqlType.Update))
-                        {
-                            continue;
-                        }
+                        continue;
                     }
-                    var value = property.GetValue(obj);
-                    var name = property.FieldNameAttributeValidate();
-                    values.Add(name, value ?? DBNull.Value);
                 }
-                catch
-                {
-                    continue;
-                }
+                var value = property.GetValue(obj);
+                var name = property.FieldNameAttributeValidate();
+                values.Add(name, value ?? DBNull.Value);
             }
             return values;
         }
@@ -130,32 +107,23 @@ namespace Utilities.Shared
             where T1 : DbConnection, new()
             where T2 : DbParameter, new()
         {
-            List<string> converter = new List<string>();
             var properties = typeof(T).PropertiesBindingFlagsAttributeValidate();
             var referenceProperties = typeof(T).ForeignKeyAttributeValidate();
             foreach (var property in properties)
             {
-                try
-                {
-                    var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
-                    var IsNotNull = AttributeExtension.NotNullAttributeValidate(property);
-                    var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
-                    var notNullPostfix = IsNotNull ? " NOT NULL " : "";
-                    var sqlType = connector.MapCLRTypeToSQLType(property.PropertyType);
-                    converter.Add($"{propertyName} {sqlType} {primaryKeyPostfix} {notNullPostfix}");
-                }
-                catch
-                {
-                    continue; //skip error property
-                }
+                var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
+                var IsNotNull = AttributeExtension.NotNullAttributeValidate(property);
+                var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
+                var notNullPostfix = IsNotNull ? " NOT NULL " : "";
+                var sqlType = connector.MapCLRTypeToSQLType(property.PropertyType);
+                yield return ($"{propertyName} {sqlType} {primaryKeyPostfix} {notNullPostfix}");
             }
             foreach (var foreignKey in referenceProperties)
             {
                 var propertyName = AttributeExtension.FieldNameAttributeValidate(foreignKey);
-                var targetTable = foreignKey.DeclaringType.Name;
-                converter.Add($"CONSTRAINT fk_{typeof(T).Name}_{targetTable} FOREIGN KEY ({foreignKey.ForeignKeyName}) REFERENCES {targetTable} ({propertyName})");
+                var targetTable = foreignKey.DeclaringType.TableNameAttributeValidate();
+                yield return ($"CONSTRAINT fk_{typeof(T).Name}_{targetTable} FOREIGN KEY ({foreignKey.ForeignKeyName}) REFERENCES {targetTable} ({propertyName})");
             }
-            return converter;
         }
     }
 }

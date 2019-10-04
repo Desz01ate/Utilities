@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 using Utilities.Enum;
 using Utilities.Interfaces;
@@ -40,7 +39,7 @@ namespace Utilities.SQL
         /// <summary>
         /// Determine whether the connection is open or not.
         /// </summary>
-        public virtual bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+        public bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
 
         /// <summary>
         /// Constructor
@@ -104,11 +103,10 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        /// <exception cref="Exception"/>
+
         public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             using var command = Connection.CreateCommand();
@@ -138,39 +136,24 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        /// <exception cref="Exception"/>
+
         public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            using var command = Connection.CreateCommand();
+            command.CommandText = sql;
+            command.Transaction = transaction as DbTransaction;
+            command.CommandType = commandType;
+            if (parameters != null)
             {
-                List<dynamic> result = new List<dynamic>();
-                using (var command = Connection.CreateCommand())
+                foreach (var parameter in parameters)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
-                    {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
-                    }
-                    using (var cursor = command.ExecuteReader())
-                    {
-                        var columns = System.Linq.Enumerable.Range(0, cursor.FieldCount).Select(cursor.GetName);
-                        while (cursor.Read())
-                        {
-                            result.Add(Data.RowBuilder(cursor, columns));
-                        }
-                    }
+                    command.Parameters.Add(parameter);
                 }
-
-                return result;
             }
-            catch (Exception)
+            using var cursor = command.ExecuteReader();
+            while (cursor.Read())
             {
-                throw;
+                yield return (DataExtension.RowBuilder(cursor));
             }
         }
 
@@ -183,34 +166,25 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"/>
-        public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : struct
+
+        public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            T result = default;
+            using (var command = Connection.CreateCommand())
             {
-                T result = default;
-
-                using (var command = Connection.CreateCommand())
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    result = (T)command.ExecuteScalar();
                 }
-
-                return result;
+                result = (T)command.ExecuteScalar();
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -221,34 +195,26 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"/>
+
         public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
-            {
-                int result = -1;
+            int result = -1;
 
-                using (var command = Connection.CreateCommand())
+            using (var command = Connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    result = command.ExecuteNonQuery();
                 }
-
-                return result;
+                result = command.ExecuteNonQuery();
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -257,11 +223,11 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="objectBuilder">How the POCO should build with each giving row of SqlDataReader.</param>
+
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        /// <exception cref="Exception"/>
+
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             List<T> result = new List<T>();
@@ -296,41 +262,29 @@ namespace Utilities.SQL
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        /// <exception cref="Exception"/>
+
         public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            List<dynamic> result = new List<dynamic>();
+            using (var command = Connection.CreateCommand())
             {
-                List<dynamic> result = new List<dynamic>();
-
-                using (var command = Connection.CreateCommand())
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
-                    }
-                    using (var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false))
-                    {
-                        var columns = cursor.GetColumns();
-                        while (await cursor.ReadAsync().ConfigureAwait(false))
-                        {
-                            result.Add(Data.RowBuilder(cursor, columns));
-                        }
+                        command.Parameters.Add(parameter);
                     }
                 }
-
-                return result;
+                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                while (await cursor.ReadAsync().ConfigureAwait(false))
+                {
+                    result.Add(DataExtension.RowBuilder(cursor));
+                }
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -342,34 +296,26 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"/>
-        public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : struct
+
+        public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
-            {
-                T result = default;
+            T result = default;
 
-                using (var command = Connection.CreateCommand())
+            using (var command = Connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    result = (T)(await command.ExecuteScalarAsync().ConfigureAwait(false));
                 }
-
-                return result;
+                result = (T)(await command.ExecuteScalarAsync().ConfigureAwait(false));
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -380,34 +326,25 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"/>
+
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            int result = -1;
+            using (var command = Connection.CreateCommand())
             {
-                int result = -1;
-
-                using (var command = Connection.CreateCommand())
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    result = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
                 }
-
-                return result;
+                result = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -418,34 +355,26 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"/>
-        public string ExecuteScalar(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+
+        public virtual object ExecuteScalar(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
-            {
-                string result = default;
+            object result = null;
 
-                using (var command = Connection.CreateCommand())
+            using (var command = Connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    result = (string)command.ExecuteScalar();
                 }
-
-                return result;
+                result = command.ExecuteScalar();
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -456,34 +385,25 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"/>
-        public async Task<string> ExecuteScalarAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+
+        public virtual async Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            object result = null;
+            using (var command = Connection.CreateCommand())
             {
-                string result = default;
-
-                using (var command = Connection.CreateCommand())
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    result = (string)(await command.ExecuteScalarAsync().ConfigureAwait(false));
                 }
-
-                return result;
+                result = await command.ExecuteScalarAsync().ConfigureAwait(false);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return result;
         }
 
         /// <summary>
@@ -496,29 +416,22 @@ namespace Utilities.SQL
         /// <returns></returns>
         public DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            using (var command = Connection.CreateCommand())
             {
-                using (var command = Connection.CreateCommand())
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
+                    foreach (var parameter in parameters)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
+                        command.Parameters.Add(parameter);
                     }
-                    var cursor = command.ExecuteReader();
-                    var dataTable = new DataTable();
-                    dataTable.Load(cursor);
-                    return dataTable;
                 }
-            }
-            catch (Exception)
-            {
-                throw;
+                var cursor = command.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(cursor);
+                return dataTable;
             }
         }
 
@@ -532,30 +445,21 @@ namespace Utilities.SQL
         /// <returns></returns>
         public async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            try
+            using var command = Connection.CreateCommand();
+            command.CommandText = sql;
+            command.Transaction = transaction as DbTransaction;
+            command.CommandType = commandType;
+            if (parameters != null)
             {
-                using (var command = Connection.CreateCommand())
+                foreach (var parameter in parameters)
                 {
-                    command.CommandText = sql;
-                    command.Transaction = transaction as DbTransaction;
-                    command.CommandType = commandType;
-                    if (parameters != null)
-                    {
-                        foreach (var parameter in parameters)
-                        {
-                            command.Parameters.Add(parameter);
-                        }
-                    }
-                    var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                    var dataTable = new DataTable();
-                    dataTable.Load(cursor);
-                    return dataTable;
+                    command.Parameters.Add(parameter);
                 }
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            DbDataReader cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var dataTable = new DataTable();
+            dataTable.Load(cursor);
+            return dataTable;
         }
     }
 }

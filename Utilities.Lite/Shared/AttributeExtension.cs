@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Utilities.Attributes.SQL;
 using Utilities.Classes;
-using Utilities.Exceptions;
 
 namespace Utilities.Shared
 {
@@ -18,8 +17,8 @@ namespace Utilities.Shared
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
             var primaryKeyProperty = properties.Where(property => property.GetCustomAttribute<PrimaryKeyAttribute>(true) != null);
-            if (primaryKeyProperty == null) throw new AttributeException(typeof(PrimaryKeyAttribute), type.FullName, null);
-            if (primaryKeyProperty.Count() != 1) throw new InvalidMultipleAttributesException(typeof(PrimaryKeyAttribute), type.FullName, null);
+            if (primaryKeyProperty == null) throw new Exception($"Can't find attribute [{typeof(PrimaryKeyAttribute).FullName}] in {type.FullName}.");
+            if (primaryKeyProperty.Count() != 1) throw new Exception($"The attribute [{typeof(PrimaryKeyAttribute).FullName}] must specific one and only one. (error in {type.FullName} class)");
             var property = new InternalPropertyInfo(primaryKeyProperty.First());
             return property;
         }
@@ -55,7 +54,7 @@ namespace Utilities.Shared
         internal static IEnumerable<InternalPropertyInfo> PropertiesBindingFlagsAttributeValidate(this Type type)
         {
             var attribute = type.GetCustomAttribute<BindingFlagsAttribute>(true);
-            PropertyInfo[] properties = null;
+            PropertyInfo[] properties;
             if (attribute == null)
             {
                 properties = type.GetProperties();
@@ -64,17 +63,13 @@ namespace Utilities.Shared
             {
                 properties = type.GetProperties(attribute.BindingFlags);
             }
-            var internalProperties = properties.Select(property =>
+            foreach (var property in properties)
             {
-                var internalPropertyInfo = new InternalPropertyInfo(property);
-                return internalPropertyInfo;
-            });
-            return internalProperties;
+                yield return new InternalPropertyInfo(property);
+            }
         }
         internal static IEnumerable<InternalPropertyInfo> ForeignKeyAttributeValidate(this Type type)
         {
-            List<InternalPropertyInfo> properties = new List<InternalPropertyInfo>();
-
             foreach (var property in type.GetProperties())
             {
                 var attribute = property.GetCustomAttribute<ForeignKeyAttribute>(true);
@@ -86,12 +81,10 @@ namespace Utilities.Shared
                     //    properties.Add(p);
                     //}
                     var refKey = attribute.ReferenceKeyProperty;
-                    refKey.ForeignKeyName = property.Name;
-                    properties.Add(refKey);
-
+                    refKey.ForeignKeyName = property.FieldNameAttributeValidate();
+                    yield return refKey;
                 }
             }
-            return properties;
         }
         private static Dictionary<Type, IEnumerable<PropertyInfo>> _propertiesCached = new Dictionary<Type, IEnumerable<PropertyInfo>>();
         internal static PropertyInfo GetUnderlyingPropertyByName(this Type type, string propertyName)

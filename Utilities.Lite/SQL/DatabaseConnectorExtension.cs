@@ -20,10 +20,10 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="top">Specified TOP(n) rows.</param>
-        /// <param name="dataBuilder">Row builder template.</param>
+
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select<T>(int? top = null, IDbTransaction transaction = null)
+        public virtual IEnumerable<T> Query<T>(int? top = null, IDbTransaction transaction = null)
             where T : class, new()
         {
             var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
@@ -36,10 +36,10 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
-        /// <param name="dataBuilder">Row builder template.</param>
+
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual T Select<T>(object primaryKey, IDbTransaction transaction = null)
+        public virtual T Query<T>(object primaryKey, IDbTransaction transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
@@ -124,10 +124,10 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="top">Specified TOP(n) rows.</param>
-        /// <param name="dataBuilder">Row builder template.</param>
+
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of object</returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>(int? top = null, IDbTransaction transaction = null)
+        public virtual async Task<IEnumerable<T>> QueryAsync<T>(int? top = null, IDbTransaction transaction = null)
             where T : class, new()
         {
             var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
@@ -140,10 +140,9 @@ namespace Utilities.SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey">Primary key of specific row</param>
-        /// <param name="dataBuilder">Row builder template.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> SelectAsync<T>(object primaryKey, IDbTransaction transaction = null)
+        public virtual async Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
@@ -225,11 +224,10 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="top">Specified TOP(n) rows.</param>
-        /// <param name="dataBuilder">Row builder template.</param>
-        /// <param name="dataBuilder">Row builder template.</param>
+
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
+        public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
             var query = preparer.query;
@@ -259,10 +257,10 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="top">Specified TOP(n) rows.</param>
-        /// <param name="dataBuilder">Row builder template.</param>
+
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> SelectAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<IEnumerable<T>> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
             var query = preparer.query;
@@ -324,7 +322,7 @@ namespace Utilities.SQL
         public virtual int CreateTable<T>() where T : class, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var fields = Data.GenerateSQLCreteFieldStatement<TDatabaseConnection, TParameterType, T>(this);
+            var fields = DataExtension.GenerateSQLCreteFieldStatement<TDatabaseConnection, TParameterType, T>(this);
             var query = $@"CREATE TABLE {tableName}({string.Join(",", fields)})";
             return this.ExecuteNonQuery(query);
         }
