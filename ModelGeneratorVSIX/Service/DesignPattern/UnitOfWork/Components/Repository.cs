@@ -57,27 +57,27 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// Get all data from repository.
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select()
+        public virtual IEnumerable<T> Query()
         {
-            return DatabaseConnector.Select<T>();
+            return DatabaseConnector.Query<T>();
         }
         /// <summary>
         /// Get data by specific condition from repository.
         /// </summary>
         /// <param name="predicate">Predicate condition.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Select(Expression<Func<T, bool>> predicate)
+        public virtual IEnumerable<T> Query(Expression<Func<T, bool>> predicate)
         {
-            return DatabaseConnector.Select<T>(predicate);
+            return DatabaseConnector.Query<T>(predicate);
         }
         /// <summary>
         /// Get data from repository.
         /// </summary>
         /// <param name="key">Primary key of target object.</param>
         /// <returns></returns>
-        public virtual T Select(object key)
+        public virtual T Query(object key)
         {
-            return DatabaseConnector.Select<T>(key);
+            return DatabaseConnector.Query<T>(key);
         }
         /// <summary>
         /// Update data in repository.

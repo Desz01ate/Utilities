@@ -139,7 +139,7 @@ namespace ModelGenerator
                         OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
                     return;
             }
-            var connectionString = Microsoft.VisualBasic.Interaction.InputBox("Connection string to Microsoft SQL Server");
+            var connectionString = Microsoft.VisualBasic.Interaction.InputBox($"Connection string to Microsoft SQL Server\nYou might required to install Deszolate.Utilities.Lite v{Utilities.Metadata.Version} to use the generated service.");
 
             var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
             var directory = Path.GetDirectoryName(selectedProject.FullName);

@@ -10,17 +10,20 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.0</Version>
+    <Version>0.2.0.2</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-+ Welcome to version 0.2.0 this version is drastically improvement (and breaking things too!) read changes log below
++ Improve flexibility for internal builder.
++ Remove unused code.
 
 [SQL]
-+ Simplify the interface by lower tight coupling and remove some method out to lower the need for customize implementation.
-+ New way to build data from IDataReader which is very very significant improvement on both execution speed and memory efficient, result in remove Func&lt;IDataReader,T&gt; from all IDatabaseConnector interface!
-+ All query-generate methods has been moved to Utilities.SQL.Extension.SqlQueryExtension</PackageReleaseNotes>
++ Add DapperConnector support for .NET 4.5
+
+
+[String]
++ Add overload for Translate method.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -66,7 +69,7 @@
   <ItemGroup>
     <!-- <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" /> -->
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4" Condition="'$(TargetFramework)' == 'netstandard2.0'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -82,6 +85,11 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netstandard2.0'">
       <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
+      <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+      <PackageReference Include="Dapper">
+        <Version>1.50.2</Version>
+      </PackageReference>
+    </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
       <PackageReference Include="Dapper">
         <Version>2.0.30</Version>

@@ -14,7 +14,7 @@ namespace Utilities.Shared
     /// <summary>
     /// This class contains a generic way to build data from specific source such as DbDataReader or from object itself
     /// </summary>
-    public static class DataExtension
+    internal static class DataExtension
     {
         /// <summary>
         /// Convert DataRow into dynamic object with specified column name.
@@ -22,7 +22,7 @@ namespace Utilities.Shared
         /// <param name="row">data reader to convert to dynamic object</param>
         /// <param name="columns">column name container</param>
         /// <returns></returns>
-        public static dynamic RowBuilder(this DataRow row, IEnumerable<string> columns)
+        internal static dynamic RowBuilder(this DataRow row, IEnumerable<string> columns)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             for (var idx = 0; idx < columns.Count(); idx++)
@@ -36,7 +36,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <param name="row">data reader to convert to dynamic object</param>
         /// <returns></returns>
-        public static dynamic RowBuilder(this IDataReader row)
+        internal static dynamic RowBuilder(this IDataReader row)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             for (var idx = 0; idx < row.FieldCount; idx++)
@@ -50,7 +50,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public static dynamic RowBuilder(this DataRow row)
+        internal static dynamic RowBuilder(this DataRow row)
         {
             var rowInstance = new ExpandoObject() as IDictionary<string, object>;
             var columns = row.Table.Columns;
@@ -59,26 +59,6 @@ namespace Utilities.Shared
                 rowInstance.Add(column.ColumnName, row?[column]);
             }
             return rowInstance;
-        }
-        /// <summary>
-        /// Convert data row into POCO.
-        /// </summary>
-        /// <typeparam name="T">Class that implement IExcelReader</typeparam>
-        /// <param name="dr"></param>
-        /// <returns></returns>
-        public static T ConvertDataRowTo<T>(DataRow dr) where T : IExcelReader, new()
-        {
-            var properties = typeof(T).GetProperties();
-            var obj = new T();
-
-            for (var idx = 0; idx < properties.Length; idx++)
-            {
-                var property = properties[idx];
-                var externalIndex = obj.GetExternalColumnIndex(property.Name);
-                var value = dr?[externalIndex];
-                property.SetValue(obj, value);
-            }
-            return obj;
         }
 
         internal static Dictionary<string, object> CRUDDataMapping<T>(T obj, SqlType type)

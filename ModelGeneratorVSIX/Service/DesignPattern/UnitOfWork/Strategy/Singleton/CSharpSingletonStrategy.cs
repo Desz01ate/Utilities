@@ -54,6 +54,9 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
             sb.AppendLine();
             sb.AppendLine($@"namespace {Namespace}.Repositories");
             sb.AppendLine("{");
+            sb.AppendLine("    /// <summary>");
+            sb.AppendLine($"    /// Data contractor for {tableName}");
+            sb.AppendLine("    /// </summary>");
             sb.AppendLine($"    public class {repositoryName} : Repository<{tableName},SqlConnection,SqlParameter>");
             sb.AppendLine("    {");
             sb.AppendLine($"       public {repositoryName}(IDatabaseConnectorExtension<SqlConnection,SqlParameter> connector) : base(connector)");
@@ -93,6 +96,9 @@ namespace ModelGenerator.Services.DesignPattern.UnitOfWork.Strategy.NonSingleton
                 var tableName = TableNameCleanser(table);
                 var repositoryName = $"{tableName}Repository";
                 sb.AppendLine($"        private {repositoryName} _{tableName} {{ get; set; }}");
+                sb.AppendLine("         /// <summary>");
+                sb.AppendLine($"        /// Data repository for {tableName} table");
+                sb.AppendLine("         /// </summary>");
                 sb.AppendLine($"        public {repositoryName} {tableName}");
                 sb.AppendLine($"        {{");
                 sb.AppendLine($"            get");

@@ -105,7 +105,8 @@ namespace Utilities.Shared
                 string propName = attrib == null ? property.Name : attrib.FieldName;
                 if (propName == propertyName) return property;
             }
-            throw new Exception($"Property {propertyName} is not found on type '{type.FullName}");
+            return null;
+            //throw new Exception($"Property {propertyName} is not found on type '{type.FullName}");
         }
     }
 }

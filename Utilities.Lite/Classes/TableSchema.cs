@@ -13,8 +13,8 @@ namespace Utilities.Classes
 
         public int ColumnOrdinal { get; set; }
         public int ColumnSize { get; set; }
-        public int NumericPrecision { get; set; }
-        public int NumericScale { get; set; }
+        public short NumericPrecision { get; set; }
+        public short NumericScale { get; set; }
 
         public int ProviderType { get; set; }
         public int NonVersionedProviderType { get; set; }

@@ -389,7 +389,7 @@ namespace Utilities.SQL.Translator
                         return m;
 
                     case ExpressionType.Constant:
-                        var constantInvokedValue = Expression.Lambda(m).Compile().DynamicInvoke();
+                        var constantInvokedValue = CompileExpression(m);
                         _sqlParameters.Add(new TSqlParameter()
                         {
                             ParameterName = _previousVisitField,
