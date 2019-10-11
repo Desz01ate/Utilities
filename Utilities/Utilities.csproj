@@ -9,29 +9,16 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.0</Version>
+    <Version>0.2.0.1</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
-+ Package version has been push up to 0.2.0 to reflect both Utilities and Utilities.Lite in the same development branch.
-+ Welcome to version 0.2.0 this version is drastically improvement (and breaking things too!) read changes log below.
-- Remove Exceptions as it only use just for one specific reason and not worth increasing the overall library size.
-+ Utilities.Shared.Data renamed to Utilities.Shared.DataExtension
-+ Utilities.Shared.Enumerable renamed to Utilities.Shared.EnumerableExtension
++ Improve flexibility for internal builder.
++ Remove unused code.
 
 
-[Interfaces]
-+ All interfaces now documented.
-
-[SQL]
-+ Simplify the interface by lower tight coupling and remove some method out to lower the need for customize implementation.
-+ New way to build data from IDataReader which is very very significant improvement on both execution speed and memory efficient, result in remove Func&lt;IDataReader,T&gt; from all IDatabaseConnector interface!
-+ All query-generate methods has been moved to Utilities.SQL.Extension.SqlQueryExtension.
-+ Select / SelectAsync renamed to Query / QueryAsync.
-
-[DesignPattern - Repository]
-+ Select / SelectAsync renamed to Query / QueryAsync.
-</PackageReleaseNotes>
+[String]
++ Add overload for Translate method.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 

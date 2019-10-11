@@ -106,18 +106,6 @@
             </summary>
             <param name="content"></param>
         </member>
-        <member name="T:Utilities.Interfaces.IExcelReader">
-            <summary>
-            Interface required for Excel Data Reader.
-            </summary>
-        </member>
-        <member name="M:Utilities.Interfaces.IExcelReader.GetExternalColumnIndex(System.String)">
-            <summary>
-            Map object property name to its index inside excel file.
-            </summary>
-            <param name="columnName">Property name per implemented class</param>
-            <returns></returns>
-        </member>
         <member name="T:Utilities.Interfaces.INoSQLConnector">
             <summary>
             Provide methods for wrapper operation on DbConnection class
@@ -612,6 +600,21 @@
             Update data in repository in an asynchronous manner.
             </summary>
             <param name="data">Generic object.</param>
+        </member>
+        <member name="T:Utilities.Enum.Language">
+            <summary>
+            Contains supported language constants for language translator.
+            </summary>
+        </member>
+        <member name="F:Utilities.Enum.Language.Bork_bork_bork">
+            <summary>
+            What kind of language is this? doesn't seem to work tho.
+            </summary>
+        </member>
+        <member name="T:Utilities.Enum.InternalPredefinedConfiguration">
+            <summary>
+            Contains supported language constants for language translator.
+            </summary>
         </member>
         <member name="T:Utilities.Enum.SchemaRestriction">
             <summary>
@@ -1191,14 +1194,6 @@
             Convert DataRow into dynamic object.
             </summary>
             <param name="row"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.DataExtension.ConvertDataRowTo``1(System.Data.DataRow)">
-            <summary>
-            Convert data row into POCO.
-            </summary>
-            <typeparam name="T">Class that implement IExcelReader</typeparam>
-            <param name="dr"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.IDataReader)">
@@ -2053,6 +2048,15 @@
             Convert base64 string to original string
             </summary>
             <param name="base64String"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Translate(System.String,Utilities.Enum.Language,Utilities.Enum.Language)">
+            <summary>
+            Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
+            </summary>
+            <param name="originalText">Original text.</param>
+            <param name="fromLanguage">From language.</param>
+            <param name="toLanguage">To language.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.Translate(System.String,System.String,System.String)">

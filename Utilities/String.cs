@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text;
+using Utilities.Enum;
 
 namespace Utilities
 {
@@ -120,6 +121,19 @@ namespace Utilities
         /// <param name="fromLanguage">From language.</param>
         /// <param name="toLanguage">To language.</param>
         /// <returns></returns>
+        public static string Translate(string originalText, Language fromLanguage, Language toLanguage)
+        {
+            var from = InternalPredefinedConfiguration._languageInternalValue[fromLanguage];
+            var to = InternalPredefinedConfiguration._languageInternalValue[toLanguage];
+            return Translate(originalText, from, to);
+        }
+        /// <summary>
+        /// Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
+        /// </summary>
+        /// <param name="originalText">Original text.</param>
+        /// <param name="fromLanguage">From language.</param>
+        /// <param name="toLanguage">To language.</param>
+        /// <returns></returns>
         public static string Translate(string originalText, string fromLanguage, string toLanguage)
         {
             if (string.IsNullOrWhiteSpace(originalText)) throw new ArgumentException("Input string must not be null or empty.");
@@ -134,7 +148,6 @@ namespace Utilities
             var result = response.Substring(startExtractIndex + 1, endExtractIndex - 3);
             return result;
         }
-
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
