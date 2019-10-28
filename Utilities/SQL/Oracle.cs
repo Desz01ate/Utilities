@@ -14,12 +14,16 @@ namespace Utilities.SQL
     /// </summary>
     public sealed class Oracle : DatabaseConnector<OracleConnection, OracleParameter>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public Oracle(string connectionString) : base(connectionString)
         {
             SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
 
         }
-        public override string MapCLRTypeToSQLType(Type type)
+        protected internal override string MapCLRTypeToSQLType(Type type)
         {
             if (type == typeof(string))
             {

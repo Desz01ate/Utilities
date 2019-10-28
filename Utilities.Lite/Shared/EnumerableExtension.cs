@@ -25,7 +25,7 @@ namespace Utilities.Shared
         /// <param name="source">base enumerable</param>
         /// <param name="startIndex">starting index</param>
         /// <param name="count">count of elements</param>
-        /// <exception cref="ArgumentNullException"/>
+
         /// <exception cref="ArgumentOutOfRangeException"/>
         /// <exception cref="Exception"/>
         /// <returns></returns>
@@ -34,7 +34,7 @@ namespace Utilities.Shared
             var totalElement = source.Count();
             if (source == null)
             {
-                throw new ArgumentNullException("source must not be null.");
+                return null;
             }
             if (startIndex < 0)
             {
@@ -73,12 +73,11 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="source">A base dataset.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <exception cref="ArgumentNullException"/>
+
         /// <returns></returns>
         public static (IEnumerable<T> Match, IEnumerable<T> Unmatch) Partition<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException("source must not be null");
+            if (source == null) return (null, null);
             var match = source.Where(predicate);
             var unmatch = source.Except(match);
             return (match, unmatch);
@@ -89,14 +88,11 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
-        /// <exception cref="ArgumentNullException"/>
+
         /// <returns></returns>
         public static Stack<T> ToStack<T>(this IEnumerable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source must not be null");
-            }
+            if (source == null) return null;
             var stack = new Stack<T>(source);
             return stack;
         }
@@ -106,14 +102,12 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
-        /// <exception cref="ArgumentNullException"/>
+
         /// <returns></returns>        
         public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException("source must not be null");
-            }
+            if (source == null) return null;
+
             var queue = new Queue<T>(source);
             return queue;
         }
@@ -126,6 +120,7 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static DataTable ToDataTable<T>(this IEnumerable<T> source)
         {
+            if (source == null) return null;
             var properties = typeof(T).GetProperties();
             var dt = new DataTable();
             foreach (var property in properties)
@@ -150,11 +145,13 @@ namespace Utilities.Shared
         /// <param name="source"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"/>
+
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random random = null)
         {
             if (source == null)
-                throw new ArgumentNullException("source must not be null.");
+            {
+                yield break;
+            }
             var buffer = source.ToList();
             if (random == null)
                 random = new Random();

@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
@@ -32,10 +33,12 @@ namespace Utilities.Testing
             {
                 try
                 {
+                    var datas = new List<TestTable>();
                     connection.CreateTable<TestTable>();
                     for (var iter = 0; iter < 10; iter++)
                     {
                         TestTable testTable = new TestTable() { id = iter, value = $"test" };
+                        datas.Add(testTable);
                         var affectedCreate = connection.Insert(testTable);
                         Assert.AreEqual(affectedCreate, 1);
                         var selectedById = connection.Query<TestTable>(primaryKey: iter);
@@ -60,6 +63,8 @@ namespace Utilities.Testing
                     }
                     var affectedSelectScalar = connection.Query<TestTable>();
                     Assert.AreEqual(affectedSelectScalar.Count(), 0);
+
+                    Assert.AreEqual(datas.Count(), connection.InsertMultiple(datas));
                     Assert.Pass();
                 }
                 finally

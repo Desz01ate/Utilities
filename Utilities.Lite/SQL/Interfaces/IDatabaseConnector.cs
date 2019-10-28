@@ -15,6 +15,17 @@ namespace Utilities.Interfaces
         where TDatabaseType : DbConnection, new()
         where TParameter : DbParameter, new()
     {
+        /// <summary>
+        /// Connection string of this object.
+        /// </summary>
+        string ConnectionString { get; }
+        /// <summary>
+        /// Determine whether the connection is open or not.
+        /// </summary>
+        bool IsOpen { get; }
+        /// <summary>
+        /// Connector underlying current connection.
+        /// </summary>
         TDatabaseType Connection { get; }
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns

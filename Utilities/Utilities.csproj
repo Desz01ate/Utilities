@@ -9,16 +9,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.0.1</Version>
+    <Version>0.2.0.3</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
     <PackageReleaseNotes>[General]
-+ Improve flexibility for internal builder.
-+ Remove unused code.
++ Fix attribute usage metadata.
 
-
-[String]
-+ Add overload for Translate method.</PackageReleaseNotes>
+[SQL]
++ MapCLRTypeToSQLType now only visible to derived class and not the consumer.
++ Add QueryFirst&lt;T&gt; and QueryFirstAsync&lt;T&gt;.
+- Remove DROP_TABLE_USE_WITH_CAUTION method.
+- Replace IDatabaseConnectorProperty interface with DatabaseConnectorContractor abstract class.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 

@@ -15,15 +15,14 @@
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-+ Improve flexibility for internal builder.
-+ Remove unused code.
++ Fix attribute usage metadata.
 
 [SQL]
-+ Add DapperConnector support for .NET 4.5
-
-
-[String]
-+ Add overload for Translate method.</PackageReleaseNotes>
++ MapCLRTypeToSQLType now only visible to derived class and not the consumer.
++ Add QueryFirst&lt;T&gt; and QueryFirstAsync&lt;T&gt;.
+- Remove DROP_TABLE_USE_WITH_CAUTION method.
+- Replace IDatabaseConnectorProperty interface with DatabaseConnectorContractor abstract class.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -10,12 +10,16 @@ namespace Utilities.SQL
     /// </summary>
     public sealed class SQLite : DatabaseConnector<SQLiteConnection, SQLiteParameter>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public SQLite(string connectionString) : base(connectionString)
         {
             SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
 
         }
-        public override string MapCLRTypeToSQLType(Type type)
+        protected internal override string MapCLRTypeToSQLType(Type type)
         {
             if (type == typeof(string))
             {

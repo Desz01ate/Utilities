@@ -29,12 +29,12 @@ namespace Utilities.SQL
         /// <summary>
         /// Connection string of this object.
         /// </summary>
-        public new string ConnectionString => Connection.ConnectionString;
+        public string ConnectionString => Connection.ConnectionString;
 
         /// <summary>
         /// Determine whether the connection is open or not.
         /// </summary>
-        public new bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+        public bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
 
         /// <summary>
         /// Constructor

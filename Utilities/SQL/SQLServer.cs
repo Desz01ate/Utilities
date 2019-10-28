@@ -10,6 +10,10 @@ namespace Utilities.SQL
     /// </summary>
     public sealed class SQLServer : DatabaseConnector<SqlConnection, SqlParameter>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public SQLServer(string connectionString) : base(connectionString)
         {
             SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LEN");

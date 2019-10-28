@@ -83,7 +83,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual async Task InsertAsync(IEnumerable<T> data)
         {
-            await Database.InsertAsync(data).ConfigureAwait(false);
+            await Database.InsertMultipleAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual void Insert(IEnumerable<T> data)
         {
-            Database.Insert(data);
+            Database.InsertMultiple(data);
         }
 
         /// <summary>

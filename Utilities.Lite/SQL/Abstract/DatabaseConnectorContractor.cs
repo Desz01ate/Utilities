@@ -11,14 +11,6 @@ namespace Utilities.SQL.Abstract
     public abstract class DatabaseConnectorContractor
     {
         /// <summary>
-        /// Connection string of this object.
-        /// </summary>
-        public string ConnectionString { get; protected set; }
-        /// <summary>
-        /// Determine whether the connection is open or not.
-        /// </summary>
-        public bool IsOpen { get; protected set; }
-        /// <summary>
         /// SQL-function configuration for LINQ usage.
         /// </summary>
         internal protected Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; private protected set; }

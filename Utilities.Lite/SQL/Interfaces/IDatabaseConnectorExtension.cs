@@ -46,14 +46,14 @@ namespace Utilities.Interfaces
         /// <returns>Object of given class</returns>
         T Query<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
-        /// Select one row from table.
+        /// Select first row from table.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
         T QueryFirst<T>(IDbTransaction transaction = null) where T : class, new();
         /// <summary>
-        /// Select one row from table by using matched predicate.
+        /// Select one first from table by using matched predicate.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
@@ -75,7 +75,7 @@ namespace Utilities.Interfaces
         /// <param name="data">IEnumrable to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        int Insert<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
+        int InsertMultiple<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
         /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -136,14 +136,14 @@ namespace Utilities.Interfaces
         /// <returns>Object of given class</returns>
         Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
-        /// Select one row from table.
+        /// Select first row from table.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
         Task<T> QueryFirstAsync<T>(IDbTransaction transaction = null) where T : class, new();
         /// <summary>
-        /// Select one row from table by using matched predicate.
+        /// Select first row from table by using matched predicate.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
@@ -165,7 +165,7 @@ namespace Utilities.Interfaces
         /// <param name="data">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        Task<int> InsertAsync<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
+        Task<int> InsertMultipleAsync<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
         /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -202,25 +202,12 @@ namespace Utilities.Interfaces
         #endregion DML
 
         #region DDL
-        ///// <summary>
-        ///// Create table from given model
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <returns></returns>
-        //int CreateTable<T>() where T : class, new();
-        ///// <summary>
-        ///// Drop specific table.
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <returns></returns>
-        //int DROP_TABLE_USE_WITH_CAUTION<T>() where T : class, new();
-        ///// <summary>
-        ///// Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
-        ///// </summary>
-        ///// <param name="type"></param>
-        ///// <returns></returns>
-        //string MapCLRTypeToSQLType(Type type);
-
+        /// <summary>
+        /// Create table from given model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        int CreateTable<T>() where T : class, new();
         #endregion DDL
     }
 }

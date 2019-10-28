@@ -14,12 +14,16 @@ namespace Utilities.SQL
     /// </summary>
     public sealed class MySQL : DatabaseConnector<MySqlConnection, MySqlParameter>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public MySQL(string connectionString) : base(connectionString)
         {
             SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
 
         }
-        public override string MapCLRTypeToSQLType(Type type)
+        protected internal override string MapCLRTypeToSQLType(Type type)
         {
             if (type == typeof(string))
             {

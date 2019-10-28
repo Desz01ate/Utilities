@@ -113,6 +113,21 @@
             <typeparam name="TDatabaseType">DbConnection type</typeparam>
             <typeparam name="TParameter">DbParameter type</typeparam>
         </member>
+        <member name="P:Utilities.Interfaces.IDatabaseConnector`2.ConnectionString">
+            <summary>
+            Connection string of this object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Interfaces.IDatabaseConnector`2.IsOpen">
+            <summary>
+            Determine whether the connection is open or not.
+            </summary>
+        </member>
+        <member name="P:Utilities.Interfaces.IDatabaseConnector`2.Connection">
+            <summary>
+            Connector underlying current connection.
+            </summary>
+        </member>
         <member name="M:Utilities.Interfaces.IDatabaseConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
@@ -271,6 +286,23 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.QueryFirst``1(System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.QueryFirst``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+            <summary>
+            Select one first from table by using matched predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
         <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.Insert``1(``0,System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -353,6 +385,23 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.QueryFirstAsync``1(System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.QueryFirstAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table by using matched predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
         <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.InsertAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -413,40 +462,6 @@
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
-        </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.DROP_TABLE_USE_WITH_CAUTION``1">
-            <summary>
-            Drop specific table.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.MapCLRTypeToSQLType(System.Type)">
-            <summary>
-            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Utilities.Interfaces.IDatabaseConnectorProperty">
-            <summary>
-            Provide an essential properties to database connector interface
-            </summary>
-        </member>
-        <member name="P:Utilities.Interfaces.IDatabaseConnectorProperty.ConnectionString">
-            <summary>
-            Connection string of this object.
-            </summary>
-        </member>
-        <member name="P:Utilities.Interfaces.IDatabaseConnectorProperty.IsOpen">
-            <summary>
-            Determine whether the connection is open or not.
-            </summary>
-        </member>
-        <member name="P:Utilities.Interfaces.IDatabaseConnectorProperty.SQLFunctionConfiguration">
-            <summary>
-            SQL-function configuration for LINQ usage.
-            </summary>
         </member>
         <member name="T:Utilities.DesignPattern.UnitOfWork.Components.EnumeratableRepository`3">
             <summary>
@@ -682,26 +697,6 @@
             Serialize given object and write to csv file.
             </summary>
             <param name="data">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
@@ -1168,6 +1163,17 @@
             <exception cref="T:System.Exception"/>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.Shared.EnumerableExtension.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -1227,6 +1233,23 @@
             </summary>
             <param name="obj"></param>
             <param name="targetType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.SQL.Abstract.DatabaseConnectorContractor">
+            <summary>
+            Contractor class with properties required for internal and derived class.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.Abstract.DatabaseConnectorContractor.SQLFunctionConfiguration">
+            <summary>
+            SQL-function configuration for LINQ usage.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.Abstract.DatabaseConnectorContractor.MapCLRTypeToSQLType(System.Type)">
+            <summary>
+            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
+            </summary>
+            <param name="type"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DapperConnector`2">
@@ -1354,11 +1377,6 @@
         <member name="P:Utilities.SQL.DatabaseConnector`2.Connection">
             <summary>
             Instance of object that hold information of the connection.
-            </summary>
-        </member>
-        <member name="P:Utilities.SQL.DatabaseConnector`2.SQLFunctionConfiguration">
-            <summary>
-            SQL-function configuration for LINQ usage.
             </summary>
         </member>
         <member name="P:Utilities.SQL.DatabaseConnector`2.ConnectionString">
@@ -1542,6 +1560,23 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.QueryFirst``1(System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.QueryFirst``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table by using matched predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(``0,System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -1593,6 +1628,23 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="primaryKey">Primary key of specific row</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.QueryFirstAsync``1(System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>Object of given class</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.QueryFirstAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+            <summary>
+            Select first row from table by using matched predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns>Object of given class</returns>
         </member>
@@ -1688,25 +1740,18 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.CreateTable``1">
-            <summary>
-            Create table from given model
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.DROP_TABLE_USE_WITH_CAUTION``1">
-            <summary>
-            Drop specific table.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
             <summary>
             Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
             </summary>
             <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.CreateTable``1">
+            <summary>
+            Create table from given model
+            </summary>
+            <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.Extension.SqlConnectionExtension">
@@ -1772,7 +1817,7 @@
             <param name="top"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``2(Utilities.Interfaces.IDatabaseConnectorProperty,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``2(Utilities.SQL.Abstract.DatabaseConnectorContractor,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1829,7 +1874,7 @@
             <param name="primaryKey"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``2(Utilities.Interfaces.IDatabaseConnectorProperty,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``2(Utilities.SQL.Abstract.DatabaseConnectorContractor,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
             Generate SQL query with sql parameters.
             </summary>

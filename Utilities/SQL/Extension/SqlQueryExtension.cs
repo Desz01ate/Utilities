@@ -142,19 +142,35 @@ namespace Utilities.SQL.Extension
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
             var pkValue = primaryKey.GetValue(obj);
-            var parameters = Shared.DataExtension.CRUDDataMapping(obj, SqlType.Update);
-            parameters.Remove(primaryKey.Name);
-            var query = $@"UPDATE {tableName} SET
-                               {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-                                WHERE
-                               {primaryKey.Name} = @{primaryKey.Name}";
-            var parametersArray = parameters.Select(x => new TParameterType()
+            var parametersMap = Shared.DataExtension.CRUDDataMapping(obj, SqlType.Update);
+
+            var parameters = new List<TParameterType>();
+            //remove primary key from parameter, it should not be part of the SET block.
+            //parametersMap.Remove(primaryKey.Name);
+
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"UPDATE {tableName} SET");
+            foreach (var parameter in parametersMap)
             {
-                ParameterName = $"@{x.Key}",
-                Value = x.Value
-            }).ToList();
-            parametersArray.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
-            return (query, parametersArray);
+                //if the parameter is not a primary key, add it to the SET block.
+                if (parameter.Key != primaryKey.Name)
+                    stringBuilder.AppendLine($"{parameter.Key} = @{parameter.Key}");
+                parameters.Add(new TParameterType()
+                {
+                    ParameterName = $"@{parameter.Key}",
+                    Value = parameter.Value
+                });
+            }
+            stringBuilder.AppendLine("WHERE");
+            stringBuilder.AppendLine($"{primaryKey.Name} = @{primaryKey.Name}");
+            //var query = $@"UPDATE {tableName} SET
+            //                   {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
+            //                    WHERE
+            //                   {primaryKey.Name} = @{primaryKey.Name}";
+            var query = stringBuilder.ToString();
+
+            //parameters.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
+            return (query, parameters);
         }
 
         /// <summary>
