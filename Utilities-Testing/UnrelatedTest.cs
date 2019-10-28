@@ -18,7 +18,7 @@ namespace Utilities.Testing
                 //var d1 = mssqlConnector.Select<iris>(x => x.Label.Contains("set"));
                 //var labels = new[] { "A", "B", "Iris-setosa" }.ToList();
                 var labels = new[] { 1d, 2, 3, 4 };
-                var data = mssqlConnector.Select<taxifaretest>(top: 1000).ToList();
+                var data = mssqlConnector.Query<taxifaretest>(top: 1000).ToList();
                 //var labels = new[] { "A", "B", "C" }.ToList();
                 //var data = mssqlConnector.Select<iris>(x => labels.Contains(x.Label));
             }

@@ -7,6 +7,7 @@ using System.Text;
 using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Abstract;
 using Utilities.SQL.Translator;
 
 namespace Utilities.SQL.Extension
@@ -38,7 +39,7 @@ namespace Utilities.SQL.Extension
         /// <param name="predicate"></param>
         /// <param name="top"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T, TParameterType>(IDatabaseConnectorProperty connector, Expression<Func<T, bool>> predicate, int? top = null)
+        public static (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T, TParameterType>(DatabaseConnectorContractor connector, Expression<Func<T, bool>> predicate, int? top = null)
             where T : class, new()
             where TParameterType : DbParameter, new()
         {
@@ -210,7 +211,7 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T, TParameterType>(IDatabaseConnectorProperty connector, Expression<Func<T, bool>> predicate)
+        public static (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T, TParameterType>(DatabaseConnectorContractor connector, Expression<Func<T, bool>> predicate)
             where T : class, new()
             where TParameterType : DbParameter, new()
         {

@@ -5,7 +5,7 @@ namespace Utilities.Attributes.SQL
     /// <summary>
     /// Attribute for ignorance on insert or update statement
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class IgnoreFieldAttribute : Attribute
     {
         public bool IgnoreInsert { get; }

@@ -38,15 +38,18 @@ namespace Utilities.Testing
                         TestTable testTable = new TestTable() { id = iter, value = $"test" };
                         var affectedCreate = connection.Insert(testTable);
                         Assert.AreEqual(affectedCreate, 1);
-                        var selectedById = connection.Select<TestTable>(primaryKey: iter);
+                        var selectedById = connection.Query<TestTable>(primaryKey: iter);
                         Assert.AreEqual(selectedById.id, iter);
                         Assert.AreEqual(selectedById.value, "test");
-                        var selectedByIdLambda = connection.Select<TestTable>(x => x.id == iter);
-                        Assert.AreEqual(selectedByIdLambda.First().id, iter);
-                        Assert.AreEqual(selectedByIdLambda.First().value, "test");
-                        var selectedAll = connection.Select<TestTable>();
-                        Assert.AreEqual(selectedAll.First().id, iter);
-                        Assert.AreEqual(selectedAll.First().value, "test");
+                        var selectedByIdLambda = connection.Query<TestTable>(x => x.id == iter).First();
+                        Assert.AreEqual(selectedByIdLambda.id, iter);
+                        Assert.AreEqual(selectedByIdLambda.value, "test");
+                        var selectedAll = connection.Query<TestTable>().First();
+                        Assert.AreEqual(selectedAll.id, iter);
+                        Assert.AreEqual(selectedAll.value, "test");
+                        var selectFirst = connection.QueryFirst<TestTable>();
+                        Assert.AreEqual(selectFirst.id, iter);
+                        Assert.AreEqual(selectFirst.value, "test");
                         testTable.value = null;//"updated";
                         var affectedUpdate = connection.Update(testTable);
                         Assert.AreEqual(affectedUpdate, 1);
@@ -55,13 +58,13 @@ namespace Utilities.Testing
                         var affectedDelete = connection.Delete(testTable);
                         Assert.AreEqual(affectedDelete, 1);
                     }
-                    var affectedSelectScalar = connection.Select<TestTable>();
+                    var affectedSelectScalar = connection.Query<TestTable>();
                     Assert.AreEqual(affectedSelectScalar.Count(), 0);
                     Assert.Pass();
                 }
                 finally
                 {
-                    connection.DROP_TABLE_USE_WITH_CAUTION<TestTable>();
+                    connection.ExecuteNonQuery("DROP TABLE [TestTable]");
                 }
             }
         }
@@ -78,12 +81,12 @@ namespace Utilities.Testing
                     {
                         var affectedCreate = connection.ExecuteNonQuery(@"INSERT INTO [dbo].[TestTable]([id],[value]) VALUES(@id,@value)", new[] { new SqlParameter("id", iter), new SqlParameter("value", "test") });
                         Assert.AreEqual(affectedCreate, 1);
-                        var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
-                        Assert.AreEqual(selectedById.First().id, iter);
-                        Assert.AreEqual(selectedById.First().value, "test");
-                        var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
-                        Assert.AreEqual(selectedByIdDynamic.First().id, iter);
-                        Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                        var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) }).First();
+                        Assert.AreEqual(selectedById.id, iter);
+                        Assert.AreEqual(selectedById.value, "test");
+                        var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) }).First();
+                        Assert.AreEqual(selectedByIdDynamic.id, iter);
+                        Assert.AreEqual(selectedByIdDynamic.value, "test");
                         var affectedUpdate = connection.ExecuteNonQuery(@"UPDATE [dbo].[TestTable] SET [value] = @value WHERE [id] = @id", new[] { new SqlParameter("id", iter), new SqlParameter("value", "updated") });
                         Assert.AreEqual(affectedUpdate, 1);
                         var affectedDelete = connection.ExecuteNonQuery(@"DELETE FROM [dbo].[TestTable] WHERE [id] = @id", new[] { new SqlParameter("id", iter) });
@@ -111,12 +114,12 @@ namespace Utilities.Testing
                     {
                         var affectedCreate = connection.ExecuteNonQuery(@"INSERT INTO TestTable(id,value) VALUES(@id,@value)", new[] { new MySqlParameter("id", iter), new MySqlParameter("value", "test") });
                         Assert.AreEqual(affectedCreate, 1);
-                        var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM TestTable WHERE id = @id", new[] { new MySqlParameter("id", iter) });
-                        Assert.AreEqual(selectedById.First().id, iter);
-                        Assert.AreEqual(selectedById.First().value, "test");
-                        var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM TestTable WHERE id = @id", new[] { new MySqlParameter("id", iter) });
-                        Assert.AreEqual(selectedByIdDynamic.First().id, iter);
-                        Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                        var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM TestTable WHERE id = @id", new[] { new MySqlParameter("id", iter) }).First();
+                        Assert.AreEqual(selectedById.id, iter);
+                        Assert.AreEqual(selectedById.value, "test");
+                        var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM TestTable WHERE id = @id", new[] { new MySqlParameter("id", iter) }).First();
+                        Assert.AreEqual(selectedByIdDynamic.id, iter);
+                        Assert.AreEqual(selectedByIdDynamic.value, "test");
                         var affectedUpdate = connection.ExecuteNonQuery(@"UPDATE TestTable SET value = @value WHERE id = @id", new[] { new MySqlParameter("id", iter), new MySqlParameter("value", "updated") });
                         Assert.AreEqual(affectedUpdate, 1);
                         var affectedDelete = connection.ExecuteNonQuery(@"DELETE FROM TestTable WHERE id = @id", new[] { new MySqlParameter("id", iter) });

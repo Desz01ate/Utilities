@@ -5,7 +5,7 @@ namespace Utilities.Attributes.SQL
     /// <summary>
     /// Attribute for field name customization
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class FieldAttribute : Attribute
     {
         public string FieldName { get; }

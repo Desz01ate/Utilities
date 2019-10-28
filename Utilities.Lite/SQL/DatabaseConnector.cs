@@ -27,19 +27,14 @@ namespace Utilities.SQL
         private bool Disposed { get; set; }
 
         /// <summary>
-        /// SQL-function configuration for LINQ usage.
-        /// </summary>
-        public Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; }
-
-        /// <summary>
         /// Connection string of this object.
         /// </summary>
-        public virtual string ConnectionString => Connection.ConnectionString;
+        public new string ConnectionString => Connection.ConnectionString;
 
         /// <summary>
         /// Determine whether the connection is open or not.
         /// </summary>
-        public bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
+        public new bool IsOpen => Connection != null && Connection.State == ConnectionState.Open;
 
         /// <summary>
         /// Constructor
@@ -47,7 +42,7 @@ namespace Utilities.SQL
         /// <param name="connectionString">Connection string for database.</param>
         public DatabaseConnector(string connectionString)
         {
-            SQLFunctionConfiguration = new Dictionary<SqlFunction, string>();
+            SQLFunctionConfiguration ??= new Dictionary<SqlFunction, string>();
             Connection = new TDatabaseConnection()
             {
                 ConnectionString = connectionString

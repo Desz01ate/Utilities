@@ -82,10 +82,8 @@ namespace Utilities.Shared
             return values;
         }
 
-        internal static IEnumerable<string> GenerateSQLCreteFieldStatement<T1, T2, T>(this IDatabaseConnectorExtension<T1, T2> connector)
+        internal static IEnumerable<string> GenerateSQLCreteFieldStatement<T>(this SQL.Abstract.DatabaseConnectorContractor connector)
             where T : class, new()
-            where T1 : DbConnection, new()
-            where T2 : DbParameter, new()
         {
             var properties = typeof(T).PropertiesBindingFlagsAttributeValidate();
             var referenceProperties = typeof(T).ForeignKeyAttributeValidate();

@@ -1,6 +1,4 @@
-﻿#if !NET45
-
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -53,5 +51,3 @@ namespace Utilities.SQL.Extension
         }
     }
 }
-
-#endif
