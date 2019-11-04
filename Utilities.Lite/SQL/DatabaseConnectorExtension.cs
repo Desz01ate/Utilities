@@ -361,6 +361,32 @@ namespace Utilities.SQL
             var parameters = preparer.parameters;
             return await ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
         }
+
+
+        /// <summary>
+        /// Returns rows count from specified table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public virtual int Count<T>() where T : class
+        {
+            var tableName = AttributeExtension.TableNameAttributeValidate(typeof(T));
+            var query = $"SELECT COUNT(*) FROM {tableName}";
+            var count = this.ExecuteScalar<int>(query);
+            return count;
+        }
+        /// <summary>
+        /// Returns rows count from specified table in an asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public virtual async Task<int> CountAsync<T>() where T : class
+        {
+            var tableName = AttributeExtension.TableNameAttributeValidate(typeof(T));
+            var query = $"SELECT COUNT(*) FROM {tableName}";
+            var count = await this.ExecuteScalarAsync<int>(query).ConfigureAwait(false);
+            return count;
+        }
         /// <summary>
         /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
         /// </summary>
@@ -451,5 +477,6 @@ namespace Utilities.SQL
         //    var query = $@"DROP TABLE {tableName}";
         //    return this.ExecuteNonQuery(query);
         //}
+
     }
 }

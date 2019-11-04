@@ -181,6 +181,14 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
             await Database.UpdateAsync(data).ConfigureAwait(false);
         }
         /// <summary>
+        /// Returns rows count from repository.
+        /// </summary>
+        /// <returns></returns>
+        public virtual int Count()
+        {
+            return this.Database.Count<T>();
+        }
+        /// <summary>
         /// Get enumerator of data repository.
         /// </summary>
         /// <returns></returns>

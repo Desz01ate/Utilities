@@ -209,5 +209,17 @@ namespace Utilities.Interfaces
         /// <returns></returns>
         int CreateTable<T>() where T : class, new();
         #endregion DDL
+        /// <summary>
+        /// Returns rows count from specified table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        int Count<T>() where T : class;
+        /// <summary>
+        /// Returns rows count from specified table in an asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        Task<int> CountAsync<T>() where T : class;
     }
 }
