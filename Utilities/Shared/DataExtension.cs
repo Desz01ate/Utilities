@@ -17,21 +17,6 @@ namespace Utilities.Shared
     internal static class DataExtension
     {
         /// <summary>
-        /// Convert DataRow into dynamic object with specified column name.
-        /// </summary>
-        /// <param name="row">data reader to convert to dynamic object</param>
-        /// <param name="columns">column name container</param>
-        /// <returns></returns>
-        internal static dynamic RowBuilder(this DataRow row, IEnumerable<string> columns)
-        {
-            var rowInstance = new ExpandoObject() as IDictionary<string, object>;
-            for (var idx = 0; idx < columns.Count(); idx++)
-            {
-                rowInstance.Add(columns.ElementAt(idx), row?[idx]);
-            }
-            return rowInstance;
-        }
-        /// <summary>
         /// Convert IDataReader into dynamic object.
         /// </summary>
         /// <param name="row">data reader to convert to dynamic object</param>
@@ -42,21 +27,6 @@ namespace Utilities.Shared
             for (var idx = 0; idx < row.FieldCount; idx++)
             {
                 rowInstance.Add(row.GetName(idx), row[idx]);
-            }
-            return rowInstance;
-        }
-        /// <summary>
-        /// Convert DataRow into dynamic object.
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        internal static dynamic RowBuilder(this DataRow row)
-        {
-            var rowInstance = new ExpandoObject() as IDictionary<string, object>;
-            var columns = row.Table.Columns;
-            foreach (DataColumn column in columns)
-            {
-                rowInstance.Add(column.ColumnName, row?[column]);
             }
             return rowInstance;
         }

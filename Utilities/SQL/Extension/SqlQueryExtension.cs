@@ -100,31 +100,35 @@ namespace Utilities.SQL.Extension
         /// Generate SQL query with sql parameters.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
+        /// <param name="source"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T, TParameterType>(IEnumerable<T> obj)
+        public static (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T, TParameterType>(IEnumerable<T> source)
             where T : class, new()
             where TParameterType : DbParameter, new()
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = Shared.DataExtension.CRUDDataMapping(obj.First(), SqlType.Insert);
-            var query = new StringBuilder($@"INSERT INTO {tableName}({string.Join(",", kvMapper.Select(field => field.Key))}) VALUES");
-            var values = new List<string>();
-            var parameters = new List<TParameterType>();
-            for (var idx = 0; idx < obj.Count(); idx++)
-            {
-                var o = obj.ElementAt(idx);
-                var map = Shared.DataExtension.CRUDDataMapping(o, SqlType.Insert);
+            var parametersMap = Shared.DataExtension.CRUDDataMapping(source.First(), SqlType.Insert);
 
-                values.Add($"({ string.Join(",", map.Select(field => $"@{field.Key}{idx}"))})");
-                parameters.AddRange(map.Select(field => new TParameterType()
-                {
-                    ParameterName = $"@{field.Key}{idx}",
-                    Value = field.Value
-                }));
+            //values placeholder before append.
+            var values = new List<string>();
+
+            var parameters = new List<TParameterType>();
+            var query = new StringBuilder($@"INSERT INTO {tableName}");
+            query.Append("(");
+            query.Append($"{string.Join(",", parametersMap.Select(field => field.Key))}");
+            query.AppendLine(")");
+            query.AppendLine("VALUES");
+            for (var idx = 0; idx < source.Count(); idx++)
+            {
+                var obj = source.ElementAt(idx);
+                var mapper = DataExtension.CRUDDataMapping(obj, SqlType.Insert);
+                var currentValueStatement = $"({string.Join(",", mapper.Select(x => $"@{x.Key}{idx}"))})";
+                values.Add(currentValueStatement);
+                var currentParameters = mapper.Select(x => new TParameterType() { ParameterName = $"@{x.Key}{idx}", Value = x.Value });
+                parameters.AddRange(currentParameters);
+
             }
-            var joinedValue = string.Join(",", values);
-            query.Append(joinedValue);
+            query.AppendLine(string.Join(",", values));
             return (query.ToString(), parameters);
         }
 
@@ -141,12 +145,10 @@ namespace Utilities.SQL.Extension
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
-            var pkValue = primaryKey.GetValue(obj);
             var parametersMap = Shared.DataExtension.CRUDDataMapping(obj, SqlType.Update);
 
             var parameters = new List<TParameterType>();
-            //remove primary key from parameter, it should not be part of the SET block.
-            //parametersMap.Remove(primaryKey.Name);
+
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"UPDATE {tableName} SET");
@@ -163,13 +165,9 @@ namespace Utilities.SQL.Extension
             }
             stringBuilder.AppendLine("WHERE");
             stringBuilder.AppendLine($"{primaryKey.Name} = @{primaryKey.Name}");
-            //var query = $@"UPDATE {tableName} SET
-            //                   {string.Join(",", parameters.Select(x => $"{x.Key} = @{x.Key}"))}
-            //                    WHERE
-            //                   {primaryKey.Name} = @{primaryKey.Name}";
+
             var query = stringBuilder.ToString();
 
-            //parameters.Add(new TParameterType() { ParameterName = $"@{primaryKey.Name}", Value = primaryKey.GetValue(obj) });
             return (query, parameters);
         }
 

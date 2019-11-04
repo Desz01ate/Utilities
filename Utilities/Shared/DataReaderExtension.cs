@@ -14,7 +14,7 @@ namespace Utilities.Shared
         /// <returns></returns>
         internal static IEnumerable<string> GetColumns(this IDataReader dataReader)
         {
-            if (dataReader == null) throw new ArgumentNullException($"{nameof(dataReader)} must not be null.");
+            if (dataReader == null) return null;
             return System.Linq.Enumerable.Range(0, dataReader.FieldCount).Select(dataReader.GetName);
         }
     }

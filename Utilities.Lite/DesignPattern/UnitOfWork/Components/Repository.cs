@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
@@ -13,7 +14,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDatabase"></typeparam>
     /// <typeparam name="TParameter"></typeparam>
-    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>
+    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>, IEnumerable<T>
         where T : class, new()
         where TDatabase : DbConnection, new()
         where TParameter : DbParameter, new()
@@ -81,7 +82,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// Insert data into repository in an asynchronous manner.
         /// </summary>
         /// <param name="data">Generic object.</param>
-        public virtual async Task InsertAsync(IEnumerable<T> data)
+        public virtual async Task InsertMultipleAsync(IEnumerable<T> data)
         {
             await Database.InsertMultipleAsync(data).ConfigureAwait(false);
         }
@@ -90,7 +91,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// Insert data into repository.
         /// </summary>
         /// <param name="data">Generic object.</param>
-        public virtual void Insert(IEnumerable<T> data)
+        public virtual void InsertMultiple(IEnumerable<T> data)
         {
             Database.InsertMultiple(data);
         }
@@ -178,6 +179,22 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         public virtual async Task UpdateAsync(T data)
         {
             await Database.UpdateAsync(data).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Get enumerator of data repository.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (var data in Query())
+            {
+                yield return data;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

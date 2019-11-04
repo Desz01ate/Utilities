@@ -72,10 +72,20 @@ namespace Utilities.Testing
             {
                 string asc = ((char)i).ToString();
                 Assert.IsTrue(Utilities.RegularExpression.IsOnlyText(asc));
+                Assert.IsTrue(Utilities.RegularExpression.IsOnlyText(asc, Enum.Language.English));
                 Assert.IsFalse(Utilities.RegularExpression.IsOnlyText(i.ToString()));
                 Assert.IsFalse(Utilities.RegularExpression.IsOnlyText($@"{asc}{i}"));
+                Assert.IsFalse(Utilities.RegularExpression.IsOnlyText($@"{asc}{i}", Enum.Language.English));
             }
             Assert.IsTrue(Utilities.RegularExpression.IsOnlyText("สวัสดี"));
+            Assert.IsTrue(Utilities.RegularExpression.IsOnlyText("สวัสดี", Enum.Language.Thai));
+            foreach (int member in System.Enum.GetValues(typeof(Enum.Language)))
+            {
+                var mem = System.Enum.GetName(typeof(Enum.Language), member);
+                if (mem.Equals(Enum.Language.Thai.ToString()) || mem.Equals(Enum.Language.English.ToString())) continue;
+                Assert.Throws<System.NotSupportedException>(() => Utilities.RegularExpression.IsOnlyText("สวัสดี", (Enum.Language)member));
+
+            }
             Assert.Pass();
         }
 

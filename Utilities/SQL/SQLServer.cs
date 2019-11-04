@@ -1,7 +1,8 @@
-﻿#if NETSTANDARD2_0
-    using System.Data.SqlClient;
+﻿using System;
+#if NETSTANDARD2_0
+using System.Data.SqlClient;
 #elif NETSTANDARD2_1
-    using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 #endif
 namespace Utilities.SQL
 {
@@ -17,6 +18,10 @@ namespace Utilities.SQL
         public SQLServer(string connectionString) : base(connectionString)
         {
             SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LEN");
+        }
+        protected internal override string MapCLRTypeToSQLType(Type type)
+        {
+            return base.MapCLRTypeToSQLType(type);
         }
     }
 }

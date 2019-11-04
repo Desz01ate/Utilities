@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Linq;
+using Utilities.SQL.Abstract;
 using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 

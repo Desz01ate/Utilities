@@ -81,18 +81,18 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// Insert data into repository in an asynchronous manner.
         /// </summary>
         /// <param name="data">Generic object.</param>
-        public virtual async Task InsertAsync(IEnumerable<T> data)
+        public virtual async Task InsertMultipleAsync(IEnumerable<T> data)
         {
-            await Database.InsertAsync(data).ConfigureAwait(false);
+            await Database.InsertMultipleAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Insert data into repository.
         /// </summary>
         /// <param name="data">Generic object.</param>
-        public virtual void Insert(IEnumerable<T> data)
+        public virtual void InsertMultiple(IEnumerable<T> data)
         {
-            Database.Insert(data);
+            Database.InsertMultiple(data);
         }
 
         /// <summary>

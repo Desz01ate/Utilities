@@ -18,6 +18,10 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static IEnumerable<T> ToEnumerable<T>(this DataTable data) where T : class, new()
         {
+            if (data == null)
+            {
+                yield break;
+            }
             using var dataReader = new DataTableReader(data);
             var converter = new Converter<T>(dataReader);
             while (dataReader.Read())
@@ -33,6 +37,10 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static IEnumerable<dynamic> ToEnumerable(this DataTable data)
         {
+            if (data == null)
+            {
+                yield break;
+            }
             using var dataReader = new DataTableReader(data);
             while (dataReader.Read())
             {
@@ -47,6 +55,7 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static IEnumerable<string> GetColumns(this DataTable data)
         {
+            if (data == null) return null;
             return System.Linq.Enumerable.Range(0, data.Columns.Count).Select(x => data.Columns[x].ColumnName);
         }
     }
