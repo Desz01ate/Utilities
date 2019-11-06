@@ -27,26 +27,5 @@ namespace Utilities.Shared
         {
             return Convert.ChangeType(obj, targetType);
         }
-        /// <summary>
-        /// Analyze structure of dynamic object.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static DynamicObjectMetadataCollection DynamicObjectAnalyzer(dynamic obj)
-        {
-            if (obj is null)
-            {
-                return null;
-            }
-            var result = new DynamicObjectMetadataCollection();
-            if (obj is IDictionary<string, object> dict)
-            {
-                foreach (var pair in dict)
-                {
-                    result.Add(pair.Value?.GetType(), pair.Key, pair.Value, pair);
-                }
-            }
-            return result;
-        }
     }
 }

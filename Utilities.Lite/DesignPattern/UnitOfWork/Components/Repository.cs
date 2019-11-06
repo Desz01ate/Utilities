@@ -189,6 +189,30 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
             return this.Database.Count<T>();
         }
         /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Where(Expression<Func<T, bool>> predicate)
+        {
+            foreach (var data in Query(predicate))
+            {
+                yield return data;
+            }
+        }
+        /// <summary>
+        /// Returns a specified number of contiguous elements from the start of a sequence.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Take(int n)
+        {
+            foreach (var data in Database.Query<T>(top: n))
+            {
+                yield return data;
+            }
+        }
+        /// <summary>
         /// Get enumerator of data repository.
         /// </summary>
         /// <returns></returns>
