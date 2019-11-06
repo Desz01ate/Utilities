@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
@@ -13,7 +14,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDatabase"></typeparam>
     /// <typeparam name="TParameter"></typeparam>
-    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>
+    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>, IEnumerable<T>
         where T : class, new()
         where TDatabase : DbConnection, new()
         where TParameter : DbParameter, new()
@@ -178,6 +179,54 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         public virtual async Task UpdateAsync(T data)
         {
             await Database.UpdateAsync(data).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Returns rows count from repository.
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return this.Database.Count<T>();
+        }
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Where(Expression<Func<T, bool>> predicate)
+        {
+            foreach (var data in Query(predicate))
+            {
+                yield return data;
+            }
+        }
+        /// <summary>
+        /// Returns a specified number of contiguous elements from the start of a sequence.
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Take(int count)
+        {
+            foreach (var data in Database.Query<T>(top: count))
+            {
+                yield return data;
+            }
+        }
+        /// <summary>
+        /// Get enumerator of data repository.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (var data in Query())
+            {
+                yield return data;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

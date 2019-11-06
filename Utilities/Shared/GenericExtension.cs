@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Utilities.Classes;
 
 namespace Utilities.Shared
 {
-    internal static class GenericExtension
+    public static class GenericExtension
     {
         /// <summary>
         /// Verify if the object is a generic list.

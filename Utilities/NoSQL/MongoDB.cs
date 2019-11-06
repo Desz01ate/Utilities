@@ -81,7 +81,6 @@ namespace Utilities.NoSQL
             if (!_disposed && disposing)
             {
                 Databases.Clear();
-                Connection = null;
                 _disposed = true;
             }
         }
@@ -103,7 +102,12 @@ namespace Utilities.NoSQL
                 throw new NullReferenceException("Active database is not set, you must call 'UseDatabase' before attempt to execute any action.");
             }
         }
-
+        /// <summary>
+        /// Delete specified document.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public DeleteResult Delete<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -115,7 +119,12 @@ namespace Utilities.NoSQL
             var filter = Builders<T>.Filter.Eq(field, value);
             return collection.DeleteOne(filter);
         }
-
+        /// <summary>
+        /// Delete document using key.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
         public DeleteResult Delete<T>(object primaryKey) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -127,7 +136,12 @@ namespace Utilities.NoSQL
             var filter = Builders<T>.Filter.Eq(field, value);
             return collection.DeleteOne(filter);
         }
-
+        /// <summary>
+        /// Delete document using predicate.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public DeleteResult Delete<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -135,7 +149,12 @@ namespace Utilities.NoSQL
             var collection = ActiveDatabase.GetCollection<T>(table);
             return collection.DeleteOne(predicate);
         }
-
+        /// <summary>
+        /// Delete specified document in an asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public async Task<DeleteResult> DeleteAsync<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -147,7 +166,12 @@ namespace Utilities.NoSQL
             var filter = Builders<T>.Filter.Eq(field, value);
             return await collection.DeleteOneAsync(filter);
         }
-
+        /// <summary>
+        /// Delete document using key in asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
         public async Task<DeleteResult> DeleteAsync<T>(object primaryKey) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -160,7 +184,12 @@ namespace Utilities.NoSQL
             var filter = Builders<T>.Filter.Eq(field, value);
             return await collection.DeleteOneAsync(filter);
         }
-
+        /// <summary>
+        /// Delete document using predicate in asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public async Task<DeleteResult> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -182,7 +211,12 @@ namespace Utilities.NoSQL
             return 0;
         }
 
-
+        /// <summary>
+        /// Insert specified document.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int Insert<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -191,7 +225,12 @@ namespace Utilities.NoSQL
             collection.InsertOne(obj);
             return 0;
         }
-
+        /// <summary>
+        /// Insert documents.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int Insert<T>(IEnumerable<T> obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -200,7 +239,12 @@ namespace Utilities.NoSQL
             collection.InsertMany(obj);
             return 0;
         }
-
+        /// <summary>
+        /// Insert specified document in an asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public async Task<int> InsertAsync<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -210,8 +254,13 @@ namespace Utilities.NoSQL
             return 0;
         }
 
-
-        public IEnumerable<T> Select<T>(int? top = null) where T : class, new()
+        /// <summary>
+        /// Read documents.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Query<T>(int? top = null) where T : class, new()
         {
             VerifyActiveDatabase();
             var table = typeof(T).TableNameAttributeValidate();
@@ -220,8 +269,14 @@ namespace Utilities.NoSQL
             var result = top == null ? buffer.ToList() : buffer.Limit(top.Value).ToList();
             return result;
         }
-
-        public IEnumerable<T> Select<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
+        /// <summary>
+        /// Read documents which match predicate.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
         {
             VerifyActiveDatabase();
             var table = typeof(T).TableNameAttributeValidate();
@@ -230,8 +285,13 @@ namespace Utilities.NoSQL
             var result = top == null ? buffer.ToList() : buffer.Limit(top.Value).ToList();
             return result;
         }
-
-        public T Select<T>(object primaryKey) where T : class, new()
+        /// <summary>
+        /// Read document using key.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
+        public T Query<T>(object primaryKey) where T : class, new()
         {
             VerifyActiveDatabase();
             var type = typeof(T);
@@ -241,7 +301,12 @@ namespace Utilities.NoSQL
             var buffer = collection.Find<T>(filter);
             return buffer.FirstOrDefault();
         }
-
+        /// <summary>
+        /// Update specified document.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public ReplaceOneResult Update<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -253,7 +318,12 @@ namespace Utilities.NoSQL
             var result = collection.ReplaceOne(filter, obj);
             return result;
         }
-
+        /// <summary>
+        /// Update specified document in an asynchrounous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public async Task<ReplaceOneResult> UpdateAsync<T>(T obj) where T : class, new()
         {
             VerifyActiveDatabase();
@@ -330,15 +400,6 @@ namespace Utilities.NoSQL
             return await collection.DeleteOneAsync(predicate);
         }
 
-
-        public static int DROP_TABLE_USE_WITH_CAUTION<T>(this IMongoDatabase database) where T : class, new()
-        {
-            var table = typeof(T).TableNameAttributeValidate();
-            database.DropCollection(table);
-            return 0;
-        }
-
-
         public static int Insert<T>(this IMongoDatabase database, T obj) where T : class, new()
         {
             var table = typeof(T).TableNameAttributeValidate();
@@ -364,7 +425,7 @@ namespace Utilities.NoSQL
         }
 
 
-        public static IEnumerable<T> Select<T>(this IMongoDatabase database, int? top = null) where T : class, new()
+        public static IEnumerable<T> Query<T>(this IMongoDatabase database, int? top = null) where T : class, new()
         {
             var table = typeof(T).TableNameAttributeValidate();
             var collection = database.GetCollection<T>(table);
@@ -373,7 +434,7 @@ namespace Utilities.NoSQL
             return result;
         }
 
-        public static IEnumerable<T> Select<T>(this IMongoDatabase database, Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
+        public static IEnumerable<T> Query<T>(this IMongoDatabase database, Expression<Func<T, bool>> predicate, int? top = null) where T : class, new()
         {
             var table = typeof(T).TableNameAttributeValidate();
             var collection = database.GetCollection<T>(table);
@@ -382,7 +443,7 @@ namespace Utilities.NoSQL
             return result;
         }
 
-        public static T Select<T>(this IMongoDatabase database, object primaryKey) where T : class, new()
+        public static T Query<T>(this IMongoDatabase database, object primaryKey) where T : class, new()
         {
             var table = typeof(T).TableNameAttributeValidate();
             var collection = database.GetCollection<T>(table);

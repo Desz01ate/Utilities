@@ -34,7 +34,7 @@ namespace Utilities.Shared
             var totalElement = source.Count();
             if (source == null)
             {
-                return null;
+                return Enumerable.Empty<T>();
             }
             if (startIndex < 0)
             {
@@ -77,7 +77,7 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static (IEnumerable<T> Match, IEnumerable<T> Unmatch) Partition<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
-            if (source == null) return (null, null);
+            if (source == null) return (Enumerable.Empty<T>(), Enumerable.Empty<T>());
             var match = source.Where(predicate);
             var unmatch = source.Except(match);
             return (match, unmatch);

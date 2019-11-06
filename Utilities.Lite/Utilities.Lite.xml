@@ -34,6 +34,67 @@
             Proxy for PropertyInfo for customizable property for internal use only.
             </summary>
         </member>
+        <member name="T:Utilities.Classes.DynamicObjectAnalyzer">
+            <summary>
+            Collection of DynamicObjectMetadata which describe the looks of dynamic object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Values">
+            <summary>
+            Available object for dynamic object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Keys">
+            <summary>
+            Available keys for dynamic object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Item(System.String)">
+            <summary>
+            Get value by key.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Item(System.Int32)">
+            <summary>
+            Get value by index
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.#ctor(System.Object)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.#ctor(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="dict"></param>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.TryParse``1(``0@)">
+            <summary>
+            Try parse dynamic object into specified object type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.Parse``1">
+            <summary>
+            Parse dynamic object into specified object type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.Classes.DynamicObjectMetadata">
+            <summary>
+            Contains information of member of dynamic object.
+            </summary>
+        </member>
         <member name="T:Utilities.Interfaces.IGenericRepository`1">
             <summary>
             Contains required implementation on Repository template
@@ -455,6 +516,20 @@
             <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.Count``1">
+            <summary>
+            Returns rows count from specified table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.CountAsync``1">
+            <summary>
+            Returns rows count from specified table in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.DesignPattern.UnitOfWork.Components.Repository`3">
             <summary>
             Repository class designed for IDatabaseConnectorExtension.
@@ -574,6 +649,26 @@
             </summary>
             <param name="data">Generic object.</param>
         </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Count">
+            <summary>
+            Returns rows count from repository.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Filters a sequence of values based on a predicate.
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Take(System.Int32)">
+            <summary>
+            Returns a specified number of contiguous elements from the start of a sequence.
+            </summary>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.GetEnumerator">
             <summary>
             Get enumerator of data repository.
@@ -675,26 +770,6 @@
             Serialize given object and write to csv file.
             </summary>
             <param name="data">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
@@ -1256,14 +1331,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.SecureRandomString(System.Int32,System.String)">
-            <summary>
-            Provide statistically random string generate with customizable length and combination.
-            </summary>
-            <param name="length">Length of string.</param>
-            <param name="combination">Combination of string.</param>
-            <returns></returns>
-        </member>
         <member name="T:Utilities.Security.CryptoProvider.AES">
             <summary>
             Simple wrapper for Advance Encryption Standard.
@@ -1396,6 +1463,17 @@
             <exception cref="T:System.Exception"/>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.Shared.EnumerableExtension.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -1451,6 +1529,25 @@
             </summary>
             <param name="obj"></param>
             <param name="targetType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.SizeOf``1(Utilities.Enum.MeasureSize,System.Single)">
+            <summary>
+            Get size of class.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="measureSize">Measure size, default = byte</param>
+            <param name="measureRatio">Measure ratio, default = 1024.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.SizeOf(System.Type,Utilities.Enum.MeasureSize,System.Single)">
+            <summary>
+            Get size of class.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type">Target type</param>
+            <param name="measureSize">Measure size, default = byte</param>
+            <param name="measureRatio">Measure ratio, default = 1024.</param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.Abstract.DatabaseConnectorContractor">
@@ -1956,6 +2053,20 @@
             <typeparam name="T"></typeparam>
             <param name="primaryKey">Specified primary key.</param>
             <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Count``1">
+            <summary>
+            Returns rows count from specified table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.CountAsync``1">
+            <summary>
+            Returns rows count from specified table in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">

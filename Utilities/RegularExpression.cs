@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Utilities.Enum;
 
 namespace Utilities
 {
@@ -37,11 +38,23 @@ namespace Utilities
 
         //\u0E00-\u0E7F is a Unicode for Thai language
         /// <summary>
-        /// Check if the given input is matching the string-only (English and Thai alphabetics only)
+        /// Check if the given input is matching the string-only (English and Thai alphabetics combination)
         /// </summary>
         /// <param name="input">Input string</param>
         /// <returns></returns>
         public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+$").Success;
+        /// <summary>
+        /// Check if the given input is matching the string-only in specific language (Support English and Thai language only).
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public static bool IsOnlyText(string input, Language language) => language switch
+        {
+            Language.English => RegexMatch(input, @"^[a-zA-Z]+$").Success,
+            Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F]+$").Success,
+            _ => throw new System.NotSupportedException($"{language.ToString()} is not supported.")
+        };
 
         /// <summary>
         /// Check if the given input is matching the Thai citizen id format.

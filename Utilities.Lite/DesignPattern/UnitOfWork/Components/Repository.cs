@@ -184,7 +184,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// Returns rows count from repository.
         /// </summary>
         /// <returns></returns>
-        public virtual int Count()
+        public int Count()
         {
             return this.Database.Count<T>();
         }
@@ -195,19 +195,21 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public IEnumerable<T> Where(Expression<Func<T, bool>> predicate)
         {
+            var count = 0;
             foreach (var data in Query(predicate))
             {
                 yield return data;
+                count++;
             }
         }
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
-        /// <param name="n"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        public IEnumerable<T> Take(int n)
+        public IEnumerable<T> Take(int count)
         {
-            foreach (var data in Database.Query<T>(top: n))
+            foreach (var data in Database.Query<T>(top: count))
             {
                 yield return data;
             }

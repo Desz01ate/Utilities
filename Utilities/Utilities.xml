@@ -42,6 +42,67 @@
             Proxy for PropertyInfo for customizable property for internal use only.
             </summary>
         </member>
+        <member name="T:Utilities.Classes.DynamicObjectAnalyzer">
+            <summary>
+            Collection of DynamicObjectMetadata which describe the looks of dynamic object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Values">
+            <summary>
+            Available object for dynamic object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Keys">
+            <summary>
+            Available keys for dynamic object.
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Item(System.String)">
+            <summary>
+            Get value by key.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Item(System.Int32)">
+            <summary>
+            Get value by index
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.#ctor(System.Object)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.#ctor(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="dict"></param>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.TryParse``1(``0@)">
+            <summary>
+            Try parse dynamic object into specified object type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Classes.DynamicObjectAnalyzer.Parse``1">
+            <summary>
+            Parse dynamic object into specified object type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.Classes.DynamicObjectMetadata">
+            <summary>
+            Contains information of member of dynamic object.
+            </summary>
+        </member>
         <member name="T:Utilities.Interfaces.IGenericRepository`1">
             <summary>
             Contains required implementation on Repository template
@@ -326,7 +387,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.InsertMultiple``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
             <summary>
             Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -425,7 +486,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.InsertMultipleAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -473,6 +534,20 @@
         <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.CreateTable``1">
             <summary>
             Create table from given model
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.Count``1">
+            <summary>
+            Returns rows count from specified table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Interfaces.IDatabaseConnectorExtension`2.CountAsync``1">
+            <summary>
+            Returns rows count from specified table in an asynchronous manner.
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
@@ -546,13 +621,13 @@
             </summary>
             <param name="data">Generic object.</param>
         </member>
-        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertAsync(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertMultipleAsync(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             Insert data into repository in an asynchronous manner.
             </summary>
             <param name="data">Generic object.</param>
         </member>
-        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Insert(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.InsertMultiple(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             Insert data into repository.
             </summary>
@@ -615,6 +690,32 @@
             Update data in repository in an asynchronous manner.
             </summary>
             <param name="data">Generic object.</param>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Count">
+            <summary>
+            Returns rows count from repository.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Filters a sequence of values based on a predicate.
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.Take(System.Int32)">
+            <summary>
+            Returns a specified number of contiguous elements from the start of a sequence.
+            </summary>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.DesignPattern.UnitOfWork.Components.Repository`3.GetEnumerator">
+            <summary>
+            Get enumerator of data repository.
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Utilities.Enum.Language">
             <summary>
@@ -991,6 +1092,54 @@
             Verify if active database is available.
             </summary>
         </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Delete``1(``0)">
+            <summary>
+            Delete specified document.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Delete``1(System.Object)">
+            <summary>
+            Delete document using key.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Delete document using predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.DeleteAsync``1(``0)">
+            <summary>
+            Delete specified document in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.DeleteAsync``1(System.Object)">
+            <summary>
+            Delete document using key in asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.DeleteAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Delete document using predicate in asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.NoSQL.MongoDB.DropCollection``1">
             <summary>
             Drop collection on active database.
@@ -998,10 +1147,318 @@
             <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Insert``1(``0)">
+            <summary>
+            Insert specified document.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Insert``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Insert documents.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.InsertAsync``1(``0)">
+            <summary>
+            Insert specified document in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Query``1(System.Nullable{System.Int32})">
+            <summary>
+            Read documents.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Query``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
+            <summary>
+            Read documents which match predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicate"></param>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Query``1(System.Object)">
+            <summary>
+            Read document using key.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.Update``1(``0)">
+            <summary>
+            Update specified document.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.NoSQL.MongoDB.UpdateAsync``1(``0)">
+            <summary>
+            Update specified document in an asynchrounous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.NoSQL.MongoDBDatabaseExtension">
             <summary>
             Extension set of methods which integrated with native MongoDB Driver.
             </summary>
+        </member>
+        <member name="T:Utilities.Numerics.MathExtension">
+            decimal method derived from https://github.com/raminrahimzada/CSharp-Helper-Classes/blob/master/Math/DecimalMath
+            <summary>
+            Provides extension methods for specific circumstances on numerical on top of Math API
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.PI">
+            <summary>
+            Represents the ratio of the circumference of a circle to its diameter, specified
+            by the constant, π.
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.EPSILON">
+            <summary>
+            Represent error tolerance rate.
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.PIx2">
+            <summary>
+            represents 2*PI.
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.E">
+            <summary>
+            Represents the natural logarithmic base, specified by the constant, e.
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.PIdiv2">
+            <summary>
+            represents PI/2
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.PIdiv4">
+            <summary>
+            represents PI/4
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.Einv">
+            <summary>
+            represents 1.0/E
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.Log10Inv">
+            <summary>
+            log(10,E) factor
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.Zero">
+            <summary>
+            Zero
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.One">
+            <summary>
+            One
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.Half">
+            <summary>
+            Represents 0.5M
+            </summary>
+        </member>
+        <member name="F:Utilities.Numerics.MathExtension.MaxIteration">
+            <summary>
+            Max iterations count in Taylor series
+            </summary>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Exp(System.Decimal)">
+            <summary>
+            Returns e raised to the specified power.
+            </summary>
+            <param name="x">A number specifying a power.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Pow(System.Decimal,System.Decimal)">
+            <summary>
+            Returns a specified number raised to the specified power.
+            </summary>
+            <param name="value">A double-precision floating-point number to be raised to a power.</param>
+            <param name="pow">A double-precision floating-point number that specifies a power.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.PowerN(System.Decimal,System.Int32)">
+            <summary>
+            Power to the integer value
+            </summary>
+            <param name="value"></param>
+            <param name="power"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Log10(System.Decimal)">
+            <summary>
+            Returns the base 10 logarithm of a specified number.
+            </summary>
+            <param name="x">A number whose logarithm is to be found.</param>
+            <returns>
+            One of the values in the following table. d parameter Return value Positive The
+            base 10 log of d; that is, log 10d. Zero System.Double.NegativeInfinity Negative
+            System.Double.NaN Equal to System.Double.NaNSystem.Double.NaN Equal to System.Double.PositiveInfinitySystem.Double.PositiveInfinity
+            </returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Log(System.Decimal)">
+            <summary>
+            Analogy of Math.Log
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Cos(System.Decimal)">
+            <summary>
+            Returns the cosine of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Tan(System.Decimal)">
+            <summary>
+            Returns the tangent of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Sin(System.Decimal)">
+            <summary>
+            Returns the sine of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Sqrt(System.Decimal,System.Decimal)">
+            <summary>
+            Analogy of Math.Sqrt
+            </summary>
+            <param name="x"></param>
+            <param name="epsilon">lasts iteration while error less than this epsilon</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Sinh(System.Decimal)">
+            <summary>
+            Returns the hyperbolic sine of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Cosh(System.Decimal)">
+            <summary>
+            Returns the hyperbolic cosine of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Sign(System.Decimal)">
+            <summary>
+            Analogy of Math.Sign
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Tanh(System.Decimal)">
+            <summary>
+            Returns the hyperbolic tangent of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Abs(System.Decimal)">
+            <summary>
+            Analogy of Math.Abs
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Asin(System.Decimal)">
+            <summary>
+            Returns the angle whose sine is the specified number.
+            </summary>
+            <param name="x">A number representing a sine, where x must be greater than or equal to -1, but less than or equal to 1.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Atan(System.Decimal)">
+            <summary>
+            Returns the angle whose tangent is the specified number.
+            </summary>
+            <param name="x">A number representing a tangent.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Acos(System.Decimal)">
+            <summary>
+            Returns the angle whose cosine is the specified number.
+            </summary>
+            <param name="x">A number representing a cosine, where x must be greater than or equal to -1, but less than or equal to 1.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Atan2(System.Decimal,System.Decimal)">
+            <summary>
+            Returns the angle whose tangent is the quotient of two specified numbers.
+            for more see this
+            <seealso cref="!:http://i.imgur.com/TRLjs8R.png"/>
+            </summary>
+            <param name="y">The y coordinate of a point.</param>
+            <param name="x">The x coordinate of a point.</param>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Length(System.Int32)">
+            <summary>
+            Returns the digit length of a specified number.
+            </summary>
+            <param name="value">A number.</param>
+            <returns>Length of a number.</returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Length(System.Double)">
+            <summary>
+            Returns the digit length of a specified number.
+            </summary>
+            <param name="value">A number.</param>
+            <returns>Length of a number.</returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Length(System.Single)">
+            <summary>
+            Returns the digit length of a specified number.
+            </summary>
+            <param name="value">A number.</param>
+            <returns>Length of a number.</returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Length(System.Decimal)">
+            <summary>
+            Returns the digit length of a specified number.
+            </summary>
+            <param name="value">A number.</param>
+            <returns>Length of a number.</returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Length(System.Int64)">
+            <summary>
+            Returns the digit length of a specified number.
+            </summary>
+            <param name="value">A number.</param>
+            <returns>Length of a number.</returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.IsPrimeNumber(System.Int32)">
+            <summary>
+            Returns the boolean whether the value is prime number or not.
+            </summary>
+            <param name="value">A number.</param>
+            <returns>A boolean whether the value is prime number or not.</returns>
         </member>
         <member name="T:Utilities.RegularExpression">
             <summary>
@@ -1033,9 +1490,17 @@
         </member>
         <member name="M:Utilities.RegularExpression.IsOnlyText(System.String)">
             <summary>
-            Check if the given input is matching the string-only (English and Thai alphabetics only)
+            Check if the given input is matching the string-only (English and Thai alphabetics combination)
             </summary>
             <param name="input">Input string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyText(System.String,Utilities.Enum.Language)">
+            <summary>
+            Check if the given input is matching the string-only in specific language (Support English and Thai language only).
+            </summary>
+            <param name="input"></param>
+            <param name="language"></param>
             <returns></returns>
         </member>
         <member name="F:Utilities.RegularExpression.THAI_ID_LENGTH">
@@ -1189,26 +1654,11 @@
             This class contains a generic way to build data from specific source such as DbDataReader or from object itself
             </summary>
         </member>
-        <member name="M:Utilities.Shared.DataExtension.RowBuilder(System.Data.DataRow,System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Convert DataRow into dynamic object with specified column name.
-            </summary>
-            <param name="row">data reader to convert to dynamic object</param>
-            <param name="columns">column name container</param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.Shared.DataExtension.RowBuilder(System.Data.IDataReader)">
             <summary>
             Convert IDataReader into dynamic object.
             </summary>
             <param name="row">data reader to convert to dynamic object</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.DataExtension.RowBuilder(System.Data.DataRow)">
-            <summary>
-            Convert DataRow into dynamic object.
-            </summary>
-            <param name="row"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.IDataReader)">
@@ -1266,7 +1716,6 @@
             <param name="source">base enumerable</param>
             <param name="startIndex">starting index</param>
             <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentNullException"/>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <exception cref="T:System.Exception"/>
             <returns></returns>
@@ -1278,7 +1727,6 @@
             <typeparam name="T"></typeparam>
             <param name="source">A base dataset.</param>
             <param name="predicate">A function to test each element for a condition.</param>
-            <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.ToStack``1(System.Collections.Generic.IEnumerable{``0})">
@@ -1287,7 +1735,6 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
-            <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.ToQueue``1(System.Collections.Generic.IEnumerable{``0})">
@@ -1296,7 +1743,6 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
-            <exception cref="T:System.ArgumentNullException"/>
             <returns></returns>        
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
@@ -1315,7 +1761,6 @@
             <param name="source"></param>
             <param name="random"></param>
             <returns></returns>
-            <exception cref="T:System.ArgumentNullException"/>
         </member>
         <member name="M:Utilities.Shared.GenericExtension.IsGenericList(System.Object)">
             <summary>
@@ -1683,7 +2128,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.Insert``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertMultiple``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
             <summary>
             Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1754,7 +2199,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.DatabaseConnector`2.InsertMultipleAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1835,6 +2280,20 @@
             <typeparam name="T"></typeparam>
             <param name="primaryKey">Specified primary key.</param>
             <param name="transaction">Transaction for current execution.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.Count``1">
+            <summary>
+            Returns rows count from specified table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.CountAsync``1">
+            <summary>
+            Returns rows count from specified table in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.MapCLRTypeToSQLType(System.Type)">
@@ -1944,7 +2403,7 @@
             Generate SQL query with sql parameters.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="obj"></param>
+            <param name="source"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Extension.SqlQueryExtension.UpdateQueryGenerate``2(``0)">
@@ -1984,25 +2443,55 @@
             MySQL Connector with implementation derived from DatabaseConnector
             </summary>
         </member>
+        <member name="M:Utilities.SQL.MySQL.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="connectionString"></param>
+        </member>
         <member name="T:Utilities.SQL.Oracle">
             <summary>
             Oracle Database Connector with implementation derived from DatabaseConnector
             </summary>
+        </member>
+        <member name="M:Utilities.SQL.Oracle.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="connectionString"></param>
         </member>
         <member name="T:Utilities.SQL.PostgreSQL">
             <summary>
             PostgreSQL Connector with implementation derived from DatabaseConnector
             </summary>
         </member>
+        <member name="M:Utilities.SQL.PostgreSQL.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="connectionString"></param>
+        </member>
         <member name="T:Utilities.SQL.SQLite">
             <summary>
             SQLite Connector with implementation derived from DatabaseConnector
             </summary>
         </member>
+        <member name="M:Utilities.SQL.SQLite.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="connectionString"></param>
+        </member>
         <member name="T:Utilities.SQL.SQLServer">
             <summary>
             SQLServer Connector with implementation derived from DatabaseConnector
             </summary>
+        </member>
+        <member name="M:Utilities.SQL.SQLServer.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="connectionString"></param>
         </member>
         <member name="T:Utilities.SQL.Translator.Converter`1">
             <summary>

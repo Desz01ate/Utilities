@@ -185,7 +185,7 @@ namespace Utilities.Security
             }
             return randomBytes;
         }
-
+#if !NET45
         /// <summary>
         /// Provide statistically random string generate with customizable length and combination.
         /// </summary>
@@ -203,23 +203,18 @@ namespace Utilities.Security
                 byte[] uintBuffer = new byte[sizeof(uint)];
                 while (result.Length < length)
                 {
-#if NET45
-                    rng.GetBytes(uintBuffer);
-                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
-                    result.Append(combination[(int)(num % combination.Length)]);
-#else
                     rng.GetBytes(uintBuffer, offset, count);
                     uint num = BitConverter.ToUInt32(uintBuffer, 0);
                     if (num < max)
                     {
                         result.Append(combination[(int)(num % combination.Length)]);
                     }
-#endif
+
                 }
             }
             return result.ToString();
         }
-
+#endif
         internal static byte[] SecureGetBytes(this string key)
         {
             Encoding enc = Encoding.UTF8;
