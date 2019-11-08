@@ -34,9 +34,7 @@ namespace Utilities.SQL.Translator
                                         .Select(i => new { i, name = dataReader.GetName(i) });
             foreach (var column in columnNames)
             {
-                //var property = targetExp.Type.GetProperty(
-                //    column.name,
-                //    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
                 var property = targetExp.Type.GetUnderlyingPropertyByName(column.name);
                 if (property == null)
                     continue;
@@ -45,14 +43,27 @@ namespace Utilities.SQL.Translator
                 var propertyExp = Expression.MakeIndex(
                     paramExp, indexerInfo, new[] { columnNameExp });
 
-                var dbnullFilter = Expression.IfThenElse(
-                    Expression.TypeIs(propertyExp, typeof(DBNull)),
-                    Expression.Assign(
-                        Expression.Property(targetExp, property), Expression.Default(property.PropertyType)),
-                    Expression.Assign(
-                        Expression.Property(targetExp, property), Expression.Convert(propertyExp, property.PropertyType))
-                    );
-                exps.Add(dbnullFilter);
+                var actualType = dataReader.GetFieldType(column.i);
+                Expression safeCastExpression;
+                //if property type in model doesn't match the underlying type in SQL, we first convert into actual SQL type.
+                if (actualType != property.PropertyType)
+                {
+                    safeCastExpression = Expression.Convert(propertyExp, actualType);
+                }
+                //otherwise we do nothing.
+                else
+                {
+                    safeCastExpression = propertyExp;
+                }
+                var propertyExpression = Expression.Property(targetExp, property);
+                var ifDbNull = Expression.Assign(propertyExpression, Expression.Default(property.PropertyType));
+                var ifNotDbNull = Expression.Assign(propertyExpression, Expression.Convert(safeCastExpression, property.PropertyType));
+                var bindExpression = Expression.Condition(
+                                            Expression.Equal(propertyExp, Expression.Constant(DBNull.Value)), //if field is null then assign default value to specified field, otherwise assign the real value.
+                                            ifDbNull,
+                                            ifNotDbNull);
+
+                exps.Add(bindExpression);
             }
 
             exps.Add(targetExp);
@@ -64,64 +75,19 @@ namespace Utilities.SQL.Translator
         {
             this.dataReader = dataReader;
             _converter = GetMapFunc();
+
         }
 
-        internal T CreateItemFromRow()
+        internal T GenerateObject()
         {
             return _converter(dataReader);
         }
+        internal IEnumerable<T> GenerateObjects()
+        {
+            while (dataReader.Read())
+            {
+                yield return _converter(dataReader);
+            }
+        }
     }
-    /// <summary>
-    /// alternative to dynamic builder, it characteristic is almost on par with native code so no differences here.
-    /// </summary>
-    //internal class Converter
-    //{
-    //    readonly Func<IDataReader, dynamic> _converter;
-    //    readonly IDataReader dataReader;
-
-    //    private Func<IDataReader, dynamic> GetMapFunc()
-    //    {
-    //        var exps = new List<Expression>();
-
-    //        var paramExp = Expression.Parameter(typeof(IDataRecord), "datareader");
-
-    //        var targetExp = Expression.Variable(typeof(ExpandoObject));
-
-    //        var addExp = typeof(IDictionary<string, object>).GetMethod("Add", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string), typeof(object) }, null);
-
-    //        exps.Add(Expression.Assign(targetExp, Expression.New(targetExp.Type)));
-
-    //        //does int based lookup
-    //        var indexerInfo = typeof(IDataRecord).GetProperty("Item", new[] { typeof(int) });
-
-    //        var columnNames = System.Linq.Enumerable.Range(0, dataReader.FieldCount)
-    //                                    .Select(i => new { i, name = dataReader.GetName(i) });
-    //        foreach (var column in columnNames)
-    //        {
-    //            var columnNameExp = Expression.Constant(column.i);
-    //            var propertyExp = Expression.MakeIndex(
-    //                paramExp, indexerInfo, new[] { columnNameExp });
-
-    //            var key = Expression.Constant(column.name);
-    //            var assignExp = Expression.Call(targetExp, addExp, key, propertyExp);
-
-    //            exps.Add(assignExp);
-    //        }
-
-    //        exps.Add(targetExp);
-    //        return Expression.Lambda<Func<IDataReader, dynamic>>(
-    //            Expression.Block(new[] { targetExp }, exps), paramExp).Compile();
-    //    }
-
-    //    internal Converter(IDataReader dataReader)
-    //    {
-    //        this.dataReader = dataReader;
-    //        _converter = GetMapFunc();
-    //    }
-
-    //    internal dynamic CreateItemFromRow()
-    //    {
-    //        return _converter(dataReader);
-    //    }
-    //}
 }

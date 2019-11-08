@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 
 namespace Utilities.Shared
 {
@@ -121,8 +122,9 @@ namespace Utilities.Shared
         public static DataTable ToDataTable<T>(this IEnumerable<T> source)
         {
             if (source == null) return null;
-            var properties = typeof(T).GetProperties();
-            var dt = new DataTable();
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var typeName = typeof(T).TableNameAttributeValidate();
+            var dt = new DataTable(typeName);
             foreach (var property in properties)
             {
                 dt.Columns.Add(property.Name, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
@@ -138,6 +140,7 @@ namespace Utilities.Shared
             }
             return dt;
         }
+
         /// <summary>
         /// Shuffle dataset inside source enumerable with each equally chance using Fisher-Yates-Durstenfeld shuffle.
         /// </summary>

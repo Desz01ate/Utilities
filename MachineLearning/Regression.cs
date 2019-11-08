@@ -13,8 +13,6 @@ After:
 using MachineLearning.ML;
 */
 using MachineLearning.Shared;
-using Microsoft.Shared;
-using MachineLearning.Shared.Attributes;
 using Microsoft.ML;
 
 /* Unmerged change from project 'MachineLearning (netstandard2.1)'
@@ -32,8 +30,10 @@ using Microsoft.ML.Data;
 */
 using Microsoft.ML.Trainers.FastTree;
 using Microsoft.ML.Trainers;
-using Microsoft.ML.Trainers.FastTree;
-using Microsoft.ML.Transforms;
+using Microsoft.ML.Data;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 /* Unmerged change from project 'MachineLearning (netstandard2.1)'
 Before:
 using MachineLearning.Shared;

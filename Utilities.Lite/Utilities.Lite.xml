@@ -774,6 +774,26 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -1331,6 +1351,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Security.Cryptography.SecureRandomString(System.Int32,System.String)">
+            <summary>
+            Provide statistically random string generate with customizable length and combination.
+            </summary>
+            <param name="length">Length of string.</param>
+            <param name="combination">Combination of string.</param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.Security.CryptoProvider.AES">
             <summary>
             Simple wrapper for Advance Encryption Standard.
@@ -1461,17 +1489,6 @@
             <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <exception cref="T:System.Exception"/>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
-            <summary>
-            Take last element out of given enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentOutOfRangeException"/>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">

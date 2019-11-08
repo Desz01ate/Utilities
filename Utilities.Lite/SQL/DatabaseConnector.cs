@@ -119,7 +119,7 @@ namespace Utilities.SQL
             var converter = new Converter<T>(cursor);
             while (cursor.Read())
             {
-                yield return converter.CreateItemFromRow();
+                yield return converter.GenerateObject();
             }
         }
 
@@ -211,77 +211,6 @@ namespace Utilities.SQL
             }
             return result;
         }
-
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-
-        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
-        {
-            List<T> result = new List<T>();
-
-            using (var command = Connection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
-                {
-                    foreach (var parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-                }
-                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                var converter = new Converter<T>(cursor);
-                while (await cursor.ReadAsync().ConfigureAwait(false))
-                {
-                    result.Add(converter.CreateItemFromRow());
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of dynamic object
-        /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <returns>IEnumerable of dynamic object</returns>
-
-        public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
-        {
-            List<dynamic> result = new List<dynamic>();
-            using (var command = Connection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
-                {
-                    foreach (var parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-                }
-                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                while (await cursor.ReadAsync().ConfigureAwait(false))
-                {
-                    result.Add(DataExtension.RowBuilder(cursor));
-                }
-            }
-            return result;
-        }
-
         /// <summary>
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
@@ -456,5 +385,71 @@ namespace Utilities.SQL
             dataTable.Load(cursor);
             return dataTable;
         }
+#if NETSTANDARD2_1
+        /// <summary>
+        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>IAsyncEnumerable of POCO</returns>
+
+        public virtual async IAsyncEnumerable<T> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        {
+            using (var command = Connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                var converter = new Converter<T>(cursor);
+                while (await cursor.ReadAsync().ConfigureAwait(false))
+                {
+                    yield return converter.GenerateObject();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Execute SELECT SQL query and return IEnumerable of dynamic object
+        /// </summary>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <returns>IAsyncEnumerable of dynamic object</returns>
+
+        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        {
+            using (var command = Connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction as DbTransaction;
+                command.CommandType = commandType;
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                while (await cursor.ReadAsync().ConfigureAwait(false))
+                {
+                    yield return DataExtension.RowBuilder(cursor);
+                }
+            }
+        }
+
+#endif
     }
 }
