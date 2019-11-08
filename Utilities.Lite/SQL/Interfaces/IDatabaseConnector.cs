@@ -84,6 +84,25 @@ namespace Utilities.Interfaces
         /// <returns></returns>
         int ExecuteNonQuery(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
+        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>IEnumerable of POCO</returns>
+        Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new();
+        /// <summary>
+        /// Execute SELECT SQL query and return IEnumerable of dynamic object
+        /// </summary>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <returns>IEnumerable of dynamic object</returns>
+        Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        /// <summary>
         /// Execute SELECT SQL query and return DataTable in an asynchronous manner
         /// </summary>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
@@ -120,26 +139,5 @@ namespace Utilities.Interfaces
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
         Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
-#if NETSTANDARD2_1
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        IAsyncEnumerable<T> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new();
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of dynamic object
-        /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <returns>IEnumerable of dynamic object</returns>
-        IAsyncEnumerable<dynamic> ExecuteReaderAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
-#endif
     }
 }

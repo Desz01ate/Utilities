@@ -12,7 +12,7 @@ namespace Utilities.Interfaces
     /// </summary>
     /// <typeparam name="TDatabaseType">DbConnection type</typeparam>
     /// <typeparam name="TParameter">DbParameter type</typeparam>
-    public partial interface IDatabaseConnectorExtension<TDatabaseType, TParameter> : IDatabaseConnector<TDatabaseType, TParameter>
+    public interface IDatabaseConnectorExtension<TDatabaseType, TParameter> : IDatabaseConnector<TDatabaseType, TParameter>
         where TDatabaseType : DbConnection, new()
         where TParameter : DbParameter, new()
     {
@@ -109,6 +109,48 @@ namespace Utilities.Interfaces
         /// <returns></returns>
         int Delete<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
+        /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="top">Specified TOP(n) rows.</param>
+
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>IEnumerable of object</returns>
+        Task<IEnumerable<T>> QueryAsync<T>(int? top = null, IDbTransaction transaction = null) where T : class, new();
+        /// <summary>
+        /// Select data from table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <param name="top">Specified TOP(n) rows.</param>
+
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns></returns>
+        Task<IEnumerable<T>> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new();
+        /// <summary>
+        /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey">Primary key of specific row</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Object of given class</returns>
+        Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new();
+        /// <summary>
+        /// Select first row from table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Object of given class</returns>
+        Task<T> QueryFirstAsync<T>(IDbTransaction transaction = null) where T : class, new();
+        /// <summary>
+        /// Select first row from table by using matched predicate.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Object of given class</returns>
+        Task<T> QueryFirstAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new();
+        /// <summary>
         /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -180,51 +222,4 @@ namespace Utilities.Interfaces
         /// <returns></returns>
         Task<int> CountAsync<T>() where T : class;
     }
-#if NETSTANDARD2_1
-    public partial interface IDatabaseConnectorExtension<TDatabaseType, TParameter>
-        where TDatabaseType : DbConnection, new()
-        where TParameter : DbParameter, new()
-    {
-        /// <summary>
-        /// Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="top">Specified TOP(n) rows.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of object</returns>
-        IAsyncEnumerable<T> QueryAsync<T>(int? top = null, IDbTransaction transaction = null) where T : class, new();
-        /// <summary>
-        /// Select data from table by using matched predicate
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Predicate of data in LINQ manner</param>
-        /// <param name="top">Specified TOP(n) rows.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns></returns>
-        IAsyncEnumerable<T> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new();
-        /// <summary>
-        /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="primaryKey">Primary key of specific row</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>Object of given class</returns>
-        Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new();
-        /// <summary>
-        /// Select first row from table.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>Object of given class</returns>
-        Task<T> QueryFirstAsync<T>(IDbTransaction transaction = null) where T : class, new();
-        /// <summary>
-        /// Select first row from table by using matched predicate.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Predicate of data in LINQ manner</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>Object of given class</returns>
-        Task<T> QueryFirstAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new();
-    }
-#endif
 }

@@ -77,7 +77,6 @@ namespace Utilities.SQL.Translator
             _converter = GetMapFunc();
 
         }
-
         internal T GenerateObject()
         {
             return _converter(dataReader);

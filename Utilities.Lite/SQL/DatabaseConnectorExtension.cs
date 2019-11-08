@@ -149,6 +149,57 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="top">Specified TOP(n) rows.</param>
 
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>IEnumerable of object</returns>
+        public virtual async Task<IEnumerable<T>> QueryAsync<T>(int? top = null, IDbTransaction transaction = null)
+            where T : class, new()
+        {
+            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
+            var result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
+            return result;
+        }
+
+        /// <summary>
+        /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey">Primary key of specific row</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Object of given class</returns>
+        public virtual async Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null)
+            where T : class, new()
+        {
+            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
+            var query = preparer.query;
+            var parameters = preparer.parameters;
+            var result = (await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
+            return result;
+        }
+        /// <summary>
+        /// Select first row from table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Object of given class</returns>
+        public virtual async Task<T> QueryFirstAsync<T>(IDbTransaction transaction = null) where T : class, new()
+        {
+            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top: 1);
+            T result = (await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
+            return result;
+        }
+        /// <summary>
+        /// Select first row from table by using matched predicate.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>Object of given class</returns>
+        public virtual async Task<T> QueryFirstAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
+        {
+            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, 1);
+            T result = (await ExecuteReaderAsync(query.query, query.parameters, transaction).ConfigureAwait(false)).FirstOrDefault();
+            return result;
+        }
         /// <summary>
         /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -246,6 +297,24 @@ namespace Utilities.SQL
             var query = preparer.query;
             var parameters = preparer.parameters;
             return ExecuteNonQuery(query, parameters, transaction: transaction);
+        }
+
+        /// <summary>
+        /// Select data from table by using matched predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Predicate of data in LINQ manner</param>
+        /// <param name="top">Specified TOP(n) rows.</param>
+
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<T>> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
+        {
+            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
+            var query = preparer.query;
+            var parameters = preparer.parameters;
+            var result = await ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
+            return result;
         }
 
         /// <summary>
@@ -410,97 +479,4 @@ namespace Utilities.SQL
         //}
 
     }
-#if NETSTANDARD2_1
-    public partial class DatabaseConnector<TDatabaseConnection, TParameterType>
-        where TDatabaseConnection : DbConnection, new()
-        where TParameterType : DbParameter, new()
-    {
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of object</returns>
-        public virtual async IAsyncEnumerable<T> QueryAsync<T>(int? top = null, IDbTransaction transaction = null)
-            where T : class, new()
-        {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
-            await foreach (var result in ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false))
-            {
-                yield return result;
-            }
-        }
-        /// <summary>
-        /// Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="primaryKey">Primary key of specific row</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>Object of given class</returns>
-        public virtual async Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null)
-            where T : class, new()
-        {
-            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
-            var query = preparer.query;
-            var parameters = preparer.parameters;
-            T result = default;
-            await foreach (var buffer in ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false))
-            {
-                result = buffer;
-                break;
-            }
-            return result;
-        }
-        /// <summary>
-        /// Select first row from table.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>Object of given class</returns>
-        public virtual async Task<T> QueryFirstAsync<T>(IDbTransaction transaction = null) where T : class, new()
-        {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top: 1);
-            T result = default;
-            await foreach (var buffer in ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false))
-            {
-                result = buffer;
-                break;
-            }
-            return result;
-        }
-        /// <summary>
-        /// Select first row from table by using matched predicate.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Predicate of data in LINQ manner</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>Object of given class</returns>
-        public virtual async Task<T> QueryFirstAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
-        {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, 1);
-            T result = default;
-            await foreach (var buffer in ExecuteReaderAsync(query.query, query.parameters, transaction).ConfigureAwait(false))
-            {
-                result = buffer;
-                break;
-            }
-            return result;
-        }
-        /// <summary>
-        /// Select data from table by using matched predicate
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Predicate of data in LINQ manner</param>
-        /// <param name="top">Specified TOP(n) rows.</param>
-
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns></returns>
-        public virtual async IAsyncEnumerable<T> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
-        {
-            var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
-            var query = preparer.query;
-            var parameters = preparer.parameters;
-            await foreach (var result in ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false))
-            {
-                yield return result;
-            }
-        }
-    }
-#endif
 }

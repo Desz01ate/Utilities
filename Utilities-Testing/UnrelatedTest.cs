@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Utilities.SQL.Abstract;
 using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
@@ -9,7 +11,7 @@ namespace Utilities.Testing
     internal class UnrelatedTest
     {
         [Test]
-        public void Playground()
+        public async Task Playground()
         {
             var msCon = "Server=localhost;Database=Local;User=sa;Password=qweQWE123";
             var npgCon = "User Id=postgres;Password=sa;Host=localhost;Port=5432;Database=postgres";
@@ -19,7 +21,11 @@ namespace Utilities.Testing
                 //var d1 = mssqlConnector.Select<iris>(x => x.Label.Contains("set"));
                 //var labels = new[] { "A", "B", "Iris-setosa" }.ToList();
                 var labels = new[] { 1d, 2, 3, 4 };
-                var data = mssqlConnector.Query<taxifaretest>(top: 1000).ToList();
+                //var data = mssqlConnector.Query<taxifaretest>(top: 1000).ToList();
+                foreach (var data in await mssqlConnector.QueryAsync<taxifaretest>(top: 10))
+                {
+                    Console.WriteLine(data.fareamount);
+                }
                 //var labels = new[] { "A", "B", "C" }.ToList();
                 //var data = mssqlConnector.Select<iris>(x => labels.Contains(x.Label));
             }

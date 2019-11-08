@@ -115,11 +115,10 @@ namespace Utilities.SQL
                     command.Parameters.Add(parameter);
                 }
             }
-            using var cursor = command.ExecuteReader();
-            var converter = new Converter<T>(cursor);
-            while (cursor.Read())
+            var cursor = command.ExecuteReader();
+            foreach (var result in DataReaderBuilderSync<T>(cursor))
             {
-                yield return converter.GenerateObject();
+                yield return result;
             }
         }
 
@@ -145,11 +144,12 @@ namespace Utilities.SQL
                     command.Parameters.Add(parameter);
                 }
             }
-            using var cursor = command.ExecuteReader();
-            while (cursor.Read())
+            var cursor = command.ExecuteReader();
+            foreach (var result in DataReaderDynamicBuilderSync(cursor))
             {
-                yield return (DataExtension.RowBuilder(cursor));
+                yield return result;
             }
+
         }
 
         /// <summary>
@@ -211,6 +211,64 @@ namespace Utilities.SQL
             }
             return result;
         }
+
+        /// <summary>
+        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <returns>IEnumerable of POCO</returns>
+
+        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        {
+            using var command = Connection.CreateCommand();
+            command.CommandText = sql;
+            command.Transaction = transaction as DbTransaction;
+            command.CommandType = commandType;
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+            }
+            var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var converter = new Converter<T>(cursor);
+            var deferred = DataReaderBuilderSync<T>(cursor);
+            return deferred;
+        }
+
+        /// <summary>
+        /// Execute SELECT SQL query and return IEnumerable of dynamic object
+        /// </summary>
+        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="commandType">Type of SQL Command.</param>
+        /// <returns>IEnumerable of dynamic object</returns>
+
+        public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        {
+            using var command = Connection.CreateCommand();
+
+            command.CommandText = sql;
+            command.Transaction = transaction as DbTransaction;
+            command.CommandType = commandType;
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+            }
+            var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var deferred = DataReaderDynamicBuilderSync(cursor);
+            return deferred;
+        }
+
         /// <summary>
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
@@ -385,71 +443,27 @@ namespace Utilities.SQL
             dataTable.Load(cursor);
             return dataTable;
         }
-#if NETSTANDARD2_1
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IAsyncEnumerable of POCO</returns>
-
-        public virtual async IAsyncEnumerable<T> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        private static IEnumerable<dynamic> DataReaderDynamicBuilderSync(DbDataReader reader)
         {
-            using (var command = Connection.CreateCommand())
+            using (reader)
             {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
+                while (reader.Read())
                 {
-                    foreach (var parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
+                    yield return Shared.DataExtension.RowBuilder(reader);
                 }
-                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                var converter = new Converter<T>(cursor);
-                while (await cursor.ReadAsync().ConfigureAwait(false))
+            }
+
+        }
+        private static IEnumerable<T> DataReaderBuilderSync<T>(DbDataReader reader) where T : class
+        {
+            using (reader)
+            {
+                var converter = new Converter<T>(reader);
+                while (reader.Read())
                 {
                     yield return converter.GenerateObject();
                 }
             }
         }
-
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of dynamic object
-        /// </summary>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <returns>IAsyncEnumerable of dynamic object</returns>
-
-        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
-        {
-            using (var command = Connection.CreateCommand())
-            {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
-                {
-                    foreach (var parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-                }
-                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                while (await cursor.ReadAsync().ConfigureAwait(false))
-                {
-                    yield return DataExtension.RowBuilder(cursor);
-                }
-            }
-        }
-
-#endif
     }
 }

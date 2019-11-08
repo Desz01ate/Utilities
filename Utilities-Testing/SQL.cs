@@ -21,7 +21,7 @@ namespace Utilities.Testing
         [SetUp]
         public void Setup()
         {
-            _msSqlConnection = @"Server=localhost;Database=Local;user=sa;password=sa;";
+            _msSqlConnection = @"Server=localhost;Database=Local;user=sa;password=qweQWE123;";
             _mySqlConnection = @"Server=localhost;Database=Local;Uid=root;Pwd=;";
             _sqliteConnection = $@"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files\Local.db")};Version=3;";
         }
