@@ -14,7 +14,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDatabase"></typeparam>
     /// <typeparam name="TParameter"></typeparam>
-    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>, IEnumerable<T>
+    public partial class Repository<T, TDatabase, TParameter> : IGenericRepository<T>, IEnumerable<T>
         where T : class, new()
         where TDatabase : DbConnection, new()
         where TParameter : DbParameter, new()
@@ -135,35 +135,6 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         }
 
         /// <summary>
-        /// Get all data from repository in an asynchronous manner.
-        /// </summary>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> QueryAsync()
-        {
-            return await Database.QueryAsync<T>().ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get data by specific condition from repository in an asynchronous manner.
-        /// </summary>
-        /// <param name="predicate">Predicate condition.</param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> QueryAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await Database.QueryAsync<T>(predicate).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get data from repository.
-        /// </summary>
-        /// <param name="key">Primary key of target object.</param>
-        /// <returns></returns>
-        public virtual async Task<T> QueryAsync(object key)
-        {
-            return await Database.QueryAsync<T>(key).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Update data in repository.
         /// </summary>
         /// <param name="data">Generic object.</param>
@@ -229,4 +200,43 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
             return GetEnumerator();
         }
     }
+#if NETSTANDARD2_1
+    public partial class Repository<T, TDatabase, TParameter>
+    {
+        /// <summary>
+        /// Get all data from repository in an asynchronous manner.
+        /// </summary>
+        /// <returns></returns>
+        public virtual async IAsyncEnumerable<T> QueryAsync()
+        {
+            await foreach (var data in Database.QueryAsync<T>().ConfigureAwait(false))
+            {
+                yield return data;
+            }
+        }
+
+        /// <summary>
+        /// Get data by specific condition from repository in an asynchronous manner.
+        /// </summary>
+        /// <param name="predicate">Predicate condition.</param>
+        /// <returns></returns>
+        public virtual async IAsyncEnumerable<T> QueryAsync(Expression<Func<T, bool>> predicate)
+        {
+            await foreach (var data in Database.QueryAsync<T>(predicate).ConfigureAwait(false))
+            {
+                yield return data;
+            }
+        }
+
+        /// <summary>
+        /// Get data from repository.
+        /// </summary>
+        /// <param name="key">Primary key of target object.</param>
+        /// <returns></returns>
+        public virtual async Task<T> QueryAsync(object key)
+        {
+            return await Database.QueryAsync<T>(key).ConfigureAwait(false);
+        }
+    }
+#endif
 }
