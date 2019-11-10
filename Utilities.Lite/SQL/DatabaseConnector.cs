@@ -116,10 +116,8 @@ namespace Utilities.SQL
                 }
             }
             var cursor = command.ExecuteReader();
-            foreach (var result in DataReaderBuilderSync<T>(cursor))
-            {
-                yield return result;
-            }
+            var deferred = DataReaderBuilderSync<T>(cursor);
+            return deferred;
         }
 
         /// <summary>
@@ -145,11 +143,8 @@ namespace Utilities.SQL
                 }
             }
             var cursor = command.ExecuteReader();
-            foreach (var result in DataReaderDynamicBuilderSync(cursor))
-            {
-                yield return result;
-            }
-
+            var deferred = DataReaderDynamicBuilderSync(cursor);
+            return deferred;
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace Utilities.Shared
             var converter = new Converter<T>(dataReader);
             while (dataReader.Read())
             {
-                yield return converter.CreateItemFromRow();
+                yield return converter.GenerateObject();
             }
         }
 

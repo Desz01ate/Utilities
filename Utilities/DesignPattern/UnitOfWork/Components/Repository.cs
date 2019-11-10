@@ -195,9 +195,11 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public IEnumerable<T> Where(Expression<Func<T, bool>> predicate)
         {
+            var count = 0;
             foreach (var data in Query(predicate))
             {
                 yield return data;
+                count++;
             }
         }
         /// <summary>

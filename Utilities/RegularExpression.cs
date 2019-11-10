@@ -42,7 +42,7 @@ namespace Utilities
         /// </summary>
         /// <param name="input">Input string</param>
         /// <returns></returns>
-        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z]+$").Success;
+        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z\s]+$").Success;
         /// <summary>
         /// Check if the given input is matching the string-only in specific language (Support English and Thai language only).
         /// </summary>
@@ -51,8 +51,8 @@ namespace Utilities
         /// <returns></returns>
         public static bool IsOnlyText(string input, Language language) => language switch
         {
-            Language.English => RegexMatch(input, @"^[a-zA-Z]+$").Success,
-            Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F]+$").Success,
+            Language.English => RegexMatch(input, @"^[a-zA-Z\s]+$").Success,
+            Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F\s]+$").Success,
             _ => throw new System.NotSupportedException($"{language.ToString()} is not supported.")
         };
 

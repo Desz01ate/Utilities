@@ -209,7 +209,7 @@ namespace Utilities.SQL.Translator
                 sb.Append($@"({field} LIKE '%' + @{field})");
                 return m;
             }
-            else if (m.Method.Name == "IsNullOrEmpty" || m.Method.Name == "IsNullOrWhitespace")
+            else if (m.Method.Name == "IsNullOrEmpty" || m.Method.Name == "IsNullOrWhiteSpace")
             {
                 var node = ((MemberExpression)m.Arguments[0]).Member.Name;
                 var field = _fieldsConfiguration[node];

@@ -774,6 +774,26 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
             Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
@@ -804,28 +824,6 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.HttpRequest.GetAsyncFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a GET request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></ections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Send a GET request to the specified Uri as an asynchronous operation.
             </summary>
@@ -1069,7 +1067,30 @@
             Returns a specified number raised to the specified power.
             </summary>
             <param name="value">A double-precision floating-point number to be raised to a power.</param>
-            <param name="pow">A double-precision floating-point number that specifies a pomary>
+            <param name="pow">A double-precision floating-point number that specifies a power.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.PowerN(System.Decimal,System.Int32)">
+            <summary>
+            Power to the integer value
+            </summary>
+            <param name="value"></param>
+            <param name="power"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Log10(System.Decimal)">
+            <summary>
+            Returns the base 10 logarithm of a specified number.
+            </summary>
+            <param name="x">A number whose logarithm is to be found.</param>
+            <returns>
+            One of the values in the following table. d parameter Return value Positive The
+            base 10 log of d; that is, log 10d. Zero System.Double.NegativeInfinity Negative
+            System.Double.NaN Equal to System.Double.NaNSystem.Double.NaN Equal to System.Double.PositiveInfinitySystem.Double.PositiveInfinity
+            </returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Log(System.Decimal)">
+            <summary>
             Analogy of Math.Log
             </summary>
             <param name="x"></param>
@@ -1389,29 +1410,6 @@
             </summary>
             <param name="publicKey">Public key as string</param>
             <param name="data">Raw data to encrypt</param>
-            <returns>Encrypted data as byte array</returns>
-        </member>
-        <member name="M:Utilities.Security.CryptoProvider.RSA.Decrypt(System.String,System.Byte[])">
-            <summary>
-            Decrypt encrypted byte array using private key
-            </summary>
-            <param name="privateKey">Private key as string</param>
-            <param name="encryptedBytes">Encrypted byte array</param>
-            <returns>Raw data of encrypted byte array</returns>
-        </member>
-        <member name="T:Utilities.Shared.DataExtension">
-            <summary>
-            This class contains a generic way to build data from specific source such as DbDataReader or from object itself
-            </summary>
-        </member>
-        <member name="M:Utilities.Shared.DataExtension.RowBuilder(System.Data.IDataReader)">
-            <summary>
-            Convert IDataReader into dynamic object.
-            </summary>
-            <param name="row">data reader to convert to dynamic object</param>
-            <returns></returns>
-        </member>
-        <m      <param name="data">Raw data to encrypt</param>
             <returns>Encrypted data as byte array</returns>
         </member>
         <member name="M:Utilities.Security.CryptoProvider.RSA.Decrypt(System.String,System.Byte[])">

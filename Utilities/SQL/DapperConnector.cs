@@ -76,31 +76,6 @@ namespace Utilities.SQL
             return this.Connection.Query<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType);
         }
 
-        /// <summary>
-        /// Execute parameterized SQL and return an IEnumerable of dynamic.
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="commandType"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public override async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
-        {
-            return await this.Connection.QueryAsync(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Execute parameterized SQL and return an IEnumerable of T.
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="commandType"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
-        {
-            return await this.Connection.QueryAsync<T>(sql, parameters.ToDapperParameters(), transaction, commandType: commandType).ConfigureAwait(false);
-        }
 
         /// <summary>
         /// Execute parameterized SQL that selects a single value.

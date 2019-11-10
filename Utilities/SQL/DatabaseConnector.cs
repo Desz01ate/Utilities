@@ -115,12 +115,9 @@ namespace Utilities.SQL
                     command.Parameters.Add(parameter);
                 }
             }
-            using var cursor = command.ExecuteReader();
-            var converter = new Converter<T>(cursor);
-            while (cursor.Read())
-            {
-                yield return converter.CreateItemFromRow();
-            }
+            var cursor = command.ExecuteReader();
+            var deferred = DataReaderBuilderSync<T>(cursor);
+            return deferred;
         }
 
         /// <summary>
@@ -145,11 +142,9 @@ namespace Utilities.SQL
                     command.Parameters.Add(parameter);
                 }
             }
-            using var cursor = command.ExecuteReader();
-            while (cursor.Read())
-            {
-                yield return (DataExtension.RowBuilder(cursor));
-            }
+            var cursor = command.ExecuteReader();
+            var deferred = DataReaderDynamicBuilderSync(cursor);
+            return deferred;
         }
 
         /// <summary>
@@ -225,29 +220,21 @@ namespace Utilities.SQL
 
         public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
-            List<T> result = new List<T>();
-
-            using (var command = Connection.CreateCommand())
+            using var command = Connection.CreateCommand();
+            command.CommandText = sql;
+            command.Transaction = transaction as DbTransaction;
+            command.CommandType = commandType;
+            if (parameters != null)
             {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
+                foreach (var parameter in parameters)
                 {
-                    foreach (var parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-                }
-                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                var converter = new Converter<T>(cursor);
-                while (await cursor.ReadAsync().ConfigureAwait(false))
-                {
-                    result.Add(converter.CreateItemFromRow());
+                    command.Parameters.Add(parameter);
                 }
             }
-
-            return result;
+            var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var converter = new Converter<T>(cursor);
+            var deferred = DataReaderBuilderSync<T>(cursor);
+            return deferred;
         }
 
         /// <summary>
@@ -260,26 +247,21 @@ namespace Utilities.SQL
 
         public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            List<dynamic> result = new List<dynamic>();
-            using (var command = Connection.CreateCommand())
+            using var command = Connection.CreateCommand();
+
+            command.CommandText = sql;
+            command.Transaction = transaction as DbTransaction;
+            command.CommandType = commandType;
+            if (parameters != null)
             {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
+                foreach (var parameter in parameters)
                 {
-                    foreach (var parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
-                }
-                using var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-                while (await cursor.ReadAsync().ConfigureAwait(false))
-                {
-                    result.Add(DataExtension.RowBuilder(cursor));
+                    command.Parameters.Add(parameter);
                 }
             }
-            return result;
+            var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var deferred = DataReaderDynamicBuilderSync(cursor);
+            return deferred;
         }
 
         /// <summary>
@@ -455,6 +437,28 @@ namespace Utilities.SQL
             var dataTable = new DataTable();
             dataTable.Load(cursor);
             return dataTable;
+        }
+        private static IEnumerable<dynamic> DataReaderDynamicBuilderSync(DbDataReader reader)
+        {
+            using (reader)
+            {
+                while (reader.Read())
+                {
+                    yield return Shared.DataExtension.RowBuilder(reader);
+                }
+            }
+
+        }
+        private static IEnumerable<T> DataReaderBuilderSync<T>(DbDataReader reader) where T : class
+        {
+            using (reader)
+            {
+                var converter = new Converter<T>(reader);
+                while (reader.Read())
+                {
+                    yield return converter.GenerateObject();
+                }
+            }
         }
     }
 }

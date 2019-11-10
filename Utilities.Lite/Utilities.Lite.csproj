@@ -10,25 +10,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.1-beta-001</Version>
+    <Version>0.2.1.1</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>[General]
-+ Fix attribute usage metadata.
-+ Add Utilities.Classes.DynamicObjectAnalyzer class which is design to describe to looks for dynamic object.
-+ Add Utilities.Numerics.MathExtension class which is design for specific circumstances on numerical operation on top of Math API.
-
-[Repository]
-- Remove EnumeratableRepository and migrate functionality to Repository.
-
-[SQL]
-+ MapCLRTypeToSQLType now only visible to derived class and not the consumer.
-+ Add QueryFirst&lt;T&gt; and QueryFirstAsync&lt;T&gt;.
-+ Add Count&lt;T&gt; and CountAsync&lt;T&gt;.
-- Remove DROP_TABLE_USE_WITH_CAUTION method.
-- Replace IDatabaseConnectorProperty interface with DatabaseConnectorContractor abstract class.
-</PackageReleaseNotes>
+    <PackageReleaseNotes>[SQL]
++ Improve performance for ExecuteReaderAsync and ExecuteReaderAsync&lt;T&gt;.
++ Internal mapper is now more flexible on mismatch data type.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

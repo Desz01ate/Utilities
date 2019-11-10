@@ -1777,6 +1777,25 @@
             <param name="targetType"></param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.GenericExtension.SizeOf``1(Utilities.Enum.MeasureSize,System.Single)">
+            <summary>
+            Get size of class.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="measureSize">Measure size, default = byte</param>
+            <param name="measureRatio">Measure ratio, default = 1024.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.SizeOf(System.Type,Utilities.Enum.MeasureSize,System.Single)">
+            <summary>
+            Get size of class.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type">Target type</param>
+            <param name="measureSize">Measure size, default = byte</param>
+            <param name="measureRatio">Measure ratio, default = 1024.</param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.SQL.Abstract.DatabaseConnectorContractor">
             <summary>
             Contractor class with properties required for internal and derived class.
@@ -1838,26 +1857,6 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL and return an IEnumerable of T.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL and return an IEnumerable of dynamic.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL and return an IEnumerable of T.
             </summary>
