@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using Utilities.Classes;
+using System.Linq.Expressions;
 
 namespace Utilities.Shared
 {
@@ -34,7 +35,7 @@ namespace Utilities.Shared
     }
     public static partial class GenericExtension
     {
-        private static ConcurrentDictionary<Type, int> _cache = new ConcurrentDictionary<Type, int>();
+        private static readonly ConcurrentDictionary<Type, int> _cache = new ConcurrentDictionary<Type, int>();
 #if NET45
         private static readonly Type[] emptyTypeArray = new Type[0];
 #else
@@ -105,6 +106,121 @@ namespace Utilities.Shared
                 Enum.MeasureSize.Megabyte => size / measureRatio / measureRatio,
                 _ => throw new NotImplementedException($"{measureSize.ToString()} is not implemented on GenericExtension.SizeOf method.")
             };
+        }
+
+    }
+    public static partial class GenericExtension
+    {
+        /// <summary>
+        /// Compiled version of PropertyInfo.GetValue().
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static PropertyGetterInfo<TSource>[] CompileGetter<TSource>()
+        {
+            var type = typeof(TSource);
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            return CompileGetter<TSource>(properties);
+        }
+        /// <summary>
+        /// Compiled version of PropertyInfo.GetValue().
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static PropertyGetterInfo<TSource>[] CompileGetter<TSource>(PropertyInfo[] properties)
+        {
+            if (properties is null) return null;
+            var funcs = new PropertyGetterInfo<TSource>[properties.Length];
+            for (var idx = 0; idx < properties.Length; idx++)
+            {
+                var property = properties[idx];
+                var targetExpr = Expression.Parameter(typeof(TSource), "target");
+                var value = Expression.Convert(Expression.Property(targetExpr, property), typeof(object));
+                var func = Expression.Lambda<Func<TSource, object>>(value, targetExpr).Compile();
+                var psi = new PropertyGetterInfo<TSource>(property, func);
+                funcs[idx] = psi;
+            }
+            return funcs;
+        }
+        /// <summary>
+        /// Compiled version of PropertyInfo.GetValue().
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static PropertyGetterInfo<TSource> CompileGetter<TSource>(PropertyInfo property)
+        {
+            if (property is null) return null;
+            var targetExpr = Expression.Parameter(typeof(TSource), "target");
+            var value = Expression.Convert(Expression.Property(targetExpr, property), typeof(object));
+            return new PropertyGetterInfo<TSource>(property, Expression.Lambda<Func<TSource, object>>(value, targetExpr).Compile());
+        }
+        /// <summary>
+        /// Compiled version of PropertyInfo.SetValue().
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static PropertySetterInfo<TSource>[] CompileSetter<TSource>()
+        {
+            var type = typeof(TSource);
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            return CompileSetter<TSource>(properties);
+        }
+        /// <summary>
+        /// Compiled version of PropertyInfo.SetValue().
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static PropertySetterInfo<TSource>[] CompileSetter<TSource>(PropertyInfo[] properties)
+        {
+            if (properties is null) return null;
+
+            var actions = new PropertySetterInfo<TSource>[properties.Length];
+            for (var idx = 0; idx < properties.Length; idx++)
+            {
+                var property = properties[idx];
+                //target variable (provide on compile).
+                var variableExpr = Expression.Parameter(typeof(TSource), "target");
+                //target property from above variable.
+                var propertyExpr = Expression.Property(variableExpr, property.Name);
+                //value to assign to above property.
+                var valueExpr = Expression.Parameter(typeof(object), "value");
+
+                var assignExpr = Expression.Assign(propertyExpr, Expression.Convert(valueExpr, property.PropertyType));
+                var assignNullExpr = Expression.Assign(propertyExpr, Expression.Default(property.PropertyType));
+                //if valueExpr equal to DBNull.Value then assign default of property type else assign unboxed valueExpr.
+                var dbnullFilterExpr = Expression.Condition(
+                                            Expression.Equal(valueExpr, Expression.Constant(DBNull.Value)),
+                                            assignNullExpr,
+                                            assignExpr
+                                       );
+                //compile expression to  : void action(variable,value) with body as dbnullFilterExpr.
+                var action = Expression.Lambda<Action<TSource, object>>(dbnullFilterExpr, variableExpr, valueExpr);
+                var psi = new PropertySetterInfo<TSource>(property, idx, action.Compile());
+                actions[idx] = psi;
+            }
+            return actions;
+        }
+        /// <summary>
+        /// Compiled version of PropertyInfo.SetValue().
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <returns></returns>
+        public static PropertySetterInfo<TSource> CompileSetter<TSource>(PropertyInfo property)
+        {
+            if (property is null) return null;
+            var targetExpr = Expression.Parameter(typeof(TSource), "target");
+            var propertyExpr = Expression.Property(targetExpr, property.Name);
+            var valueExpr = Expression.Parameter(typeof(object), "value");
+            var assignExpr = Expression.Assign(propertyExpr, Expression.Convert(valueExpr, property.PropertyType));
+            var assignNullExpr = Expression.Assign(propertyExpr, Expression.Default(property.PropertyType));
+            var dbnullFilterExpr = Expression.Condition(
+                Expression.Equal(valueExpr, Expression.Constant(DBNull.Value)),
+                assignNullExpr,
+                assignExpr
+                );
+            var action = Expression.Lambda<Action<TSource, object>>(dbnullFilterExpr, targetExpr, valueExpr).Compile();
+            var psi = new PropertySetterInfo<TSource>(property, -1, action);
+            return psi;
         }
 
     }

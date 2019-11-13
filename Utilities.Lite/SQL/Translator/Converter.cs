@@ -30,7 +30,7 @@ namespace Utilities.SQL.Translator
             //does int based lookup
             var indexerInfo = typeof(IDataRecord).GetProperty("Item", new[] { typeof(int) });
 
-            var columnNames = System.Linq.Enumerable.Range(0, dataReader.FieldCount)
+            var columnNames = Enumerable.Range(0, dataReader.FieldCount)
                                         .Select(i => new { i, name = dataReader.GetName(i) });
             foreach (var column in columnNames)
             {

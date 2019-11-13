@@ -80,7 +80,7 @@ namespace Utilities.Classes
             try
             {
                 result = new T();
-                var properties = typeof(T).GetProperties();
+                var properties = Utilities.Shared.GenericExtension.CompileSetter<T>();
                 foreach (var property in properties)
                 {
                     var value = this[property.Name];
@@ -102,7 +102,7 @@ namespace Utilities.Classes
         public T Parse<T>() where T : class, new()
         {
             var result = new T();
-            var properties = typeof(T).GetProperties();
+            var properties = Utilities.Shared.GenericExtension.CompileSetter<T>();
             foreach (var property in properties)
             {
                 var value = this[property.Name].Value;

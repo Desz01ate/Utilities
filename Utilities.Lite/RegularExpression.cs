@@ -14,7 +14,7 @@ namespace Utilities
         }
 
         /// <summary>
-        /// Check if the given input is matching the phone number (Thailand phone number is default)
+        /// Check if the given input is matching the phone number (Thailand phone number by default)
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="pattern">Regex pattern to check whether the input is matched or not</param>
@@ -35,7 +35,21 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <returns></returns>
         public static bool IsOnlyDigit(string input) => RegexMatch(input, @"^\d+$").Success;
-
+        /// <summary>
+        /// Check if the given input is matching the number-only within specified length.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static bool IsOnlyDigit(string input, int length) => RegexMatch(input, $@"^\d{{{length}}}$").Success;
+        /// <summary>
+        /// Check if the given input is matching the number-only within the length boundary.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="lengthFrom"></param>
+        /// <param name="lengthTo"></param>
+        /// <returns></returns>
+        public static bool IsOnlyDigit(string input, int lengthFrom, int lengthTo) => RegexMatch(input, $@"^\d{{{lengthFrom},{lengthTo}}}").Success;
         //\u0E00-\u0E7F is a Unicode for Thai language
         /// <summary>
         /// Check if the given input is matching the string-only (English and Thai alphabetics combination)

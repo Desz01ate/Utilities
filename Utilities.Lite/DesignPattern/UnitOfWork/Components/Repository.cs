@@ -195,12 +195,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public IEnumerable<T> Where(Expression<Func<T, bool>> predicate)
         {
-            var count = 0;
-            foreach (var data in Query(predicate))
-            {
-                yield return data;
-                count++;
-            }
+            return Query(predicate);
         }
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
@@ -209,10 +204,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public IEnumerable<T> Take(int count)
         {
-            foreach (var data in Database.Query<T>(top: count))
-            {
-                yield return data;
-            }
+            return Database.Query<T>(top: count);
         }
         /// <summary>
         /// Get enumerator of data repository.

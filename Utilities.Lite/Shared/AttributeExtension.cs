@@ -86,10 +86,10 @@ namespace Utilities.Shared
                 }
             }
         }
-        private static Dictionary<Type, IEnumerable<PropertyInfo>> _propertiesCached = new Dictionary<Type, IEnumerable<PropertyInfo>>();
+        private static Dictionary<Type, PropertyInfo[]> _propertiesCached = new Dictionary<Type, PropertyInfo[]>();
         internal static PropertyInfo GetUnderlyingPropertyByName(this Type type, string propertyName)
         {
-            IEnumerable<PropertyInfo> properties;
+            PropertyInfo[] properties;
             if (_propertiesCached.TryGetValue(type, out var existingValue))
             {
                 properties = existingValue;
