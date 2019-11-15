@@ -10,13 +10,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.1</Version>
+    <Version>0.2.1.2</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>[SQL]
-+ Improve performance for ExecuteReaderAsync and ExecuteReaderAsync&lt;T&gt;.
-+ Internal mapper is now more flexible on mismatch data type.</PackageReleaseNotes>
+    <PackageReleaseNotes>[General]
++ Improve overall performance for internal worker.
++ Add CompileGetter&lt;T&gt; and CompileSetter&lt;T&gt; to GenericExtension as a high performance reflection getter/setter counterpart.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

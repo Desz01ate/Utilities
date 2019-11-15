@@ -103,6 +103,13 @@
             Contains information of member of dynamic object.
             </summary>
         </member>
+        <member name="M:Utilities.Classes.PropertySetterInfo`1.SetValue(`0,System.Object)">
+            <summary>
+            Sets the property value of a specified object.
+            </summary>
+            <param name="source"></param>
+            <param name="value"></param>
+        </member>
         <member name="T:Utilities.Interfaces.IGenericRepository`1">
             <summary>
             Contains required implementation on Repository template
@@ -782,7 +789,7 @@
         </member>
         <member name="M:Utilities.File.ReadCsvAs``1(System.String,System.Boolean)">
             <summary>
-            Read csv file and transform input into given CSV (you still need to manually give custom implement via ICSVReader)
+            Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
             </summary>
             <typeparam name="T"></typeparam>
             <param name="path"></param>
@@ -798,7 +805,7 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsCsv(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+        <member name="M:Utilities.File.WriteAsCsv``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Text.Encoding,System.String)">
             <summary>
             Serialize given object and write to csv file.
             </summary>
@@ -807,31 +814,11 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
-        <member name="M:Utilities.File.WriteAsCsv(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+        <member name="M:Utilities.File.WriteAsCsv``1(``0,System.String,System.Text.Encoding,System.String)">
             <summary>
             Serialize given object and write to csv file.
             </summary>
             <param name="data">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
@@ -1467,7 +1454,7 @@
         </member>
         <member name="M:Utilities.RegularExpression.IsPhoneNumber(System.String,System.String)">
             <summary>
-            Check if the given input is matching the phone number (Thailand phone number is default)
+            Check if the given input is matching the phone number (Thailand phone number by default)
             </summary>
             <param name="input">Input string</param>
             <param name="pattern">Regex pattern to check whether the input is matched or not</param>
@@ -1486,6 +1473,23 @@
             Check if the given input is matching the number-only
             </summary>
             <param name="input">Input string</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyDigit(System.String,System.Int32)">
+            <summary>
+            Check if the given input is matching the number-only within specified length.
+            </summary>
+            <param name="input"></param>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyDigit(System.String,System.Int32,System.Int32)">
+            <summary>
+            Check if the given input is matching the number-only within the length boundary.
+            </summary>
+            <param name="input"></param>
+            <param name="lengthFrom"></param>
+            <param name="lengthTo"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.RegularExpression.IsOnlyText(System.String)">
@@ -1720,6 +1724,17 @@
             <exception cref="T:System.Exception"/>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.Shared.EnumerableExtension.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -1794,6 +1809,48 @@
             <param name="type">Target type</param>
             <param name="measureSize">Measure size, default = byte</param>
             <param name="measureRatio">Measure ratio, default = 1024.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1">
+            <summary>
+            Compiled version of PropertyInfo.GetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1(System.Reflection.PropertyInfo[])">
+            <summary>
+            Compiled version of PropertyInfo.GetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Compiled version of PropertyInfo.GetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileSetter``1">
+            <summary>
+            Compiled version of PropertyInfo.SetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileSetter``1(System.Reflection.PropertyInfo[])">
+            <summary>
+            Compiled version of PropertyInfo.SetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileSetter``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Compiled version of PropertyInfo.SetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.Abstract.DatabaseConnectorContractor">
@@ -2609,6 +2666,50 @@
             <param name="fromLanguage">From language.</param>
             <param name="toLanguage">To language.</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Decimal,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Int32,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
+turns>
         </member>
         <member name="M:Utilities.String.NumberFormat(System.Decimal,System.String)">
             <summary>

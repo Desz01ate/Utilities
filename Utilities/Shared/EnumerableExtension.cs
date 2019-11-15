@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Utilities.Shared
 {
     /// <summary>
     /// Collection of Emnumerable extension methods
     /// </summary>
-    public static class EnumerableExtension
+    public static partial class EnumerableExtension
     {
         /// <summary>
         /// Combine 2 or more enumerable of the same type into new enumerable
@@ -122,7 +124,7 @@ namespace Utilities.Shared
         public static DataTable ToDataTable<T>(this IEnumerable<T> source)
         {
             if (source == null) return null;
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = GenericExtension.CompileGetter<T>();
             var typeName = typeof(T).TableNameAttributeValidate();
             var dt = new DataTable(typeName);
             foreach (var property in properties)

@@ -86,27 +86,47 @@ namespace Utilities.Shared
                 }
             }
         }
-        private static Dictionary<Type, IEnumerable<PropertyInfo>> _propertiesCached = new Dictionary<Type, IEnumerable<PropertyInfo>>();
-        internal static PropertyInfo GetUnderlyingPropertyByName(this Type type, string propertyName)
+        //private static Dictionary<Type, PropertyInfo[]> _propertiesCached = new Dictionary<Type, PropertyInfo[]>();
+        //internal static PropertyInfo GetUnderlyingPropertyByName(this Type type, string propertyName)
+        //{
+        //    PropertyInfo[] properties;
+        //    if (_propertiesCached.TryGetValue(type, out var existingValue))
+        //    {
+        //        properties = existingValue;
+        //    }
+        //    else
+        //    {
+        //        properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+        //        _propertiesCached.Add(type, properties);
+        //    }
+        //    foreach (var property in properties)
+        //    {
+        //        var attrib = property.GetCustomAttribute<FieldAttribute>(true);
+        //        string propName = attrib == null ? property.Name : attrib.FieldName;
+        //        if (propName == propertyName) return property;
+        //    }
+        //    return null;
+        //    //throw new Exception($"Property {propertyName} is not found on type '{type.FullName}");
+        //}
+        private static Dictionary<PropertyInfo, FieldAttribute> _attributesCached = new Dictionary<PropertyInfo, FieldAttribute>();
+        internal static PropertyInfo GetUnderlyingPropertyByName(PropertyInfo[] properties, string propertyName)
         {
-            IEnumerable<PropertyInfo> properties;
-            if (_propertiesCached.TryGetValue(type, out var existingValue))
-            {
-                properties = existingValue;
-            }
-            else
-            {
-                properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                _propertiesCached.Add(type, properties);
-            }
             foreach (var property in properties)
             {
-                var attrib = property.GetCustomAttribute<FieldAttribute>(true);
+                FieldAttribute attrib;
+                if (_attributesCached.TryGetValue(property, out var atb))
+                {
+                    attrib = atb;
+                }
+                else
+                {
+                    attrib = property.GetCustomAttribute<FieldAttribute>(true);
+                    _attributesCached.Add(property, attrib);
+                }
                 string propName = attrib == null ? property.Name : attrib.FieldName;
                 if (propName == propertyName) return property;
             }
             return null;
-            //throw new Exception($"Property {propertyName} is not found on type '{type.FullName}");
         }
     }
 }

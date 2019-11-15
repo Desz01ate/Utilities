@@ -21,7 +21,7 @@ namespace Utilities.Testing
         [SetUp]
         public void Setup()
         {
-            _msSqlConnection = @"Server=localhost;Database=Local;user=sa;password=qweQWE123;";
+            _msSqlConnection = @"Server=localhost;Database=Local;user=sa;password=sa;";
             _mySqlConnection = @"Server=localhost;Database=Local;Uid=root;Pwd=;";
             _sqliteConnection = $@"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files\Local.db")};Version=3;";
         }
@@ -154,11 +154,13 @@ namespace Utilities.Testing
                         var affectedCreate = connection.ExecuteNonQuery(@"INSERT INTO TestTable(id,value) VALUES(@id,@value)", new[] { new SQLiteParameter("id", iter), new SQLiteParameter("value", "test") });
                         Assert.AreEqual(affectedCreate, 1);
                         var selectedById = connection.ExecuteReader<TestTable>(@"SELECT * FROM TestTable WHERE id = @id", new[] { new SQLiteParameter("id", iter) });
-                        Assert.AreEqual(selectedById.First().id, iter);
-                        Assert.AreEqual(selectedById.First().value, "test");
+                        var actual = selectedById.First();
+                        Assert.AreEqual(actual.id, iter);
+                        Assert.AreEqual(actual.value, "test");
                         var selectedByIdDynamic = connection.ExecuteReader(@"SELECT * FROM TestTable WHERE id = @id", new[] { new SQLiteParameter("id", iter) });
-                        Assert.AreEqual(selectedByIdDynamic.First().id, iter);
-                        Assert.AreEqual(selectedByIdDynamic.First().value, "test");
+                        var dynamicActual = selectedByIdDynamic.First();
+                        Assert.AreEqual(dynamicActual.id, iter);
+                        Assert.AreEqual(dynamicActual.value, "test");
                         var affectedUpdate = connection.ExecuteNonQuery(@"UPDATE TestTable SET value = @value WHERE id = @id", new[] { new SQLiteParameter("id", iter), new SQLiteParameter("value", "updated") });
                         Assert.AreEqual(affectedUpdate, 1);
                         var affectedDelete = connection.ExecuteNonQuery(@"DELETE FROM TestTable WHERE id = @id", new[] { new SQLiteParameter("id", iter) });
