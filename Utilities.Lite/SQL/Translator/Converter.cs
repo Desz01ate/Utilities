@@ -25,6 +25,7 @@ namespace Utilities.SQL.Translator
             var paramExp = Expression.Parameter(typeof(IDataRecord), "datareader");
 
             var targetExp = Expression.Variable(typeof(T));
+            //var target = new T();
             exps.Add(Expression.Assign(targetExp, Expression.New(targetExp.Type)));
 
             //does int based lookup
@@ -32,43 +33,55 @@ namespace Utilities.SQL.Translator
 
             var columnNames = Enumerable.Range(0, dataReader.FieldCount)
                                         .Select(i => new { i, name = dataReader.GetName(i) });
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var column in columnNames)
             {
 
-                var property = targetExp.Type.GetUnderlyingPropertyByName(column.name);
+                var property = AttributeExtension.GetUnderlyingPropertyByName(properties, column.name);
                 if (property == null)
                     continue;
 
-                var columnNameExp = Expression.Constant(column.i);
-                var propertyExp = Expression.MakeIndex(
-                    paramExp, indexerInfo, new[] { columnNameExp });
+                var readerIndex = Expression.Constant(column.i);
+                // equivalent to datareader[(int)readerIndex] where datareader is incoming parameter.
+                var valueExpr =
+                    Expression.MakeIndex(
+                    paramExp, indexerInfo, new[] { readerIndex });
 
                 var actualType = dataReader.GetFieldType(column.i);
                 Expression safeCastExpression;
                 //if property type in model doesn't match the underlying type in SQL, we first convert into actual SQL type.
                 if (actualType != property.PropertyType)
                 {
-                    safeCastExpression = Expression.Convert(propertyExp, actualType);
+                    safeCastExpression = Expression.Convert(valueExpr, actualType);
                 }
                 //otherwise we do nothing.
                 else
                 {
-                    safeCastExpression = propertyExp;
+                    safeCastExpression = valueExpr;
                 }
+                var isReaderDbNull = Expression.Call(paramExp, "IsDBNull", null, readerIndex);
                 var propertyExpression = Expression.Property(targetExp, property);
-                var ifDbNull = Expression.Assign(propertyExpression, Expression.Default(property.PropertyType));
-                var ifNotDbNull = Expression.Assign(propertyExpression, Expression.Convert(safeCastExpression, property.PropertyType));
-                var bindExpression = Expression.Condition(
-                                            Expression.Equal(propertyExp, Expression.Constant(DBNull.Value)), //if field is null then assign default value to specified field, otherwise assign the real value.
-                                            ifDbNull,
-                                            ifNotDbNull);
+                /*
+                 if(datareader.IsDBNull((int)readerIndex){
+                    target.property = default;
+                 }else{
+                    target.property = (castType)value;
+                 }
+                 */
+                var assignmentBlock = Expression.Condition(
+                                            Expression.IsTrue(isReaderDbNull),
+                                                Expression.Assign(propertyExpression, Expression.Default(property.PropertyType)),
+                                                Expression.Assign(propertyExpression, Expression.Convert(safeCastExpression, property.PropertyType)
+                                             )
+                                     );
 
-                exps.Add(bindExpression);
+                exps.Add(assignmentBlock);
             }
-
+            //return target;
             exps.Add(targetExp);
-            return Expression.Lambda<Func<IDataReader, T>>(
-                Expression.Block(new[] { targetExp }, exps), paramExp).Compile();
+            var func = Expression.Lambda<Func<IDataReader, T>>(
+                Expression.Block(new[] { targetExp }, exps), paramExp);
+            return func.Compile();
         }
 
         internal Converter(IDataReader dataReader)

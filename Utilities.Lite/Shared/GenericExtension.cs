@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Utilities.Classes;
 using System.Linq.Expressions;
+using System.Data;
 
 namespace Utilities.Shared
 {
@@ -193,6 +194,7 @@ namespace Utilities.Shared
                                             assignNullExpr,
                                             assignExpr
                                        );
+
                 //compile expression to  : void action(variable,value) with body as dbnullFilterExpr.
                 var action = Expression.Lambda<Action<TSource, object>>(dbnullFilterExpr, variableExpr, valueExpr);
                 var psi = new PropertySetterInfo<TSource>(property, idx, action.Compile());

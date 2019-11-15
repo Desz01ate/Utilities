@@ -117,7 +117,7 @@ namespace Utilities.SQL
                 }
             }
             var cursor = command.ExecuteReader();
-            var deferred = DataReaderBuilderSync<T>(cursor);
+            var deferred = DataReaderBuilder<T>(cursor);
             return deferred;
         }
 
@@ -144,7 +144,7 @@ namespace Utilities.SQL
                 }
             }
             var cursor = command.ExecuteReader();
-            var deferred = DataReaderDynamicBuilderSync(cursor);
+            var deferred = DataReaderDynamicBuilder(cursor);
             return deferred;
         }
 
@@ -233,7 +233,7 @@ namespace Utilities.SQL
                 }
             }
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-            var deferred = DataReaderBuilderSync<T>(cursor);
+            var deferred = DataReaderBuilder<T>(cursor);
             return deferred;
         }
 
@@ -260,7 +260,7 @@ namespace Utilities.SQL
                 }
             }
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-            var deferred = DataReaderDynamicBuilderSync(cursor);
+            var deferred = DataReaderDynamicBuilder(cursor);
             return deferred;
         }
 
@@ -438,7 +438,7 @@ namespace Utilities.SQL
             dataTable.Load(cursor);
             return dataTable;
         }
-        private static IEnumerable<dynamic> DataReaderDynamicBuilderSync(DbDataReader reader)
+        private static IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
         {
             using (reader)
             {
@@ -449,25 +449,8 @@ namespace Utilities.SQL
             }
 
         }
-        private static IEnumerable<T> DataReaderBuilderSync<T>(DbDataReader reader) where T : class, new()
+        private static IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
         {
-            //var properties = GenericExtension.CompileSetter<T>();
-            //using (reader)
-            //{
-            //    var cols = reader.GetColumns().ToArray();
-            //    while (reader.Read())
-            //    {
-            //        var obj = new T();
-            //        for (var idx = 0; idx < properties.Length; idx++)
-            //        {
-            //            var property = properties[idx];
-            //            if (!cols.Contains(property.FieldName)) continue;
-            //            var value = reader[property.FieldName];
-            //            property.SetValue(obj, value);
-            //        }
-            //        yield return obj;
-            //    }
-            //}
             using (reader)
             {
                 var converter = new Converter<T>(reader);

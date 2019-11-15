@@ -12,10 +12,10 @@ namespace Utilities.Shared
         /// </summary>
         /// <param name="dataReader"></param>
         /// <returns></returns>
-        internal static IEnumerable<string> GetColumns(this IDataReader dataReader)
+        internal static string[] GetColumns(this IDataReader dataReader)
         {
             if (dataReader == null) return null;
-            return System.Linq.Enumerable.Range(0, dataReader.FieldCount).Select(dataReader.GetName);
+            return System.Linq.Enumerable.Range(0, dataReader.FieldCount).Select(dataReader.GetName).ToArray();
         }
     }
 }
