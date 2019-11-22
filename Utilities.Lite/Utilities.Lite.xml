@@ -36,7 +36,7 @@
         </member>
         <member name="T:Utilities.Classes.DynamicObjectAnalyzer">
             <summary>
-            Collection of DynamicObjectMetadata which describe the looks of dynamic object.
+            Collection of DynamicObjectMetadata which describe the looks of dictionary dynamic object.
             </summary>
         </member>
         <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Values">
@@ -95,6 +95,13 @@
             Contains information of member of dynamic object.
             </summary>
         </member>
+        <member name="M:Utilities.Classes.PropertySetterInfo`1.SetValue(`0,System.Object)">
+            <summary>
+            Sets the property value of a specified object.
+            </summary>
+            <param name="source"></param>
+            <param name="value"></param>
+        </member>
         <member name="T:Utilities.Interfaces.IGenericRepository`1">
             <summary>
             Contains required implementation on Repository template
@@ -136,17 +143,15 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IUnitOfWork.SaveChanges(System.Data.IDbTransaction)">
+        <member name="M:Utilities.Interfaces.IUnitOfWork.SaveChanges">
             <summary>
             Save changes made by given transaction.
             </summary>
-            <param name="transaction"></param>
         </member>
-        <member name="M:Utilities.Interfaces.IUnitOfWork.RollbackChanges(System.Data.IDbTransaction)">
+        <member name="M:Utilities.Interfaces.IUnitOfWork.RollbackChanges">
             <summary>
             Rollback changes made by given transaction.
             </summary>
-            <param name="transaction"></param>
         </member>
         <member name="T:Utilities.Interfaces.ICSVReader">
             <summary>
@@ -740,7 +745,7 @@
         </member>
         <member name="M:Utilities.File.ReadCsvAs``1(System.String,System.Boolean)">
             <summary>
-            Read csv file and transform input into given CSV (you still need to manually give custom implement via ICSVReader)
+            Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
             </summary>
             <typeparam name="T"></typeparam>
             <param name="path"></param>
@@ -756,7 +761,7 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.File.WriteAsCsv(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+        <member name="M:Utilities.File.WriteAsCsv``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Text.Encoding,System.String)">
             <summary>
             Serialize given object and write to csv file.
             </summary>
@@ -765,7 +770,7 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
-        <member name="M:Utilities.File.WriteAsCsv(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+        <member name="M:Utilities.File.WriteAsCsv``1(``0,System.String,System.Text.Encoding,System.String)">
             <summary>
             Serialize given object and write to csv file.
             </summary>
@@ -774,7 +779,7 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding,System.IO.FileMode)">
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding)">
             <summary>
             Serialize given object and write to json file.
             </summary>
@@ -784,7 +789,7 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding,System.IO.FileMode)">
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding)">
             <summary>
             Serialize given object and write to json file.
             </summary>
@@ -1238,7 +1243,7 @@
         </member>
         <member name="M:Utilities.RegularExpression.IsPhoneNumber(System.String,System.String)">
             <summary>
-            Check if the given input is matching the phone number (Thailand phone number is default)
+            Check if the given input is matching the phone number (Thailand phone number by default)
             </summary>
             <param name="input">Input string</param>
             <param name="pattern">Regex pattern to check whether the input is matched or not</param>
@@ -1259,6 +1264,23 @@
             <param name="input">Input string</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyDigit(System.String,System.Int32)">
+            <summary>
+            Check if the given input is matching the number-only within specified length.
+            </summary>
+            <param name="input"></param>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.RegularExpression.IsOnlyDigit(System.String,System.Int32,System.Int32)">
+            <summary>
+            Check if the given input is matching the number-only within the length boundary.
+            </summary>
+            <param name="input"></param>
+            <param name="lengthFrom"></param>
+            <param name="lengthTo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.RegularExpression.IsOnlyText(System.String)">
             <summary>
             Check if the given input is matching the string-only (English and Thai alphabetics combination)
@@ -1274,7 +1296,7 @@
             <param name="language"></param>
             <returns></returns>
         </member>
-        <member name="F:Utilities.RegularExpression.THAI_ID_LENGTH">
+        <member name="M:Utilities.RegularExpression.IsValidThaiCitizenId(System.String)">
             <summary>
             Check if the given input is matching the Thai citizen id format.
             </summary>
@@ -1567,6 +1589,41 @@
             <param name="measureRatio">Measure ratio, default = 1024.</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1">
+            <summary>
+            Compiled version of PropertyInfo.GetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1(System.Reflection.PropertyInfo[])">
+            <summary>
+            Compiled version of PropertyInfo.GetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Compiled version of PropertyInfo.GetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileSetter``1">
+            <summary>
+            Compiled version of PropertyInfo.SetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.GenericExtension.CompileSetter``1(System.Reflection.PropertyInfo[])">
+            <summary>
+            Compiled version of PropertyInfo.SetValue().
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.SQL.Abstract.DatabaseConnectorContractor">
             <summary>
             Contractor class with properties required for internal and derived class.
@@ -1853,6 +1910,26 @@
             <param name="commandType">Type of SQL Command.</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsyncEnumerable``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, supported by async enumerable runtime.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsyncEnumerable(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object, supported by async enumerable runtime.
+            </summary>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <returns>IEnumerable of dynamic object</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Query``1(System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
