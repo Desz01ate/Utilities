@@ -75,6 +75,8 @@ namespace Utilities.SQL.Translator
                                              )
                                      );
 
+
+
                 exps.Add(assignmentBlock);
             }
             //return target;
@@ -84,17 +86,17 @@ namespace Utilities.SQL.Translator
             return func.Compile();
         }
 
-        internal Converter(IDataReader dataReader)
+        public Converter(IDataReader dataReader)
         {
             this.dataReader = dataReader;
             _converter = GetMapFunc();
 
         }
-        internal T GenerateObject()
+        public T GenerateObject()
         {
             return _converter(dataReader);
         }
-        internal IEnumerable<T> GenerateObjects()
+        public IEnumerable<T> GenerateObjects()
         {
             while (dataReader.Read())
             {

@@ -7,7 +7,7 @@ using System.Text;
 namespace Utilities.Classes
 {
     /// <summary>
-    /// Collection of DynamicObjectMetadata which describe the looks of dynamic object.
+    /// Collection of DynamicObjectMetadata which describe the looks of dictionary dynamic object.
     /// </summary>
     public class DynamicObjectAnalyzer : IEnumerable<DynamicObjectMetadata>
     {
@@ -75,7 +75,7 @@ namespace Utilities.Classes
         /// <typeparam name="T"></typeparam>
         /// <param name="result"></param>
         /// <returns></returns>
-        public bool TryParse<T>(out T result) where T : class, new()
+        public bool TryParse<T>(out T result) where T : new()
         {
             try
             {
@@ -90,7 +90,7 @@ namespace Utilities.Classes
             }
             catch
             {
-                result = null;
+                result = default;
                 return false;
             }
         }
@@ -99,7 +99,7 @@ namespace Utilities.Classes
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Parse<T>() where T : class, new()
+        public T Parse<T>() where T : new()
         {
             var result = new T();
             var properties = Utilities.Shared.GenericExtension.CompileSetter<T>();
@@ -138,7 +138,7 @@ namespace Utilities.Classes
         public Type Type { get; private set; }
         public object Value { get; private set; }
         public dynamic Parent { get; private set; }
-        public DynamicObjectMetadata(Type type, string key, object value, dynamic parent = null)
+        internal DynamicObjectMetadata(Type type, string key, object value, dynamic parent = null)
         {
             this.Name = key;
             this.Type = type;

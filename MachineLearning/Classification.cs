@@ -212,8 +212,9 @@ where TOut : class, new()
             var preprocessor = context.OneHotEncoding(properties);
 
             var trainDataframe = context.Data.LoadFromEnumerable(trainDataset);
-            var pipeline = context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray())
-                .Append(preprocessor.OneHotEncodingEstimator)
+            var pipeline =
+                preprocessor.OneHotEncodingEstimator
+                .Append(context.Transforms.Concatenate("Features", preprocessor.CombinedFeatures.ToArray()))
                 .AppendCacheCheckpoint(context)
                 .Append(context.BinaryClassification.Trainers.FastTree(
                     labelColumnName: labelColumnName,

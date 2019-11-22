@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Transactions;
 
 namespace Utilities.Interfaces
 {
@@ -12,18 +13,15 @@ namespace Utilities.Interfaces
         /// Start database transaction.
         /// </summary>
         /// <returns></returns>
-        IDbTransaction BeginTransaction();
+        void BeginTransaction();
         /// <summary>
         /// Save changes made by given transaction.
         /// </summary>
-        /// <param name="transaction"></param>
 
-        void SaveChanges(IDbTransaction transaction);
+        void SaveChanges();
         /// <summary>
         /// Rollback changes made by given transaction.
         /// </summary>
-        /// <param name="transaction"></param>
-
-        void RollbackChanges(IDbTransaction transaction);
+        void RollbackChanges();
     }
 }
