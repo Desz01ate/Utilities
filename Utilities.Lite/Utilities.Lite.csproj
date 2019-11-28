@@ -15,8 +15,9 @@
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
     <PackageReleaseNotes>[General]
-- Remove unnecessary code.
-+ Re-adjust IUnitOfWork toward self-managed transaction.</PackageReleaseNotes>
+- Remove DesignPattern module, things like repository, unit of work will auto-generate when using ModelGenerator instead.
++ Fix bugs on QueryGenerator.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -37,23 +38,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DesignPattern\Repository\**" />
-    <Compile Remove="DesignPattern\UnitOfWork\Generator\**" />
-    <Compile Remove="DesignPattern\UnitOfWork\Strategy\**" />
+    <Compile Remove="DesignPattern\**" />
     <Compile Remove="SQL\Generator\**" />
-    <EmbeddedResource Remove="DesignPattern\Repository\**" />
-    <EmbeddedResource Remove="DesignPattern\UnitOfWork\Generator\**" />
-    <EmbeddedResource Remove="DesignPattern\UnitOfWork\Strategy\**" />
+    <EmbeddedResource Remove="DesignPattern\**" />
     <EmbeddedResource Remove="SQL\Generator\**" />
-    <None Remove="DesignPattern\Repository\**" />
-    <None Remove="DesignPattern\UnitOfWork\Generator\**" />
-    <None Remove="DesignPattern\UnitOfWork\Strategy\**" />
+    <None Remove="DesignPattern\**" />
     <None Remove="SQL\Generator\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="DesignPattern\Interfaces\AbstractModelGenerator.cs" />
-    <Compile Remove="DesignPattern\Interfaces\IGeneratorStrategy.cs" />
   </ItemGroup>
 
   <!-- <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">

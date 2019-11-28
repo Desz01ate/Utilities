@@ -33,6 +33,12 @@ This package is no longer first-priority on development target (all implementati
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DesignPattern\**" />
+    <EmbeddedResource Remove="DesignPattern\**" />
+    <None Remove="DesignPattern\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="microsoft.csharp" Version="4.5.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.9.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.9.1" />

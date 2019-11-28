@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Transactions;
 using Utilities.Interfaces;
 
 namespace Utilities.DesignPattern.UnitOfWork.Components
@@ -14,7 +15,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TDatabase"></typeparam>
     /// <typeparam name="TParameter"></typeparam>
-    public class Repository<T, TDatabase, TParameter> : IGenericRepository<T>, IEnumerable<T>
+    public partial class Repository<T, TDatabase, TParameter> : IGenericRepository<T>, IEnumerable<T>
         where T : class, new()
         where TDatabase : DbConnection, new()
         where TParameter : DbParameter, new()
@@ -22,15 +23,14 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <summary>
         /// Instance of database connector.
         /// </summary>
-        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> Database;
-
+        protected readonly IDatabaseConnectorExtension<TDatabase, TParameter> Connector;
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="databaseConnector">Instance of DatabaseConnector.</param>
         public Repository(IDatabaseConnectorExtension<TDatabase, TParameter> databaseConnector)
         {
-            Database = databaseConnector;
+            Connector = databaseConnector;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual void Delete(T data)
         {
-            Database.Delete(data);
+            Connector.Delete(data);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="key">Primary key of target object.</param>
         public virtual void Delete(object key)
         {
-            Database.Delete<T>(key);
+            Connector.Delete<T>(key);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual async Task DeleteAsync(T data)
         {
-            await Database.DeleteAsync(data).ConfigureAwait(false);
+            await Connector.DeleteAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="key">Primary key of target object.</param>
         public virtual async Task DeleteAsync(object key)
         {
-            await Database.DeleteAsync<T>(key).ConfigureAwait(false);
+            await Connector.DeleteAsync<T>(key).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual void Insert(T data)
         {
-            Database.Insert(data);
+            Connector.Insert(data);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual async Task InsertMultipleAsync(IEnumerable<T> data)
         {
-            await Database.InsertMultipleAsync(data).ConfigureAwait(false);
+            await Connector.InsertMultipleAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual void InsertMultiple(IEnumerable<T> data)
         {
-            Database.InsertMultiple(data);
+            Connector.InsertMultiple(data);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual async Task InsertAsync(T data)
         {
-            await Database.InsertAsync(data).ConfigureAwait(false);
+            await Connector.InsertAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual IEnumerable<T> Query()
         {
-            return Database.Query<T>();
+            return Connector.Query<T>();
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual IEnumerable<T> Query(Expression<Func<T, bool>> predicate)
         {
-            return Database.Query<T>(predicate);
+            return Connector.Query<T>(predicate);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual T Query(object key)
         {
-            return Database.Query<T>(key);
+            return Connector.Query<T>(key);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual async Task<IEnumerable<T>> QueryAsync()
         {
-            return await Database.QueryAsync<T>().ConfigureAwait(false);
+            return await Connector.QueryAsync<T>().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual async Task<IEnumerable<T>> QueryAsync(Expression<Func<T, bool>> predicate)
         {
-            return await Database.QueryAsync<T>(predicate).ConfigureAwait(false);
+            return await Connector.QueryAsync<T>(predicate).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public virtual async Task<T> QueryAsync(object key)
         {
-            return await Database.QueryAsync<T>(key).ConfigureAwait(false);
+            return await Connector.QueryAsync<T>(key).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual void Update(T data)
         {
-            Database.Update(data);
+            Connector.Update(data);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <param name="data">Generic object.</param>
         public virtual async Task UpdateAsync(T data)
         {
-            await Database.UpdateAsync(data).ConfigureAwait(false);
+            await Connector.UpdateAsync(data).ConfigureAwait(false);
         }
         /// <summary>
         /// Returns rows count from repository.
@@ -186,7 +186,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public int Count()
         {
-            return this.Database.Count<T>();
+            return this.Connector.Count<T>();
         }
         /// <summary>
         /// Filters a sequence of values based on a predicate.
@@ -204,7 +204,7 @@ namespace Utilities.DesignPattern.UnitOfWork.Components
         /// <returns></returns>
         public IEnumerable<T> Take(int count)
         {
-            return Database.Query<T>(top: count);
+            return Connector.Query<T>(top: count);
         }
         /// <summary>
         /// Get enumerator of data repository.
