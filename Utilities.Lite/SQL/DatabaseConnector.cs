@@ -4,9 +4,11 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.Classes;
 using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Interfaces;
 using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
@@ -438,7 +440,9 @@ namespace Utilities.SQL
             dataTable.Load(cursor);
             return dataTable;
         }
-        private static IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
+
+
+        private IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
         {
             using (reader)
             {
@@ -449,15 +453,42 @@ namespace Utilities.SQL
             }
 
         }
-        private static IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
+        /// <summary>
+        /// How should engine prepare data mapper for each query.
+        /// </summary>
+        protected SqlMapperOptimize OptimizationLevel { get; set; } = SqlMapperOptimize.Aggressive;
+        private const int SMALL_SIZE_BOUNDARY = 1000;
+        private readonly RotationQueue<int> _RowsEffectedMemoized = new RotationQueue<int>(Enumerable.Range(0, 10).Select(x => int.MaxValue));
+        private IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
         {
+            var totalRows = 0;
             using (reader)
             {
-                var converter = new Converter<T>(reader);
+                IDataMapper<T> converter;
+                switch (OptimizationLevel)
+                {
+                    case SqlMapperOptimize.Auto:
+                        if (_RowsEffectedMemoized.Average() < SMALL_SIZE_BOUNDARY)
+                            converter = new GenericConverter<T>(reader);
+                        else
+                            converter = new Converter<T>(reader);
+                        break;
+                    case SqlMapperOptimize.Passive:
+                        converter = new GenericConverter<T>(reader);
+                        break;
+                    case SqlMapperOptimize.Aggressive:
+                        converter = new Converter<T>(reader);
+                        break;
+                    default:
+                        converter = new LegacyConverter<T>(reader);
+                        break;
+                };
                 while (reader.Read())
                 {
                     yield return converter.GenerateObject();
+                    totalRows++;
                 }
+                _RowsEffectedMemoized.Enqueue(totalRows);
             }
         }
     }

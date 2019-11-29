@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Utilities.Shared;
+using Utilities.SQL.Interfaces;
 
 namespace Utilities.SQL.Translator
 {
@@ -13,7 +14,7 @@ namespace Utilities.SQL.Translator
     /// alternative to reflection builder with MUCH better on performance, implementation taken from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class Converter<T>
+    internal class Converter<T> : IDataMapper<T> where T : new()
     {
         readonly Func<IDataReader, T> _converter;
         readonly IDataReader dataReader;
