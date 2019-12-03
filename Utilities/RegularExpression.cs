@@ -69,13 +69,13 @@ namespace Utilities
             Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F\s]+$").Success,
             _ => throw new System.NotSupportedException($"{language.ToString()} is not supported.")
         };
+        private const int THAI_ID_LENGTH = 13;
 
         /// <summary>
         /// Check if the given input is matching the Thai citizen id format.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private const int THAI_ID_LENGTH = 13;
 
         public static bool IsValidThaiCitizenId(string input)
         {

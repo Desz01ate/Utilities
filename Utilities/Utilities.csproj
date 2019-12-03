@@ -9,17 +9,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.2</Version>
+    <Version>0.2.1.3</Version>
     <PackageId>Deszolate.Utilities</PackageId>
     <LangVersion>8.0</LangVersion>
-    <PackageReleaseNotes>[IMPORTANT NOTE]
-This package is no longer first-priority on development target (all implementation will be port over from Utilities.Lite) which is somewhat duplicate for both codebase, so this package will be deprecate by expected at version 0.2.3 so please move to Utilities.Lite instead.
+    <PackageReleaseNotes>
+      [IMPORTANT NOTE]
+      This package has been deprecated, only critical bugs will be fix in the future.
+      Please move to https://www.nuget.org/packages/Deszolate.Utilities.Lite instead.
 
-[General]
-+ Improve overall performance for internal worker.
-+ Add CompileGetter&lt;T&gt; and CompileSetter&lt;T&gt; to GenericExtension as a high performance reflection getter/setter.
-
-</PackageReleaseNotes>
+      [General]
+      - Remove DesignPattern module, things like repository, unit of work will auto-generate when using ModelGenerator instead.
+      + Fix bugs on QueryGenerator.
+    </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
   </PropertyGroup>
 

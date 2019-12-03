@@ -134,26 +134,6 @@
             Provide schema restrictions type for SQL Server (https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/schema-restrictions)
             </summary>
         </member>
-        <member name="F:Utilities.Enum.SqlMapperOptimize.None">
-            <summary>
-            Do not optimize the mapping process.
-            </summary>
-        </member>
-        <member name="F:Utilities.Enum.SqlMapperOptimize.Auto">
-            <summary>
-            Auto detect mapper according to the circumstances.
-            </summary>
-        </member>
-        <member name="F:Utilities.Enum.SqlMapperOptimize.SmallDataset">
-            <summary>
-            Optimize for small dataset.
-            </summary>
-        </member>
-        <member name="F:Utilities.Enum.SqlMapperOptimize.LargeDataset">
-            <summary>
-            Optimize for large dataset.
-            </summary>
-        </member>
         <member name="T:Utilities.File">
             <summary>
             Contains File I/O operation over Json,Csv,Xml file type.
@@ -229,26 +209,6 @@
             Serialize given object and write to csv file.
             </summary>
             <param name="data">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
-            <param name="path">Path to target json file.</param>
-            <param name="encoding">The encoding to apply to the string.</param>
-            <param name="fileMode">File mode.</param>
-        </member>
-        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding)">
-            <summary>
-            Serialize given object and write to json file.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="obj">Target object.</param>
             <param name="path">Path to target json file.</param>
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
@@ -1209,14 +1169,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Security.Cryptography.SecureRandomString(System.Int32,System.String)">
-            <summary>
-            Provide statistically random string generate with customizable length and combination.
-            </summary>
-            <param name="length">Length of string.</param>
-            <param name="combination">Combination of string.</param>
-            <returns></returns>
-        </member>
         <member name="T:Utilities.Security.CryptoProvider.AES">
             <summary>
             Simple wrapper for Advance Encryption Standard.
@@ -1347,6 +1299,17 @@
             <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <exception cref="T:System.Exception"/>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
@@ -1747,31 +1710,6 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="P:Utilities.SQL.DatabaseConnector`2.OptimizationLevel">
-            <summary>
-            How should engine prepare data mapper for each query.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsyncEnumerable``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, supported by async enumerable runtime.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsyncEnumerable(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object, supported by async enumerable runtime.
-            </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <returns>IEnumerable of dynamic object</returns>
-        </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Query``1(System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
@@ -2132,6 +2070,11 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="F:Utilities.SQL.Translator.Converter`1._internalCache">
+            <summary>
+            Underlying object SHOULD always be ConcurrentDictionary of Type => Func of IDataReader return T
+            </summary>
+        </member>
         <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
             <summary>
             Performs evaluation and replacement of independent sub-trees
@@ -2171,12 +2114,6 @@
              </summary>
              <param name="b"></param>
              <returns></returns>
-        </member>
-        <member name="T:Utilities.SQL.Translator.LegacyConverter`1">
-            <summary>
-            Legacy and no-optimize mapper using direct PropertyInfo.
-            </summary>
-            <typeparam name="T"></typeparam>
         </member>
         <member name="T:Utilities.String">
             <summary>

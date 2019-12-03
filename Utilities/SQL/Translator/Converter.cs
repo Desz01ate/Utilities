@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Utilities.Shared;
+using Utilities.SQL.Interfaces;
 
 namespace Utilities.SQL.Translator
 {
@@ -13,8 +15,12 @@ namespace Utilities.SQL.Translator
     /// alternative to reflection builder with MUCH better on performance, implementation taken from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class Converter<T>
+    internal class Converter<T> : IDataMapper<T> where T : new()
     {
+        /// <summary>
+        /// Underlying object SHOULD always be ConcurrentDictionary of Type => Func of IDataReader return T
+        /// </summary>
+        private static ConcurrentDictionary<Type, object> _internalCache = new ConcurrentDictionary<Type, object>();
         readonly Func<IDataReader, T> _converter;
         readonly IDataReader dataReader;
 
@@ -75,6 +81,8 @@ namespace Utilities.SQL.Translator
                                              )
                                      );
 
+
+
                 exps.Add(assignmentBlock);
             }
             //return target;
@@ -84,17 +92,26 @@ namespace Utilities.SQL.Translator
             return func.Compile();
         }
 
-        internal Converter(IDataReader dataReader)
+        public Converter(IDataReader dataReader)
         {
             this.dataReader = dataReader;
-            _converter = GetMapFunc();
+            if (_internalCache.TryGetValue(typeof(T), out var res))
+            {
+                _converter = (Func<IDataReader, T>)res;
+            }
+            else
+            {
+                var func = GetMapFunc();
+                _converter = func;
+                _internalCache.TryAdd(typeof(T), func);
+            }
 
         }
-        internal T GenerateObject()
+        public T GenerateObject()
         {
             return _converter(dataReader);
         }
-        internal IEnumerable<T> GenerateObjects()
+        public IEnumerable<T> GenerateObjects()
         {
             while (dataReader.Read())
             {

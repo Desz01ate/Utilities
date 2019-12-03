@@ -14,7 +14,11 @@ namespace Utilities.Shared
         /// <returns></returns>
         internal static string[] GetColumns(this IDataReader dataReader)
         {
-            if (dataReader == null) return null;
+#if NET45
+            if (dataReader == null) return new string[0];
+#else
+            if (dataReader == null) return Array.Empty<string>();
+#endif
             return System.Linq.Enumerable.Range(0, dataReader.FieldCount).Select(dataReader.GetName).ToArray();
         }
     }

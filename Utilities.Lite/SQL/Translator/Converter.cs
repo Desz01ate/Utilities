@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -16,6 +17,10 @@ namespace Utilities.SQL.Translator
     /// <typeparam name="T"></typeparam>
     internal class Converter<T> : IDataMapper<T> where T : new()
     {
+        /// <summary>
+        /// Underlying object SHOULD always be ConcurrentDictionary of Type => Func of IDataReader return T
+        /// </summary>
+        private static ConcurrentDictionary<Type, object> _internalCache = new ConcurrentDictionary<Type, object>();
         readonly Func<IDataReader, T> _converter;
         readonly IDataReader dataReader;
 
@@ -90,7 +95,16 @@ namespace Utilities.SQL.Translator
         public Converter(IDataReader dataReader)
         {
             this.dataReader = dataReader;
-            _converter = GetMapFunc();
+            if (_internalCache.TryGetValue(typeof(T), out var res))
+            {
+                _converter = (Func<IDataReader, T>)res;
+            }
+            else
+            {
+                var func = GetMapFunc();
+                _converter = func;
+                _internalCache.TryAdd(typeof(T), func);
+            }
 
         }
         public T GenerateObject()

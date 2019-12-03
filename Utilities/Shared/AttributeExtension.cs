@@ -16,9 +16,9 @@ namespace Utilities.Shared
         }
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
-            var primaryKeyProperty = properties.Where(property => property.GetCustomAttribute<PrimaryKeyAttribute>(true) != null);
+            var primaryKeyProperty = properties.Where(IsSQLPrimaryKeyAttribute);
             if (primaryKeyProperty == null) throw new Exception($"Can't find attribute [{typeof(PrimaryKeyAttribute).FullName}] in {type.FullName}.");
-            if (primaryKeyProperty.Count() != 1) throw new Exception($"The attribute [{typeof(PrimaryKeyAttribute).FullName}] must specific one and only one. (error in {type.FullName} class)");
+            if (primaryKeyProperty.Count() != 1) throw new Exception($"The attribute [{typeof(PrimaryKeyAttribute).FullName}] must specific only once per class. (error in {type.FullName} class)");
             var property = new InternalPropertyInfo(primaryKeyProperty.First());
             return property;
         }

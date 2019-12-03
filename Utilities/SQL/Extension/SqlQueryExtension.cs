@@ -152,17 +152,19 @@ namespace Utilities.SQL.Extension
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"UPDATE {tableName} SET");
+            List<string> setter = new List<string>();
             foreach (var parameter in parametersMap)
             {
                 //if the parameter is not a primary key, add it to the SET block.
                 if (parameter.Key != primaryKey.Name)
-                    stringBuilder.AppendLine($"{parameter.Key} = @{parameter.Key}");
+                    setter.Add($"{parameter.Key} = @{parameter.Key}");
                 parameters.Add(new TParameterType()
                 {
                     ParameterName = $"@{parameter.Key}",
                     Value = parameter.Value
                 });
             }
+            stringBuilder.AppendLine(string.Join(",", setter));
             stringBuilder.AppendLine("WHERE");
             stringBuilder.AppendLine($"{primaryKey.Name} = @{primaryKey.Name}");
 

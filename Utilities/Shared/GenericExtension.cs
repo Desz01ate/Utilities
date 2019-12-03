@@ -187,43 +187,20 @@ namespace Utilities.Shared
                 var valueExpr = Expression.Parameter(typeof(object), "value");
 
                 var assignExpr = Expression.Assign(propertyExpr, Expression.Convert(valueExpr, property.PropertyType));
-                var assignNullExpr = Expression.Assign(propertyExpr, Expression.Default(property.PropertyType));
-                //if valueExpr equal to DBNull.Value then assign default of property type else assign unboxed valueExpr.
-                var dbnullFilterExpr = Expression.Condition(
-                                            Expression.Equal(valueExpr, Expression.Constant(DBNull.Value)),
-                                            assignNullExpr,
-                                            assignExpr
-                                       );
+                //var assignNullExpr = Expression.Assign(propertyExpr, Expression.Default(property.PropertyType));
+                ////if valueExpr equal to DBNull.Value then assign default of property type else assign unboxed valueExpr.
+                //var dbnullFilterExpr = Expression.Condition(
+                //                            Expression.Equal(valueExpr, Expression.Constant(DBNull.Value)),
+                //                            assignNullExpr,
+                //                            assignExpr
+                //                       );
 
                 //compile expression to  : void action(variable,value) with body as dbnullFilterExpr.
-                var action = Expression.Lambda<Action<TSource, object>>(dbnullFilterExpr, variableExpr, valueExpr);
+                var action = Expression.Lambda<Action<TSource, object>>(assignExpr, variableExpr, valueExpr);
                 var psi = new PropertySetterInfo<TSource>(property, idx, action.Compile());
                 actions[idx] = psi;
             }
             return actions;
         }
-        /// <summary>
-        /// Compiled version of PropertyInfo.SetValue().
-        /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <returns></returns>
-        public static PropertySetterInfo<TSource> CompileSetter<TSource>(PropertyInfo property)
-        {
-            if (property is null) return null;
-            var targetExpr = Expression.Parameter(typeof(TSource), "target");
-            var propertyExpr = Expression.Property(targetExpr, property.Name);
-            var valueExpr = Expression.Parameter(typeof(object), "value");
-            var assignExpr = Expression.Assign(propertyExpr, Expression.Convert(valueExpr, property.PropertyType));
-            var assignNullExpr = Expression.Assign(propertyExpr, Expression.Default(property.PropertyType));
-            var dbnullFilterExpr = Expression.Condition(
-                Expression.Equal(valueExpr, Expression.Constant(DBNull.Value)),
-                assignNullExpr,
-                assignExpr
-                );
-            var action = Expression.Lambda<Action<TSource, object>>(dbnullFilterExpr, targetExpr, valueExpr).Compile();
-            var psi = new PropertySetterInfo<TSource>(property, -1, action);
-            return psi;
-        }
-
     }
 }

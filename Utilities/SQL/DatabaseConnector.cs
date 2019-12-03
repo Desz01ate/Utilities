@@ -4,9 +4,11 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.Classes;
 using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Interfaces;
 using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
@@ -438,7 +440,9 @@ namespace Utilities.SQL
             dataTable.Load(cursor);
             return dataTable;
         }
-        private static IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
+
+
+        private IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
         {
             using (reader)
             {
@@ -449,11 +453,11 @@ namespace Utilities.SQL
             }
 
         }
-        private static IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
+        private IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
         {
             using (reader)
             {
-                var converter = new Converter<T>(reader);
+                IDataMapper<T> converter = new Converter<T>(reader);
                 while (reader.Read())
                 {
                     yield return converter.GenerateObject();
