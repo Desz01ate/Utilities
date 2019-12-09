@@ -35,7 +35,8 @@ namespace Utilities.SQL.Extension
         public static IEnumerable<TableSchema> GetTableSchema(this IDbConnection connection, string tableName)
         {
             if (connection == null) throw new ArgumentNullException("Connection must not be null");
-            if (connection.State != ConnectionState.Open) throw new Exception("Connection is not open.");
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
             var query = $"SELECT * FROM {tableName} WHERE 1 = 0";
             var command = connection.CreateCommand();
             command.CommandText = query;
@@ -53,7 +54,8 @@ namespace Utilities.SQL.Extension
         public static IEnumerable<StoredProcedureSchema> GetStoredProcedures(this DbConnection connection)
         {
             if (connection == null) throw new ArgumentNullException("Connection must not be null");
-            if (connection.State != ConnectionState.Open) throw new Exception("Connection is not open.");
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
 
             using var procedures = connection.GetSchema(SchemaRestriction.Procedures, null, null, null, "PROCEDURE");
             var storedProcedures = procedures.ToEnumerable<StoredProcedureSchema>().ToArray();

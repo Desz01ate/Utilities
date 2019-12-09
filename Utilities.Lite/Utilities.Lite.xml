@@ -29,6 +29,41 @@
             Attribute for table name customization
             </summary>
         </member>
+        <member name="T:Utilities.Classes.CircularQueue`1">
+            <summary>
+            Fixed-size queue which automatically dequeue when elements are going to exceed the limit.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.Enqueue(`0)">
+            <summary>
+            Enqueue element into the last of sequence.
+            </summary>
+            <param name="element">data to enqueue</param>
+        </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.Dequeue">
+            <summary>
+            Dequeue element from the start of the sequence.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.Peek">
+            <summary>
+            return an object from the beginning of the queue
+            without removing it.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.ShiftLeft">
+            <summary>
+            Shift all elements by 1 index to the left.
+            </summary>
+        </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.ShiftRight">
+            <summary>
+            Shift all elements by 1 index to the right.
+            </summary>
+        </member>
         <member name="T:Utilities.Classes.InternalPropertyInfo">
             <summary>
             Proxy for PropertyInfo for customizable property for internal use only.
@@ -36,7 +71,7 @@
         </member>
         <member name="T:Utilities.Classes.DynamicObjectAnalyzer">
             <summary>
-            Collection of DynamicObjectMetadata which describe the looks of dictionary dynamic object.
+            Collection of DynamicObjectMetadata which describe the looks and shape of dictionary dynamic object.
             </summary>
         </member>
         <member name="P:Utilities.Classes.DynamicObjectAnalyzer.Values">
@@ -101,18 +136,6 @@
             </summary>
             <param name="source"></param>
             <param name="value"></param>
-        </member>
-        <member name="T:Utilities.Classes.RotationQueue`1">
-            <summary>
-            Fixed-size queue which automatically dequeue when elements are going to exceed the limit.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:Utilities.Classes.RotationQueue`1.Enqueue(`0)">
-            <summary>
-            Enqueue object into the last of sequence.
-            </summary>
-            <param name="obj"></param>
         </member>
         <member name="T:Utilities.Enum.Language">
             <summary>
@@ -774,17 +797,17 @@
             <typeparam name="T"></typeparam>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Metadata">
+        <member name="T:Utilities.LibraryMetadata">
             <summary>
             Contains information of Utilities library version.
             </summary>
         </member>
-        <member name="P:Utilities.Metadata.Version">
+        <member name="P:Utilities.LibraryMetadata.Version">
             <summary>
             Library version.
             </summary>
         </member>
-        <member name="P:Utilities.Metadata.TargetFramework">
+        <member name="P:Utilities.LibraryMetadata.TargetFramework">
             <summary>
             Build target framework version.
             </summary>
@@ -940,6 +963,32 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.Numerics.MathExtension.Sign(System.Decimal)">
+            <summary>
+            Analogy of Math.Sign
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Tanh(System.Decimal)">
+            <summary>
+            Returns the hyperbolic tangent of the specified angle.
+            </summary>
+            <param name="x">An angle, measured in radians.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Abs(System.Decimal)">
+            <summary>
+            Analogy of Math.Abs
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Asin(System.Decimal)">
+            <summary>
+            Returns the angle whose sine is the specified number.
+            </summary>
+            <param name="x">A number representing a sine, where x must be greater than or equal to -1, but less than or equal to 1.</param>
+            <ret.Sign(System.Decimal)">
             <summary>
             Analogy of Math.Sign
             </summary>
@@ -1169,6 +1218,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Security.Cryptography.SecureRandomString(System.Int32,System.String)">
+            <summary>
+            Provide statistically random string generate with customizable length and combination.
+            </summary>
+            <param name="length">Length of string.</param>
+            <param name="combination">Combination of string.</param>
+            <returns></returns>
+        </member>
         <member name="T:Utilities.Security.CryptoProvider.AES">
             <summary>
             Simple wrapper for Advance Encryption Standard.
@@ -1182,32 +1239,7 @@
             <param name="data">raw data to encrypt</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Security.CryptoProvider.AES.Decrypt(System.String,System.String)">
-            <summary>
-            Decrypt data by given key using Advance Encryption Standard.
-            </summary>
-            <param name="key">key to decrypt the data</param>
-            <param name="data">encrypted data to decrypt</param>
-            <returns></returns>
-        </member>
-        <member name="T:Utilities.Security.CryptoProvider.RSA">
-            <summary>
-            Simple wrapper for Rivest–Shamir–Adleman method
-            </summary>
-        </member>
-        <member name="M:Utilities.Security.CryptoProvider.RSA.KeyGenerator">
-            <summary>
-            Generate private key and public key as a pair.
-            </summary>
-            <returns>Tuple of private and public key</returns>
-        </member>
-        <member name="M:Utilities.Security.CryptoProvider.RSA.CreatePrivateKey">
-            <summary>
-            Generate private key.
-            </summary>
-            <returns>private key as string</returns>
-        </member>
-        <member name="M:Utilities.Security.CryptoProvider.RSA.CreatePublicKey(System.String)">
+        <mem"M:Utilities.Security.CryptoProvider.RSA.CreatePublicKey(System.String)">
             <summary>
             Generate public key using private key.
             </summary>
@@ -1244,7 +1276,7 @@
         </member>
         <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.IDataReader)">
             <summary>
-            Get underlying column name of the DbDataReader.
+            Get underlying column name of the IDataReader.
             </summary>
             <param name="dataReader"></param>
             <returns></returns>
@@ -1281,12 +1313,34 @@
             Collection of Emnumerable extension methods
             </summary>
         </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Merge``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
+        <member name="M:Utilities.Shared.EnumerableExtension.Concat``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
             <summary>
-            Combine 2 or more enumerable of the same type into new enumerable
+            Concatenates two to N sequences.
             </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="enumerables">enumerables to combine</param>
+            <typeparam name="T"></typeparam>
+            <param name="source">The first sequence to concatenate.</param>
+            <param name="elements">The sequence to concatenate to the first sequence.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Create new enumerable from given enumerable, start index an         Get columns of DataTable.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.Shared.EnumerableExtension">
+            <summary>
+            Collection of Emnumerable extension methods
+            </summary>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Concat``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
+            <summary>
+            Concatenates two to N sequences.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source">The first sequence to concatenate.</param>
+            <param name="elements">The sequence to concatenate to the first sequence.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
@@ -1301,17 +1355,6 @@
             <exception cref="T:System.Exception"/>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            This method is available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
-            <summary>
-            Take last element out of given enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentOutOfRangeException"/>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.Shared.EnumerableExtension.Partition``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
             <summary>
             Splits the collection into two collections, which is paired as Match and Unmatch.
@@ -1319,6 +1362,51 @@
             <typeparam name="T"></typeparam>
             <param name="source">A base dataset.</param>
             <param name="predicate">A function to test each element for a condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Zip``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Make an iterator that aggregates elements from each of the iterables.
+            Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument
+            sequences or iterables.The iterator stops when the shortest input iterable is exhausted.With a single
+            iterable argument, it returns an iterator of 1-tuples.
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <param name="source1"></param>
+            <param name="source2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Zip``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2})">
+            <summary>
+            Make an iterator that aggregates elements from each of the iterables.
+            Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument
+            sequences or iterables.The iterator stops when the shortest input iterable is exhausted.With a single
+            iterable argument, it returns an iterator of 1-tuples.
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <param name="source1"></param>
+            <param name="source2"></param>
+            <param name="source3"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Zip``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3})">
+            <summary>
+            Make an iterator that aggregates elements from each of the iterables.
+            Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument
+            sequences or iterables.The iterator stops when the shortest input iterable is exhausted.With a single
+            iterable argument, it returns an iterator of 1-tuples.
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <typeparam name="T4"></typeparam>
+            <param name="source1"></param>
+            <param name="source2"></param>
+            <param name="source3"></param>
+            <param name="source4"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.ToStack``1(System.Collections.Generic.IEnumerable{``0})">
@@ -1354,6 +1442,14 @@
             <param name="random"></param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.IsNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Indicates whether the specified <see cref="T:System.Collections.Generic.IEnumerable`1"/> is null or not contain any element.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
         <member name="M:Utilities.Shared.GenericExtension.IsGenericList(System.Object)">
             <summary>
             Verify if the object is a generic list.
@@ -1367,25 +1463,6 @@
             </summary>
             <param name="obj"></param>
             <param name="targetType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.GenericExtension.SizeOf``1(Utilities.Enum.MeasureSize,System.Single)">
-            <summary>
-            Get size of class.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="measureSize">Measure size, default = byte</param>
-            <param name="measureRatio">Measure ratio, default = 1024.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.GenericExtension.SizeOf(System.Type,Utilities.Enum.MeasureSize,System.Single)">
-            <summary>
-            Get size of class.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="type">Target type</param>
-            <param name="measureSize">Measure size, default = byte</param>
-            <param name="measureRatio">Measure ratio, default = 1024.</param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.GenericExtension.CompileGetter``1">
@@ -1435,104 +1512,9 @@
         </member>
         <member name="M:Utilities.SQL.Abstract.DatabaseConnectorContractor.MapCLRTypeToSQLType(System.Type)">
             <summary>
-            Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
+            Provide converter to convert data type from CLR to underlying SQL type.
             </summary>
             <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Utilities.SQL.DapperConnector`2">
-            <summary>
-            Connector which internally combine the original DatabaseConnector and override some methods to take advantage of Dapper for high performance scenario, however some functionality might not fully cover for Dapper connector like attributes, internal mapper etc.
-            </summary>
-            <typeparam name="TDatabaseConnection"></typeparam>
-            <typeparam name="TParameterType"></typeparam>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.#ctor(System.String)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="connectionString"></param>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute a command asynchronously using Task.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL and return an IEnumerable of dynamic.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL and return an IEnumerable of T.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL that selects a single value.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL that selects a single value.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="commandType"></param>
-            <param name="transaction"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL that selects a single value.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="transaction"></param>
-            <param name="commandType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DapperConnector`2.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute parameterized SQL that selects a single value.
-            </summary>
-            <param name="sql"></param>
-            <param name="parameters"></param>
-            <param name="transaction"></param>
-            <param name="commandType"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector`2">
@@ -1709,6 +1691,26 @@
             <param name="commandType">Type of SQL Command.</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsyncEnumerable``1(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, supported by async enumerable runtime.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector`2.ExecuteReaderAsyncEnumerable(System.String,System.Collections.Generic.IEnumerable{`1},System.Data.IDbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object, supported by async enumerable runtime.
+            </summary>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <returns>IEnumerable of dynamic object</returns>
         </member>
         <member name="M:Utilities.SQL.DatabaseConnector`2.Query``1(System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
@@ -1963,27 +1965,6 @@
             Get user-defined stored procedure from current database connection.
             </summary>
             <param name="connection"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Utilities.SQL.Extension.SqlParameterExtension">
-            <summary>
-            Contains extension method for sql parameter.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Convert sql parameters to Dapper-supported parameters;
-            </summary>
-            <typeparam name="TParameter"></typeparam>
-            <param name="parameters"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.SqlParameterExtension.ToDapperParameters``1(``0)">
-            <summary>
-            Convert sql parameter to Dapper-supported parameter;
-            </summary>
-            <typeparam name="TParameter"></typeparam>
-            <param name="parameters"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.Extension.SqlQueryExtension">

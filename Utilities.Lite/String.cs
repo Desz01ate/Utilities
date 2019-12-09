@@ -97,7 +97,7 @@ namespace Utilities
         /// <returns></returns>
         public static string ToBase64String(this string input)
         {
-            if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException("Input string must not be null or empty.");
+            if (string.IsNullOrWhiteSpace(input)) throw new ArgumentNullException(nameof(input));
             var charArray = Encoding.UTF8.GetBytes(input);
             return Convert.ToBase64String(charArray);
         }
@@ -109,7 +109,7 @@ namespace Utilities
         /// <returns></returns>
         public static string FromBase64String(this string base64String)
         {
-            if (string.IsNullOrWhiteSpace(base64String)) throw new ArgumentException("Input string must not be null or empty.");
+            if (string.IsNullOrWhiteSpace(base64String)) throw new ArgumentNullException(nameof(base64String));
             var charArray = Convert.FromBase64String(base64String);
             return Encoding.UTF8.GetString(charArray);
         }
@@ -136,7 +136,7 @@ namespace Utilities
         /// <returns></returns>
         public static string Translate(string originalText, string fromLanguage, string toLanguage)
         {
-            if (string.IsNullOrWhiteSpace(originalText)) throw new ArgumentException("Input string must not be null or empty.");
+            if (string.IsNullOrWhiteSpace(originalText)) throw new ArgumentNullException(nameof(originalText));
             var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={fromLanguage}&tl={toLanguage}&dt=t&q={WebUtility.UrlEncode(originalText)}";
             using var webClient = new WebClient
             {
@@ -145,8 +145,12 @@ namespace Utilities
             var response = webClient.DownloadString(url);
             var startExtractIndex = response.IndexOf('"');
             var endExtractIndex = response.IndexOf('"', startExtractIndex + 1) - 1;
-            var result = response.Substring(startExtractIndex + 1, endExtractIndex - 3);
-            return result;
+            var result = response.Slice(startExtractIndex + 1, endExtractIndex - 3);
+#if NETSTANDARD2_1
+            return new string(result);
+#else
+            return result.ToString();
+#endif
         }
         /// <summary>
         /// Convert given value into a number format.

@@ -7,7 +7,7 @@ using System.Text;
 namespace Utilities.Classes
 {
     /// <summary>
-    /// Collection of DynamicObjectMetadata which describe the looks of dictionary dynamic object.
+    /// Collection of DynamicObjectMetadata which describe the looks and shape of dictionary dynamic object.
     /// </summary>
     public class DynamicObjectAnalyzer : IEnumerable<DynamicObjectMetadata>
     {

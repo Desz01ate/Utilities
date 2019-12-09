@@ -15,7 +15,7 @@ namespace Utilities.SQL.Abstract
         /// </summary>
         internal protected Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; private protected set; }
         /// <summary>
-        /// Provide converter to convert data type from CLR to underlying SQL type, default mapper is supported by SQL Server and can be override when necessary.
+        /// Provide converter to convert data type from CLR to underlying SQL type.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>

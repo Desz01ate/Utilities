@@ -7,6 +7,8 @@ using Utilities.SQL.Abstract;
 using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 using Utilities.Shared;
+using System.Collections.Generic;
+
 namespace Utilities.Testing
 {
     internal class UnrelatedTest
@@ -14,11 +16,9 @@ namespace Utilities.Testing
         [Test]
         public async Task Playground()
         {
-            var msCon = "Server=localhost;Database=Local;User=sa;Password=sa";
-
-            using (var connection = new SQLServer(msCon))
-            {
-            }
+            using var con = new SQLServer("server=localhost;database=local;user=sa;password=sa;");
+            var result = await con.ExecuteReaderAsyncEnumerable<taxifaretest>($@"SELECT TOP(1000) * FROM [taxi-fare-test]").ToListAsync();
+            //Console.ReadLine();
         }
     }
 }

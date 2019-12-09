@@ -8,7 +8,7 @@ namespace Utilities
     /// <summary>
     /// Contains information of Utilities library version.
     /// </summary>
-    public static class Metadata
+    public static class LibraryMetadata
     {
         /// <summary>
         /// Library version.

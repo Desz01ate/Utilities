@@ -185,7 +185,6 @@ namespace Utilities.Security
             }
             return randomBytes;
         }
-#if !NET45
         /// <summary>
         /// Provide statistically random string generate with customizable length and combination.
         /// </summary>
@@ -214,7 +213,6 @@ namespace Utilities.Security
             }
             return result.ToString();
         }
-#endif
         internal static byte[] SecureGetBytes(this string key)
         {
             Encoding enc = Encoding.UTF8;

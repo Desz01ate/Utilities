@@ -26,9 +26,9 @@ namespace Utilities
         /// <returns></returns>
         public static T ReadJsonAs<T>(string path, FileMode fileMode = FileMode.Open) where T : new()
         {
-            if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("json"))
+            if (string.IsNullOrWhiteSpace(path))
             {
-                throw new FormatException("It seem that the path is not ending with .json, please verify the path.");
+                throw new ArgumentNullException(nameof(path));
             }
             using var fs = new FileStream(path, fileMode);
             using var sr = new StreamReader(fs);
@@ -46,9 +46,9 @@ namespace Utilities
         /// <returns></returns>
         public static T ReadXmlAs<T>(string path, FileMode fileMode = FileMode.Open, bool omitRootObject = true) where T : new()
         {
-            if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("xml"))
+            if (string.IsNullOrWhiteSpace(path))
             {
-                throw new FormatException("It seem that the path is not ending with .xml, please verify the path.");
+                throw new ArgumentNullException(nameof(path));
             }
             using var fs = new FileStream(path, fileMode);
             using var sr = new StreamReader(fs);
@@ -67,9 +67,9 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> ReadJsonAsAsync<T>(string path, FileMode fileMode = FileMode.Open) where T : new()
         {
-            if (string.IsNullOrWhiteSpace(path) || path.ToLower().EndsWith("json"))
+            if (string.IsNullOrWhiteSpace(path))
             {
-                throw new FormatException("It seem that the path is not ending with .json, please verify the path.");
+                throw new ArgumentNullException(nameof(path));
             }
             using var fs = new FileStream(path, fileMode);
             using var sr = new StreamReader(fs);
@@ -87,9 +87,9 @@ namespace Utilities
         /// <returns></returns>
         public static async Task<T> ReadXmlAsAsync<T>(string path, FileMode fileMode = FileMode.Open, bool omitRootObject = true) where T : new()
         {
-            if (string.IsNullOrWhiteSpace(path) || path.ToLower().EndsWith("xml"))
+            if (string.IsNullOrWhiteSpace(path))
             {
-                throw new FormatException("It seem that the path is not ending with .xml, please verify the path.");
+                throw new ArgumentNullException(nameof(path));
             }
             using var fs = new FileStream(path, fileMode);
             using var sr = new StreamReader(fs);
@@ -107,9 +107,9 @@ namespace Utilities
         /// <returns></returns>
         public static IEnumerable<T> ReadCsvAs<T>(string path, bool hasHeader = false) where T : class, ICSVReader, new()
         {
-            if (string.IsNullOrWhiteSpace(path) || path.ToLower().EndsWith("xml"))
+            if (string.IsNullOrWhiteSpace(path))
             {
-                throw new FormatException("It seem that the path is not ending with .csv, please verify the path.");
+                throw new ArgumentNullException(nameof(path));
             }
             IEnumerable<string> content = System.IO.File.ReadAllLines(path);
             var skipBy = hasHeader ? 1 : 0;
