@@ -108,8 +108,8 @@ namespace Utilities.Shared
         //    return null;
         //    //throw new Exception($"Property {propertyName} is not found on type '{type.FullName}");
         //}
-        private static Dictionary<PropertyInfo, FieldAttribute> _attributesCached = new Dictionary<PropertyInfo, FieldAttribute>();
-        internal static PropertyInfo GetUnderlyingPropertyByName(PropertyInfo[] properties, string propertyName)
+        private static readonly Dictionary<PropertyInfo, FieldAttribute> _attributesCached = new Dictionary<PropertyInfo, FieldAttribute>();
+        internal static PropertyInfo? GetUnderlyingPropertyByName(PropertyInfo[] properties, string propertyName)
         {
             foreach (var property in properties)
             {
@@ -126,7 +126,7 @@ namespace Utilities.Shared
                 string propName = attrib == null ? property.Name : attrib.FieldName;
                 if (propName == propertyName) return property;
             }
-            return null;
+            return default;
         }
     }
 }

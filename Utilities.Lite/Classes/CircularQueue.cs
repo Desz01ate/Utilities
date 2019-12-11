@@ -31,15 +31,36 @@ namespace Utilities.Classes
         /// Enqueue element into the last of sequence.
         /// </summary>
         /// <param name="element">data to enqueue</param>
-        public T Enqueue(T element)
+        public void Enqueue(T element)
         {
-            T result = default;
             if (q.Count >= limit)
             {
-                q.TryDequeue(out result);
+                q.TryDequeue(out _);
             }
             q.Enqueue(element);
-            return result;
+        }
+        /// <summary>
+        /// Enqueue element into the last of sequence.
+        /// </summary>
+        /// <param name="element">data to enqueue</param>
+        public bool TryEnqueue(T element, out T firstElement)
+        {
+            try
+            {
+                T res = default;
+                if (q.Count >= limit)
+                {
+                    q.TryDequeue(out res);
+                }
+                firstElement = res;
+                q.Enqueue(element);
+                return true;
+            }
+            catch
+            {
+                firstElement = default;
+                return false;
+            }
         }
         /// <summary>
         /// Dequeue element from the start of the sequence.

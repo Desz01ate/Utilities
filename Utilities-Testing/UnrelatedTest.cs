@@ -16,9 +16,7 @@ namespace Utilities.Testing
         [Test]
         public async Task Playground()
         {
-            using var con = new SQLServer("server=localhost;database=local;user=sa;password=sa;");
-            var result = await con.ExecuteReaderAsyncEnumerable<taxifaretest>($@"SELECT TOP(1000) * FROM [taxi-fare-test]").ToListAsync();
-            //Console.ReadLine();
+            int[,] arr = null;
         }
     }
 }

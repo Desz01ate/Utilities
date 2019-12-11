@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Utilities.Shared
 {
     /// <summary>
-    /// Collection of Emnumerable extension methods
+    /// Collection of Enumerable extension methods
     /// </summary>
     public static partial class EnumerableExtension
     {

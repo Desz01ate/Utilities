@@ -18,6 +18,6 @@ namespace Utilities
         /// <summary>
         /// Build target framework version.
         /// </summary>
-        public static string TargetFramework => (Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false).First() as TargetFrameworkAttribute)?.FrameworkName;
+        public static string? TargetFramework => (Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false).First() as TargetFrameworkAttribute)?.FrameworkName;
     }
 }

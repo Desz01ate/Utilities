@@ -17,6 +17,7 @@ namespace Utilities.Asp.Core.Based
         protected string _jwtAudience { get; set; }
         protected string _jwtKey { get; set; }
         protected double _jwtExpiresMinute { get; set; }
+
         public JwtAuthorizationBasedController(IConfiguration configuration)
         {
             if (configuration == null)
@@ -32,8 +33,9 @@ namespace Utilities.Asp.Core.Based
             this._jwtKey = jwtKey;
             this._jwtExpiresMinute = jwtExpiresMinute;
         }
+
         /// <summary>
-        /// Get method for request JWT with given user id
+        /// Get method for request JWT with given user id.
         /// </summary>
         /// <param name="id">User ID</param>
         /// <returns>Response of request in form of { success, message , data }</returns>
@@ -63,6 +65,7 @@ namespace Utilities.Asp.Core.Based
             var jwtTokenHandler = new JwtSecurityTokenHandler().WriteToken(token);
             return new Response(true, Ok().StatusCode.ToString(), jwtTokenHandler);
         }
+
         /// <summary>
         /// Verify any request for JWT from Authenticate method by given id and return if the user is valid or not
         /// </summary>

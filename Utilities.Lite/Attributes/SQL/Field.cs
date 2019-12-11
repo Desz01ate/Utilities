@@ -8,7 +8,7 @@ namespace Utilities.Attributes.SQL
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class FieldAttribute : Attribute
     {
-        public string FieldName { get; }
+        internal string FieldName { get; }
 
         public FieldAttribute(string fieldName)
         {

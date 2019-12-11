@@ -9,7 +9,7 @@ namespace Utilities.Attributes.SQL
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class BindingFlagsAttribute : Attribute
     {
-        public BindingFlags BindingFlags;
+        internal BindingFlags BindingFlags;
 
         public BindingFlagsAttribute(BindingFlags bindingFlags)
         {

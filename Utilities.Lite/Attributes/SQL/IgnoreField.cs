@@ -8,8 +8,8 @@ namespace Utilities.Attributes.SQL
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class IgnoreFieldAttribute : Attribute
     {
-        public bool IgnoreInsert { get; }
-        public bool IgnoreUpdate { get; }
+        internal bool IgnoreInsert { get; }
+        internal bool IgnoreUpdate { get; }
 
         public IgnoreFieldAttribute(bool insert, bool update)
         {

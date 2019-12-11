@@ -132,7 +132,7 @@ namespace Utilities.Classes
     /// <summary>
     /// Contains information of member of dynamic object.
     /// </summary>
-    public struct DynamicObjectMetadata : IEquatable<DynamicObjectMetadata>
+    public class DynamicObjectMetadata : IEquatable<DynamicObjectMetadata>
     {
         public string Name { get; private set; }
         public Type Type { get; private set; }
