@@ -8,6 +8,7 @@ using Utilities.Testing.Models;
 using Utilities.Testing.SQLConnectors;
 using Utilities.Shared;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Utilities.Testing
 {
@@ -16,7 +17,20 @@ namespace Utilities.Testing
         [Test]
         public async Task Playground()
         {
-            int[,] arr = null;
+
+        }
+        public string Test(IEnumerable<string> a)
+        {
+            foreach (var x in a)
+            {
+                Console.WriteLine(x);
+            }
+            var all = new StringBuilder();
+            foreach (var x in a)
+            {
+                all.Append(a);
+            }
+            return all.ToString();
         }
     }
 }

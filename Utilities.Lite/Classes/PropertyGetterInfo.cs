@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Utilities.Classes
 {
@@ -16,7 +14,7 @@ namespace Utilities.Classes
         {
             Info = propertyInfo;
             GetValue = func;
-            FieldName = Utilities.Shared.AttributeExtension.FieldNameAttributeValidate(propertyInfo);
+            FieldName = Shared.AttributeExtension.FieldNameAttributeValidate(propertyInfo);
         }
     }
 }

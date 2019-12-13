@@ -23,10 +23,10 @@ namespace Utilities.SQL
 
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Query<T>(int? top = null, IDbTransaction transaction = null)
+        public virtual IEnumerable<T> Query<T>(int? top = null, IDbTransaction? transaction = null)
             where T : class, new()
         {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
+            var query = SqlQueryExtension.SelectQueryGenerate<T>(top);
             IEnumerable<T> result = ExecuteReader<T>(query, transaction: transaction);
             return result;
         }
@@ -39,7 +39,7 @@ namespace Utilities.SQL
 
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual T Query<T>(object primaryKey, IDbTransaction transaction = null)
+        public virtual T Query<T>(object primaryKey, IDbTransaction? transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
@@ -54,9 +54,9 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual T QueryFirst<T>(IDbTransaction transaction = null) where T : class, new()
+        public virtual T QueryFirst<T>(IDbTransaction? transaction = null) where T : class, new()
         {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top: 1);
+            var query = SqlQueryExtension.SelectQueryGenerate<T>(top: 1);
             T result = ExecuteReader<T>(query, transaction: transaction).FirstOrDefault();
             return result;
         }
@@ -67,7 +67,7 @@ namespace Utilities.SQL
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual T QueryFirst<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
+        public virtual T QueryFirst<T>(Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
         {
             var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, 1);
             T result = ExecuteReader(query.query, query.parameters, transaction).FirstOrDefault();
@@ -80,7 +80,7 @@ namespace Utilities.SQL
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual int Insert<T>(T obj, IDbTransaction transaction = null)
+        public virtual int Insert<T>(T obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             if (obj == null) return -1;
@@ -98,7 +98,7 @@ namespace Utilities.SQL
         /// <param name="obj">IEnumrable to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual int InsertMultiple<T>(IEnumerable<T> obj, IDbTransaction transaction = null)
+        public virtual int InsertMultiple<T>(IEnumerable<T> obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             if (obj == null || !obj.Any()) return -1;
@@ -116,7 +116,7 @@ namespace Utilities.SQL
         /// <param name="obj">Object to update.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an update.</returns>
-        public virtual int Update<T>(T obj, IDbTransaction transaction = null)
+        public virtual int Update<T>(T obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.UpdateQueryGenerate<T, TParameterType>(obj);
@@ -133,7 +133,7 @@ namespace Utilities.SQL
         /// <param name="obj"></param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual int Delete<T>(T obj, IDbTransaction transaction = null)
+        public virtual int Delete<T>(T obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(obj);
@@ -151,10 +151,10 @@ namespace Utilities.SQL
 
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of object</returns>
-        public virtual async Task<IEnumerable<T>> QueryAsync<T>(int? top = null, IDbTransaction transaction = null)
+        public virtual async Task<IEnumerable<T>> QueryAsync<T>(int? top = null, IDbTransaction? transaction = null)
             where T : class, new()
         {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top);
+            var query = SqlQueryExtension.SelectQueryGenerate<T>(top);
             var result = await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
             return result;
         }
@@ -166,7 +166,7 @@ namespace Utilities.SQL
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> QueryAsync<T>(object primaryKey, IDbTransaction transaction = null)
+        public virtual async Task<T> QueryAsync<T>(object primaryKey, IDbTransaction? transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(primaryKey);
@@ -181,9 +181,9 @@ namespace Utilities.SQL
         /// <typeparam name="T"></typeparam>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> QueryFirstAsync<T>(IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<T> QueryFirstAsync<T>(IDbTransaction? transaction = null) where T : class, new()
         {
-            var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(top: 1);
+            var query = SqlQueryExtension.SelectQueryGenerate<T>(top: 1);
             T result = (await ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
@@ -194,7 +194,7 @@ namespace Utilities.SQL
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Object of given class</returns>
-        public virtual async Task<T> QueryFirstAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<T> QueryFirstAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
         {
             var query = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, 1);
             T result = (await ExecuteReaderAsync(query.query, query.parameters, transaction).ConfigureAwait(false)).FirstOrDefault();
@@ -207,7 +207,7 @@ namespace Utilities.SQL
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual async Task<int> InsertAsync<T>(T obj, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> InsertAsync<T>(T obj, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
@@ -223,7 +223,7 @@ namespace Utilities.SQL
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual async Task<int> InsertMultipleAsync<T>(IEnumerable<T> obj, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> InsertMultipleAsync<T>(IEnumerable<T> obj, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
@@ -239,7 +239,7 @@ namespace Utilities.SQL
         /// <param name="obj">Object to update.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an update.</returns>
-        public virtual async Task<int> UpdateAsync<T>(T obj, IDbTransaction transaction = null)
+        public virtual async Task<int> UpdateAsync<T>(T obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.UpdateQueryGenerate<T, TParameterType>(obj);
@@ -256,7 +256,7 @@ namespace Utilities.SQL
         /// <param name="obj"></param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(T obj, IDbTransaction transaction = null)
+        public virtual async Task<int> DeleteAsync<T>(T obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(obj);
@@ -275,7 +275,7 @@ namespace Utilities.SQL
 
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
+        public virtual IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
             var query = preparer.query;
@@ -291,7 +291,7 @@ namespace Utilities.SQL
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual int Delete<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
+        public virtual int Delete<T>(Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(this, predicate);
             var query = preparer.query;
@@ -308,7 +308,7 @@ namespace Utilities.SQL
 
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<IEnumerable<T>> QueryAsync<T>(Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.SelectQueryGenerate<T, TParameterType>(this, predicate, top);
             var query = preparer.query;
@@ -324,7 +324,7 @@ namespace Utilities.SQL
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(this, predicate);
             var query = preparer.query;
@@ -339,7 +339,7 @@ namespace Utilities.SQL
         /// <param name="primaryKey">Specified primary key.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual int Delete<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new()
+        public virtual int Delete<T>(object primaryKey, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(primaryKey);
             var query = preparer.query;
@@ -354,7 +354,7 @@ namespace Utilities.SQL
         /// <param name="primaryKey">Specified primary key.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public virtual async Task<int> DeleteAsync<T>(object primaryKey, IDbTransaction transaction = null) where T : class, new()
+        public virtual async Task<int> DeleteAsync<T>(object primaryKey, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.DeleteQueryGenerate<T, TParameterType>(primaryKey);
             var query = preparer.query;

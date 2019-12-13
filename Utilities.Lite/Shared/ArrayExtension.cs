@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Utilities.Shared
 {
+    // ReSharper disable InconsistentNaming
     /// <summary>
     /// Collection of Array extension methods
     /// </summary>
@@ -12,7 +11,6 @@ namespace Utilities.Shared
         /// <summary>
         /// Sum value of 2-dimensions <seealso cref="int"/> array with locality of reference optimized.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <returns></returns>
         public static long Sum(this int[,] arr)
@@ -33,10 +31,10 @@ namespace Utilities.Shared
             }
             return sum;
         }
+
         /// <summary>
         /// Sum value of 2-dimensions <seealso cref="float"/> array with locality of reference optimized.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <returns></returns>
         public static float Sum(this float[,] arr)
@@ -57,10 +55,10 @@ namespace Utilities.Shared
             }
             return sum;
         }
+
         /// <summary>
         /// Sum value of 2-dimensions <seealso cref="double"/> array with locality of reference optimized.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <returns></returns>
         public static double Sum(this double[,] arr)
@@ -85,7 +83,6 @@ namespace Utilities.Shared
         /// <summary>
         /// Sum value of 3-dimensions <seealso cref="int"/> array with locality of reference optimized.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <returns></returns>
         public static long Sum(this int[,,] arr)
@@ -104,10 +101,10 @@ namespace Utilities.Shared
                         sum += arr[z, y, x];
             return sum;
         }
+
         /// <summary>
         /// Sum value of 3-dimensions <seealso cref="float"/> array with locality of reference optimized.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <returns></returns>
         public static float Sum(this float[,,] arr)
@@ -126,10 +123,10 @@ namespace Utilities.Shared
                         sum += arr[z, y, x];
             return sum;
         }
+
         /// <summary>
         /// Sum value of 3-dimensions <seealso cref="double"/> array with locality of reference optimized.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <returns></returns>
         public static double Sum(this double[,,] arr)
@@ -149,4 +146,7 @@ namespace Utilities.Shared
             return sum;
         }
     }
+    // ReSharper restore InconsistentNaming
+
 }
+

@@ -14,18 +14,19 @@ namespace Utilities.Asp.Core.Based
         /// <summary>
         /// SignalR hub context.
         /// </summary>
-        protected readonly IHubContext<THub> _Hub;
+        protected readonly IHubContext<THub> Hub;
 
         public SignalrController(IHubContext<THub> hub)
         {
-            _Hub = hub;
+            Hub = hub;
         }
     }
 
     /// <summary>
     /// A controller with SignalR context integrated.
     /// </summary>
-    /// <typeparam name="THub"></typeparam>
+    /// <typeparam name="THub1"></typeparam>
+    /// <typeparam name="THub2"></typeparam>
     [ApiController]
     public class SignalrController<THub1, THub2> : ControllerBase
         where THub1 : Hub
@@ -34,24 +35,26 @@ namespace Utilities.Asp.Core.Based
         /// <summary>
         /// SignalR hub context.
         /// </summary>
-        protected readonly IHubContext<THub1> _Hub1;
+        protected readonly IHubContext<THub1> Hub1;
 
         /// <summary>
         /// SignalR hub context.
         /// </summary>
-        protected readonly IHubContext<THub2> _Hub2;
+        protected readonly IHubContext<THub2> Hub2;
 
         public SignalrController(IHubContext<THub1> hub1, IHubContext<THub2> hub2)
         {
-            _Hub1 = hub1;
-            _Hub2 = hub2;
+            Hub1 = hub1;
+            Hub2 = hub2;
         }
     }
 
     /// <summary>
     /// A controller with SignalR context integrated.
     /// </summary>
-    /// <typeparam name="THub"></typeparam>
+    /// <typeparam name="THub1"></typeparam>
+    /// <typeparam name="THub2"></typeparam>
+    /// <typeparam name="THub3"></typeparam>
     [ApiController]
     public class SignalrController<THub1, THub2, THub3> : ControllerBase
         where THub1 : Hub
@@ -61,23 +64,23 @@ namespace Utilities.Asp.Core.Based
         /// <summary>
         /// SignalR hub context.
         /// </summary>
-        protected readonly IHubContext<THub1> _Hub1;
+        protected readonly IHubContext<THub1> Hub1;
 
         /// <summary>
         /// SignalR hub context.
         /// </summary>
-        protected readonly IHubContext<THub2> _Hub2;
+        protected readonly IHubContext<THub2> Hub2;
 
         /// <summary>
         /// SignalR hub context.
         /// </summary>
-        protected readonly IHubContext<THub3> _Hub3;
+        protected readonly IHubContext<THub3> Hub3;
 
         public SignalrController(IHubContext<THub1> hub1, IHubContext<THub2> hub2, IHubContext<THub3> hub3)
         {
-            _Hub1 = hub1;
-            _Hub2 = hub2;
-            _Hub3 = hub3;
+            Hub1 = hub1;
+            Hub2 = hub2;
+            Hub3 = hub3;
         }
     }
 }

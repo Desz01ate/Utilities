@@ -139,7 +139,7 @@ namespace Utilities.SQL.Translator
                     var fieldName = (m.Arguments[1] as MemberExpression).Member.Name;
                     var field = _fieldsConfiguration[fieldName];
                     var values = CompileExpression(m.Arguments[0]) as dynamic;
-                    var paramArray = new string[values.Length];
+                    var paramArray = new string[(int)values.Length];
                     for (var idx = 0; idx < values.Length; idx++)
                     {
                         var paramName = $@"@cepr{idx}";
@@ -158,7 +158,7 @@ namespace Utilities.SQL.Translator
                     var fieldName = (m.Arguments[0] as MemberExpression).Member.Name;
                     var field = _fieldsConfiguration[fieldName];
                     var values = CompileExpression(m.Object) as dynamic;
-                    var paramArray = new string[values.Count];
+                    var paramArray = new string[(int)values.Count];
                     for (var idx = 0; idx < values.Count; idx++)
                     {
                         var paramName = $@"@cepr{idx}";

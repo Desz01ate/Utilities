@@ -535,7 +535,7 @@ namespace Utilities.Numerics
         /// </summary>
         /// <param name="value">A number.</param>
         /// <returns>Length of a number.</returns>
-        public static decimal Length(this decimal value) => Math.Floor(MathExtension.Log10(value < 0 ? Math.Abs(value) : value) + 1);
+        public static decimal Length(this decimal value) => Math.Floor(Log10(value < 0 ? Math.Abs(value) : value) + 1);
         /// <summary>
         /// Returns the digit length of a specified number.
         /// </summary>

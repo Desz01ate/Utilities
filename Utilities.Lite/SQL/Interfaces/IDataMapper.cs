@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Utilities.SQL.Interfaces
+namespace Utilities.Interfaces
 {
-    internal interface IDataMapper<T> where T : new()
+    internal interface IDataMapper<out T> where T : new()
     {
         T GenerateObject();
         IEnumerable<T> GenerateObjects();

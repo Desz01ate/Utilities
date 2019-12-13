@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
-using Utilities.Classes;
 using Utilities.Enum;
 using Utilities.Interfaces;
-using Utilities.Shared;
-using Utilities.SQL.Interfaces;
 using Utilities.SQL.Translator;
 
 namespace Utilities.SQL
@@ -160,9 +156,9 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual T ExecuteScalar<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
-            T result = default;
+            T result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
@@ -189,10 +185,9 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual int ExecuteNonQuery(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
-            int result = -1;
-
+            int result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
@@ -244,10 +239,10 @@ namespace Utilities.SQL
         /// </summary>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="transaction"></param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-
-        public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             using var command = Connection.CreateCommand();
 
@@ -278,7 +273,7 @@ namespace Utilities.SQL
 
         public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            T result = default;
+            T result;
 
             using (var command = Connection.CreateCommand())
             {
@@ -306,9 +301,9 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
-            int result = -1;
+            int result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
@@ -335,9 +330,9 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual object ExecuteScalar(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual object ExecuteScalar(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
-            object result = null;
+            object result;
 
             using (var command = Connection.CreateCommand())
             {
@@ -367,7 +362,7 @@ namespace Utilities.SQL
 
         public virtual async Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
         {
-            object result = null;
+            object result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
@@ -442,7 +437,7 @@ namespace Utilities.SQL
         }
 
 
-        private IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
+        private static IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
         {
             using (reader)
             {
@@ -453,7 +448,7 @@ namespace Utilities.SQL
             }
 
         }
-        private IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
+        private static IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
         {
             using (reader)
             {
@@ -478,9 +473,9 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
-            using var command = Connection.CreateCommand();
+            await using var command = Connection.CreateCommand();
             command.CommandText = sql;
             command.Transaction = transaction as DbTransaction;
             command.CommandType = commandType;
@@ -504,12 +499,12 @@ namespace Utilities.SQL
         /// </summary>
         /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
+        /// <param name="transaction"></param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-
-        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
-            using var command = Connection.CreateCommand();
+            await using var command = Connection.CreateCommand();
 
             command.CommandText = sql;
             command.Transaction = transaction as DbTransaction;
@@ -524,7 +519,7 @@ namespace Utilities.SQL
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
             while (await cursor.ReadAsync().ConfigureAwait(false))
             {
-                yield return Utilities.Shared.DataExtension.RowBuilder(cursor);
+                yield return Shared.DataExtension.RowBuilder(cursor);
             }
         }
     }

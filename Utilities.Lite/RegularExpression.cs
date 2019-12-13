@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using Utilities.Enum;
 
 namespace Utilities
@@ -69,7 +70,7 @@ namespace Utilities
             Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F\s]+$").Success,
             _ => throw new System.NotSupportedException($"{language.ToString()} is not supported.")
         };
-        private const int THAI_ID_LENGTH = 13;
+        private const int ThaiIdLength = 13;
 
         /// <summary>
         /// Check if the given input is matching the Thai citizen id format.
@@ -79,15 +80,15 @@ namespace Utilities
 
         public static bool IsValidThaiCitizenId(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || input.Length != THAI_ID_LENGTH || !IsOnlyDigit(input)) return false;
+            if (string.IsNullOrWhiteSpace(input) || input.Length != ThaiIdLength || !IsOnlyDigit(input)) return false;
             var sum = 0d;
-            for (var idx = 0; idx < THAI_ID_LENGTH - 1; idx++)
+            for (var idx = 0; idx < ThaiIdLength - 1; idx++)
             {
-                sum += double.Parse(input[idx].ToString()) * (THAI_ID_LENGTH - idx);
+                sum += double.Parse(input[idx].ToString()) * (ThaiIdLength - idx);
             }
-            var formulaSummation = ((THAI_ID_LENGTH - 2) - sum % (THAI_ID_LENGTH - 2)) % 10;
-            var lastDigit = double.Parse(input[THAI_ID_LENGTH - 1].ToString());
-            return formulaSummation == lastDigit;
+            var formulaSummation = ((ThaiIdLength - 2) - sum % (ThaiIdLength - 2)) % 10;
+            var lastDigit = double.Parse(input[ThaiIdLength - 1].ToString());
+            return Math.Abs(formulaSummation - lastDigit) < 1e-10;
         }
     }
 }

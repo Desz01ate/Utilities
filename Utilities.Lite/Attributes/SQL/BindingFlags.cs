@@ -13,7 +13,7 @@ namespace Utilities.Attributes.SQL
 
         public BindingFlagsAttribute(BindingFlags bindingFlags)
         {
-            this.BindingFlags = bindingFlags;
+            BindingFlags = bindingFlags;
         }
     }
 }

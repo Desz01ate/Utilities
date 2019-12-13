@@ -61,7 +61,7 @@ namespace Utilities.Shared
             {
                 var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
                 var IsNotNull = AttributeExtension.NotNullAttributeValidate(property);
-                var primaryKeyPostfix = property.IsSQLPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
+                var primaryKeyPostfix = property.IsSqlPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
                 var notNullPostfix = IsNotNull ? " NOT NULL " : "";
                 var sqlType = connector.MapCLRTypeToSQLType(property.PropertyType);
                 yield return ($"{propertyName} {sqlType} {primaryKeyPostfix} {notNullPostfix}");

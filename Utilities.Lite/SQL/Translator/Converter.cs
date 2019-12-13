@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Utilities.Interfaces;
 using Utilities.Shared;
-using Utilities.SQL.Interfaces;
 
 namespace Utilities.SQL.Translator
 {
@@ -17,12 +15,9 @@ namespace Utilities.SQL.Translator
     /// <typeparam name="T"></typeparam>
     internal class Converter<T> : IDataMapper<T> where T : new()
     {
-        /// <summary>
-        /// Underlying object SHOULD always be ConcurrentDictionary of Type => Func of IDataReader return T
-        /// </summary>
-        private static ConcurrentDictionary<Type, object> _internalCache = new ConcurrentDictionary<Type, object>();
-        readonly Func<IDataReader, T> _converter;
-        readonly IDataReader dataReader;
+        // ReSharper disable once InconsistentNaming
+        private static Func<IDataReader, T> _converter;
+        private readonly IDataReader _dataReader;
 
         private Func<IDataReader, T> GetMapFunc()
         {
@@ -37,8 +32,8 @@ namespace Utilities.SQL.Translator
             //does int based lookup
             var indexerInfo = typeof(IDataRecord).GetProperty("Item", new[] { typeof(int) });
 
-            var columnNames = Enumerable.Range(0, dataReader.FieldCount)
-                                        .Select(i => new { i, name = dataReader.GetName(i) });
+            var columnNames = Enumerable.Range(0, _dataReader.FieldCount)
+                                        .Select(i => new { i, name = _dataReader.GetName(i) });
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var column in columnNames)
             {
@@ -53,7 +48,7 @@ namespace Utilities.SQL.Translator
                     Expression.MakeIndex(
                     paramExp, indexerInfo, new[] { readerIndex });
 
-                var actualType = dataReader.GetFieldType(column.i);
+                var actualType = _dataReader.GetFieldType(column.i);
                 Expression safeCastExpression;
                 //if property type in model doesn't match the underlying type in SQL, we first convert into actual SQL type.
                 if (actualType != property.PropertyType)
@@ -94,28 +89,20 @@ namespace Utilities.SQL.Translator
 
         public Converter(IDataReader dataReader)
         {
-            this.dataReader = dataReader;
-            if (_internalCache.TryGetValue(typeof(T), out var res))
-            {
-                _converter = (Func<IDataReader, T>)res;
-            }
-            else
-            {
-                var func = GetMapFunc();
-                _converter = func;
-                _internalCache.TryAdd(typeof(T), func);
-            }
-
+            this._dataReader = dataReader;
+            if (_converter != null) return;
+            var func = GetMapFunc();
+            _converter = func;
         }
         public T GenerateObject()
         {
-            return _converter(dataReader);
+            return _converter(_dataReader);
         }
         public IEnumerable<T> GenerateObjects()
         {
-            while (dataReader.Read())
+            while (_dataReader.Read())
             {
-                yield return _converter(dataReader);
+                yield return _converter(_dataReader);
             }
         }
     }

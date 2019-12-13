@@ -13,12 +13,12 @@ namespace Utilities.SQL.Abstract
         /// <summary>
         /// SQL-function configuration for LINQ usage.
         /// </summary>
-        internal protected Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; private protected set; }
+        protected internal Dictionary<SqlFunction, string> SQLFunctionConfiguration { get; private protected set; }
         /// <summary>
         /// Provide converter to convert data type from CLR to underlying SQL type.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal protected abstract string MapCLRTypeToSQLType(Type type);
+        protected internal abstract string MapCLRTypeToSQLType(Type type);
     }
 }

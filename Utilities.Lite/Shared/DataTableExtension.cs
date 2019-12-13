@@ -55,8 +55,8 @@ namespace Utilities.Shared
         /// <returns></returns>
         public static IEnumerable<string> GetColumns(this DataTable data)
         {
-            if (data == null) return null;
-            return System.Linq.Enumerable.Range(0, data.Columns.Count).Select(x => data.Columns[x].ColumnName);
+            if (data == null) return Enumerable.Empty<string>();
+            return Enumerable.Range(0, data.Columns.Count).Select(x => data.Columns[x].ColumnName);
         }
     }
 }

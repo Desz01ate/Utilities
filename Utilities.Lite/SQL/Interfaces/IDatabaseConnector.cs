@@ -11,7 +11,7 @@ namespace Utilities.Interfaces
     /// </summary>
     /// <typeparam name="TDatabaseType">DbConnection type</typeparam>
     /// <typeparam name="TParameter">DbParameter type</typeparam>
-    public interface IDatabaseConnector<TDatabaseType, TParameter> : IDisposable
+    public interface IDatabaseConnector<out TDatabaseType, in TParameter> : IDisposable
         where TDatabaseType : DbConnection, new()
         where TParameter : DbParameter, new()
     {

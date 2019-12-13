@@ -105,7 +105,7 @@ namespace Utilities
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ReadCsvAs<T>(string path, bool hasHeader = false) where T : class, ICSVReader, new()
+        public static IEnumerable<T> ReadCsvAs<T>(string path, bool hasHeader = false) where T : class, ICsvReader, new()
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -116,7 +116,7 @@ namespace Utilities
             foreach (var line in content.Skip(skipBy))
             {
                 var obj = new T();
-                obj.ReadFromCSV(line);
+                obj.ReadFromCsv(line);
                 yield return obj;
             }
         }

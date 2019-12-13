@@ -34,7 +34,7 @@ namespace Utilities.SQL.Extension
         /// <returns></returns>
         public static IEnumerable<TableSchema> GetTableSchema(this IDbConnection connection, string tableName)
         {
-            if (connection == null) throw new ArgumentNullException("Connection must not be null");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (connection.State != ConnectionState.Open)
                 connection.Open();
             var query = $"SELECT * FROM {tableName} WHERE 1 = 0";
@@ -53,7 +53,7 @@ namespace Utilities.SQL.Extension
         /// <returns></returns>
         public static IEnumerable<StoredProcedureSchema> GetStoredProcedures(this DbConnection connection)
         {
-            if (connection == null) throw new ArgumentNullException("Connection must not be null");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
             if (connection.State != ConnectionState.Open)
                 connection.Open();
 

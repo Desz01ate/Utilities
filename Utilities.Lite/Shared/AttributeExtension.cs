@@ -16,22 +16,22 @@ namespace Utilities.Shared
         }
         internal static InternalPropertyInfo PrimaryKeyAttributeValidate(this IEnumerable<PropertyInfo> properties, Type type)
         {
-            var primaryKeyProperty = properties.Where(IsSQLPrimaryKeyAttribute);
+            var primaryKeyProperty = properties.Where(IsSqlPrimaryKeyAttribute);
             if (primaryKeyProperty == null) throw new Exception($"Can't find attribute [{typeof(PrimaryKeyAttribute).FullName}] in {type.FullName}.");
-            if (primaryKeyProperty.Count() != 1) throw new Exception($"The attribute [{typeof(PrimaryKeyAttribute).FullName}] must specific only once per class. (error in {type.FullName} class)");
-            var property = new InternalPropertyInfo(primaryKeyProperty.First());
+            var propertyInfos = primaryKeyProperty as PropertyInfo[] ?? primaryKeyProperty.ToArray();
+            if (propertyInfos.Count() != 1) throw new Exception($"The attribute [{typeof(PrimaryKeyAttribute).FullName}] must specific only once per class. (error in {type.FullName} class)");
+            var property = new InternalPropertyInfo(propertyInfos.First());
             return property;
         }
-        internal static bool IsSQLPrimaryKeyAttribute(this PropertyInfo property)
+        internal static bool IsSqlPrimaryKeyAttribute(this PropertyInfo property)
         {
-            var attrib = property.GetCustomAttribute<PrimaryKeyAttribute>(true);
-            return attrib != null;
+            var attribute = property.GetCustomAttribute<PrimaryKeyAttribute>(true);
+            return attribute != null;
         }
         internal static string FieldNameAttributeValidate(this PropertyInfo propertyInfo)
         {
             var attribute = propertyInfo.GetCustomAttribute<FieldAttribute>(true);
-            if (attribute == null) return propertyInfo.Name;
-            return attribute.FieldName;
+            return attribute == null ? propertyInfo.Name : attribute.FieldName;
         }
         internal static IEnumerable<string> FieldNameAttributeValidate(this IEnumerable<PropertyInfo> propertyInfos)
         {
@@ -108,22 +108,22 @@ namespace Utilities.Shared
         //    return null;
         //    //throw new Exception($"Property {propertyName} is not found on type '{type.FullName}");
         //}
-        private static readonly Dictionary<PropertyInfo, FieldAttribute> _attributesCached = new Dictionary<PropertyInfo, FieldAttribute>();
-        internal static PropertyInfo? GetUnderlyingPropertyByName(PropertyInfo[] properties, string propertyName)
+        private static readonly Dictionary<PropertyInfo, FieldAttribute> AttributesCached = new Dictionary<PropertyInfo, FieldAttribute>();
+        internal static PropertyInfo? GetUnderlyingPropertyByName(IEnumerable<PropertyInfo> properties, string propertyName)
         {
             foreach (var property in properties)
             {
-                FieldAttribute attrib;
-                if (_attributesCached.TryGetValue(property, out var atb))
+                FieldAttribute attribute;
+                if (AttributesCached.TryGetValue(property, out var atb))
                 {
-                    attrib = atb;
+                    attribute = atb;
                 }
                 else
                 {
-                    attrib = property.GetCustomAttribute<FieldAttribute>(true);
-                    _attributesCached.Add(property, attrib);
+                    attribute = property.GetCustomAttribute<FieldAttribute>(true);
+                    AttributesCached.Add(property, attribute);
                 }
-                string propName = attrib == null ? property.Name : attrib.FieldName;
+                string propName = attribute == null ? property.Name : attribute.FieldName;
                 if (propName == propertyName) return property;
             }
             return default;

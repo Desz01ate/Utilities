@@ -195,7 +195,7 @@ namespace Utilities
         /// <returns></returns>
         public static string NumberFormat(string value, string numericFormat = "N")
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Input string must not be null or empty.");
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
             var success = decimal.TryParse(value, out var result);
             if (!success)
                 throw new FormatException("String value is not a valid numeric value.");

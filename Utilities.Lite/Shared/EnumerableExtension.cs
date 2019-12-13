@@ -13,13 +13,13 @@ namespace Utilities.Shared
     /// </summary>
     public static partial class EnumerableExtension
     {
-        [Obsolete("This method is deprecated, please use Concat instead.")]
         /// <summary>
         /// Combine 2 or more enumerable of the same type into new enumerable
         /// </summary>
         /// <typeparam name="T">type of enumerable</typeparam>
         /// <param name="enumerables">enumerables to combine</param>
         /// <returns></returns>
+        [Obsolete("This method is deprecated, please use Concat instead.")]
         public static IEnumerable<T> Merge<T>(this IEnumerable<T> source, params IEnumerable<T>[] enumerables) => source.Concat(enumerables.SelectMany(x => x));
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace Utilities.Interfaces
     /// </summary>
     /// <typeparam name="TDatabaseType">DbConnection type</typeparam>
     /// <typeparam name="TParameter">DbParameter type</typeparam>
-    public interface IDatabaseConnectorExtension<TDatabaseType, TParameter> : IDatabaseConnector<TDatabaseType, TParameter>
+    public interface IDatabaseConnectorExtension<out TDatabaseType, in TParameter> : IDatabaseConnector<TDatabaseType, TParameter>
         where TDatabaseType : DbConnection, new()
         where TParameter : DbParameter, new()
     {
