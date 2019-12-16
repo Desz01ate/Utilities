@@ -75,7 +75,7 @@ namespace Utilities.Interfaces
         /// <param name="data">IEnumrable to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        int InsertMultiple<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
+        int InsertMany<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
         /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
@@ -159,13 +159,13 @@ namespace Utilities.Interfaces
         /// <returns>Affected row after an insert.</returns>
         Task<int> InsertAsync<T>(T data, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
-        /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        Task<int> InsertMultipleAsync<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
+        Task<int> InsertManyAsync<T>(IEnumerable<T> data, IDbTransaction transaction = null) where T : class, new();
         /// <summary>
         /// Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>

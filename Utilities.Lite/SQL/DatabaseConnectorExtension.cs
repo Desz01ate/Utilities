@@ -98,7 +98,7 @@ namespace Utilities.SQL
         /// <param name="obj">IEnumrable to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual int InsertMultiple<T>(IEnumerable<T> obj, IDbTransaction? transaction = null)
+        public virtual int InsertMany<T>(IEnumerable<T> obj, IDbTransaction? transaction = null)
             where T : class, new()
         {
             if (obj == null || !obj.Any()) return -1;
@@ -217,13 +217,13 @@ namespace Utilities.SQL
         }
 
         /// <summary>
-        /// Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
+        /// Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public virtual async Task<int> InsertMultipleAsync<T>(IEnumerable<T> obj, IDbTransaction? transaction = null) where T : class, new()
+        public virtual async Task<int> InsertManyAsync<T>(IEnumerable<T> obj, IDbTransaction? transaction = null) where T : class, new()
         {
             var preparer = SqlQueryExtension.InsertQueryGenerate<T, TParameterType>(obj);
             var query = preparer.query;
