@@ -100,68 +100,6 @@ namespace Utilities.Security
 
         #endregion Simple Encryption - Decryption Method
 
-        #region Simple Hash/Salt Generator and Verification
-
-        /// <summary>
-        /// Generate combination of hash string and salt string from given plain text and salt byte array
-        /// </summary>
-        /// <param name="plainText">Plain text to encrypt</param>
-        /// <param name="salt">Salt using to calculate the hash</param>
-        /// <param name="byteSize">Entropy size</param>
-        /// <param name="iterations">Encryption iterations</param>
-        /// <returns></returns>
-        public static (string Hash, string Salt) GenerateHash(string plainText, byte[] salt, int byteSize = 128, int iterations = 2000)
-        {
-            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-            using (var rfc2898 = new Rfc2898DeriveBytes(plainTextBytes, salt, iterations))
-            {
-                var hash = rfc2898.GetBytes(byteSize);
-                return (Convert.ToBase64String(hash), Convert.ToBase64String(salt));
-            }
-        }
-
-        /// <summary>
-        /// Generate combination of hash string and salt string from given plain text
-        /// </summary>
-        /// <param name="plainText">Plain text to encrypt</param>
-        /// <param name="byteSize">Entropy size</param>
-        /// <param name="iterations">Encryption iterations</param>
-        /// <returns></returns>
-        public static (string Hash, string Salt) GenerateHash(string plainText, int byteSize = 128, int iterations = 2000)
-        {
-            return GenerateHash(plainText, GenerateSalt(), byteSize, iterations);
-        }
-
-        /// <summary>
-        /// Generate combination of hash string and salt string from given plain text and salt base64 string
-        /// </summary>
-        /// <param name="plainText">Plain text to encrypt</param>
-        /// <param name="salt">Base64 string using to calculate the hash</param>
-        /// <param name="byteSize">Entropy size</param>
-        /// <param name="iterations">Encryption iterations</param>
-        /// <returns></returns>
-        public static (string Hash, string Salt) GenerateHash(string plainText, string salt, int byteSize = 128, int iterations = 2000)
-        {
-            var saltBytes = Convert.FromBase64String(salt);
-            return GenerateHash(plainText, saltBytes, byteSize, iterations);
-        }
-
-        /// <summary>
-        /// Compare the plain text with given hash and salt
-        /// </summary>
-        /// <param name="plainText">Plain text to compare</param>
-        /// <param name="hash">Hash string to compare</param>
-        /// <param name="salt">Salt to compute while comparing</param>
-        /// <param name="iterations">Iterations to compute while comparing</param>
-        /// <returns></returns>
-        public static bool Verify(string plainText, string hash, string salt, int iterations = 2000)
-        {
-            var inputHash = GenerateHash(plainText, salt, iterations: iterations);
-            return inputHash.Hash == hash;
-        }
-
-        #endregion Simple Hash/Salt Generator and Verification
-
         /// <summary>
         /// Randomly generate salt byte array
         /// </summary>
@@ -220,6 +158,55 @@ namespace Utilities.Security
             byte[] rawKey = enc.GetBytes(key);
             byte[] hashKey = sha2.ComputeHash(rawKey);
             return hashKey;
+        }
+    }
+    /// <summary>
+    /// Simple wrapper for one-way hashing specifically for password hashing.
+    /// </summary>
+    public static class OneWayHash
+    {
+        /// <summary>
+        /// Encrypt text with specified salt, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        public static string Encrypt(string text, string salt)
+        {
+            var combined = Combine(text, salt);
+            var data = Encoding.UTF8.GetBytes(combined);
+            using var shaM = new SHA256Managed();
+            var res = shaM.ComputeHash(data);
+            return Convert.ToBase64String(res);
+        }
+        /// <summary>
+        /// Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="hash"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        public static bool Verify(string text, string hash, string salt)
+        {
+            var challengeHash = Encrypt(text, salt);
+            return challengeHash.Equals(hash);
+        }
+        private static string Combine(string text, string salt)
+        {
+            var saltFlip = salt.Reverse();
+            var combinedText = new StringBuilder();
+            var rules = new[] { 2, 5, 7 };
+            for (var i = 0; i < text.Length; i++)
+            {
+                combinedText.Append(text[i]);
+                if (i != 0)
+                    foreach (var rule in rules)
+                        if (i % rule == 0)
+                            combinedText.Append(salt[i]);
+            }
+            var leftOver = new string(saltFlip.Skip(combinedText.Length).ToArray());
+            combinedText.Append(leftOver);
+            return combinedText.ToString();
         }
     }
 }
