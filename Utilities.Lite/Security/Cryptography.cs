@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Utilities.Shared;
 
 namespace Utilities.Security
 {
@@ -22,6 +23,9 @@ namespace Utilities.Security
         /// <param name="blockSize">Entropy size</param>
         /// <param name="iterations">Encryption iterations</param>
         /// <returns></returns>
+#if NETSTANDARD2_0
+        [Obsolete("This method is implement an old Rfc2898DeriveBytes (HMAC-SHA1) which is considered a weak hash algorithm.")]
+#endif
         public static string Encrypt(string plainText, string salt, int blockSize = 128, int iterations = 2000)
         {
             var saltStringBytes = GenerateRandomEntropy(blockSize);
@@ -64,6 +68,9 @@ namespace Utilities.Security
         /// <param name="blockSize">Entropy size</param>
         /// <param name="iterations">Decryption iterations</param>
         /// <returns></returns>
+#if NETSTANDARD2_0
+        [Obsolete("This method is implement an old Rfc2898DeriveBytes (HMAC-SHA1) which is considered a weak hash algorithm.")]
+#endif
         public static string Decrypt(string hash, string salt, int blockSize = 128, int iterations = 2000)
         {
             var blockSizeByte = 128 / 8;
@@ -104,11 +111,11 @@ namespace Utilities.Security
         /// Randomly generate salt byte array
         /// </summary>
         /// <returns></returns>
-        public static byte[] GenerateSalt()
+        public static byte[] GenerateSalt(int size = 32)
         {
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
             {
-                var salt = new byte[32];
+                var salt = new byte[size];
                 randomNumberGenerator.GetBytes(salt);
                 return salt;
             }
@@ -160,6 +167,7 @@ namespace Utilities.Security
             return hashKey;
         }
     }
+#if NETSTANDARD2_1
     /// <summary>
     /// Simple wrapper for one-way hashing specifically for password hashing.
     /// </summary>
@@ -171,13 +179,36 @@ namespace Utilities.Security
         /// <param name="text"></param>
         /// <param name="salt"></param>
         /// <returns></returns>
-        public static string Encrypt(string text, string salt)
+        /// <exception cref="ArgumentNullException"/>
+        public static string Encrypt(string text, byte[] salt)
         {
-            var combined = Combine(text, salt);
-            var data = Encoding.UTF8.GetBytes(combined);
-            using var shaM = new SHA256Managed();
-            var res = shaM.ComputeHash(data);
-            return Convert.ToBase64String(res);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+            if (salt.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(salt));
+            }
+            using var encryptor = new Rfc2898DeriveBytes(text, salt, 100000, HashAlgorithmName.SHA512);
+            var res = encryptor.GetBytes(24);
+            var sb = new StringBuilder();
+            foreach (var _byte in res)
+            {
+                sb.Append(_byte.ToString("x2"));
+            }
+            return sb.ToString();
+        }
+        /// <summary>
+        /// Encrypt text WITHOUT specified salt and let the internal worker generate salt instead, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        public static string Encrypt(string text, out byte[] salt)
+        {
+            salt = Cryptography.GenerateSalt(256);
+            return Encrypt(text, salt);
         }
         /// <summary>
         /// Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
@@ -186,16 +217,20 @@ namespace Utilities.Security
         /// <param name="hash"></param>
         /// <param name="salt"></param>
         /// <returns></returns>
-        public static bool Verify(string text, string hash, string salt)
+        /// <exception cref="ArgumentNullException"/>
+        public static bool Verify(string text, string hash, byte[] salt)
         {
             var challengeHash = Encrypt(text, salt);
             return challengeHash.Equals(hash);
         }
+        private static readonly int[] rules = new int[] { 2, 5, 7 };
         private static string Combine(string text, string salt)
         {
-            var saltFlip = salt.Reverse();
+            var (Match, Unmatch) = Enumerable.Range(0, salt.Length).Partition(x => x % 2 == 0);
+            var headSalt = Match.Select(x => salt[x]).ToArray();
+            var tailSalt = Unmatch.Select(x => salt[x]).ToArray();
             var combinedText = new StringBuilder();
-            var rules = new[] { 2, 5, 7 };
+            combinedText.Append(new string(headSalt));
             for (var i = 0; i < text.Length; i++)
             {
                 combinedText.Append(text[i]);
@@ -204,9 +239,9 @@ namespace Utilities.Security
                         if (i % rule == 0)
                             combinedText.Append(salt[i]);
             }
-            var leftOver = new string(saltFlip.Skip(combinedText.Length).ToArray());
-            combinedText.Append(leftOver);
+            combinedText.Append(new string(tailSalt));
             return combinedText.ToString();
         }
     }
+#endif
 }
