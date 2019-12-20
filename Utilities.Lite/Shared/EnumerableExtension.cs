@@ -97,7 +97,7 @@ namespace Utilities.Shared
             {
                 return Enumerable.Empty<(T1, T2)>();
             }
-            return source1.Zip(source2, (x, y) => (x, y));
+            return source1.Zip(source2, (x, y) => (t1: x, t2: y));
         }
         /// <summary>
         /// Make an iterator that aggregates elements from each of the iterables.
@@ -119,7 +119,7 @@ namespace Utilities.Shared
                 return Enumerable.Empty<(T1, T2, T3)>();
             }
             var z1 = source1.Zip(source2, (x, y) => (x, y));
-            var z2 = z1.Zip(source3, (x, y) => (x.x, x.y, y));
+            var z2 = z1.Zip(source3, (x, y) => (t1: x.x, t2: x.y, t3: y));
             return z2;
         }
         /// <summary>
@@ -145,7 +145,7 @@ namespace Utilities.Shared
             }
             var z1 = source1.Zip(source2, (x, y) => (x, y));
             var z2 = z1.Zip(source3, (x, y) => (x.x, x.y, y));
-            var z3 = z2.Zip(source4, (x, y) => (x.x, x.Item2, x.Item3, y));
+            var z3 = z2.Zip(source4, (x, y) => (t1: x.x, t2: x.Item2, t3: x.Item3, t4: y));
             return z3;
         }
         /// <summary>
