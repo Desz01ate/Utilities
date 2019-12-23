@@ -19,7 +19,7 @@ namespace Utilities.Testing
                     var saltBytes = Security.Cryptography.GenerateSalt();
                     var encrypt = Security.Cryptography.Encrypt(plainText, salt, block, iter);
                     var decrypt = Security.Cryptography.Decrypt(encrypt, salt, block, iter);
-                    var gh1 = Security.Cryptography.GenerateHash(plainText, 128, iter);
+                    var gh1 = Security.OneWayHash.GenerateHash(plainText, 128, iter);
                     var gh2 = Security.Cryptography.GenerateHash(plainText, saltBytes, 128, iter);
                     var gh3 = Security.Cryptography.GenerateHash(plainText, Convert.ToBase64String(saltBytes), 128, iter);
                     Assert.AreEqual(decrypt, plainText);

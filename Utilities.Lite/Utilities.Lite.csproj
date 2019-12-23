@@ -10,18 +10,27 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.4-beta1</Version>
+    <Version>0.2.1.4</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>
-      [General]
-      - Remove Dapper dependency as the ORM internal mapper has prove itself to be close enough to what Dapper could achieve.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>[General]
+- Remove Dapper implementation and dependencies (as DatabaseConnector's performance is really close to Dapper).
++ Enable range and index on .NET standard 2.0 (it's still in beta and may be remove any time).
++ Add nullable-reference type into mostly if not all methods signature.
+
+[Enumerable]
++ Add Zip method (act similar to Python's Zip).
+
+[SQL]
++ Rename InsertMultiple to InsertMany.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>signkey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,16 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.16.4</Version>
-    <PackageReleaseNotes>Add Swagger support.</PackageReleaseNotes>
+    <Version>0.0.17</Version>
+    <PackageReleaseNotes>[General]
++ Drop support for .NET standard 2.0 and 2.1 (aiming for only .NET Core 2.0 ~ 3.0).
++ Add SignalrController.
++ Add FilterContextExtension which contains a shortcuts for request-header, request-controller and DI context.
++ Add AuthorizationBasedAttribute for customizable authorize controller (rather than depend on ASP configuration).</PackageReleaseNotes>
     <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Asp.Core\Utilities.Asp.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

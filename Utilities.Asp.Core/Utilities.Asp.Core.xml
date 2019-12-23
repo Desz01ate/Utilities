@@ -6,7 +6,7 @@
     <members>
         <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.Authenticate(System.String)">
             <summary>
-            Get method for request JWT with given user id
+            Get method for request JWT with given user id.
             </summary>
             <param name="id">User ID</param>
             <returns>Response of request in form of { success, message , data }</returns>
@@ -18,14 +18,66 @@
             <param name="id">User ID</param>
             <returns>boolean which indicate whether the user is allow to get the JWT or not</returns>
         </member>
-        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SetPreconfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection@,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="T:Utilities.Asp.Core.Based.SignalrController`1">
+            <summary>
+            A controller with SignalR context integrated.
+            </summary>
+            <typeparam name="THub"></typeparam>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.SignalrController`1.Hub">
+            <summary>
+            SignalR hub context.
+            </summary>
+        </member>
+        <member name="T:Utilities.Asp.Core.Based.SignalrController`2">
+            <summary>
+            A controller with SignalR context integrated.
+            </summary>
+            <typeparam name="THub1"></typeparam>
+            <typeparam name="THub2"></typeparam>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.SignalrController`2.Hub1">
+            <summary>
+            SignalR hub context.
+            </summary>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.SignalrController`2.Hub2">
+            <summary>
+            SignalR hub context.
+            </summary>
+        </member>
+        <member name="T:Utilities.Asp.Core.Based.SignalrController`3">
+            <summary>
+            A controller with SignalR context integrated.
+            </summary>
+            <typeparam name="THub1"></typeparam>
+            <typeparam name="THub2"></typeparam>
+            <typeparam name="THub3"></typeparam>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.SignalrController`3.Hub1">
+            <summary>
+            SignalR hub context.
+            </summary>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.SignalrController`3.Hub2">
+            <summary>
+            SignalR hub context.
+            </summary>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.SignalrController`3.Hub3">
+            <summary>
+            SignalR hub context.
+            </summary>
+        </member>
+        <member name="M:Utilities.Asp.Core.Configurations.JwtAuthorizationConfiguration.AddJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
             </summary>
             <param name="services">instance of IServiceCollection</param>
             <param name="configuration">configuration read from appsettings.json with 'JwtIssuer','JwtAudience' and 'JwtKey' properties.</param>
+            <exception cref="T:System.ArgumentNullException"/>
         </member>
-        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SetPreconfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection@,System.String,System.String,System.String,System.Double)">
+        <member name="M:Utilities.Asp.Core.Configurations.JwtAuthorizationConfiguration.AddJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String)">
             <summary>
             Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
             </summary>
@@ -33,22 +85,74 @@
             <param name="validIssuer">issuer of JWT</param>
             <param name="validAudience">audience of JWT</param>
             <param name="jwtKey">key of JWT</param>
+            <exception cref="T:System.ArgumentNullException"/>
         </member>
-        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SetAppUseAuthentication(Microsoft.AspNetCore.Builder.IApplicationBuilder@)">
+        <member name="M:Utilities.Asp.Core.Configurations.JwtAuthorizationConfiguration.UseJwtAuthentication(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
             (optional) You can use app.UserAuthentication(); in Startup.Configure.
             </summary>
             <param name="application"></param>
         </member>
-        <member name="F:Utilities.Asp.Core.Enumerables.RepositoryType.Singleton">
+        <member name="M:Utilities.Asp.Core.Configurations.SwaggerConfiguration.AddSwaggerServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Collections.Generic.IDictionary{System.String,Swashbuckle.AspNetCore.Swagger.Info})">
             <summary>
-            Specific that engine will generate service with singleton pattern
+            Add Swagger generate options to IServiceCollection, this method must be called on ConfigureServices method in order to take effects.
             </summary>
+            <param name="services"></param>
+            <param name="configs"></param>
         </member>
-        <member name="F:Utilities.Asp.Core.Enumerables.RepositoryType.NonSingleton">
+        <member name="M:Utilities.Asp.Core.Configurations.SwaggerConfiguration.UseSwaggerRequest(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.String,System.String)">
             <summary>
-            (Recommend) Specific that engine will generate service with public ctor that allow unit of work to be dependency injection
+            Add Swagger services to HTTP request pipeline, this method must be called on Configure method in order to take effects.
             </summary>
+            <param name="application"></param>
+            <param name="name"></param>
+            <param name="url"></param>
+            <param name="routePrefix"></param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Configurations.SwaggerConfiguration.UseSwaggerRequest(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptions})">
+            <summary>
+            Add Swagger services to HTTP request pipeline, this method must be called on Configure method in order to take effects.
+            </summary>
+            <param name="application"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetRequestHeader(Microsoft.AspNetCore.Mvc.Filters.FilterContext,System.String)">
+            <summary>
+            Get request header using key.
+            </summary>
+            <param name="context"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetRequestController(Microsoft.AspNetCore.Mvc.Filters.FilterContext)">
+            <summary>
+            Get request controller.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetRequestAction(Microsoft.AspNetCore.Mvc.Filters.FilterContext)">
+            <summary>
+            Get request action.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetDependencyInjectionInstance``1(Microsoft.AspNetCore.Mvc.Filters.FilterContext)">
+            <summary>
+            Get dependency injection object which is injected from startup as a generic object"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetDependencyInjectionInstance(Microsoft.AspNetCore.Mvc.Filters.FilterContext,System.Type)">
+            <summary>
+            Get dependency injection object which is injected from startup.
+            </summary>
+            <param name="context"></param>
+            <param name="type"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

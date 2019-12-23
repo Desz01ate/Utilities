@@ -313,7 +313,6 @@ namespace Utilities.Shared
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
             return count <= 0 ? source : source.SubEnumerable(0, totalElement - count);
-
         }
     }
 #endif

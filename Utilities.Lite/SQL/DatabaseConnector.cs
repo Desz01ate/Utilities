@@ -473,7 +473,7 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<TParameterType>?? parameters = null, IDbTransaction?? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             await using var command = Connection.CreateCommand();
             command.CommandText = sql;
@@ -502,7 +502,7 @@ namespace Utilities.SQL
         /// <param name="transaction"></param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<TParameterType>?? parameters = null, IDbTransaction?? transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             await using var command = Connection.CreateCommand();
 
@@ -513,13 +513,15 @@ namespace Utilities.SQL
             {
                 foreach (var parameter in parameters)
                 {
-                    command.Parameters.Add(parameter);
+                    {
+                        command.Parameters.Add(parameter);
+                    }
                 }
-            }
-            var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
-            while (await cursor.ReadAsync().ConfigureAwait(false))
-            {
-                yield return Shared.DataExtension.RowBuilder(cursor);
+                var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+                while (await cursor.ReadAsync().ConfigureAwait(false))
+                {
+                    yield return Shared.DataExtension.RowBuilder(cursor);
+                }
             }
         }
     }

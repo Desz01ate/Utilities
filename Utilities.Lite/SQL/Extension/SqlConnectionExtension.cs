@@ -21,7 +21,7 @@ namespace Utilities.SQL.Extension
         /// <param name="restriction"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static DataTable GetSchema(this DbConnection connection, SchemaRestriction restriction, params string[] parameters)
+        public static DataTable? GetSchema(this DbConnection connection, SchemaRestriction restriction, params string[] parameters)
         {
             return connection?.GetSchema(restriction.ToString(), parameters);
         }

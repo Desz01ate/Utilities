@@ -1185,38 +1185,6 @@
             <param name="combination">Combination of string.</param>
             <returns></returns>
         </member>
-        <member name="T:Utilities.Security.OneWayHash">
-            <summary>
-            Simple wrapper for one-way hashing specifically for password hashing.
-            </summary>
-        </member>
-        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[])">
-            <summary>
-            Encrypt text with specified salt, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
-            </summary>
-            <param name="text"></param>
-            <param name="salt"></param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException"/>
-        </member>
-        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[]@)">
-            <summary>
-            Encrypt text WITHOUT specified salt and let the internal worker generate salt instead, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
-            </summary>
-            <param name="text"></param>
-            <param name="salt"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Security.OneWayHash.Verify(System.String,System.String,System.Byte[])">
-            <summary>
-            Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
-            </summary>
-            <param name="text"></param>
-            <param name="hash"></param>
-            <param name="salt"></param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException"/>
-        </member>
         <member name="T:Utilities.Security.CryptoProvider.AES">
             <summary>
             Simple wrapper for Advance Encryption Standard.
@@ -1277,6 +1245,38 @@
             <param name="privateKey">Private key as string</param>
             <param name="encryptedBytes">Encrypted byte array</param>
             <returns>Raw data of encrypted byte array</returns>
+        </member>
+        <member name="T:Utilities.Security.OneWayHash">
+            <summary>
+            Simple wrapper for one-way hashing specifically for password hashing.
+            </summary>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[],System.Security.Cryptography.DeriveBytes)">
+            <summary>
+            Encrypt text with specified salt, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+            </summary>
+            <param name="text"></param>
+            <param name="salt"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[]@)">
+            <summary>
+            Encrypt text WITHOUT specified salt and let the internal worker generate salt instead, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+            </summary>
+            <param name="text"></param>
+            <param name="salt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Verify(System.String,System.String,System.Byte[])">
+            <summary>
+            Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
+            </summary>
+            <param name="text"></param>
+            <param name="hash"></param>
+            <param name="salt"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
         </member>
         <member name="T:Utilities.Shared.ArrayExtension">
             <summary>

@@ -22,7 +22,7 @@ namespace Utilities.Asp.Core.Based
         {
             if (configuration == null)
             {
-                throw new NullReferenceException($"IConfiguration instant must not be null on {this.GetType().FullName}");
+                throw new ArgumentNullException(nameof(configuration));
             }
             var jwtIssuer = configuration["JwtIssuer"];
             var jwtAudience = configuration["JwtAudience"];
