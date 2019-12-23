@@ -37,7 +37,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <returns></returns>
-        public static PropertyGetterInfo<TSource>[] CompileGetter<TSource>()
+        public static PropertyGetterInfo<TSource>[]? CompileGetter<TSource>()
         {
             var type = typeof(TSource);
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
@@ -48,7 +48,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <returns></returns>
-        public static PropertyGetterInfo<TSource>[] CompileGetter<TSource>(PropertyInfo[] properties)
+        public static PropertyGetterInfo<TSource>[]? CompileGetter<TSource>(PropertyInfo[] properties)
         {
             if (properties is null) return null;
             var funcs = new PropertyGetterInfo<TSource>[properties.Length];
@@ -68,7 +68,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <returns></returns>
-        public static PropertyGetterInfo<TSource> CompileGetter<TSource>(PropertyInfo property)
+        public static PropertyGetterInfo<TSource>? CompileGetter<TSource>(PropertyInfo property)
         {
             if (property is null) return null;
             var targetExpr = Expression.Parameter(typeof(TSource), "target");
@@ -80,7 +80,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <returns></returns>
-        public static PropertySetterInfo<TSource>[] CompileSetter<TSource>()
+        public static PropertySetterInfo<TSource>[]? CompileSetter<TSource>()
         {
             var type = typeof(TSource);
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
@@ -91,7 +91,7 @@ namespace Utilities.Shared
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <returns></returns>
-        public static PropertySetterInfo<TSource>[] CompileSetter<TSource>(PropertyInfo[] properties)
+        public static PropertySetterInfo<TSource>[]? CompileSetter<TSource>(PropertyInfo[] properties)
         {
             if (properties is null) return null;
 

@@ -36,7 +36,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new();
+        IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new();
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -45,7 +45,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute SELECT SQL query and return DataTable
         /// </summary>
@@ -54,7 +54,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute parameterized SQL that selects a single value.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Utilities.Interfaces
         /// <param name="transaction"></param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        object ExecuteScalar(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        object ExecuteScalar(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
@@ -73,7 +73,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        T ExecuteScalar<T>(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        T ExecuteScalar<T>(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
@@ -82,7 +82,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        int ExecuteNonQuery(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        int ExecuteNonQuery(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -93,7 +93,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new();
+        Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new();
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -101,7 +101,7 @@ namespace Utilities.Interfaces
         /// <param name="parameters">SQL parameters according to the sql parameter.</param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute SELECT SQL query and return DataTable in an asynchronous manner
         /// </summary>
@@ -110,7 +110,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute SELECT SQL query and return a string in asynchronous manner
         /// </summary>
@@ -119,7 +119,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute SELECT SQL query and return a scalar object
         /// </summary>
@@ -129,7 +129,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
         /// <summary>
         /// Execute any non-DML SQL Query
         /// </summary>
@@ -138,6 +138,6 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameter> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text);
+        Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<TParameter>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text);
     }
 }

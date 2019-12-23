@@ -155,7 +155,7 @@ namespace Utilities.Shared
         /// <param name="source"></param>
 
         /// <returns></returns>
-        public static Stack<T> ToStack<T>(this IEnumerable<T> source)
+        public static Stack<T>? ToStack<T>(this IEnumerable<T> source)
         {
             if (source == null) return null;
             var stack = new Stack<T>(source);
@@ -169,7 +169,7 @@ namespace Utilities.Shared
         /// <param name="source"></param>
 
         /// <returns></returns>        
-        public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
+        public static Queue<T>? ToQueue<T>(this IEnumerable<T> source)
         {
             if (source == null) return null;
             var queue = new Queue<T>(source);
@@ -182,10 +182,11 @@ namespace Utilities.Shared
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static DataTable ToDataTable<T>(this IEnumerable<T> source)
+        public static DataTable? ToDataTable<T>(this IEnumerable<T> source)
         {
             if (source == null) return default;
             var properties = GenericExtension.CompileGetter<T>();
+            if (properties == null) return default;
             var typeName = typeof(T).TableNameAttributeValidate();
             var dt = new DataTable(typeName);
             foreach (var property in properties)

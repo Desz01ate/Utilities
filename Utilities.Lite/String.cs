@@ -21,13 +21,14 @@ namespace Utilities
         {
             if (input.IsEmpty)
             {
-                throw new ArgumentException("Input string must not be null or empty.");
+                throw new ArgumentNullException(nameof(input));
             }
             bool upperNextChar = true;
             if (upperAllWords)
             {
                 var length = input.Length;
                 Span<char> span = input.Length < 1024 ? stackalloc char[length] : new char[length];
+                var test = span[1..2];
                 for (var idx = 0; idx < length; idx++)
                 {
                     var chr = input[idx];

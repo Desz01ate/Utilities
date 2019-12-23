@@ -133,7 +133,7 @@ namespace Utilities
         {
             if (obj == null)
             {
-                throw new ArgumentNullException("Object must not be null.");
+                throw new ArgumentNullException(nameof(obj));
             }
             if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("json"))
             {
@@ -154,7 +154,7 @@ namespace Utilities
         {
             if (obj == null && obj.Count() == 0)
             {
-                throw new ArgumentNullException("Object must not be null and must contains atleast one element.");
+                throw new ArgumentNullException(nameof(obj));
             }
             if (string.IsNullOrWhiteSpace(path) || !path.ToLower().EndsWith("csv"))
             {

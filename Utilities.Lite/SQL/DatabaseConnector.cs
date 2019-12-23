@@ -76,7 +76,7 @@ namespace Utilities.SQL
         /// Shortcut for this.Connection.BeginTransaction()
         /// </summary>
         /// <returns></returns>
-        public IDbTransaction BeginTransaction()
+        public IDbTransaction? BeginTransaction()
         {
             return Connection.BeginTransaction();
         }
@@ -86,7 +86,7 @@ namespace Utilities.SQL
         /// </summary>
         /// <param name="isolationLevel">Specified isolation level.</param>
         /// <returns></returns>
-        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel)
+        public IDbTransaction? BeginTransaction(IsolationLevel isolationLevel)
         {
             return Connection.BeginTransaction(isolationLevel);
         }
@@ -101,7 +101,7 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
 
-        public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
@@ -128,7 +128,7 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of dynamic object</returns>
 
-        public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
@@ -216,7 +216,7 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
 
-        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
@@ -271,7 +271,7 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             T result;
 
@@ -360,7 +360,7 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual async Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async Task<object> ExecuteScalarAsync(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             object result;
             using (var command = Connection.CreateCommand())
@@ -388,7 +388,7 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             using (var command = Connection.CreateCommand())
             {
@@ -417,7 +417,7 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameterType> parameters = null, IDbTransaction transaction = null, CommandType commandType = CommandType.Text)
+        public async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
@@ -473,7 +473,7 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<TParameterType>?? parameters = null, IDbTransaction?? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             await using var command = Connection.CreateCommand();
             command.CommandText = sql;
@@ -502,7 +502,7 @@ namespace Utilities.SQL
         /// <param name="transaction"></param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<TParameterType>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<TParameterType>?? parameters = null, IDbTransaction?? transaction = null, CommandType commandType = CommandType.Text)
         {
             await using var command = Connection.CreateCommand();
 
