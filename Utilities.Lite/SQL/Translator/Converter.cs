@@ -19,11 +19,11 @@ namespace Utilities.SQL.Translator
         private static Func<IDataReader, T> _converter;
         private readonly IDataReader _dataReader;
 
-        private Func<IDataReader, T> GetMapFunc()
+        private Func<IDataReader, T> CompileMapperFunction()
         {
             var exps = new List<Expression>();
 
-            var paramExp = Expression.Parameter(typeof(IDataRecord), "datareader");
+            var dataReaderExprParam = Expression.Parameter(typeof(IDataRecord), "datareader");
 
             var targetExp = Expression.Variable(typeof(T));
             //var target = new T();
@@ -33,7 +33,7 @@ namespace Utilities.SQL.Translator
             var indexerInfo = typeof(IDataRecord).GetProperty("Item", new[] { typeof(int) });
 
             var columnNames = Enumerable.Range(0, _dataReader.FieldCount)
-                                        .Select(i => new { i, name = _dataReader.GetName(i) });
+                                        .Select(i => new { index = i, name = _dataReader.GetName(i) });
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var column in columnNames)
             {
@@ -42,13 +42,11 @@ namespace Utilities.SQL.Translator
                 if (property == null)
                     continue;
 
-                var readerIndex = Expression.Constant(column.i);
+                var readerIndex = Expression.Constant(column.index);
                 // equivalent to datareader[(int)readerIndex] where datareader is incoming parameter.
-                var valueExpr =
-                    Expression.MakeIndex(
-                    paramExp, indexerInfo, new[] { readerIndex });
+                var valueExpr = Expression.MakeIndex(dataReaderExprParam, indexerInfo, new[] { readerIndex });
 
-                var actualType = _dataReader.GetFieldType(column.i);
+                var actualType = _dataReader.GetFieldType(column.index);
                 Expression safeCastExpression;
                 //if property type in model doesn't match the underlying type in SQL, we first convert into actual SQL type.
                 if (actualType != property.PropertyType)
@@ -60,7 +58,7 @@ namespace Utilities.SQL.Translator
                 {
                     safeCastExpression = valueExpr;
                 }
-                var isReaderDbNull = Expression.Call(paramExp, "IsDBNull", null, readerIndex);
+                var isReaderDbNull = Expression.Call(dataReaderExprParam, "IsDBNull", null, readerIndex);
                 var propertyExpression = Expression.Property(targetExp, property);
                 /*
                  if(datareader.IsDBNull((int)readerIndex){
@@ -75,15 +73,12 @@ namespace Utilities.SQL.Translator
                                                 Expression.Assign(propertyExpression, Expression.Convert(safeCastExpression, property.PropertyType)
                                              )
                                      );
-
-
-
                 exps.Add(assignmentBlock);
             }
             //return target;
             exps.Add(targetExp);
             var func = Expression.Lambda<Func<IDataReader, T>>(
-                Expression.Block(new[] { targetExp }, exps), paramExp);
+                Expression.Block(new[] { targetExp }, exps), dataReaderExprParam);
             return func.Compile();
         }
 
@@ -91,8 +86,7 @@ namespace Utilities.SQL.Translator
         {
             this._dataReader = dataReader;
             if (_converter != null) return;
-            var func = GetMapFunc();
-            _converter = func;
+            _converter = CompileMapperFunction();
         }
         public T GenerateObject()
         {

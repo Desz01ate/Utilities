@@ -35,6 +35,18 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.#ctor(System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="limitSize"></param>
+        </member>
+        <member name="M:Utilities.Classes.CircularQueue`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="limitSize"></param>
+        </member>
         <member name="M:Utilities.Classes.CircularQueue`1.Enqueue(`0)">
             <summary>
             Enqueue element into the last of sequence.
@@ -136,12 +148,136 @@
             Contains information of member of dynamic object.
             </summary>
         </member>
+        <member name="T:Utilities.Classes.PropertyGetterInfo`1">
+            <summary>
+            Custom class which reflect the characteristic of <seealso cref="T:System.Reflection.PropertyInfo"/> GetValue while maintain better memory footprint and execution speed.
+            </summary>
+            <typeparam name="TSource"></typeparam>
+        </member>
+        <member name="F:Utilities.Classes.PropertyGetterInfo`1.Name">
+            <summary>
+            Gets the name of current member.
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.PropertyGetterInfo`1.FieldName">
+            <summary>
+            Gets the <seealso cref="T:Utilities.Attributes.SQL.FieldAttribute"/> value of current member.
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.PropertyGetterInfo`1.PropertyType">
+            <summary>
+            Gets the type of this property.
+            </summary>
+        </member>
+        <member name="M:Utilities.Classes.PropertyGetterInfo`1.GetValue(`0)">
+            <summary>
+            Returns the property value of a specified object.
+            </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utilities.Classes.PropertySetterInfo`1">
+            <summary>
+            Custom class which reflect the characteristic of <seealso cref="T:System.Reflection.PropertyInfo"/> SetValue while maintain better memory footprint and execution speed.
+            </summary>
+            <typeparam name="TSource"></typeparam>
+        </member>
+        <member name="F:Utilities.Classes.PropertySetterInfo`1.Name">
+            <summary>
+            Gets the name of current member.
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.PropertySetterInfo`1.FieldName">
+            <summary>
+            Gets the <seealso cref="T:Utilities.Attributes.SQL.FieldAttribute"/> value of current member.
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.PropertySetterInfo`1.PropertyType">
+            <summary>
+            Gets the type of this property.
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.PropertySetterInfo`1.PropertyIndex">
+            <summary>
+            Gets the index of this property.
+            </summary>
+        </member>
         <member name="M:Utilities.Classes.PropertySetterInfo`1.SetValue(`0,System.Object)">
             <summary>
             Sets the property value of a specified object.
             </summary>
             <param name="source"></param>
             <param name="value"></param>
+        </member>
+        <member name="T:Utilities.Enum.FormatSpecifier">
+            <summary>
+            Standard numeric format strings are used to format common numeric types (https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings#the-currency-c-format-specifier)
+            </summary>
+        </member>
+        <member name="F:Utilities.Enum.FormatSpecifier.Value">
+            <summary>
+            Inner value for current format.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.Currency">
+            <summary>
+            The "C" (or currency) format specifier converts a number to a string that represents a currency amount. 
+            The precision specifier indicates the desired number of decimal places in the result string. 
+            If the precision specifier is omitted, the default precision is defined by the NumberFormatInfo.CurrencyDecimalDigits property.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.Decimal">
+            <summary>
+            The "D" (or decimal) format specifier converts a number to a string of decimal digits (0-9), prefixed by a minus sign if the number is negative. 
+            This format is supported only for integral types.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.Exponential">
+            <summary>
+            The exponential ("E") format specifier converts a number to a string of the form "-d.ddd…E+ddd" or "-d.ddd…e+ddd", where each "d" indicates a digit (0-9). 
+            The string starts with a minus sign if the number is negative. 
+            Exactly one digit always precedes the decimal point.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.FixedPoint">
+            <summary>
+            The fixed-point ("F") format specifier converts a number to a string of the form "-ddd.ddd…" where each "d" indicates a digit (0-9). 
+            The string starts with a minus sign if the number is negative.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.General">
+            <summary>
+            The general ("G") format specifier converts a number to the more compact of either fixed-point or scientific notation, depending on the type of the number and whether a precision specifier is present. 
+            The precision specifier defines the maximum number of significant digits that can appear in the result string. 
+            If the precision specifier is omitted or zero, the type of the number determines the default precision, as indicated in the following table.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.Numeric">
+            <summary>
+            The numeric ("N") format specifier converts a number to a string of the form "-d,ddd,ddd.ddd…", where "-" indicates a negative number symbol if required, "d" indicates a digit (0-9), "," indicates a group separator, and "." indicates a decimal point symbol. 
+            The precision specifier indicates the desired number of digits after the decimal point. 
+            If the precision specifier is omitted, the number of decimal places is defined by the current NumberFormatInfo.NumberDecimalDigits property.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.Percent">
+            <summary>
+            The percent ("P") format specifier multiplies a number by 100 and converts it to a string that represents a percentage. 
+            The precision specifier indicates the desired number of decimal places. 
+            If the precision specifier is omitted, the default numeric precision supplied by the current PercentDecimalDigits property is used.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.RoundTrip">
+            <summary>
+            The round-trip ("R") format specifier attempts to ensure that a numeric value that is converted to a string is parsed back into the same numeric value. 
+            This format is supported only for the Single, Double, and BigInteger types.
+            </summary>
+        </member>
+        <member name="P:Utilities.Enum.FormatSpecifier.Hexadecimal">
+            <summary>
+            The hexadecimal ("X") format specifier converts a number to a string of hexadecimal digits. 
+            The case of the format specifier indicates whether to use uppercase or lowercase characters for hexadecimal digits that are greater than 9. 
+            For example, use "X" to produce "ABCDEF", and "x" to produce "abcdef". This format is supported only for integral types.
+            </summary>
         </member>
         <member name="T:Utilities.Enum.Language">
             <summary>
@@ -2215,7 +2351,7 @@
             <param name="toLanguage">To language.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.String.NumberFormat(System.Decimal,System.String)">
+        <member name="M:Utilities.String.NumberFormat(System.Int32,Utilities.Enum.FormatSpecifier)">
             <summary>
             Convert given value into a number format.
             </summary>
@@ -2223,7 +2359,7 @@
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.String.NumberFormat(System.Int32,System.String)">
+        <member name="M:Utilities.String.NumberFormat(System.Double,Utilities.Enum.FormatSpecifier)">
             <summary>
             Convert given value into a number format.
             </summary>
@@ -2231,7 +2367,7 @@
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.String.NumberFormat(System.Double,System.String)">
+        <member name="M:Utilities.String.NumberFormat(System.Single,Utilities.Enum.FormatSpecifier)">
             <summary>
             Convert given value into a number format.
             </summary>
@@ -2239,7 +2375,7 @@
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.String.NumberFormat(System.Single,System.String)">
+        <member name="M:Utilities.String.NumberFormat(System.Decimal,Utilities.Enum.FormatSpecifier)">
             <summary>
             Convert given value into a number format.
             </summary>
@@ -2247,7 +2383,7 @@
             <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.String.NumberFormat(System.String,System.String)">
+        <member name="M:Utilities.String.NumberFormat(System.String,Utilities.Enum.FormatSpecifier)">
             <summary>
             Convert given value into a number format.
             </summary>

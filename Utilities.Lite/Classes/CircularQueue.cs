@@ -15,12 +15,20 @@ namespace Utilities.Classes
     {
         private readonly ConcurrentQueue<T> q;
         private readonly int limit;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="limitSize"></param>
         public CircularQueue(int limitSize)
         {
             if (limitSize <= 0) throw new ArgumentOutOfRangeException(nameof(limitSize));
             limit = limitSize;
             q = new ConcurrentQueue<T>(new T[limit]);
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="limitSize"></param>
         public CircularQueue(IEnumerable<T> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

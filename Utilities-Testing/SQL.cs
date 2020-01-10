@@ -64,7 +64,7 @@ namespace Utilities.Testing
                     var affectedSelectScalar = connection.Query<TestTable>();
                     Assert.AreEqual(affectedSelectScalar.Count(), 0);
 
-                    Assert.AreEqual(datas.Count(), connection.InsertMultiple(datas));
+                    Assert.AreEqual(datas.Count(), connection.InsertMany(datas));
                     Assert.Pass();
                 }
                 finally

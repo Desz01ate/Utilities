@@ -32,6 +32,9 @@ namespace Utilities.Shared
     }
     public static partial class GenericExtension
     {
+        private readonly static Dictionary<Type, object> getterCache = new Dictionary<Type, object>();
+        private readonly static Dictionary<Type, object> setterCache = new Dictionary<Type, object>();
+
         /// <summary>
         /// Compiled version of PropertyInfo.GetValue().
         /// </summary>
@@ -51,6 +54,10 @@ namespace Utilities.Shared
         public static PropertyGetterInfo<TSource>[]? CompileGetter<TSource>(PropertyInfo[] properties)
         {
             if (properties is null) return null;
+            if (getterCache.TryGetValue(typeof(TSource), out var info))
+            {
+                return info as PropertyGetterInfo<TSource>[];
+            }
             var funcs = new PropertyGetterInfo<TSource>[properties.Length];
             for (var idx = 0; idx < properties.Length; idx++)
             {
@@ -61,6 +68,7 @@ namespace Utilities.Shared
                 var psi = new PropertyGetterInfo<TSource>(property, func);
                 funcs[idx] = psi;
             }
+            getterCache.Add(typeof(TSource), funcs);
             return funcs;
         }
         /// <summary>
@@ -94,7 +102,10 @@ namespace Utilities.Shared
         public static PropertySetterInfo<TSource>[]? CompileSetter<TSource>(PropertyInfo[] properties)
         {
             if (properties is null) return null;
-
+            if (setterCache.TryGetValue(typeof(TSource), out var info))
+            {
+                return info as PropertySetterInfo<TSource>[];
+            }
             var actions = new PropertySetterInfo<TSource>[properties.Length];
             for (var idx = 0; idx < properties.Length; idx++)
             {
@@ -120,6 +131,7 @@ namespace Utilities.Shared
                 var psi = new PropertySetterInfo<TSource>(property, idx, action.Compile());
                 actions[idx] = psi;
             }
+            setterCache.Add(typeof(TSource), actions);
             return actions;
         }
     }

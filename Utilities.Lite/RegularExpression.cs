@@ -9,9 +9,9 @@ namespace Utilities
     /// </summary>
     public static class RegularExpression
     {
-        private static Match RegexMatch(string input, string pattern)
+        private static bool RegexMatch(string input, string pattern)
         {
-            return new Regex(pattern).Match(input);
+            return Regex.IsMatch(input, pattern);
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <param name="pattern">Regex pattern to check whether the input is matched or not</param>
         /// <returns></returns>
-        public static bool IsPhoneNumber(string input, string pattern = @"^(0\d{1}|\+66)\d{8,9}$") => RegexMatch(input, pattern).Success;
+        public static bool IsPhoneNumber(string input, string pattern = @"^(0\d{1}|\+66)\d{8,9}$") => RegexMatch(input, pattern);
 
         /// <summary>
         /// Check if the given input is matching the email
@@ -28,21 +28,21 @@ namespace Utilities
         /// <param name="input">Input string</param>
         /// <param name="pattern">Regex pattern to check whether the input is matched or not</param>
         /// <returns></returns>
-        public static bool IsEmail(string input, string pattern = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?") => RegexMatch(input, pattern).Success;
+        public static bool IsEmail(string input, string pattern = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?") => RegexMatch(input, pattern);
 
         /// <summary>
         /// Check if the given input is matching the number-only
         /// </summary>
         /// <param name="input">Input string</param>
         /// <returns></returns>
-        public static bool IsOnlyDigit(string input) => RegexMatch(input, @"^\d+$").Success;
+        public static bool IsOnlyDigit(string input) => RegexMatch(input, @"^\d+$");
         /// <summary>
         /// Check if the given input is matching the number-only within specified length.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static bool IsOnlyDigit(string input, int length) => RegexMatch(input, $@"^\d{{{length}}}$").Success;
+        public static bool IsOnlyDigit(string input, int length) => RegexMatch(input, $@"^\d{{{length}}}$");
         /// <summary>
         /// Check if the given input is matching the number-only within the length boundary.
         /// </summary>
@@ -50,14 +50,14 @@ namespace Utilities
         /// <param name="lengthFrom"></param>
         /// <param name="lengthTo"></param>
         /// <returns></returns>
-        public static bool IsOnlyDigit(string input, int lengthFrom, int lengthTo) => RegexMatch(input, $@"^\d{{{lengthFrom},{lengthTo}}}").Success;
+        public static bool IsOnlyDigit(string input, int lengthFrom, int lengthTo) => RegexMatch(input, $@"^\d{{{lengthFrom},{lengthTo}}}");
         //\u0E00-\u0E7F is a Unicode for Thai language
         /// <summary>
         /// Check if the given input is matching the string-only (English and Thai alphabetics combination)
         /// </summary>
         /// <param name="input">Input string</param>
         /// <returns></returns>
-        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z\s]+$").Success;
+        public static bool IsOnlyText(string input) => RegexMatch(input, @"^[\u0E00-\u0E7Fa-zA-Z\s]+$");
         /// <summary>
         /// Check if the given input is matching the string-only in specific language (Support English and Thai language only).
         /// </summary>
@@ -66,8 +66,8 @@ namespace Utilities
         /// <returns></returns>
         public static bool IsOnlyText(string input, Language language) => language switch
         {
-            Language.English => RegexMatch(input, @"^[a-zA-Z\s]+$").Success,
-            Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F\s]+$").Success,
+            Language.English => RegexMatch(input, @"^[a-zA-Z\s]+$"),
+            Language.Thai => RegexMatch(input, @"^[\u0E00-\u0E7F\s]+$"),
             _ => throw new System.NotSupportedException($"{language.ToString()} is not supported.")
         };
         private const int ThaiIdLength = 13;

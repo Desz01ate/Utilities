@@ -1,16 +1,33 @@
 ﻿using System;
 using System.Reflection;
+using Utilities.Attributes.SQL;
 using Utilities.Shared;
 
 namespace Utilities.Classes
 {
+    /// <summary>
+    /// Custom class which reflect the characteristic of <seealso cref="PropertyInfo"/> SetValue while maintain better memory footprint and execution speed.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
     public sealed class PropertySetterInfo<TSource>
     {
-        private Action<TSource, object> Setter { get; }
-        public string Name { get; }
-        public string FieldName { get; }
-        public Type PropertyType { get; }
-        public int PropertyIndex { get; }
+        private readonly Action<TSource, object> Setter;
+        /// <summary>
+        /// Gets the name of current member.
+        /// </summary>
+        public readonly string Name;
+        /// <summary>
+        /// Gets the <seealso cref="FieldAttribute"/> value of current member.
+        /// </summary>
+        public readonly string FieldName;
+        /// <summary>
+        /// Gets the type of this property.
+        /// </summary>
+        public readonly Type PropertyType;
+        /// <summary>
+        /// Gets the index of this property.
+        /// </summary>
+        public readonly int PropertyIndex;
         internal PropertySetterInfo(PropertyInfo propertyInfo, int propertyIndex, Action<TSource, object> func)
         {
             Name = propertyInfo.Name;

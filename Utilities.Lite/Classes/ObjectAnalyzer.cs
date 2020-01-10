@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Utilities.Classes
 {
@@ -37,11 +38,16 @@ namespace Utilities.Classes
         /// <param name="obj"></param>
         public DynamicObjectAnalyzer(dynamic obj)
         {
+            if (obj is IList<dynamic> list)
+            {  
+                obj = list.FirstOrDefault();
+            }
             if (obj is IDictionary<string, object> dict)
             {
                 Members = new Dictionary<string, DynamicObjectMetadata>();
                 ConstructMembers(dict);
             }
+
         }
         /// <summary>
         /// Constructor
@@ -125,6 +131,23 @@ namespace Utilities.Classes
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+        public void SaveModel(string filePath, string className = null)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+            var sb = new StringBuilder();
+            sb.AppendLine("using System;");
+            sb.AppendLine($"class {className ?? "Class1"}");
+            sb.AppendLine(@"{");
+            foreach (var member in Members)
+            {
+                sb.AppendLine($"    public {member.Value.Type} {member.Value.Name} {{ get; set; }}");
+            }
+            sb.AppendLine(@"}");
+            System.IO.File.WriteAllText(filePath, sb.ToString());
         }
     }
 

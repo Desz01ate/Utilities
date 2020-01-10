@@ -4,19 +4,61 @@
         <name>Utilities.Asp.Core</name>
     </assembly>
     <members>
-        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.Authenticate(System.String)">
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.RefreshToken(Utilities.Asp.Core.Models.JwtTokenEntity)">
+            <summary>
+            Post method for request new JWT with expired access token and refresh token.
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.Authenticate(System.String,System.String)">
             <summary>
             Get method for request JWT with given user id.
             </summary>
             <param name="id">User ID</param>
             <returns>Response of request in form of { success, message , data }</returns>
         </member>
-        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.VerifyAuthentication(System.String)">
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.Revoke(System.String)">
+            <summary>
+            Delete method for revoke access token.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.GenerateRefreshToken">
+            <summary>
+            Generate pseudo-random refresh token to use alongside access token.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.GetPrincipalFromExpiredToken(System.String,Microsoft.IdentityModel.Tokens.TokenValidationParameters)">
+            <summary>
+            Retrieve jwt principal from expired token, useful for re-generate new token.
+            </summary>
+            <param name="token"></param>
+            <param name="tokenValidationParameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.VerifyAuthentication(System.String,System.String)">
             <summary>
             Verify any request for JWT from Authenticate method by given id and return if the user is valid or not
             </summary>
             <param name="id">User ID</param>
             <returns>boolean which indicate whether the user is allow to get the JWT or not</returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.RetrieveRefreshTokenFromPreferredDataSource(System.String)">
+            <summary>
+            Retrieve refresh token correspond to username from preferred datasource.
+            </summary>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.SaveRefreshTokenToPreferredDataSource(System.String,System.String)">
+            <summary>
+            Save refresh token alongside username to any preferred datasource.
+            </summary>
+            <param name="username"></param>
+            <param name="refreshToken"></param>
         </member>
         <member name="T:Utilities.Asp.Core.Based.SignalrController`1">
             <summary>
@@ -153,6 +195,72 @@
             <param name="context"></param>
             <param name="type"></param>
             <returns></returns>
+        </member>
+        <member name="T:Utilities.Asp.Core.Models.Response">
+            <summary>
+            Defined set of basic properties required for most HTTP response.
+            </summary>
+        </member>
+        <member name="P:Utilities.Asp.Core.Models.Response.Success">
+            <summary>
+            Indicated that the request has been successfully processed.
+            </summary>
+        </member>
+        <member name="P:Utilities.Asp.Core.Models.Response.Message">
+            <summary>
+            Optional message.
+            </summary>
+        </member>
+        <member name="P:Utilities.Asp.Core.Models.Response.Data">
+            <summary>
+            Optional data.
+            </summary>
+        </member>
+        <member name="M:Utilities.Asp.Core.Models.Response.#ctor(System.Boolean,System.String,System.Object)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="success"></param>
+            <param name="message"></param>
+            <param name="data"></param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Models.Response.#ctor">
+            <summary>
+            Ctor
+            </summary>
+        </member>
+        <member name="T:Utilities.Asp.Core.Models.Response`1">
+            <summary>
+            Defined set of basic properties required for most HTTP response with generic data-object constraint.
+            </summary>
+        </member>
+        <member name="P:Utilities.Asp.Core.Models.Response`1.Success">
+            <summary>
+            Indicated that the request has been successfully processed.
+            </summary>
+        </member>
+        <member name="P:Utilities.Asp.Core.Models.Response`1.Message">
+            <summary>
+            Optional message.
+            </summary>
+        </member>
+        <member name="P:Utilities.Asp.Core.Models.Response`1.Data">
+            <summary>
+            Optional data.
+            </summary>
+        </member>
+        <member name="M:Utilities.Asp.Core.Models.Response`1.#ctor(System.Boolean,System.String,`0)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="success"></param>
+            <param name="message"></param>
+            <param name="data"></param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Models.Response`1.#ctor">
+            <summary>
+            Ctor
+            </summary>
         </member>
     </members>
 </doc>

@@ -24,15 +24,14 @@ namespace Utilities
                 throw new ArgumentNullException(nameof(input));
             }
             bool upperNextChar = true;
+            var length = input.Length;
+            Span<char> span = input.Length < 1024 ? stackalloc char[length] : new char[length];
             if (upperAllWords)
             {
-                var length = input.Length;
-                Span<char> span = input.Length < 1024 ? stackalloc char[length] : new char[length];
-                var test = span[1..2];
                 for (var idx = 0; idx < length; idx++)
                 {
                     var chr = input[idx];
-                    if (chr == seperator)
+                    if (chr.CompareTo(seperator) == 0)
                     {
                         upperNextChar = true;
                         span[idx] = chr;
@@ -41,19 +40,20 @@ namespace Utilities
                     if (upperNextChar)
                     {
                         upperNextChar = false;
-                        span[idx] = char.ToUpper(chr);
+                        span[idx] = char.ToUpperInvariant(chr);
                     }
                     else
                     {
                         span[idx] = chr;
                     }
                 }
-                return span.ToString();
             }
             else
             {
-                return $@"{char.ToUpper(input[0])}{input.Slice(1).ToString()}";
+                input.CopyTo(span);
+                span[0] = char.ToUpperInvariant(span[0]);
             }
+            return span.ToString();
         }
 
         /// <summary>
@@ -159,42 +159,51 @@ namespace Utilities
         /// <param name="value">Value</param>
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
-        public static string NumberFormat(decimal value, string numericFormat = "N")
+        public static string NumberFormat(int value, FormatSpecifier numericFormat)
         {
-            return string.Format("{0:" + numericFormat + "}", value);
+            var formatValue = numericFormat.Value;
+            return value.ToString(formatValue);
         }
-
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
         /// <param name="value">Value</param>
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
-        public static string NumberFormat(int value, string numericFormat = "N") => NumberFormat((decimal)value, numericFormat);
-
+        public static string NumberFormat(double value, FormatSpecifier numericFormat)
+        {
+            var formatValue = numericFormat.Value;
+            return value.ToString(formatValue);
+        }
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
         /// <param name="value">Value</param>
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
-        public static string NumberFormat(double value, string numericFormat = "N") => NumberFormat((decimal)value, numericFormat);
-
+        public static string NumberFormat(float value, FormatSpecifier numericFormat)
+        {
+            var formatValue = numericFormat.Value;
+            return value.ToString(formatValue);
+        }
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
         /// <param name="value">Value</param>
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
-        public static string NumberFormat(float value, string numericFormat = "N") => NumberFormat((decimal)value, numericFormat);
-
+        public static string NumberFormat(decimal value, FormatSpecifier numericFormat)
+        {
+            var formatValue = numericFormat.Value;
+            return value.ToString(formatValue);
+        }
         /// <summary>
         /// Convert given value into a number format.
         /// </summary>
         /// <param name="value">Value</param>
         /// <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
         /// <returns></returns>
-        public static string NumberFormat(string value, string numericFormat = "N")
+        public static string NumberFormat(string value, FormatSpecifier numericFormat)
         {
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
             var success = decimal.TryParse(value, out var result);
