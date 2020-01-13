@@ -3,6 +3,9 @@ using System;
 
 namespace Utilities.Asp.Core.Extensions
 {
+    /// <summary>
+    /// Provide extension methods for FilterContext class.
+    /// </summary>
     public static class FilterContextExtension
     {
         /// <summary>
@@ -49,7 +52,7 @@ namespace Utilities.Asp.Core.Extensions
         }
 
         /// <summary>
-        /// Get dependency injection object which is injected from startup as a generic object"/>.
+        /// Get dependency injection object which is injected from startup as a generic object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>

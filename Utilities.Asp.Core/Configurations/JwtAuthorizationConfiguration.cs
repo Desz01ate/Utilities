@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Utilities.Asp.Core.Configurations
 {
+    /// <summary>
+    /// Provide pre-configuration for JWT.
+    /// </summary>
     public static class JwtAuthorizationConfiguration
     {
         /// <summary>

@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace Utilities.Asp.Core.Configurations
 {
+    /// <summary>
+    /// Provide pre-configuration for Swagger.
+    /// </summary>
     public static class SwaggerConfiguration
     {
         /// <summary>

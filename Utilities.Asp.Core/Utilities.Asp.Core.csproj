@@ -4,14 +4,14 @@
     <TargetFrameworks>netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.2-beta1</Version>
+    <Version>0.0.18</Version>
     <PackageReleaseNotes>+ Add 'refresh token' to JWT controller
-+ Add way to refresh/revoke acess token to JWT controller</PackageReleaseNotes>
++ Add way to refresh acess token to JWT controller</PackageReleaseNotes>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Asp.Core\Utilities.Asp.Core.xml</DocumentationFile>
   </PropertyGroup>
 

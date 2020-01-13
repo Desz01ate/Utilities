@@ -4,6 +4,49 @@
         <name>Utilities.Asp.Core</name>
     </assembly>
     <members>
+        <member name="T:Utilities.Asp.Core.Attributes.AuthorizationBasedAttribute">
+            <summary>
+            Abstract class that provide required signature for manual authorization handler.
+            </summary>
+        </member>
+        <member name="M:Utilities.Asp.Core.Attributes.AuthorizationBasedAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            Called after the action executes, before the action result.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Utilities.Asp.Core.Attributes.AuthorizationBasedAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Called before the action executes, after model binding is complete.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.JwtIssuer">
+            <summary>
+            Issuer (creator) of JWT token.
+            </summary>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.JwtAudience">
+            <summary>
+            Audience (receiver) of JWT token.
+            </summary>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.JwtKey">
+            <summary>
+            JWT secure key.
+            </summary>
+        </member>
+        <member name="F:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.JwtExpireMinutes">
+            <summary>
+            JWT expire after in minutes.
+            </summary>
+        </member>
+        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="configuration"></param>
+        </member>
         <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.RefreshToken(Utilities.Asp.Core.Models.JwtTokenEntity)">
             <summary>
             Post method for request new JWT with expired access token and refresh token.
@@ -17,13 +60,6 @@
             </summary>
             <param name="id">User ID</param>
             <returns>Response of request in form of { success, message , data }</returns>
-        </member>
-        <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.Revoke(System.String)">
-            <summary>
-            Delete method for revoke access token.
-            </summary>
-            <param name="data"></param>
-            <returns></returns>
         </member>
         <member name="M:Utilities.Asp.Core.Based.JwtAuthorizationBasedController.GenerateRefreshToken">
             <summary>
@@ -111,6 +147,11 @@
             SignalR hub context.
             </summary>
         </member>
+        <member name="T:Utilities.Asp.Core.Configurations.JwtAuthorizationConfiguration">
+            <summary>
+            Provide pre-configuration for JWT.
+            </summary>
+        </member>
         <member name="M:Utilities.Asp.Core.Configurations.JwtAuthorizationConfiguration.AddJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Set required authentication and bearer for JWT, this method need to be call on ConfigureServices on Startup.cs
@@ -135,6 +176,11 @@
             </summary>
             <param name="application"></param>
         </member>
+        <member name="T:Utilities.Asp.Core.Configurations.SwaggerConfiguration">
+            <summary>
+            Provide pre-configuration for Swagger.
+            </summary>
+        </member>
         <member name="M:Utilities.Asp.Core.Configurations.SwaggerConfiguration.AddSwaggerServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Collections.Generic.IDictionary{System.String,Swashbuckle.AspNetCore.Swagger.Info})">
             <summary>
             Add Swagger generate options to IServiceCollection, this method must be called on ConfigureServices method in order to take effects.
@@ -157,6 +203,11 @@
             </summary>
             <param name="application"></param>
             <param name="action"></param>
+        </member>
+        <member name="T:Utilities.Asp.Core.Extensions.FilterContextExtension">
+            <summary>
+            Provide extension methods for FilterContext class.
+            </summary>
         </member>
         <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetRequestHeader(Microsoft.AspNetCore.Mvc.Filters.FilterContext,System.String)">
             <summary>
@@ -182,7 +233,7 @@
         </member>
         <member name="M:Utilities.Asp.Core.Extensions.FilterContextExtension.GetDependencyInjectionInstance``1(Microsoft.AspNetCore.Mvc.Filters.FilterContext)">
             <summary>
-            Get dependency injection object which is injected from startup as a generic object"/>.
+            Get dependency injection object which is injected from startup as a generic object.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="context"></param>

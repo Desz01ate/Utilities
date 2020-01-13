@@ -14,11 +14,26 @@ namespace Utilities.Asp.Core.Based
     [ApiController]
     public abstract class JwtAuthorizationBasedController : ControllerBase
     {
-        protected string _jwtIssuer { get; set; }
-        protected string _jwtAudience { get; set; }
-        protected string _jwtKey { get; set; }
-        protected double _jwtExpiresMinute { get; set; }
-        //protected readonly Dictionary
+        /// <summary>
+        /// Issuer (creator) of JWT token.
+        /// </summary>
+        protected readonly string JwtIssuer;
+        /// <summary>
+        /// Audience (receiver) of JWT token.
+        /// </summary>
+        protected readonly string JwtAudience;
+        /// <summary>
+        /// JWT secure key.
+        /// </summary>
+        protected readonly string JwtKey;
+        /// <summary>
+        /// JWT expire after in minutes.
+        /// </summary>
+        protected readonly double JwtExpireMinutes;
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="configuration"></param>
         public JwtAuthorizationBasedController(IConfiguration configuration)
         {
             if (configuration == null)
@@ -29,10 +44,10 @@ namespace Utilities.Asp.Core.Based
             var jwtAudience = configuration["JwtAudience"];
             var jwtKey = configuration["JwtKey"];
             var jwtExpiresMinute = Convert.ToDouble(configuration["JwtExpireMinutes"]);
-            this._jwtIssuer = jwtIssuer;
-            this._jwtAudience = jwtAudience;
-            this._jwtKey = jwtKey;
-            this._jwtExpiresMinute = jwtExpiresMinute;
+            this.JwtIssuer = jwtIssuer;
+            this.JwtAudience = jwtAudience;
+            this.JwtKey = jwtKey;
+            this.JwtExpireMinutes = jwtExpiresMinute;
         }
         /// <summary>
         /// Post method for request new JWT with expired access token and refresh token.
@@ -78,16 +93,6 @@ namespace Utilities.Asp.Core.Based
                 ValidUntil = expires
             });
         }
-        /// <summary>
-        /// Delete method for revoke access token.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpDelete]
-        public virtual Response Revoke([FromQuery]string data)
-        {
-            throw new NotImplementedException();
-        }
         private string GenerateAccessToken(string id, out DateTime expires)
         {
             var claims = new List<Claim>
@@ -97,13 +102,12 @@ namespace Utilities.Asp.Core.Based
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            expires = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtExpiresMinute));/*DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));*/
-
+            expires = DateTime.Now.AddMinutes(Convert.ToDouble(JwtExpireMinutes));
             var token = new JwtSecurityToken(
-                issuer: _jwtIssuer,
-                audience: _jwtAudience,
+                issuer: JwtIssuer,
+                audience: JwtAudience,
                 claims: claims,
                 expires: expires,
                 signingCredentials: creds
@@ -135,7 +139,7 @@ namespace Utilities.Asp.Core.Based
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtKey)),
                 ValidateLifetime = false
             };
             var tokenHandler = new JwtSecurityTokenHandler();
