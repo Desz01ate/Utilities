@@ -216,7 +216,6 @@ namespace Utilities.SQL.Translator
                 sb.Append($"({field} IS NULL OR {field} = '')");
                 return m;
             }
-
             throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
         }
 
@@ -390,6 +389,7 @@ namespace Utilities.SQL.Translator
 
                     case ExpressionType.Constant:
                         var constantInvokedValue = CompileExpression(m);
+                        if (_previousVisitField == null) _previousVisitField = m.Member.Name;
                         _sqlParameters.Add(new TSqlParameter()
                         {
                             ParameterName = _previousVisitField,

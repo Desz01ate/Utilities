@@ -14,7 +14,7 @@
         ViewColumns,
         ProcedureParameters,
         Procedures,
-        IndexColums,
+        IndexColumns,
         Indexes,
         UserDefinedTypes,
         ForeignKeys,

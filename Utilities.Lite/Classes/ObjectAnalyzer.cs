@@ -39,7 +39,7 @@ namespace Utilities.Classes
         public DynamicObjectAnalyzer(dynamic obj)
         {
             if (obj is IList<dynamic> list)
-            {  
+            {
                 obj = list.FirstOrDefault();
             }
             if (obj is IDictionary<string, object> dict)
@@ -138,6 +138,7 @@ namespace Utilities.Classes
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
+            filePath = System.IO.Path.GetFullPath(filePath);
             var sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine($"class {className ?? "Class1"}");
