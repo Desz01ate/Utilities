@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.5</Version>
+    <Version>0.2.1.6-beta-001</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
@@ -22,7 +22,7 @@
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>signkey.pfx</AssemblyOriginatorKeyFile>
     <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>

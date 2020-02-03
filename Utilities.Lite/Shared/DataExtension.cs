@@ -32,7 +32,7 @@ namespace Utilities.Shared
         }
 
         internal static Dictionary<string, object> CRUDDataMapping<T>(T obj, SqlType type)
-            where T : class, new()
+            where T : class
         {
             var values = new Dictionary<string, object>();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
