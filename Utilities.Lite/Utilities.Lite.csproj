@@ -10,22 +10,25 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.6-beta-008</Version>
+    <Version>0.2.1.6</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>
-      [General]
-      + Add new struct 'DbParameterStruct' which will be used with non-generic DatabaseConnector.
+    <PackageReleaseNotes>**This version is a breaking change, read general section for more information**
 
-      [Sql]
+[General]
+- Remove IDatabaseConnector&lt;TDatabase,TParameterType&gt; and its related-class such as IDatabaseConnectorExtension etc. and replace with non-generic IDatabaseConnector.
++ All CRUD like Query,  Insert, Update and Delete are now separate as an extension method in Utilities.SQL.Extension.
++ Add new struct 'DbParameterStruct' which will be used with non-generic DatabaseConnector.
 
-      + Experiment with a new non-generic DatabaseConnector with non-generic IDabaseConnector altogether, this features is meant to bring more easy-to-consume to
-      consumer while also not breaking the current generic DatabaseConnector signature which mean you can easily adopt this new class into existing code.
-      + non-generic DatabaseConnector feature with new property 'AllowBuffer' which will affects how the data reader processing by cache it as a list rather than deferred execution until the iterator run,
-      this option allow you to keep iterate over the dataset again and again without the error of datareader is closed however, this feature will slow you down (and consume more memory) if the query return enormous data size.
-    </PackageReleaseNotes>
+[Sql]
++ 
++ Experiment with a new non-generic DatabaseConnector with non-generic IDabaseConnector altogether, this features is meant to bring more easy-to-consume to
+consumer while also not breaking the current generic DatabaseConnector signature which mean you can easily adopt this new class into existing code.
++ DatabaseConnector's ExecuteReader feature with new argument 'buffered' which will affects how the data reader processing by cache it as a list rather than deferred execution until the iterator run,
+this option allow you to keep iterate over the dataset again and again without the error of datareader is closed however, this feature will slow you down (and consume more memory) if the query return in enormous data size.
+</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
-using Utilities.SQL.Abstract;
 using Utilities.SQL.Translator;
 using Utilities.Structs;
 
 namespace Utilities.SQL.Extension
 {
+
+    #region NON-GENERIC
     /// <summary>
     /// Provide extension for SQL generate.
     /// </summary>
@@ -25,8 +24,8 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="top"></param>
         /// <returns></returns>
-        public static string SelectQueryGenerate<T>(int? top = null)
-            where T : class, new()
+        public static string SelectQueryGenerate<T>(this IDatabaseConnector connector, int? top = null)
+            where T : class
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var query = $"SELECT {(top.HasValue ? $"TOP({top.Value})" : "")} * FROM {tableName}";
@@ -40,12 +39,11 @@ namespace Utilities.SQL.Extension
         /// <param name="predicate"></param>
         /// <param name="top"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T, TParameterType>(DatabaseConnectorContractor connector, Expression<Func<T, bool>> predicate, int? top = null)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) SelectQueryGenerate<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null)
+            where T : class
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var translator = new ExpressionTranslator<T, TParameterType>(connector.SQLFunctionConfiguration);
+            var translator = new ExpressionTranslator<T>(connector.CompatibleFunctionName);
             var translateResult = translator.Translate(predicate);
             var query = string.Format("SELECT {0} * FROM {1} WHERE {2}", top.HasValue ? $"TOP({top.Value})" : "", tableName, translateResult.Expression);
             return (query, translateResult.Parameters);
@@ -57,19 +55,14 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) SelectQueryGenerate<T, TParameterType>(object primaryKey)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) SelectQueryGenerate<T>(this IDatabaseConnector connector, object primaryKey)
+            where T : class
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
             var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
-            var parameter = new TParameterType()
-            {
-                ParameterName = primaryKeyAttribute.Name,
-                Value = primaryKey
-            };
+            var parameter = new DbParameterStruct(primaryKeyAttribute.Name, primaryKey);
             return (query, new[] { parameter });
         }
 
@@ -79,9 +72,8 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T, TParameterType>(T obj)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) InsertQueryGenerate<T>(this IDatabaseConnector connector, T obj)
+            where T : class
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             var tableName = typeof(T).TableNameAttributeValidate();
@@ -90,11 +82,7 @@ namespace Utilities.SQL.Extension
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
                               ({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})";
-            var parameters = kvMapper.Select(field => new TParameterType()
-            {
-                ParameterName = $"@{field.Key}",
-                Value = field.Value
-            });
+            var parameters = kvMapper.Select(field => new DbParameterStruct($"@{field.Key}", field.Value));
             return (query, parameters);
         }
 
@@ -104,9 +92,8 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) InsertQueryGenerate<T, TParameterType>(IEnumerable<T> source)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) InsertQueryGenerate<T>(this IDatabaseConnector connector, IEnumerable<T> source)
+            where T : class
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var enumerable = source as T[] ?? source.ToArray();
@@ -115,7 +102,7 @@ namespace Utilities.SQL.Extension
             //values placeholder before append.
             var values = new List<string>();
 
-            var parameters = new List<TParameterType>();
+            var parameters = new List<DbParameterStruct>();
             var query = new StringBuilder($@"INSERT INTO {tableName}");
             query.Append("(");
             query.Append($"{string.Join(",", parametersMap.Select(field => field.Key))}");
@@ -128,7 +115,7 @@ namespace Utilities.SQL.Extension
                 // ReSharper disable AccessToModifiedClosure
                 var currentValueStatement = $"({string.Join(",", mapper.Select(x => $"@{x.Key}{idx}"))})";
                 values.Add(currentValueStatement);
-                var currentParameters = mapper.Select(x => new TParameterType() { ParameterName = $"@{x.Key}{idx}", Value = x.Value });
+                var currentParameters = mapper.Select(x => new DbParameterStruct($"@{x.Key}{idx}", x.Value));
                 parameters.AddRange(currentParameters);
                 // ReSharper restore AccessToModifiedClosure
 
@@ -143,16 +130,15 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) UpdateQueryGenerate<T, TParameterType>(T obj)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) UpdateQueryGenerate<T>(this IDatabaseConnector connector, T obj)
+            where T : class
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
             var parametersMap = DataExtension.CRUDDataMapping(obj, SqlType.Update);
 
-            var parameters = new List<TParameterType>();
+            var parameters = new List<DbParameterStruct>();
 
 
             var stringBuilder = new StringBuilder();
@@ -163,11 +149,7 @@ namespace Utilities.SQL.Extension
                 //if the parameter is not a primary key, add it to the SET block.
                 if (parameter.Key != primaryKey.Name)
                     setter.Add($"{parameter.Key} = @{parameter.Key}");
-                parameters.Add(new TParameterType()
-                {
-                    ParameterName = $"@{parameter.Key}",
-                    Value = parameter.Value
-                });
+                parameters.Add(new DbParameterStruct($"@{parameter.Key}", parameter.Value));
             }
             stringBuilder.AppendLine(string.Join(",", setter));
             stringBuilder.AppendLine("WHERE");
@@ -184,9 +166,8 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T, TParameterType>(T obj)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) DeleteQueryGenerate<T>(this IDatabaseConnector connector, T obj)
+            where T : class
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
@@ -194,11 +175,8 @@ namespace Utilities.SQL.Extension
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var parameters = new[] {
-                    new TParameterType()
-                    {
-                        ParameterName = primaryKey.Name,
-                        Value = primaryKey.GetValue(obj)
-                    } };
+                    new DbParameterStruct(primaryKey.Name,primaryKey.GetValue(obj))
+            };
             return (query, parameters);
         }
 
@@ -208,20 +186,15 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="primaryKey"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T, TParameterType>(object primaryKey)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) DeleteQueryGenerate<T>(this IDatabaseConnector connector, object primaryKey)
+            where T : class
         {
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
             var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var parameters = new[] {
-                    new TParameterType()
-                    {
-                        ParameterName = primaryKeyAttribute.Name,
-                        Value = primaryKey
-                    }
+                    new DbParameterStruct(primaryKeyAttribute.Name,primaryKey)
                 };
             return (query, parameters);
         }
@@ -232,15 +205,15 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public static (string query, IEnumerable<TParameterType> parameters) DeleteQueryGenerate<T, TParameterType>(DatabaseConnectorContractor connector, Expression<Func<T, bool>> predicate)
-            where T : class, new()
-            where TParameterType : DbParameter, new()
+        public static (string query, IEnumerable<DbParameterStruct> parameters) DeleteQueryGenerate<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate)
+            where T : class
         {
             var tableName = typeof(T).TableNameAttributeValidate();
-            var translator = new ExpressionTranslator<T, TParameterType>(connector.SQLFunctionConfiguration);
+            var translator = new ExpressionTranslator<T>(connector.CompatibleFunctionName);
             var translateResult = translator.Translate(predicate);
             var query = $@"DELETE FROM {tableName} WHERE {translateResult.Expression}";
             return (query, translateResult.Parameters);
         }
     }
+    #endregion
 }
