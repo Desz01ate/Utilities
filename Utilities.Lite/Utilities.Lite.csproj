@@ -10,21 +10,29 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.6-beta-001</Version>
+    <Version>0.2.1.6-beta-008</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>[General]
+    <PackageReleaseNotes>
+      [General]
+      + Add new struct 'DbParameterStruct' which will be used with non-generic DatabaseConnector.
 
-+ Fix internal RuntimeHelpers to public as it appeared that range and index will not work if the compiler is not bound to this static class.
-+ Fix ExpressionTranslator will not work in some rare cases.</PackageReleaseNotes>
+      [Sql]
+
+      + Experiment with a new non-generic DatabaseConnector with non-generic IDabaseConnector altogether, this features is meant to bring more easy-to-consume to
+      consumer while also not breaking the current generic DatabaseConnector signature which mean you can easily adopt this new class into existing code.
+      + non-generic DatabaseConnector feature with new property 'AllowBuffer' which will affects how the data reader processing by cache it as a list rather than deferred execution until the iterator run,
+      this option allow you to keep iterate over the dataset again and again without the error of datareader is closed however, this feature will slow you down (and consume more memory) if the query return enormous data size.
+    </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>signkey.pfx</AssemblyOriginatorKeyFile>
     <Platforms>AnyCPU;x86</Platforms>
+    <Configurations>Debug;Release;Release-Local-Nuget</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -33,10 +41,19 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Local-Nuget|AnyCPU'">
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <Optimize>true</Optimize>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release-Local-Nuget|netstandard2.0|AnyCPU'">
     <Optimize>true</Optimize>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -69,4 +86,8 @@
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
   </ItemGroup>
+  <Target Name="CopyPackage" AfterTargets="Pack" Condition="$(Configuration) == 'Release'">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(UserProfile)\Documents\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="D:\Documents\nuget" />
+  </Target>
 </Project>

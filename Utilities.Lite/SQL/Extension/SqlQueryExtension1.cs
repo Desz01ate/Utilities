@@ -62,11 +62,7 @@ namespace Utilities.SQL.Extension
             var tableName = type.TableNameAttributeValidate();
             var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"SELECT * FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
-            var parameter = new DbParameterStruct()
-            {
-                ParameterName = primaryKeyAttribute.Name,
-                ParameterValue = primaryKey
-            };
+            var parameter = new DbParameterStruct(primaryKeyAttribute.Name, primaryKey);
             return (query, new[] { parameter });
         }
 
@@ -86,11 +82,7 @@ namespace Utilities.SQL.Extension
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
                               ({string.Join(",", kvMapper.Select(field => $"@{field.Key}"))})";
-            var parameters = kvMapper.Select(field => new DbParameterStruct()
-            {
-                ParameterName = $"@{field.Key}",
-                ParameterValue = field.Value
-            });
+            var parameters = kvMapper.Select(field => new DbParameterStruct($"@{field.Key}", field.Value));
             return (query, parameters);
         }
 
@@ -123,7 +115,7 @@ namespace Utilities.SQL.Extension
                 // ReSharper disable AccessToModifiedClosure
                 var currentValueStatement = $"({string.Join(",", mapper.Select(x => $"@{x.Key}{idx}"))})";
                 values.Add(currentValueStatement);
-                var currentParameters = mapper.Select(x => new DbParameterStruct() { ParameterName = $"@{x.Key}{idx}", ParameterValue = x.Value });
+                var currentParameters = mapper.Select(x => new DbParameterStruct($"@{x.Key}{idx}", x.Value));
                 parameters.AddRange(currentParameters);
                 // ReSharper restore AccessToModifiedClosure
 
@@ -157,11 +149,7 @@ namespace Utilities.SQL.Extension
                 //if the parameter is not a primary key, add it to the SET block.
                 if (parameter.Key != primaryKey.Name)
                     setter.Add($"{parameter.Key} = @{parameter.Key}");
-                parameters.Add(new DbParameterStruct()
-                {
-                    ParameterName = $"@{parameter.Key}",
-                    ParameterValue = parameter.Value
-                });
+                parameters.Add(new DbParameterStruct($"@{parameter.Key}", parameter.Value));
             }
             stringBuilder.AppendLine(string.Join(",", setter));
             stringBuilder.AppendLine("WHERE");
@@ -187,11 +175,8 @@ namespace Utilities.SQL.Extension
 
             var query = $"DELETE FROM {tableName} WHERE {primaryKey.Name} = @{primaryKey.Name}";
             var parameters = new[] {
-                    new DbParameterStruct()
-                    {
-                        ParameterName = primaryKey.Name,
-                        ParameterValue = primaryKey.GetValue(obj)
-                    } };
+                    new DbParameterStruct(primaryKey.Name,primaryKey.GetValue(obj))
+            };
             return (query, parameters);
         }
 
@@ -209,11 +194,7 @@ namespace Utilities.SQL.Extension
             var primaryKeyAttribute = type.PrimaryKeyAttributeValidate();
             var query = $"DELETE FROM {tableName} WHERE {primaryKeyAttribute.Name} = @{primaryKeyAttribute.Name}";
             var parameters = new[] {
-                    new DbParameterStruct()
-                    {
-                        ParameterName = primaryKeyAttribute.Name,
-                        ParameterValue = primaryKey
-                    }
+                    new DbParameterStruct(primaryKeyAttribute.Name,primaryKey)
                 };
             return (query, parameters);
         }

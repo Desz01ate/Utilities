@@ -22,6 +22,7 @@
       + Fix bugs on QueryGenerator.
     </PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools.</Description>
+    <Configurations>Debug;Release;Release-Local-Nuget</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,6 +31,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Local-Nuget|AnyCPU'">
     <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities\Utilities.xml</DocumentationFile>
   </PropertyGroup>
 

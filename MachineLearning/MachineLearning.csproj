@@ -16,9 +16,14 @@
     <PackageReleaseNotes>Improve QoL for MachineLearning
 
 Add Tensorflow Image Classification to MachineLearning</PackageReleaseNotes>
+    <Configurations>Debug;Release;Release-Local-Nuget</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\MachineLearning\MachineLearning.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Local-Nuget|AnyCPU'">
     <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\MachineLearning\MachineLearning.xml</DocumentationFile>
   </PropertyGroup>
 

@@ -145,11 +145,7 @@ namespace Utilities.SQL.Translator
                     {
                         var paramName = $@"@cepr{idx}";
                         paramArray[idx] = paramName;
-                        _sqlParameters.Add(new DbParameterStruct()
-                        {
-                            ParameterName = paramName,
-                            ParameterValue = values[idx]
-                        });
+                        _sqlParameters.Add(new DbParameterStruct(paramName, values[idx]));
                     }
                     sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
                     return m;
@@ -164,11 +160,7 @@ namespace Utilities.SQL.Translator
                     {
                         var paramName = $@"@cepr{idx}";
                         paramArray[idx] = paramName;
-                        _sqlParameters.Add(new DbParameterStruct()
-                        {
-                            ParameterName = paramName,
-                            ParameterValue = values[idx]
-                        });
+                        _sqlParameters.Add(new DbParameterStruct(paramName, values[idx]));
                     }
                     sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
                     return m;
@@ -177,11 +169,7 @@ namespace Utilities.SQL.Translator
                 {
                     var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                     var expression = CompileExpression(m.Arguments[0]);//m.Arguments[0].ToString().Replace("\"", "");
-                    _sqlParameters.Add(new DbParameterStruct()
-                    {
-                        ParameterName = field,
-                        ParameterValue = expression
-                    });
+                    _sqlParameters.Add(new DbParameterStruct(field,expression));
                     sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                     return m;
                 }
@@ -190,11 +178,7 @@ namespace Utilities.SQL.Translator
             {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                 var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
-                _sqlParameters.Add(new DbParameterStruct()
-                {
-                    ParameterName = field,
-                    ParameterValue = expression
-                });
+                _sqlParameters.Add(new DbParameterStruct(field, expression));
                 sb.Append($@"({field} LIKE @{field} + '%')");
                 return m;
             }
@@ -202,11 +186,7 @@ namespace Utilities.SQL.Translator
             {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                 var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
-                _sqlParameters.Add(new DbParameterStruct()
-                {
-                    ParameterName = field,
-                    ParameterValue = expression
-                });
+                _sqlParameters.Add(new DbParameterStruct(field, expression));
                 sb.Append($@"({field} LIKE '%' + @{field})");
                 return m;
             }
@@ -348,11 +328,7 @@ namespace Utilities.SQL.Translator
 
                     case TypeCode.DateTime:
                     case TypeCode.String:
-                        _sqlParameters.Add(new DbParameterStruct()
-                        {
-                            ParameterName = _previousVisitField,
-                            ParameterValue = c.Value
-                        });
+                        _sqlParameters.Add(new DbParameterStruct(_previousVisitField,c.Value));
                         sb.Append($"@{_previousVisitField}");
                         //sb.Append("'");
                         //sb.Append(c.Value);
@@ -391,11 +367,7 @@ namespace Utilities.SQL.Translator
                     case ExpressionType.Constant:
                         var constantInvokedValue = CompileExpression(m);
                         if (_previousVisitField == null) _previousVisitField = m.Member.Name;
-                        _sqlParameters.Add(new DbParameterStruct()
-                        {
-                            ParameterName = _previousVisitField,
-                            ParameterValue = constantInvokedValue
-                        });
+                        _sqlParameters.Add(new DbParameterStruct(_previousVisitField, constantInvokedValue));
                         sb.Append($"@{_previousVisitField}");
                         return m;
                     //need more research on this
@@ -411,11 +383,7 @@ namespace Utilities.SQL.Translator
 
                             default:
                                 var value = CompileExpression(m);
-                                _sqlParameters.Add(new DbParameterStruct()
-                                {
-                                    ParameterName = _previousVisitField,
-                                    ParameterValue = value
-                                });
+                                _sqlParameters.Add(new DbParameterStruct(_previousVisitField,value));
                                 sb.Append($"@{_previousVisitField}");
                                 break;
                         }

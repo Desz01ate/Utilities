@@ -9,9 +9,14 @@
 + Add way to refresh acess token to JWT controller</PackageReleaseNotes>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
+    <Configurations>Debug;Release;Release-Local-Nuget</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Asp.Core\Utilities.Asp.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Local-Nuget|AnyCPU'">
     <DocumentationFile>C:\Users\TYCHE\Documents\GitHub\Utilities\Utilities.Asp.Core\Utilities.Asp.Core.xml</DocumentationFile>
   </PropertyGroup>
 
