@@ -33,6 +33,13 @@ namespace Utilities.SQL
         /// </summary>
         public DbConnection Connection { get; }
         private bool Disposed { get; set; }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connectorType">Type of database connector, must be derived type of DbConnection</param>
+        /// <param name="connectionString">Connection string to database</param>
+        /// <exception cref="ArgumentNullException">Will throw argument null if connector type is null</exception>
+        /// <exception cref="InvalidCastException">Will throw invalid cast if connector type is not a subclass of DbConnection</exception>
         public DatabaseConnector(Type connectorType, string connectionString)
         {
             if (connectorType == null) throw new ArgumentNullException(nameof(connectorType));
@@ -44,11 +51,17 @@ namespace Utilities.SQL
             this.Connection = connection;
             this.Connection.Open();
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connection">Instance of database connection</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DatabaseConnector(DbConnection connection)
         {
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
             connection.Open();
         }
+
         void Dispose(bool disposing)
         {
             if (Disposed) return;
@@ -58,6 +71,9 @@ namespace Utilities.SQL
             }
             Disposed = true;
         }
+        /// <summary>
+        /// Close the connection to the database.
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);

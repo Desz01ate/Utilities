@@ -22,12 +22,13 @@ namespace Utilities.SQL.Extension
         /// <param name="connector"></param>
         /// <param name="top">Specified TOP(n) rows.</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, int? top = null, IDbTransaction? transaction = null)
+        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, int? top = null, IDbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
             var query = connector.SelectQueryGenerate<T>(top);
-            IEnumerable<T> result = connector.ExecuteReader<T>(query, transaction: transaction);
+            IEnumerable<T> result = connector.ExecuteReader<T>(query, transaction: transaction, buffered: buffered);
             return result;
         }
 
@@ -38,14 +39,15 @@ namespace Utilities.SQL.Extension
         /// <param name="connector"></param>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T Query<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null)
+        public static T Query<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
             var preparer = connector.SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            T result = connector.ExecuteReader<T>(query, parameters, transaction: transaction).FirstOrDefault();
+            T result = connector.ExecuteReader<T>(query, parameters, transaction: transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -54,11 +56,12 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="connector"></param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T QueryFirst<T>(this IDatabaseConnector connector, IDbTransaction? transaction = null) where T : class, new()
+        public static T QueryFirst<T>(this IDatabaseConnector connector, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
             var query = connector.SelectQueryGenerate<T>(top: 1);
-            T result = connector.ExecuteReader<T>(query, transaction: transaction).FirstOrDefault();
+            T result = connector.ExecuteReader<T>(query, transaction: transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -68,11 +71,12 @@ namespace Utilities.SQL.Extension
         /// <param name="connector"></param>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T QueryFirst<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
+        public static T QueryFirst<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
             var query = connector.SelectQueryGenerate<T>(predicate, 1);
-            T result = connector.ExecuteReader(query.query, query.parameters, transaction).FirstOrDefault();
+            T result = connector.ExecuteReader(query.query, query.parameters, transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -156,12 +160,13 @@ namespace Utilities.SQL.Extension
         /// <param name="connector"></param>
         /// <param name="top">Specified TOP(n) rows.</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>IEnumerable of object</returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, int? top = null, IDbTransaction? transaction = null)
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, int? top = null, IDbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
             var query = connector.SelectQueryGenerate<T>(top);
-            var result = await connector.ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false);
+            var result = await connector.ExecuteReaderAsync<T>(query, transaction: transaction, buffered: buffered).ConfigureAwait(false);
             return result;
         }
 
@@ -172,14 +177,15 @@ namespace Utilities.SQL.Extension
         /// <param name="connector"></param>
         /// <param name="primaryKey">Primary key of specific row</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryAsync<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null)
+        public static async Task<T> QueryAsync<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
             var preparer = connector.SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = (await connector.ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
+            var result = (await connector.ExecuteReaderAsync<T>(query, parameters, transaction: transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -188,11 +194,12 @@ namespace Utilities.SQL.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="connector"></param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
             var query = connector.SelectQueryGenerate<T>(top: 1);
-            T result = (await connector.ExecuteReaderAsync<T>(query, transaction: transaction).ConfigureAwait(false)).FirstOrDefault();
+            T result = (await connector.ExecuteReaderAsync<T>(query, transaction: transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -202,11 +209,12 @@ namespace Utilities.SQL.Extension
         /// <param name="connector"></param>
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
             var query = connector.SelectQueryGenerate<T>(predicate, 1);
-            T result = (await connector.ExecuteReaderAsync(query.query, query.parameters, transaction).ConfigureAwait(false)).FirstOrDefault();
+            T result = (await connector.ExecuteReaderAsync(query.query, query.parameters, transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -287,13 +295,14 @@ namespace Utilities.SQL.Extension
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="top">Specified TOP(n) rows.</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null) where T : class, new()
+        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
             var preparer = connector.SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = connector.ExecuteReader<T>(query, parameters, transaction: transaction);
+            var result = connector.ExecuteReader<T>(query, parameters, transaction: transaction, buffered: buffered);
             return result;
         }
 
@@ -321,13 +330,14 @@ namespace Utilities.SQL.Extension
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="top">Specified TOP(n) rows.</param>
         /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
             var preparer = connector.SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await connector.ExecuteReaderAsync<T>(query, parameters, transaction: transaction).ConfigureAwait(false);
+            var result = await connector.ExecuteReaderAsync<T>(query, parameters, transaction: transaction, buffered: buffered).ConfigureAwait(false);
             return result;
         }
 
