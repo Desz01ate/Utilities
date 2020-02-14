@@ -35,7 +35,7 @@ namespace Utilities.Interfaces
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false) where T : class, new();
+        IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true) where T : class, new();
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -45,7 +45,7 @@ namespace Utilities.Interfaces
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false);
+        IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true);
         /// <summary>
         /// Execute SELECT SQL query and return DataTable
         /// </summary>
@@ -94,7 +94,7 @@ namespace Utilities.Interfaces
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <returns>IEnumerable of POCO</returns>
-        Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false) where T : class, new();
+        Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true) where T : class, new();
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of dynamic object
         /// </summary>
@@ -103,7 +103,7 @@ namespace Utilities.Interfaces
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false);
+        Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true);
         /// <summary>
         /// Execute SELECT SQL query and return DataTable in an asynchronous manner
         /// </summary>

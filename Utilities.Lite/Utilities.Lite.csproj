@@ -10,19 +10,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.8-beta-001</Version>
+    <Version>0.2.1.8-beta-005</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>[General]
-+ Due to heavily replacement of DbParameterStruct on v0.2.1.6 with DbParameterStruct , the ParameterDirection is missing and some existing code may not working as expected. This version should address those problems already with the introducing of new type to replace DbParameterStruct called [DatabaseParameter].
-[Sql]
-+ New extension method for database connector 'QueryOffset' and 'CreateTable'
-+ New class [DatabaseParameter] for replacement of v0.2.1.6 [DbParameterStruct] which will address 'ParameterDirection'.
-+ Introducing events to DatabaseConnector, [OnQueryExecuting] and [OnQueryExecuted] as a way to intercept command on specific circumstances.
-[HttpRequest]
-+ As an old static HttpRequest is a long time obsolete, this version remove this static class and introducing as a normal class for both performance and usablility concern.</PackageReleaseNotes>
+    <PackageReleaseNotes>[SQL]
++ Improve .Insert and .Update correctness and efficiency by optimized internal worker.
++ PrimaryKey attribute now had an optional parameter autoIncrement.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

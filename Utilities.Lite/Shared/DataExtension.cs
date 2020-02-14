@@ -31,16 +31,22 @@ namespace Utilities.Shared
             return rowInstance;
         }
 
-        internal static Dictionary<string, object> CRUDDataMapping<T>(T obj, SqlType type)
+        internal static Dictionary<string, object> InsertUpdateMapper<T>(T obj, SqlType type)
             where T : class
         {
             var values = new Dictionary<string, object>();
             foreach (var property in typeof(T).PropertiesBindingFlagsAttributeValidate())
             {
-                var pIns = property.GetCustomAttribute<IgnoreFieldAttribute>(true);
-                if (pIns != null)
+                var primaryKey = property.GetCustomAttribute<PrimaryKeyAttribute>(true);
+                var isPrimaryKey = primaryKey != null;
+                var ignoreField = property.GetCustomAttribute<IgnoreFieldAttribute>(true);
+                var isIgnoreField = ignoreField != null;
+                if (isIgnoreField || isPrimaryKey)
                 {
-                    if ((pIns.IgnoreInsert && type == SqlType.Insert) || (pIns.IgnoreUpdate && type == SqlType.Update))
+                    var disallowInsert = (isIgnoreField && ignoreField.IgnoreInsert) || (isPrimaryKey && primaryKey.AutoIncrement);
+                    var disallowUpdate = (isIgnoreField && ignoreField.IgnoreUpdate);
+                    if (   type == SqlType.Insert && disallowInsert 
+                        || type == SqlType.Update && disallowUpdate)
                     {
                         continue;
                     }

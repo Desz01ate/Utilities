@@ -78,7 +78,7 @@ namespace Utilities.SQL.Extension
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             var tableName = typeof(T).TableNameAttributeValidate();
-            var kvMapper = DataExtension.CRUDDataMapping(obj, SqlType.Insert);
+            var kvMapper = DataExtension.InsertUpdateMapper(obj, SqlType.Insert);
             var query = $@"INSERT INTO {tableName}
                               ({string.Join(",", kvMapper.Select(field => field.Key))})
                               VALUES
@@ -98,7 +98,7 @@ namespace Utilities.SQL.Extension
         {
             var tableName = typeof(T).TableNameAttributeValidate();
             var enumerable = source as T[] ?? source.ToArray();
-            var parametersMap = DataExtension.CRUDDataMapping(enumerable.First(), SqlType.Insert);
+            var parametersMap = DataExtension.InsertUpdateMapper(enumerable.First(), SqlType.Insert);
 
             //values placeholder before append.
             var values = new List<string>();
@@ -112,7 +112,7 @@ namespace Utilities.SQL.Extension
             for (var idx = 0; idx < enumerable.Count(); idx++)
             {
                 var obj = enumerable.ElementAt(idx);
-                var mapper = DataExtension.CRUDDataMapping(obj, SqlType.Insert);
+                var mapper = DataExtension.InsertUpdateMapper(obj, SqlType.Insert);
                 // ReSharper disable AccessToModifiedClosure
                 var currentValueStatement = $"({string.Join(",", mapper.Select(x => $"@{x.Key}{idx}"))})";
                 values.Add(currentValueStatement);
@@ -137,7 +137,7 @@ namespace Utilities.SQL.Extension
             var type = typeof(T);
             var tableName = type.TableNameAttributeValidate();
             var primaryKey = type.PrimaryKeyAttributeValidate();
-            var parametersMap = DataExtension.CRUDDataMapping(obj, SqlType.Update);
+            var parametersMap = DataExtension.InsertUpdateMapper(obj, SqlType.Update);
 
             var parameters = new List<DatabaseParameter>();
 

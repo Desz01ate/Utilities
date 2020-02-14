@@ -30,12 +30,20 @@ namespace Utilities
             this.BaseUrl = new Uri(baseUrl);
             this.Client = new HttpClient();
         }
-        public void AddDefaultHeaderValue(string key, string value, HttpRequest refClient)
+        /// <summary>
+        /// Add default request header value.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void AddDefaultHeaderValue(string key, string value)
         {
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentNullException(nameof(key));
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
             this.Client.DefaultRequestHeaders.Add(key, value);
         }
+        /// <summary>
+        /// Clear all request headers value.
+        /// </summary>
         public void ClearDefaultHeadersValue()
         {
             this.Client.DefaultRequestHeaders.Clear();
@@ -49,6 +57,9 @@ namespace Utilities
             }
             this.disposed = true;
         }
+        /// <summary>
+        /// Dispose the object and release all unmanaged resources under the hood.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

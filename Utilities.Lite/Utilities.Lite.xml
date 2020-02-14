@@ -24,6 +24,17 @@
             Attribute which specified which property is a primary key
             </summary>
         </member>
+        <member name="F:Utilities.Attributes.SQL.PrimaryKeyAttribute.AutoIncrement">
+            <summary>
+            Whether this primary key is auto-increment or not.
+            </summary>
+        </member>
+        <member name="M:Utilities.Attributes.SQL.PrimaryKeyAttribute.#ctor(System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="autoIncrement"></param>
+        </member>
         <member name="T:Utilities.Attributes.SQL.TableAttribute">
             <summary>
             Attribute for table name customization
@@ -448,6 +459,23 @@
             Constructor
             </summary>
             <param name="baseUrl"></param>
+        </member>
+        <member name="M:Utilities.HttpRequest.AddDefaultHeaderValue(System.String,System.String)">
+            <summary>
+            Add default request header value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Utilities.HttpRequest.ClearDefaultHeadersValue">
+            <summary>
+            Clear all request headers value.
+            </summary>
+        </member>
+        <member name="M:Utilities.HttpRequest.Dispose">
+            <summary>
+            Dispose the object and release all unmanaged resources under the hood.
+            </summary>
         </member>
         <member name="M:Utilities.HttpRequest.GetAsync(System.String)">
             <summary>
@@ -1463,11 +1491,6 @@
             <param name="connection">Instance of database connection</param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.Dispose">
-            <summary>
-            Close the connection to the database.
-            </summary>
-        </member>
         <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
@@ -1639,6 +1662,59 @@
         <member name="E:Utilities.SQL.DatabaseConnector.OnqueryExecuted">
             <summary>
             The event that will trigger when query is executed.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector.Database">
+            <summary>
+            Gets the name of the current database after a connection is opened, or the database
+            name specified in the connection string before the connection is opened.
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector.DataSource">
+            <summary>
+            The name of the database server to which to connect. The default value is an
+            empty string. 
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector.ServerVersion">
+            <summary>
+            Gets a string that represents the version of the server to which the object is
+            connected. 
+            </summary>
+        </member>
+        <member name="P:Utilities.SQL.DatabaseConnector.State">
+            <summary>
+            Gets a string that describes the state of the connection.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.BeginDbTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Starts a database transaction with the specified isolation level.
+            </summary>
+            <param name="isolationLevel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.ChangeDatabase(System.String)">
+            <summary>
+            Changes the current database for an open connection.
+            </summary>
+            <param name="databaseName"></param>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.Close">
+            <summary>
+            Closes the connection to the database. This is the preferred method of closing
+            any open connection.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.CreateDbCommand">
+            <summary>
+            Creates and returns a System.Data.Common.DbCommand object associated with the
+            current connection.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.Open">
+            <summary>
+            Opens a database connection with the settings specified by the System.Data.Common.DbConnection.ConnectionString.
             </summary>
         </member>
         <member name="T:Utilities.SQL.Events.ExecutionInterceptor">
@@ -1904,6 +1980,20 @@
         <member name="M:Utilities.SQL.Extension.DataConnectorExtension.CountAsync``1(Utilities.Interfaces.IDatabaseConnector)">
             <summary>
             Returns rows count from specified table in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Count``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Returns rows count on specific condition from specified table.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.CountAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Returns rows count on specific condition from specified table in an asynchronous manner.
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>

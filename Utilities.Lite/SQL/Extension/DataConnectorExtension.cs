@@ -27,7 +27,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, int? top = null, DbTransaction? transaction = null, bool buffered = false)
+        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, int? top = null, DbTransaction? transaction = null, bool buffered = true)
             where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
@@ -46,7 +46,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T Query<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null, bool buffered = false)
+        public static T Query<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null, bool buffered = true)
             where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
@@ -65,7 +65,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T QueryFirst<T>(this IDatabaseConnector connector, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static T QueryFirst<T>(this IDatabaseConnector connector, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -82,7 +82,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T QueryFirst<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static T QueryFirst<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -181,7 +181,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>IEnumerable of object</returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, int? top = null, DbTransaction? transaction = null, bool buffered = false)
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, int? top = null, DbTransaction? transaction = null, bool buffered = true)
             where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
@@ -200,7 +200,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryAsync<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null, bool buffered = false)
+        public static async Task<T> QueryAsync<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null, bool buffered = true)
             where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
@@ -219,7 +219,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -236,7 +236,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -332,7 +332,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -371,7 +371,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -514,7 +514,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> QueryOffset<T>(this IDatabaseConnector connector, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static IEnumerable<T> QueryOffset<T>(this IDatabaseConnector connector, int offset, int limit, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -539,7 +539,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> QueryOffset<T>(this IDatabaseConnector connector, string orderBy, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static IEnumerable<T> QueryOffset<T>(this IDatabaseConnector connector, string orderBy, int offset, int limit, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -559,7 +559,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> QueryOffsetAsync<T>(this IDatabaseConnector connector, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<IEnumerable<T>> QueryOffsetAsync<T>(this IDatabaseConnector connector, int offset, int limit, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
@@ -583,7 +583,7 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> QueryOffsetAsync<T>(this IDatabaseConnector connector, string orderBy, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<IEnumerable<T>> QueryOffsetAsync<T>(this IDatabaseConnector connector, string orderBy, int offset, int limit, DbTransaction? transaction = null, bool buffered = true) where T : class, new()
         {
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
