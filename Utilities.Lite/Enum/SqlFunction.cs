@@ -2,6 +2,7 @@
 {
     public enum SqlFunction
     {
-        Length
+        Length,
+        Sum
     }
 }

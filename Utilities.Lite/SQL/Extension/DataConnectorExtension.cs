@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Abstracts;
+using Utilities.SQL.Translator;
 
 namespace Utilities.SQL.Extension
 {
@@ -24,11 +27,13 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, int? top = null, IDbTransaction? transaction = null, bool buffered = false)
+        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, int? top = null, DbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
-            var query = connector.SelectQueryGenerate<T>(top);
-            IEnumerable<T> result = connector.ExecuteReader<T>(query, transaction: transaction, buffered: buffered);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>(top);
+            IEnumerable<T> result = con.ExecuteReader<T>(query, transaction: transaction, buffered: buffered);
             return result;
         }
 
@@ -41,13 +46,15 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T Query<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null, bool buffered = false)
+        public static T Query<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
-            var preparer = connector.SelectQueryGenerate<T>(primaryKey);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            T result = connector.ExecuteReader<T>(query, parameters, transaction: transaction, buffered: buffered).FirstOrDefault();
+            T result = con.ExecuteReader<T>(query, parameters, transaction: transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -58,10 +65,12 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T QueryFirst<T>(this IDatabaseConnector connector, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static T QueryFirst<T>(this IDatabaseConnector connector, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
-            var query = connector.SelectQueryGenerate<T>(top: 1);
-            T result = connector.ExecuteReader<T>(query, transaction: transaction, buffered: buffered).FirstOrDefault();
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>(top: 1);
+            T result = con.ExecuteReader<T>(query, transaction: transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -73,10 +82,12 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static T QueryFirst<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static T QueryFirst<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
-            var query = connector.SelectQueryGenerate<T>(predicate, 1);
-            T result = connector.ExecuteReader(query.query, query.parameters, transaction, buffered: buffered).FirstOrDefault();
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>(predicate, 1);
+            T result = con.ExecuteReader(query.query, query.parameters, transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -87,14 +98,16 @@ namespace Utilities.SQL.Extension
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public static int Insert<T>(this IDatabaseConnector connector, T obj, IDbTransaction? transaction = null)
+        public static int Insert<T>(this IDatabaseConnector connector, T obj, DbTransaction? transaction = null)
             where T : class, new()
         {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
             if (obj == null) return -1;
-            var preparer = connector.InsertQueryGenerate<T>(obj);
+            var preparer = con.InsertQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = connector.ExecuteNonQuery(query, parameters, transaction: transaction);
+            var result = con.ExecuteNonQuery(query, parameters, transaction: transaction);
             return result;
         }
 
@@ -106,14 +119,16 @@ namespace Utilities.SQL.Extension
         /// <param name="obj">IEnumrable to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public static int InsertMany<T>(this IDatabaseConnector connector, IEnumerable<T> obj, IDbTransaction? transaction = null)
+        public static int InsertMany<T>(this IDatabaseConnector connector, IEnumerable<T> obj, DbTransaction? transaction = null)
             where T : class, new()
         {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
             if (obj == null || !obj.Any()) return -1;
-            var preparer = connector.InsertQueryGenerate<T>(obj);
+            var preparer = con.InsertQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = connector.ExecuteNonQuery(query, parameters, transaction: transaction);
+            var result = con.ExecuteNonQuery(query, parameters, transaction: transaction);
             return result;
         }
 
@@ -125,13 +140,15 @@ namespace Utilities.SQL.Extension
         /// <param name="obj">Object to update.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an update.</returns>
-        public static int Update<T>(this IDatabaseConnector connector, T obj, IDbTransaction? transaction = null)
+        public static int Update<T>(this IDatabaseConnector connector, T obj, DbTransaction? transaction = null)
             where T : class, new()
         {
-            var preparer = connector.UpdateQueryGenerate<T>(obj);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.UpdateQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var value = connector.ExecuteNonQuery(query, parameters, transaction: transaction);
+            var value = con.ExecuteNonQuery(query, parameters, transaction: transaction);
             return value;
         }
 
@@ -143,13 +160,15 @@ namespace Utilities.SQL.Extension
         /// <param name="obj"></param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public static int Delete<T>(this IDatabaseConnector connector, T obj, IDbTransaction? transaction = null)
+        public static int Delete<T>(this IDatabaseConnector connector, T obj, DbTransaction? transaction = null)
             where T : class, new()
         {
-            var preparer = connector.DeleteQueryGenerate<T>(obj);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.DeleteQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = connector.ExecuteNonQuery(query, parameters, transaction: transaction);
+            var result = con.ExecuteNonQuery(query, parameters, transaction: transaction);
             return result;
         }
 
@@ -162,11 +181,13 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>IEnumerable of object</returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, int? top = null, IDbTransaction? transaction = null, bool buffered = false)
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, int? top = null, DbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
-            var query = connector.SelectQueryGenerate<T>(top);
-            var result = await connector.ExecuteReaderAsync<T>(query, transaction: transaction, buffered: buffered).ConfigureAwait(false);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>(top);
+            var result = await con.ExecuteReaderAsync<T>(query, transaction: transaction, buffered: buffered).ConfigureAwait(false);
             return result;
         }
 
@@ -179,13 +200,15 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryAsync<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null, bool buffered = false)
+        public static async Task<T> QueryAsync<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null, bool buffered = false)
             where T : class, new()
         {
-            var preparer = connector.SelectQueryGenerate<T>(primaryKey);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.SelectQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = (await connector.ExecuteReaderAsync<T>(query, parameters, transaction: transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
+            var result = (await con.ExecuteReaderAsync<T>(query, parameters, transaction: transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -196,10 +219,12 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
-            var query = connector.SelectQueryGenerate<T>(top: 1);
-            T result = (await connector.ExecuteReaderAsync<T>(query, transaction: transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>(top: 1);
+            T result = (await con.ExecuteReaderAsync<T>(query, transaction: transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -211,10 +236,12 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns>Object of given class</returns>
-        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<T> QueryFirstAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
-            var query = connector.SelectQueryGenerate<T>(predicate, 1);
-            T result = (await connector.ExecuteReaderAsync(query.query, query.parameters, transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>(predicate, 1);
+            T result = (await con.ExecuteReaderAsync(query.query, query.parameters, transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -225,12 +252,14 @@ namespace Utilities.SQL.Extension
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public static async Task<int> InsertAsync<T>(this IDatabaseConnector connector, T obj, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<int> InsertAsync<T>(this IDatabaseConnector connector, T obj, DbTransaction? transaction = null) where T : class, new()
         {
-            var preparer = connector.InsertQueryGenerate<T>(obj);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.InsertQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await connector.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            var result = await con.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -242,12 +271,14 @@ namespace Utilities.SQL.Extension
         /// <param name="obj">Object to insert.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an insert.</returns>
-        public static async Task<int> InsertManyAsync<T>(this IDatabaseConnector connector, IEnumerable<T> obj, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<int> InsertManyAsync<T>(this IDatabaseConnector connector, IEnumerable<T> obj, DbTransaction? transaction = null) where T : class, new()
         {
-            var preparer = connector.InsertQueryGenerate<T>(obj);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.InsertQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await connector.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            var result = await con.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -259,13 +290,15 @@ namespace Utilities.SQL.Extension
         /// <param name="obj">Object to update.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>Affected row after an update.</returns>
-        public static async Task<int> UpdateAsync<T>(this IDatabaseConnector connector, T obj, IDbTransaction? transaction = null)
+        public static async Task<int> UpdateAsync<T>(this IDatabaseConnector connector, T obj, DbTransaction? transaction = null)
             where T : class, new()
         {
-            var preparer = connector.UpdateQueryGenerate<T>(obj);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.UpdateQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await connector.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            var result = await con.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -277,13 +310,15 @@ namespace Utilities.SQL.Extension
         /// <param name="obj"></param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public static async Task<int> DeleteAsync<T>(this IDatabaseConnector connector, T obj, IDbTransaction? transaction = null)
+        public static async Task<int> DeleteAsync<T>(this IDatabaseConnector connector, T obj, DbTransaction? transaction = null)
             where T : class, new()
         {
-            var preparer = connector.DeleteQueryGenerate<T>(obj);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.DeleteQueryGenerate<T>(obj);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await connector.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            var result = await con.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
             return result;
         }
 
@@ -297,12 +332,14 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static IEnumerable<T> Query<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
-            var preparer = connector.SelectQueryGenerate<T>(predicate, top);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = connector.ExecuteReader<T>(query, parameters, transaction: transaction, buffered: buffered);
+            var result = con.ExecuteReader<T>(query, parameters, transaction: transaction, buffered: buffered);
             return result;
         }
 
@@ -314,12 +351,14 @@ namespace Utilities.SQL.Extension
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public static int Delete<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
+        public static int Delete<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null) where T : class, new()
         {
-            var preparer = connector.DeleteQueryGenerate<T>(predicate);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.DeleteQueryGenerate<T>(predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            return connector.ExecuteNonQuery(query, parameters, transaction: transaction);
+            return con.ExecuteNonQuery(query, parameters, transaction: transaction);
         }
 
         /// <summary>
@@ -332,12 +371,14 @@ namespace Utilities.SQL.Extension
         /// <param name="transaction">Transaction for current execution.</param>
         /// <param name="buffered">Whether the data should be cached in memory.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, IDbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, int? top = null, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
         {
-            var preparer = connector.SelectQueryGenerate<T>(predicate, top);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.SelectQueryGenerate<T>(predicate, top);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            var result = await connector.ExecuteReaderAsync<T>(query, parameters, transaction: transaction, buffered: buffered).ConfigureAwait(false);
+            var result = await con.ExecuteReaderAsync<T>(query, parameters, transaction: transaction, buffered: buffered).ConfigureAwait(false);
             return result;
         }
 
@@ -349,12 +390,14 @@ namespace Utilities.SQL.Extension
         /// <param name="predicate">Predicate of data in LINQ manner</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public static async Task<int> DeleteAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<int> DeleteAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate, DbTransaction? transaction = null) where T : class, new()
         {
-            var preparer = connector.DeleteQueryGenerate<T>(predicate);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.DeleteQueryGenerate<T>(predicate);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            return await connector.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            return await con.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -365,12 +408,14 @@ namespace Utilities.SQL.Extension
         /// <param name="primaryKey">Specified primary key.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public static int Delete<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null) where T : class, new()
+        public static int Delete<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null) where T : class, new()
         {
-            var preparer = connector.DeleteQueryGenerate<T>(primaryKey);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.DeleteQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            return connector.ExecuteNonQuery(query, parameters, transaction: transaction);
+            return con.ExecuteNonQuery(query, parameters, transaction: transaction);
         }
 
         /// <summary>
@@ -381,12 +426,14 @@ namespace Utilities.SQL.Extension
         /// <param name="primaryKey">Specified primary key.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public static async Task<int> DeleteAsync<T>(this IDatabaseConnector connector, object primaryKey, IDbTransaction? transaction = null) where T : class, new()
+        public static async Task<int> DeleteAsync<T>(this IDatabaseConnector connector, object primaryKey, DbTransaction? transaction = null) where T : class, new()
         {
-            var preparer = connector.DeleteQueryGenerate<T>(primaryKey);
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var preparer = con.DeleteQueryGenerate<T>(primaryKey);
             var query = preparer.query;
             var parameters = preparer.parameters;
-            return await connector.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
+            return await con.ExecuteNonQueryAsync(query, parameters, transaction: transaction).ConfigureAwait(false);
         }
 
 
@@ -397,10 +444,13 @@ namespace Utilities.SQL.Extension
         /// <returns></returns>
         public static int Count<T>(this IDatabaseConnector connector) where T : class
         {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
             var tableName = AttributeExtension.TableNameAttributeValidate(typeof(T));
             var query = $"SELECT COUNT(*) FROM {tableName}";
-            var count = connector.ExecuteScalar<int>(query);
-            return count;
+            var count = con.ExecuteScalar(query);
+            var countAsString = count.ToString();
+            return int.Parse(countAsString);
         }
         /// <summary>
         /// Returns rows count from specified table in an asynchronous manner.
@@ -409,10 +459,169 @@ namespace Utilities.SQL.Extension
         /// <returns></returns>
         public static async Task<int> CountAsync<T>(this IDatabaseConnector connector) where T : class
         {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
             var tableName = AttributeExtension.TableNameAttributeValidate(typeof(T));
             var query = $"SELECT COUNT(*) FROM {tableName}";
-            var count = await connector.ExecuteScalarAsync<int>(query).ConfigureAwait(false);
-            return count;
+            var count = await con.ExecuteScalarAsync(query).ConfigureAwait(false);
+            var countAsString = count.ToString();
+            return int.Parse(countAsString);
+        }
+        /// <summary>
+        /// Returns rows count on specific condition from specified table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static int Count<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate) where T : class
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var tableName = AttributeExtension.TableNameAttributeValidate(typeof(T));
+            var exprTranslator = new ExpressionTranslator<T>(con.CompatibleFunctionName);
+            var translateResult = exprTranslator.Translate(predicate);
+            var query = $"SELECT COUNT(*) FROM {tableName} WHERE {translateResult.Expression}";
+            var count = con.ExecuteScalar(query, translateResult.Parameters);
+            var countAsString = count.ToString();
+            return int.Parse(countAsString);
+        }
+        /// <summary>
+        /// Returns rows count on specific condition from specified table in an asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static async Task<int> CountAsync<T>(this IDatabaseConnector connector, Expression<Func<T, bool>> predicate) where T : class
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var tableName = AttributeExtension.TableNameAttributeValidate(typeof(T));
+            var exprTranslator = new ExpressionTranslator<T>(con.CompatibleFunctionName);
+            var translateResult = exprTranslator.Translate(predicate);
+            var query = $"SELECT COUNT(*) FROM {tableName} WHERE {translateResult.Expression}";
+            var count = await con.ExecuteScalarAsync(query, translateResult.Parameters).ConfigureAwait(false);
+            var countAsString = count.ToString();
+            return int.Parse(countAsString);
+        }
+    }
+    public static partial class DataConnectorExtension
+    {
+        /// <summary>
+        /// Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connector"></param>
+        /// <param name="offset">The amount of rows to be offset (skip).</param>
+        /// <param name="limit">The amount of rows to be take.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
+        /// <returns></returns>
+        public static IEnumerable<T> QueryOffset<T>(this IDatabaseConnector connector, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>();
+            var primaryKey = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T));
+            if (primaryKey == null) throw new Exception("You must specified [PrimaryKey] attribute in order to use QueryOffset without specified column.");
+            var orderBy = primaryKey.Name;
+            var queryAppender = new StringBuilder(query);
+            queryAppender.AppendLine($" ORDER BY {orderBy} OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY");
+            var queryAppendString = queryAppender.ToString();
+            var result = con.ExecuteReader<T>(queryAppendString, transaction: transaction, buffered: buffered);
+            return result;
+        }
+        /// <summary>
+        /// Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connector"></param>
+        /// <param name="orderBy">Order by column.</param>
+        /// <param name="offset">The amount of rows to be offset (skip).</param>
+        /// <param name="limit">The amount of rows to be take.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
+        /// <returns></returns>
+        public static IEnumerable<T> QueryOffset<T>(this IDatabaseConnector connector, string orderBy, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>();
+            var queryAppender = new StringBuilder(query);
+            queryAppender.AppendLine($" ORDER BY {orderBy} OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY");
+            var result = con.ExecuteReader<T>(queryAppender.ToString(), transaction: transaction, buffered: buffered);
+            return result;
+        }
+        /// <summary>
+        /// Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connector"></param>
+        /// <param name="offset">The amount of rows to be offset (skip).</param>
+        /// <param name="limit">The amount of rows to be take.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<T>> QueryOffsetAsync<T>(this IDatabaseConnector connector, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>();
+            var primaryKey = AttributeExtension.PrimaryKeyAttributeValidate(typeof(T));
+            if (primaryKey == null) throw new Exception("You must specified [PrimaryKey] attribute in order to use QueryOffset without specified column.");
+            var orderBy = primaryKey.Name;
+            var queryAppender = new StringBuilder(query);
+            queryAppender.AppendLine($" ORDER BY {orderBy} OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY");
+            var result = await con.ExecuteReaderAsync<T>(queryAppender.ToString(), transaction: transaction, buffered: buffered).ConfigureAwait(false);
+            return result;
+        }
+        /// <summary>
+        /// Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connector"></param>
+        /// <param name="orderBy">Order by column.</param>
+        /// <param name="offset">The amount of rows to be offset (skip).</param>
+        /// <param name="limit">The amount of rows to be take.</param>
+        /// <param name="transaction">Transaction for current execution.</param>
+        /// <param name="buffered">Whether the data should be cached in memory.</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<T>> QueryOffsetAsync<T>(this IDatabaseConnector connector, string orderBy, int offset, int limit, DbTransaction? transaction = null, bool buffered = false) where T : class, new()
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.SelectQueryGenerate<T>();
+            var queryAppender = new StringBuilder(query);
+            queryAppender.AppendLine($" ORDER BY {orderBy} OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY");
+            var result = await con.ExecuteReaderAsync<T>(queryAppender.ToString(), transaction: transaction, buffered: buffered).ConfigureAwait(false);
+            return result;
+        }
+        /// <summary>
+        /// Create table from model object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connector"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public static int CreateTable<T>(this IDatabaseConnector connector, DbTransaction? transaction = null) where T : class, new()
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.GenerateCreateTableStatement<T>();
+            var result = con.ExecuteNonQuery(query, transaction: transaction);
+            return result;
+        }
+        /// <summary>
+        /// Create table from model object in an asynchronous manner.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connector"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public static async Task<int> CreateTableAsync<T>(this IDatabaseConnector connector, DbTransaction? transaction = null) where T : class, new()
+        {
+            var con = connector as DatabaseConnectorBase;
+            if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
+            var query = con.GenerateCreateTableStatement<T>();
+            var result = await con.ExecuteNonQueryAsync(query, transaction: transaction).ConfigureAwait(false);
+            return result;
         }
     }
 }

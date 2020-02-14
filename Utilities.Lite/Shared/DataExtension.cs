@@ -51,27 +51,5 @@ namespace Utilities.Shared
             }
             return values;
         }
-
-        internal static IEnumerable<string> GenerateSQLCreteFieldStatement<T>(this SQL.Abstract.DatabaseConnectorContractor connector)
-            where T : class, new()
-        {
-            var properties = typeof(T).PropertiesBindingFlagsAttributeValidate();
-            var referenceProperties = typeof(T).ForeignKeyAttributeValidate();
-            foreach (var property in properties)
-            {
-                var propertyName = AttributeExtension.FieldNameAttributeValidate(property);
-                var IsNotNull = AttributeExtension.NotNullAttributeValidate(property);
-                var primaryKeyPostfix = property.IsSqlPrimaryKeyAttribute() ? " PRIMARY KEY " : "";
-                var notNullPostfix = IsNotNull ? " NOT NULL " : "";
-                var sqlType = connector.MapCLRTypeToSQLType(property.PropertyType);
-                yield return ($"{propertyName} {sqlType} {primaryKeyPostfix} {notNullPostfix}");
-            }
-            foreach (var foreignKey in referenceProperties)
-            {
-                var propertyName = AttributeExtension.FieldNameAttributeValidate(foreignKey);
-                var targetTable = foreignKey.DeclaringType.TableNameAttributeValidate();
-                yield return ($"CONSTRAINT fk_{typeof(T).Name}_{targetTable} FOREIGN KEY ({foreignKey.ForeignKeyName}) REFERENCES {targetTable} ({propertyName})");
-            }
-        }
     }
 }

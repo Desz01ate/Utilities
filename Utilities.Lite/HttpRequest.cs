@@ -1,435 +1,227 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Utilities
 {
+#if NETSTANDARD2_0
     /// <summary>
     /// Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
     /// </summary>
-    [Obsolete("This class is obsolete, you should switch to RestSharp instead.")]
-    public static class HttpRequest
+#else
+    /// <summary>
+    /// Wrapper for standard Microsoft HttpClient request for GET,POST,PUT,PATCH and DELETE
+    /// </summary>
+#endif
+    public class HttpRequest : IDisposable
     {
+        readonly Uri BaseUrl;
+        readonly HttpClient Client;
         /// <summary>
-        /// Send a GET request to the specified Uri.
+        /// Constructor
         /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static HttpResponseMessage Get(string url, Dictionary<string, string> headers = null)
+        /// <param name="baseUrl"></param>
+        public HttpRequest(string baseUrl)
         {
-            using (var httpClient = new HttpClient())
+            this.BaseUrl = new Uri(baseUrl);
+            this.Client = new HttpClient();
+        }
+        public void AddDefaultHeaderValue(string key, string value, HttpRequest refClient)
+        {
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
+            this.Client.DefaultRequestHeaders.Add(key, value);
+        }
+        public void ClearDefaultHeadersValue()
+        {
+            this.Client.DefaultRequestHeaders.Clear();
+        }
+        private bool disposed { get; set; }
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !disposed)
             {
-                if (headers != null)
+                this.Client?.Dispose();
+            }
+            this.disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        /// <summary>
+        /// Request GET to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, string Body)> GetAsync(string path)
+        {
+            var request = await Client.GetAsync(this.BaseUrl + path).ConfigureAwait(false);
+            var response = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return (request.StatusCode, response);
+        }
+        /// <summary>
+        /// Request GET to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, T Body)> GetAsync<T>(string path)
+        {
+            var response = await GetAsync(path).ConfigureAwait(false);
+            if (response.StatusCode != HttpStatusCode.OK) return (response.StatusCode, default);
+            return (response.StatusCode, JsonConvert.DeserializeObject<T>(response.Body));
+        }
+        /// <summary>
+        /// Request POST to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, string Body)> PostAsync(string path, object body)
+        {
+            HttpContent? requestBody = default;
+            try
+            {
+                if (body is HttpContent content)
                 {
-                    foreach (var header in headers)
-                    {
-                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
+                    requestBody = content;
                 }
-                var request = httpClient.GetAsync(url).Result;
-                //request.EnsureSuccessStatusCode();
-                return request;
+                else
+                {
+                    requestBody = DefaultContentBuilder(body);
+                }
+                var request = await Client.PostAsync(this.BaseUrl + path, requestBody).ConfigureAwait(false);
+                var response = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return (request.StatusCode, response);
+            }
+            finally
+            {
+                requestBody?.Dispose();
             }
         }
-
         /// <summary>
-        /// Send a GET request to the specified Uri.
+        /// Request POST to specific action of current host url and return status code with body.
         /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public static T GetFor<T>(string url, Dictionary<string, string> headers = null) where T : class, new()
+        public async Task<(HttpStatusCode StatusCode, T Body)> PostAsync<T>(string path, object body)
         {
-            var response = Get(url, headers);
-            var json = response.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
+            var response = await PostAsync(path, body).ConfigureAwait(false);
+            if (response.StatusCode != HttpStatusCode.OK) return (response.StatusCode, default);
+            return (response.StatusCode, JsonConvert.DeserializeObject<T>(response.Body));
         }
-
         /// <summary>
-        /// Send a GET request to the specified Uri as an asynchronous operation.
+        /// Request PUT to specific action of current host url and return status code with body.
         /// </summary>
-        /// <param name="url">Target endpoint</param>
-        /// <param name="headers"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public static async Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string> headers = null)
+        public async Task<(HttpStatusCode StatusCode, string Body)> PutAsync(string path, object body)
         {
-            using (var httpClient = new HttpClient())
+            HttpContent? requestBody = default;
+            try
             {
-                if (headers != null)
+                if (body is HttpContent content)
                 {
-                    foreach (var header in headers)
-                    {
-                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
+                    requestBody = content;
                 }
-                var request = await httpClient.GetAsync(url).ConfigureAwait(false);
-                //request.EnsureSuccessStatusCode();
-                return request;
+                else
+                {
+                    requestBody = DefaultContentBuilder(body);
+                }
+                var request = await Client.PutAsync(this.BaseUrl + path, requestBody).ConfigureAwait(false);
+                var response = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return (request.StatusCode, response);
+            }
+            finally
+            {
+                requestBody?.Dispose();
             }
         }
-
         /// <summary>
-        /// Send a GET request to the specified Uri as an asynchronous operation.
+        /// Request PUT to specific action of current host url and return status code with body.
         /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public static async Task<T> GetAsyncFor<T>(string url, Dictionary<string, string> headers = null) where T : class, new()
+        public async Task<(HttpStatusCode StatusCode, T Body)> PutAsync<T>(string path, object body)
         {
-            var response = await GetAsync(url, headers).ConfigureAwait(false);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
+            var response = await PutAsync(path, body).ConfigureAwait(false);
+            if (response.StatusCode != HttpStatusCode.OK) return (response.StatusCode, default);
+            return (response.StatusCode, JsonConvert.DeserializeObject<T>(response.Body));
         }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static HttpResponseMessage Delete(string url, Dictionary<string, string> headers = null)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                }
-                var request = httpClient.DeleteAsync(url).Result;
-                //request.EnsureSuccessStatusCode();
-                return request;
-            }
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static T DeleteFor<T>(string url, Dictionary<string, string> headers = null) where T : class, new()
-        {
-            HttpResponseMessage response = Delete(url, headers);
-            var json = response.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<HttpResponseMessage> DeleteAsync(string url, Dictionary<string, string> headers = null)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                }
-                var request = await httpClient.DeleteAsync(url).ConfigureAwait(false);
-                //request.EnsureSuccessStatusCode();
-                return request;
-            }
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<T> DeleteAsyncFor<T>(string url, Dictionary<string, string> headers = null)
-        {
-            HttpResponseMessage response = await DeleteAsync(url, headers).ConfigureAwait(false);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a POST request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static HttpResponseMessage Post(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            var request = httpClient.PostAsync(url, body).Result;
-            body?.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
-        }
-
-        /// <summary>
-        /// Send a POST request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static T PostFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
-        {
-            HttpResponseMessage response = Post(url, body, headers);
-            var json = response.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a POST request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<HttpResponseMessage> PostAsync(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            var request = await httpClient.PostAsync(url, body).ConfigureAwait(false);
-            body?.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
-        }
-
-        /// <summary>
-        /// Send a POST request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<T> PostAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
-        {
-            HttpResponseMessage response = await PostAsync(url, body, headers).ConfigureAwait(false);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a PUT request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static HttpResponseMessage Put(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            var request = httpClient.PutAsync(url, body).Result;
-            body.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
-        }
-
-        /// <summary>
-        /// Send a PUT request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static T PutFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            HttpResponseMessage response = Put(url, body, headers);
-            var json = response.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a PUT request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<HttpResponseMessage> PutAsync(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            var request = await httpClient.PutAsync(url, body).ConfigureAwait(false);
-            body?.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
-        }
-
-        /// <summary>
-        /// Send a PUT request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<T> PutAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
-        {
-            HttpResponseMessage response = await PutAsync(url, body, headers).ConfigureAwait(false);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static HttpResponseMessage Delete(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Delete, url)
-            {
-                Content = body
-            };
-            var request = httpClient.SendAsync(message).Result;
-            message.Dispose();
-            body?.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static T DeleteFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
-        {
-            HttpResponseMessage response = Delete(url, body, headers);
-            var json = response.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<HttpResponseMessage> DeleteAsync(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            var message = new HttpRequestMessage(HttpMethod.Delete, url)
-            {
-                Content = body
-            };
-            var request = await httpClient.SendAsync(message).ConfigureAwait(false);
-            message.Dispose();
-            body?.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
-        }
-
-        /// <summary>
-        /// Send a DELETE request to the specified Uri as an asynchronous operation.
-        /// </summary>
-        /// <param name="url">The Uri the request is sent to.</param>
-        /// <param name="body">The body content the request is sent to.</param>
-        /// <param name="headers"></param>
-        /// <returns></returns>
-        public static async Task<T> DeleteAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : class, new()
-        {
-            HttpResponseMessage response = await DeleteAsync(url, body, headers).ConfigureAwait(false);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
-        }
-
 #if NETSTANDARD2_1
-        public static HttpResponseMessage Patch(string url, HttpContent body, Dictionary<string, string> headers = null)
+        /// <summary>
+        /// Request PATCH to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, string Body)> PatchAsync(string path, object body)
         {
-            return PatchAsync(url, body, headers).Result;
-        }
-        public static T PatchFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : new()
-        {
-            return PatchAsyncFor<T>(url, body, headers).Result;
-        }
-
-        public static async Task<HttpResponseMessage> PatchAsync(string url, HttpContent body, Dictionary<string, string> headers = null)
-        {
-            using var httpClient = new HttpClient();
-            if (headers != null)
+            HttpContent? requestBody = default;
+            try
             {
-                foreach (var header in headers)
+                if (body is HttpContent content)
                 {
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    requestBody = content;
                 }
+                else
+                {
+                    requestBody = DefaultContentBuilder(body);
+                }
+                var request = await Client.PatchAsync(this.BaseUrl + path, requestBody).ConfigureAwait(false);
+                var response = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return (request.StatusCode, response);
             }
-            var request = await httpClient.PatchAsync(url, body);
-            body.Dispose();
-            //request.EnsureSuccessStatusCode();
-            return request;
+            finally
+            {
+                requestBody?.Dispose();
+            }
         }
-        public static async Task<T> PatchAsyncFor<T>(string url, HttpContent body, Dictionary<string, string> headers = null) where T : new()
+        /// <summary>
+        /// Request PATCH to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, T Body)> PatchAsync<T>(string path, object body)
         {
-            var response = await PatchAsync(url, body, headers);
-            var json = response.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
+            var response = await PatchAsync(path, body).ConfigureAwait(false);
+            if (response.StatusCode != HttpStatusCode.OK) return (response.StatusCode, default);
+            return (response.StatusCode, JsonConvert.DeserializeObject<T>(response.Body));
         }
 #endif
+        /// <summary>
+        /// Request DELETE to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, string Body)> DeleteAsync(string path)
+        {
+            var request = await Client.DeleteAsync(this.BaseUrl + path).ConfigureAwait(false);
+            var response = await request.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return (request.StatusCode, response);
+        }
+        /// <summary>
+        /// Request DELETE to specific action of current host url and return status code with body.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public async Task<(HttpStatusCode StatusCode, T Body)> DeleteAsync<T>(string path)
+        {
+            var response = await DeleteAsync(path).ConfigureAwait(false);
+            if (response.StatusCode != HttpStatusCode.OK) return (response.StatusCode, default);
+            return (response.StatusCode, JsonConvert.DeserializeObject<T>(response.Body));
+        }
+        /// <summary>
+        /// Provide a way to build HttpContent from given body as a fallback when body is not HttpContent already.
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns></returns>
+        protected virtual HttpContent DefaultContentBuilder(object body)
+        {
+            return new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+        }
     }
 }

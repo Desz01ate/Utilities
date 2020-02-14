@@ -1,52 +1,69 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using Utilities.SQL.Abstract;
-using Utilities.Testing.Models;
-using Utilities.Testing.SQLConnectors;
-using Utilities.Shared;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
-using System.Collections.Concurrent;
+using Utilities.SQL;
+using System.Data.Common;
+using Utilities.Enum;
+using Utilities.SQL.Extension;
+using Utilities.Testing.Models;
+using Newtonsoft.Json;
+using System.Net.Http;
+using Utilities.Interfaces;
 
 namespace Utilities.Testing
 {
     internal class UnrelatedTest
     {
-        public partial class Calendar
+        public class AuthorizationModel
         {
-            public int id { get; set; }
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public DateTime? StartDate { get; set; }
-            public DateTime? EndDate { get; set; }
-            public string Location { get; set; }
+            public string AccessToken { get; set; }
+            public string RefreshToken { get; set; }
+            public DateTime ValidUntil { get; set; }
         }
-        [Test]
+        public class Response<T>
+        {
+            public bool Success { get; set; }
+            public string Message { get; set; }
+            public T Data { get; set; }
+        }
+        abstract class DatabaseConnectorContract
+        {
+            protected abstract string CompatibleFunction();
+            protected abstract string CompatibleType();
+            protected virtual string MapAnything()
+            {
+                return string.Empty;
+            }
+            public int ExecuteNonQuery()
+            {
+                return 1;
+            }
+        }
+        class MyConnector : DatabaseConnectorContract
+        {
+            protected override string MapAnything()
+            {
+                return "New Value";
+            }
+            protected override string CompatibleFunction()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override string CompatibleType()
+            {
+                throw new NotImplementedException();
+            }
+        }
+        //[Test]
         public async Task Playground()
         {
-            using var con = new SQLServer("server=localhost;database=local;user=sa;password=sa;");
-            var start = DateTime.Now.AddDays(-10);
-            var end = DateTime.Now;
-            var query = Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate<Calendar, SqlParameter>(con, (x => DateTime.Now.AddDays(-10) <= x.StartDate && x.EndDate <= end));
-            //Console.ReadLine();
-        }
-        public string Test(IEnumerable<string> a)
-        {
-            foreach (var x in a)
-            {
-                Console.WriteLine(x);
-            }
-            var all = new StringBuilder();
-            foreach (var x in a)
-            {
-                all.Append(a);
-            }
-            return all.ToString();
+            var connector = new DatabaseConnector(null);
+            connector.OnqueryExecuted += (s) => { };
+            IDatabaseConnector con2 = connector;
         }
     }
 }

@@ -3,44 +3,60 @@ using Npgsql;
 using System;
 using System.Data.SqlClient;
 using System.Data.SQLite;
+using Utilities.Enum;
 using Utilities.SQL;
 
 namespace Utilities.Testing.SQLConnectors
 {
-    internal class SQLServer : Utilities.SQL.DatabaseConnector<SqlConnection, SqlParameter>
+    internal class SQLServer : DatabaseConnector
     {
-        public SQLServer(string connectionString) : base(connectionString)
+        public SQLServer(string connectionString) : base(typeof(SqlConnection), connectionString)
         {
-            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LEN");
+
         }
-        protected override string MapCLRTypeToSQLType(Type type)
+        protected override string CompatibleSQLType(Type type)
         {
             //throw new Exception("Test thrower");
-            return base.MapCLRTypeToSQLType(type);
+            return base.CompatibleSQLType(type);
         }
     }
 
-    internal class MySQL : DatabaseConnector<MySqlConnection, MySqlParameter>
+    internal class MySQL : DatabaseConnector
     {
-        public MySQL(string connectionString) : base(connectionString)
+        public MySQL(string connectionString) : base(typeof(MySqlConnection), connectionString)
         {
-            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
+
+        }
+        protected override string CompatibleFunctionName(SqlFunction function)
+        {
+            if (function == SqlFunction.Length) return "LENGTH";
+            return base.CompatibleFunctionName(function);
         }
     }
 
-    internal class SQLite : DatabaseConnector<SQLiteConnection, SQLiteParameter>
+    internal class SQLite : DatabaseConnector
     {
-        public SQLite(string connectionString) : base(connectionString)
+        public SQLite(string connectionString) : base(typeof(SQLiteConnection), connectionString)
         {
-            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
+
+        }
+        protected override string CompatibleFunctionName(SqlFunction function)
+        {
+            if (function == SqlFunction.Length) return "LENGTH";
+            return base.CompatibleFunctionName(function);
         }
     }
 
-    internal class PostgreSQL : DatabaseConnector<NpgsqlConnection, NpgsqlParameter>
+    internal class PostgreSQL : DatabaseConnector
     {
-        public PostgreSQL(string connectionString) : base(connectionString)
+        public PostgreSQL(string connectionString) : base(typeof(Npgsql.NpgsqlConnection), connectionString)
         {
-            SQLFunctionConfiguration.Add(Enum.SqlFunction.Length, "LENGTH");
+
+        }
+        protected override string CompatibleFunctionName(SqlFunction function)
+        {
+            if (function == SqlFunction.Length) return "LENGTH";
+            return base.CompatibleFunctionName(function);
         }
     }
 }

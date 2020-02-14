@@ -82,6 +82,46 @@
             Shift all elements by 1 index to the right.
             </summary>
         </member>
+        <member name="T:Utilities.Classes.DatabaseParameter">
+            <summary>
+            Provide an abstract layer for IDbParameter for using in a non-generic environment.
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.DatabaseParameter.ParameterName">
+            <summary>
+            Name of parameter;
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DatabaseParameter.Value">
+            <summary>
+            Value of parameter;
+            </summary>
+        </member>
+        <member name="F:Utilities.Classes.DatabaseParameter.Direction">
+            <summary>
+            Direction of parameter;
+            </summary>
+        </member>
+        <member name="P:Utilities.Classes.DatabaseParameter.DbType">
+            <summary>
+            Get the <seealso cref="T:System.Data.DbType"/> of the parameter, this property is currently not allow to set.
+            </summary>
+        </member>
+        <member name="M:Utilities.Classes.DatabaseParameter.#ctor(System.String,System.Object)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="parameterName">Name of parameter</param>
+            <param name="value">Value of parameter</param>
+        </member>
+        <member name="M:Utilities.Classes.DatabaseParameter.#ctor(System.String,System.Object,System.Data.ParameterDirection)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="parameterName">Name of parameter</param>
+            <param name="value">Value of parameter</param>
+            <param name="direction">Direction of parameter</param>
+        </member>
         <member name="T:Utilities.Classes.InternalPropertyInfo">
             <summary>
             Proxy for PropertyInfo for customizable property for internal use only.
@@ -378,181 +418,112 @@
             <param name="encoding">The encoding to apply to the string.</param>
             <param name="fileMode">File mode.</param>
         </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Collections.Generic.IEnumerable{System.Object},System.String,System.Text.Encoding)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
+        <member name="M:Utilities.File.WriteAsJsonAsync(System.Object,System.String,System.Text.Encoding)">
+            <summary>
+            Serialize given object and write to json file.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">Target object.</param>
+            <param name="path">Path to target json file.</param>
+            <param name="encoding">The encoding to apply to the string.</param>
+            <param name="fileMode">File mode.</param>
+        </member>
         <member name="T:Utilities.HttpRequest">
             <summary>
-            Wrapper for standard Microsoft HttpClient request for GET,POST,PUT and DELETE
+            Wrapper for standard Microsoft HttpClient request for GET,POST,PUT,PATCH and DELETE
             </summary>
         </member>
-        <member name="M:Utilities.HttpRequest.Get(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.#ctor(System.String)">
             <summary>
-            Send a GET request to the specified Uri.
+            Constructor
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="baseUrl"></param>
+        </member>
+        <member name="M:Utilities.HttpRequest.GetAsync(System.String)">
+            <summary>
+            Request GET to specific action of current host url and return status code with body.
+            </summary>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.GetFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.GetAsync``1(System.String)">
             <summary>
-            Send a GET request to the specified Uri.
+            Request GET to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.GetAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.Object)">
             <summary>
-            Send a GET request to the specified Uri as an asynchronous operation.
+            Request POST to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">Target endpoint</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.GetAsyncFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PostAsync``1(System.String,System.Object)">
             <summary>
-            Send a GET request to the specified Uri as an asynchronous operation.
+            Request POST to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.Object)">
             <summary>
-            Send a DELETE request to the specified Uri.
+            Request PUT to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PutAsync``1(System.String,System.Object)">
             <summary>
-            Send a DELETE request to the specified Uri.
+            Request PUT to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PatchAsync(System.String,System.Object)">
             <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
+            Request PATCH to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.PatchAsync``1(System.String,System.Object)">
             <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
+            Request PATCH to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.Post(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String)">
             <summary>
-            Send a POST request to the specified Uri.
+            Request DELETE to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PostFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.DeleteAsync``1(System.String)">
             <summary>
-            Send a POST request to the specified Uri.
+            Request DELETE to specific action of current host url and return status code with body.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="path"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.HttpRequest.PostAsync(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Utilities.HttpRequest.DefaultContentBuilder(System.Object)">
             <summary>
-            Send a POST request to the specified Uri as an asynchronous operation.
+            Provide a way to build HttpContent from given body as a fallback when body is not HttpContent already.
             </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PostAsyncFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a POST request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Put(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutAsync(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.PutAsyncFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a PUT request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.Delete(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.HttpRequest.DeleteAsyncFor``1(System.String,System.Net.Http.HttpContent,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Send a DELETE request to the specified Uri as an asynchronous operation.
-            </summary>
-            <param name="url">The Uri the request is sent to.</param>
-            <param name="body">The body content the request is sent to.</param>
-            <param name="headers"></param>
+            <param name="body"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.Interfaces.ICsvReader">
@@ -586,7 +557,7 @@
             Connector underlying current connection.
             </summary>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -598,7 +569,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of POCO</returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -609,7 +580,7 @@
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of dynamic object</returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsDataTable(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsDataTable(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return DataTable
             </summary>
@@ -619,7 +590,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute parameterized SQL that selects a single value.
             </summary>
@@ -629,7 +600,7 @@
             <param name="commandType"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -640,7 +611,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -650,7 +621,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -662,7 +633,7 @@
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of POCO</returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -672,7 +643,7 @@
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of dynamic object</returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return DataTable in an asynchronous manner
             </summary>
@@ -682,7 +653,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a string in asynchronous manner
             </summary>
@@ -692,7 +663,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -703,7 +674,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -1138,6 +1109,38 @@
             <param name="encryptedBytes">Encrypted byte array</param>
             <returns>Raw data of encrypted byte array</returns>
         </member>
+        <member name="T:Utilities.Security.OneWayHash">
+            <summary>
+            Simple wrapper for one-way hashing specifically for password hashing.
+            </summary>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[],System.Security.Cryptography.DeriveBytes)">
+            <summary>
+            Encrypt text with specified salt, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+            </summary>
+            <param name="text"></param>
+            <param name="salt"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[]@)">
+            <summary>
+            Encrypt text WITHOUT specified salt and let the internal worker generate salt instead, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+            </summary>
+            <param name="text"></param>
+            <param name="salt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Verify(System.String,System.String,System.Byte[])">
+            <summary>
+            Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
+            </summary>
+            <param name="text"></param>
+            <param name="hash"></param>
+            <param name="salt"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
         <member name="T:Utilities.Shared.ArrayExtension">
             <summary>
             Collection of Array extension methods
@@ -1360,43 +1363,6 @@
             <param name="source"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Take last element out of given enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentOutOfRangeException"/>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Append``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Appends a value to the end of the sequence.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source">A sequence of values.</param>
-            <param name="element">The value to append to source.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Prepend``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Prepends a value to the start of the sequence.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source">A sequence of values.</param>
-            <param name="element">The value to append to source.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.SkipLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Take a sequence of elements from the start and skip N elements from the end.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source"></param>
-            <param name="count"></param>
-            <returns></returns>
-        </member>
         <member name="M:Utilities.Shared.EnumerableExtension.AsList``1(System.Collections.Generic.IEnumerable{``0})">
             Implementation of Dapper's AsList (https://github.com/StackExchange/Dapper/blob/master/Dapper/SqlMapper.cs) Licensed as http://www.apache.org/licenses/LICENSE-2.0
             <summary>
@@ -1456,26 +1422,14 @@
             <typeparam name="TSource"></typeparam>
             <returns></returns>
         </member>
-        <member name="T:Utilities.SQL.Abstract.DatabaseConnectorContractor">
+        <member name="T:Utilities.SQL.Abstracts.DatabaseConnectorBase">
             <summary>
-            Contractor class with properties required for internal and derived class.
+            Abstract class that is contains the higher-abstract level of IDatabaseConnector.
             </summary>
-        </member>
-        <member name="P:Utilities.SQL.Abstract.DatabaseConnectorContractor.SQLFunctionConfiguration">
-            <summary>
-            SQL-function configuration for LINQ usage.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.Abstract.DatabaseConnectorContractor.MapCLRTypeToSQLType(System.Type)">
-            <summary>
-            Provide converter to convert data type from CLR to underlying SQL type.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
         </member>
         <member name="T:Utilities.SQL.DatabaseConnector">
             <summary>
-            Abstract class that is contains the implementation of the database connector.
+            Default implementation class of DatabaseConnectorProvider, provide an necessary implement for IDatabaseConnector.
             </summary>
         </member>
         <member name="P:Utilities.SQL.DatabaseConnector.ConnectionString">
@@ -1493,7 +1447,28 @@
             Instance of object that hold information of the connection.
             </summary>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.SQL.DatabaseConnector.#ctor(System.Type,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connectorType">Type of database connector, must be derived type of DbConnection</param>
+            <param name="connectionString">Connection string to database</param>
+            <exception cref="T:System.ArgumentNullException">Will throw argument null if connector type is null</exception>
+            <exception cref="T:System.InvalidCastException">Will throw invalid cast if connector type is not a subclass of DbConnection</exception>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.#ctor(System.Data.Common.DbConnection)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="connection">Instance of database connection</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.Dispose">
+            <summary>
+            Close the connection to the database.
+            </summary>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1505,7 +1480,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>IEnumerable of POCO</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -1516,7 +1491,7 @@
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of dynamic object</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalar``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -1527,7 +1502,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteNonQuery(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -1537,7 +1512,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
             </summary>
@@ -1549,7 +1524,7 @@
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of POCO</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType,System.Boolean)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
             Execute SELECT SQL query and return IEnumerable of dynamic object
             </summary>
@@ -1560,7 +1535,7 @@
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of dynamic object</returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalarAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a scalar object
             </summary>
@@ -1571,7 +1546,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteNonQueryAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute any non-DML SQL Query
             </summary>
@@ -1581,7 +1556,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalar(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a string
             </summary>
@@ -1591,7 +1566,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteScalarAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return a string in asynchronous manner
             </summary>
@@ -1601,7 +1576,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsDataTable(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsDataTable(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return DataTable
             </summary>
@@ -1611,7 +1586,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Structs.DbParameterStruct},System.Data.IDbTransaction,System.Data.CommandType)">
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsDataTableAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
             <summary>
             Execute SELECT SQL query and return DataTable in an asynchronous manner
             </summary>
@@ -1621,12 +1596,75 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.CompatibleFunctionName(Utilities.Enum.SqlFunction)">
+            <summary>
+            Provide function to convert from internal support SQL function to compatible SQL function (default support SQL Server).
+            </summary>
+            <param name="function"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.CompatibleSQLType(System.Type)">
+            <summary>
+            Provide function to convert from CLR type to compatible SQL type (default support SQL Server).
+            </summary>
+            <param name="type">CLR type</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsyncEnumerable``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, supported by async enumerable runtime.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsyncEnumerable(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object, supported by async enumerable runtime.
+            </summary>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="transaction"></param>
+            <param name="commandType">Type of SQL Command.</param>
+            <returns>IEnumerable of dynamic object</returns>
+        </member>
+        <member name="E:Utilities.SQL.DatabaseConnector.OnQueryExecuting">
+            <summary>
+            The event that will trigger when query is ready to execute.
+            </summary>
+        </member>
+        <member name="E:Utilities.SQL.DatabaseConnector.OnqueryExecuted">
+            <summary>
+            The event that will trigger when query is executed.
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.Events.ExecutionInterceptor">
+            <summary>
+            Contains event for command execution interceptor.
+            </summary>
+        </member>
+        <member name="T:Utilities.SQL.Events.ExecutionInterceptor.OnQueryExecutingEventHandler">
+            <summary>
+            The event that will trigger when query is ready to execute.
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+        </member>
+        <member name="T:Utilities.SQL.Events.ExecutionInterceptor.OnQueryExecutedEventHandler">
+            <summary>
+            The event that will trigger when query is executed.
+            </summary>
+            <param name="affectedRows"></param>
+        </member>
         <member name="T:Utilities.SQL.Extension.DataConnectorExtension">
             <summary>
             Provide extension set on CRUD operation for IDatabaseConnector
             </summary>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Query``1(Utilities.Interfaces.IDatabaseConnector,System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Query``1(Utilities.Interfaces.IDatabaseConnector,System.Nullable{System.Int32},System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1634,9 +1672,10 @@
             <param name="connector"></param>
             <param name="top">Specified TOP(n) rows.</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Query``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Query``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1644,18 +1683,20 @@
             <param name="connector"></param>
             <param name="primaryKey">Primary key of specific row</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirst``1(Utilities.Interfaces.IDatabaseConnector,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirst``1(Utilities.Interfaces.IDatabaseConnector,System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select first row from table.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="connector"></param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirst``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirst``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select first row from table by using matched predicate.
             </summary>
@@ -1663,9 +1704,10 @@
             <param name="connector"></param>
             <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Insert``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Insert``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.Common.DbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1675,7 +1717,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.InsertMany``1(Utilities.Interfaces.IDatabaseConnector,System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.InsertMany``1(Utilities.Interfaces.IDatabaseConnector,System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
             <summary>
             Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1685,7 +1727,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Update``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Update``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.Common.DbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1695,7 +1737,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an update.</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Delete``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Delete``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.Common.DbTransaction)">
             <summary>
             Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1705,7 +1747,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Nullable{System.Int32},System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select all rows from table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1713,9 +1755,10 @@
             <param name="connector"></param>
             <param name="top">Specified TOP(n) rows.</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>IEnumerable of object</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select one row from table from given primary key (primary key can be set by [PrimaryKey] attribute, table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1723,18 +1766,20 @@
             <param name="connector"></param>
             <param name="primaryKey">Primary key of specific row</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirstAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirstAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select first row from table.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="connector"></param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirstAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryFirstAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select first row from table by using matched predicate.
             </summary>
@@ -1742,9 +1787,10 @@
             <param name="connector"></param>
             <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns>Object of given class</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.InsertAsync``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.InsertAsync``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.Common.DbTransaction)">
             <summary>
             Insert row into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1754,7 +1800,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.InsertManyAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.InsertManyAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Collections.Generic.IEnumerable{``0},System.Data.Common.DbTransaction)">
             <summary>
             Insert rows into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1764,7 +1810,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an insert.</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.UpdateAsync``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.UpdateAsync``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.Common.DbTransaction)">
             <summary>
             Update specific object into table (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1774,7 +1820,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns>Affected row after an update.</returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.DeleteAsync``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.DeleteAsync``1(Utilities.Interfaces.IDatabaseConnector,``0,System.Data.Common.DbTransaction)">
             <summary>
             Delete given object from table by inference of [PrimaryKey] attribute. (table name is a class name or specific [Table] attribute, an attribute has higher priority).
             </summary>
@@ -1784,7 +1830,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Query``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Query``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -1793,9 +1839,10 @@
             <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="top">Specified TOP(n) rows.</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Delete``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Delete``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
             <summary>
             Delete data from table by using matched predicate
             </summary>
@@ -1805,7 +1852,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.Common.DbTransaction,System.Boolean)">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -1814,9 +1861,10 @@
             <param name="predicate">Predicate of data in LINQ manner</param>
             <param name="top">Specified TOP(n) rows.</param>
             <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.DeleteAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.DeleteAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.Common.DbTransaction)">
             <summary>
             Select data from table by using matched predicate
             </summary>
@@ -1826,7 +1874,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Delete``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Delete``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.Common.DbTransaction)">
             <summary>
             Select data from table by using primary key
             </summary>
@@ -1836,7 +1884,7 @@
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.DeleteAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.IDbTransaction)">
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.DeleteAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Object,System.Data.Common.DbTransaction)">
             <summary>
             Select data from table by using primary key
             </summary>
@@ -1858,6 +1906,74 @@
             Returns rows count from specified table in an asynchronous manner.
             </summary>
             <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffset``1(Utilities.Interfaces.IDatabaseConnector,System.Int32,System.Int32,System.Data.Common.DbTransaction,System.Boolean)">
+            <summary>
+            Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
+            <param name="offset">The amount of rows to be offset (skip).</param>
+            <param name="limit">The amount of rows to be take.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffset``1(Utilities.Interfaces.IDatabaseConnector,System.String,System.Int32,System.Int32,System.Data.Common.DbTransaction,System.Boolean)">
+            <summary>
+            Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
+            <param name="orderBy">Order by column.</param>
+            <param name="offset">The amount of rows to be offset (skip).</param>
+            <param name="limit">The amount of rows to be take.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffsetAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Int32,System.Int32,System.Data.Common.DbTransaction,System.Boolean)">
+            <summary>
+            Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
+            <param name="offset">The amount of rows to be offset (skip).</param>
+            <param name="limit">The amount of rows to be take.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffsetAsync``1(Utilities.Interfaces.IDatabaseConnector,System.String,System.Int32,System.Int32,System.Data.Common.DbTransaction,System.Boolean)">
+            <summary>
+            Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
+            <param name="orderBy">Order by column.</param>
+            <param name="offset">The amount of rows to be offset (skip).</param>
+            <param name="limit">The amount of rows to be take.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <param name="buffered">Whether the data should be cached in memory.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.CreateTable``1(Utilities.Interfaces.IDatabaseConnector,System.Data.Common.DbTransaction)">
+            <summary>
+            Create table from model object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.CreateTableAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Data.Common.DbTransaction)">
+            <summary>
+            Create table from model object in an asynchronous manner.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
+            <param name="transaction"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.Extension.SqlConnectionExtension">
@@ -1894,7 +2010,7 @@
             Provide extension for SQL generate.
             </summary>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,System.Nullable{System.Int32})">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,System.Nullable{System.Int32})">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1902,7 +2018,7 @@
             <param name="top"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32})">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1911,7 +2027,7 @@
             <param name="top"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,System.Object)">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.SelectQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,System.Object)">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1919,7 +2035,7 @@
             <param name="primaryKey"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.InsertQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,``0)">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.InsertQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,``0)">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1927,7 +2043,7 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.InsertQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.InsertQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1935,7 +2051,7 @@
             <param name="source"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.UpdateQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,``0)">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.UpdateQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,``0)">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1943,7 +2059,7 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,``0)">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,``0)">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1951,7 +2067,7 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,System.Object)">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,System.Object)">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
@@ -1959,12 +2075,20 @@
             <param name="primaryKey"></param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.DeleteQueryGenerate``1(Utilities.SQL.Abstracts.DatabaseConnectorBase,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
             Generate SQL query with sql parameters.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.Extension.SqlQueryExtension.GenerateCreateTableStatement``1(Utilities.SQL.Abstracts.DatabaseConnectorBase)">
+            <summary>
+            Generate SQL create table query.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connector"></param>
             <returns></returns>
         </member>
         <member name="T:Utilities.SQL.Translator.Converter`1">
@@ -1999,76 +2123,11 @@
             be part of an evaluated sub-tree.
             </summary>
         </member>
-        <member name="T:Utilities.SQL.Translator.ExpressionTranslator`2">
-            <summary>
-            Provide expression tree translation service using visitor pattern.
-            </summary>
-            <typeparam name="TObject"></typeparam>
-            <typeparam name="TSqlParameter"></typeparam>
-        </member>
-        <member name="M:Utilities.SQL.Translator.ExpressionTranslator`2.VisitBinary(System.Linq.Expressions.BinaryExpression)">
-             <summary>
-            
-             </summary>
-             <param name="b"></param>
-             <returns></returns>
-        </member>
-        <member name="T:Utilities.SQL.Translator.ExpressionTranslator`1">
-            <summary>
-            Provide expression tree translation servic     <returns></returns>
-        </member>
-        <member name="T:Utilities.SQL.Translator.Converter`1">
-            <summary>
-            alternative to reflection builder with MUCH better on performance, implementation taken from https://stackoverflow.com/questions/19841120/generic-dbdatareader-to-listt-mapping/19845980#19845980
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})">
-            <summary>
-            Performs evaluation and replacement of independent sub-trees
-            </summary>
-            <param name="expression">The root of the expression tree.</param>
-            <param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>
-            <returns>A new tree with sub-trees evaluated and replaced.</returns>
-        </member>
-        <member name="M:Utilities.SQL.Translator.Evaluator.PartialEval(System.Linq.Expressions.Expression)">
-            <summary>
-            Performs evaluation and replacement of independent sub-trees
-            </summary>
-            <param name="expression">The root of the expression tree.</param>
-            <returns>A new tree with sub-trees evaluated and replaced.</returns>
-        </member>
-        <member name="T:Utilities.SQL.Translator.Evaluator.SubtreeEvaluator">
-            <summary>
-            Evaluates and replaces sub-trees when first candidate is reached (top-down)
-            </summary>
-        </member>
-        <member name="T:Utilities.SQL.Translator.Evaluator.Nominator">
-            <summary>
-            Performs bottom-up analysis to determine which nodes can possibly
-            be part of an evaluated sub-tree.
-            </summary>
-        </member>
-        <member name="T:Utilities.SQL.Translator.ExpressionTranslator`2">
-            <summary>
-            Provide expression tree translation service using visitor pattern.
-            </summary>
-            <typeparam name="TObject"></typeparam>
-            <typeparam name="TSqlParameter"></typeparam>
-        </member>
-        <member name="M:Utilities.SQL.Translator.ExpressionTranslator`2.VisitBinary(System.Linq.Expressions.BinaryExpression)">
-             <summary>
-            
-             </summary>
-             <param name="b"></param>
-             <returns></returns>
-        </member>
         <member name="T:Utilities.SQL.Translator.ExpressionTranslator`1">
             <summary>
             Provide expression tree translation service using visitor pattern.
             </summary>
             <typeparam name="TObject"></typeparam>
-            <typeparam name="TSqlParameter"></typeparam>
         </member>
         <member name="M:Utilities.SQL.Translator.ExpressionTranslator`1.VisitBinary(System.Linq.Expressions.BinaryExpression)">
              <summary>
@@ -2174,114 +2233,20 @@
             <returns></returns>
         </member>
         <member name="M:Utilities.String.NumberFormat(System.Decimal,Utilities.Enum.FormatSpecifier)">
- nd last element.
-            </remarks>
-        </member>
-        <member name="P:System.Index.Start">
-            <summary>Create an Index pointing at first element.</summary>
-        </member>
-        <member name="P:System.Index.End">
-            <summary>Create an Index pointing at beyond last element.</summary>
-        </member>
-        <member name="M:System.Index.FromStart(System.Int32)">
-            <summary>Create an Index from the start at the position indicated by the value.</summary>
-            <param name="value">The index value from the start.</param>
-        </member>
-        <member name="M:System.Index.FromEnd(System.Int32)">
-            <summary>Create an Index from the end at the position indicated by the value.</summary>
-            <param name="value">The index value from the end.</param>
-        </member>
-        <member name="P:System.Index.Value">
-            <summary>Returns the index value.</summary>
-        </member>
-        <member name="P:System.Index.IsFromEnd">
-            <summary>Indicates whether the index is from the start or the end.</summary>
-        </member>
-        <member name="M:System.Index.GetOffset(System.Int32)">
-            <summary>Calculate the offset from the start using the giving collection length.</summary>
-            <param name="length">The length of the collection that the Index will be used with. length has to be a positive value</param>
-            <remarks>
-            For performance reason, we don't validate the input length parameter and the returned offset value against negative values.
-            we don't validate either the returned offset is greater than the input length.
-            It is expected Index will be used with collections which always have non negative length/count. If the returned offset is negative and
-            then used to index a collection will get out of range exception which will be same affect as the validation.
-            </remarks>
-        </member>
-        <member name="M:System.Index.Equals(System.Object)">
-            <summary>Indicates whether the current Index object is equal to another object of the same type.</summary>
-            <param name="value">An object to compare with this object</param>
-        </member>
-        <member name="M:System.Index.Equals(System.Index)">
-            <summary>Indicates whether the current Index object is equal to another Index object.</summary>
-            <param name="other">An object to compare with this object</param>
-        </member>
-        <member name="M:System.Index.GetHashCode">
-            <summary>Returns the hash code for this instance.</summary>
-        </member>
-        <member name="M:System.Index.op_Implicit(System.Int32)~System.Index">
-            <summary>Converts integer number to an Index.</summary>
-        </member>
-        <member name="M:System.Index.ToString">
-            <summary>Converts the value of the current Index object to its equivalent string representation.</summary>
-        </member>
-        <member name="T:System.Range">
-            <summary>Represent a range has start and end indexes.</summary>
-            <remarks>
-            Range is used by the C# compiler to support the range syntax.
-            <code>
-            int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
-            int[] subArray1 = someArray[0..2]; // { 1, 2 }
-            int[] subArray2 = someArray[1..^0]; // { 2, 3, 4, 5 }
-            </code>
-            </remarks>
-        </member>
-        <member name="P:System.Range.Start">
-            <summary>Represent the inclusive start index of the Range.</summary>
-        </member>
-        <member name="P:System.Range.End">
-            <summary>Represent the exclusive end index of the Range.</summary>
-        </member>
-        <member name="M:System.Range.#ctor(System.Index,System.Index)">
-            <summary>Construct a Range object using the start and end indexes.</summary>
-            <param name="start">Represent the inclusive start index of the range.</param>
-            <param name="end">Represent the exclusive end index of the range.</param>
-        </member>
-        <member name="M:System.Range.Equals(System.Object)">
-            <summary>Indicates whether the current Range object is equal to another object of the same type.</summary>
-            <param name="value">An object to compare with this object</param>
-        </member>
-        <member name="M:System.Range.Equals(System.Range)">
-            <summary>Indicates whether the current Range object is equal to another Range object.</summary>
-            <param name="other">An object to compare with this object</param>
-        </member>
-        <member name="M:System.Range.GetHashCode">
-            <summary>Returns the hash code for this instance.</summary>
-        </member>
-        <member name="M:System.Range.ToString">
-            <summary>Converts the value of the current Range object to its equivalent string representation.</summary>
-        </member>
-        <member name="M:System.Range.StartAt(System.Index)">
-            <summary>Create a Range object starting from start index to the end of the collection.</summary>
-        </member>
-        <member name="M:System.Range.EndAt(System.Index)">
-            <summary>Create a Range object starting from first element in the collection to the end Index.</summary>
-        </member>
-        <member name="P:System.Range.All">
-            <summary>Create a Range object starting from first element to the end.</summary>
-        </member>
-        <member name="M:System.Range.GetOffsetAndLength(System.Int32)">
-            <summary>Calculate the start offset and length of range object using a collection length.</summary>
-            <param name="length">The length of the collection that the range will be used with. length has to be a positive value.</param>
-            <remarks>
-            For performance reason, we don't validate the input length parameter against negative values.
-            It is expected Range will be used with collections which always have non negative length/count.
-            We validate the range is inside the length scope though.
-            </remarks>
-        </member>
-        <member name="M:System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray``1(``0[],System.Range)">
             <summary>
-            Slices the specified array using the specified range.
+            Convert given value into a number format.
             </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,Utilities.Enum.FormatSpecifier)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

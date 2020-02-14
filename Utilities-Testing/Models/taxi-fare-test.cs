@@ -6,6 +6,8 @@ namespace Utilities.Testing.Models
     [Utilities.Attributes.SQL.Table("[taxi-fare-test]")]
     public class taxifaretest
     {
+        [PrimaryKey]
+        [NotNull]
         public string vendor_id { get; set; }
         public float rate_code { get; set; }
         public float passenger_count { get; set; }

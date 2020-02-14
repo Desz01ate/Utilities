@@ -6,33 +6,45 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities.Classes;
 using Utilities.Enum;
 using Utilities.Interfaces;
 using Utilities.Shared;
+using Utilities.SQL.Abstracts;
 using Utilities.SQL.Extension;
 using Utilities.SQL.Translator;
-using Utilities.Structs;
+
+using static Utilities.SQL.Events.ExecutionInterceptor;
 
 namespace Utilities.SQL
 {
     /// <summary>
-    /// Abstract class that is contains the implementation of the database connector.
+    /// Default implementation class of DatabaseConnectorProvider, provide an necessary implement for IDatabaseConnector.
     /// </summary>
-    public partial class DatabaseConnector : IDatabaseConnector
+    public partial class DatabaseConnector : DatabaseConnectorBase
     {
         /// <summary>
         /// Connection string of this object.
         /// </summary>
-        public string ConnectionString => Connection.ConnectionString;
+        public override string ConnectionString
+        {
+            get
+            {
+                return Connection.ConnectionString;
+            }
+            set
+            {
+                Connection.ConnectionString = value;
+            }
+        }
         /// <summary>
         /// Determine whether the connection is open or not.
         /// </summary>
-        public bool IsOpen => Connection.State == ConnectionState.Open;
+        public override bool IsOpen => Connection.State == ConnectionState.Open;
         /// <summary>
         /// Instance of object that hold information of the connection.
         /// </summary>
-        public DbConnection Connection { get; }
-        private bool Disposed { get; set; }
+        public override DbConnection Connection { get; }
         /// <summary>
         /// Constructor
         /// </summary>
@@ -62,23 +74,6 @@ namespace Utilities.SQL
             connection.Open();
         }
 
-        void Dispose(bool disposing)
-        {
-            if (Disposed) return;
-            if (disposing)
-            {
-                Connection.Dispose();
-            }
-            Disposed = true;
-        }
-        /// <summary>
-        /// Close the connection to the database.
-        /// </summary>
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
         /// <summary>
         /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
         /// </summary>
@@ -89,11 +84,11 @@ namespace Utilities.SQL
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        public virtual IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false) where T : class, new()
+        public override IEnumerable<T> ExecuteReader<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false)
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -101,11 +96,15 @@ namespace Utilities.SQL
                 {
                     var compatibleParameter = command.CreateParameter();
                     compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.ParameterValue;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
                     command.Parameters.Add(compatibleParameter);
                 }
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = command.ExecuteReader();
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var deferred = DataReaderBuilder<T>(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
@@ -121,11 +120,11 @@ namespace Utilities.SQL
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <returns>IEnumerable of dynamic object</returns>
 
-        public virtual IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false)
+        public override IEnumerable<dynamic> ExecuteReader(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false)
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -133,11 +132,15 @@ namespace Utilities.SQL
                 {
                     var compatibleParameter = command.CreateParameter();
                     compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.ParameterValue;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
                     command.Parameters.Add(compatibleParameter);
                 }
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = command.ExecuteReader();
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var deferred = DataReaderDynamicBuilder(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
@@ -153,13 +156,13 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual T ExecuteScalar<T>(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override T ExecuteScalar<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             T result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
+                command.Transaction = transaction;
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
@@ -167,10 +170,13 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter);
                     }
                 }
+                this.OnQueryExecuting?.Invoke(sql, parameters);
                 result = (T)command.ExecuteScalar();
             }
             return result;
@@ -185,13 +191,13 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual int ExecuteNonQuery(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override int ExecuteNonQuery(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             int result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
+                command.Transaction = transaction;
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
@@ -199,10 +205,13 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter);
                     }
                 }
+                this.OnQueryExecuting?.Invoke(sql, parameters);
                 result = command.ExecuteNonQuery();
             }
             return result;
@@ -221,11 +230,11 @@ namespace Utilities.SQL
 
         /// <returns>IEnumerable of POCO</returns>
 
-        public virtual async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false) where T : class, new()
+        public override async Task<IEnumerable<T>> ExecuteReaderAsync<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false)
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -233,11 +242,15 @@ namespace Utilities.SQL
                 {
                     var compatibleParameter = command.CreateParameter();
                     compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.ParameterValue;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
                     command.Parameters.Add(compatibleParameter);
                 }
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var deferred = DataReaderBuilder<T>(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
@@ -252,12 +265,12 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="buffered">Whether to buffered result in memory.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        public virtual async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false)
+        public override async Task<IEnumerable<dynamic>> ExecuteReaderAsync(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = false)
         {
             using var command = Connection.CreateCommand();
 
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -265,11 +278,15 @@ namespace Utilities.SQL
                 {
                     var compatibleParameter = command.CreateParameter();
                     compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.ParameterValue;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
                     command.Parameters.Add(compatibleParameter);
                 }
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var deferred = DataReaderDynamicBuilder(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
@@ -285,14 +302,14 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override async Task<T> ExecuteScalarAsync<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             T result;
 
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
+                command.Transaction = transaction;
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
@@ -300,10 +317,13 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter);
                     }
                 }
+                this.OnQueryExecuting?.Invoke(sql, parameters);
                 result = (T)(await command.ExecuteScalarAsync().ConfigureAwait(false));
             }
             return result;
@@ -318,13 +338,13 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override async Task<int> ExecuteNonQueryAsync(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             int result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
+                command.Transaction = transaction;
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
@@ -332,10 +352,13 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter);
                     }
                 }
+                this.OnQueryExecuting?.Invoke(sql, parameters);
                 result = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
             return result;
@@ -350,14 +373,14 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual object ExecuteScalar(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override object ExecuteScalar(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             object result;
 
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
+                command.Transaction = transaction;
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
@@ -365,10 +388,13 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter);
                     }
                 }
+                this.OnQueryExecuting?.Invoke(sql, parameters);
                 result = command.ExecuteScalar();
             }
             return result;
@@ -383,13 +409,13 @@ namespace Utilities.SQL
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
 
-        public virtual async Task<object> ExecuteScalarAsync(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override async Task<object> ExecuteScalarAsync(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             object result;
             using (var command = Connection.CreateCommand())
             {
                 command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
+                command.Transaction = transaction;
                 command.CommandType = commandType;
                 if (parameters != null)
                 {
@@ -397,10 +423,13 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter); command.Parameters.Add(parameter);
                     }
                 }
+                this.OnQueryExecuting?.Invoke(sql, parameters);
                 result = await command.ExecuteScalarAsync().ConfigureAwait(false);
             }
             return result;
@@ -414,28 +443,30 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override DataTable ExecuteReaderAsDataTable(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
-            using (var command = Connection.CreateCommand())
+            using var command = Connection.CreateCommand();
+            command.CommandText = sql;
+            command.Transaction = transaction;
+            command.CommandType = commandType;
+            if (parameters != null)
             {
-                command.CommandText = sql;
-                command.Transaction = transaction as DbTransaction;
-                command.CommandType = commandType;
-                if (parameters != null)
+                foreach (var parameter in parameters)
                 {
-                    foreach (var parameter in parameters)
-                    {
-                        var compatibleParameter = command.CreateParameter();
-                        compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
-                        command.Parameters.Add(compatibleParameter);
-                    }
+                    var compatibleParameter = command.CreateParameter();
+                    compatibleParameter.ParameterName = parameter.ParameterName;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
+                    command.Parameters.Add(compatibleParameter);
                 }
-                var cursor = command.ExecuteReader();
-                var dataTable = new DataTable();
-                dataTable.Load(cursor);
-                return dataTable;
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
+            var cursor = command.ExecuteReader();
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
+            var dataTable = new DataTable();
+            dataTable.Load(cursor);
+            return dataTable;
         }
 
         /// <summary>
@@ -446,11 +477,11 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns></returns>
-        public async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+        public override async Task<DataTable> ExecuteReaderAsDataTableAsync(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             using var command = Connection.CreateCommand();
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -458,20 +489,94 @@ namespace Utilities.SQL
                 {
                     var compatibleParameter = command.CreateParameter();
                     compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.ParameterValue;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
                     command.Parameters.Add(compatibleParameter);
                 }
             }
-            DbDataReader cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            this.OnQueryExecuting?.Invoke(sql, parameters);
+            var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var dataTable = new DataTable();
             dataTable.Load(cursor);
             return dataTable;
         }
-        public virtual string CompatibleFunctionName(SqlFunction function) => function switch
+        /// <summary>
+        /// Provide function to convert from internal support SQL function to compatible SQL function (default support SQL Server).
+        /// </summary>
+        /// <param name="function"></param>
+        /// <returns></returns>
+        internal protected override string CompatibleFunctionName(SqlFunction function) => function switch
         {
             SqlFunction.Length => "LEN",
+            SqlFunction.Sum => "SUM",
             _ => throw new NotSupportedException(function.ToString())
         };
+        /// <summary>
+        /// Provide function to convert from CLR type to compatible SQL type (default support SQL Server).
+        /// </summary>
+        /// <param name="type">CLR type</param>
+        /// <returns></returns>
+        internal protected override string CompatibleSQLType(Type type)
+        {
+            if (type == typeof(string))
+            {
+                return "NVARCHAR(1024)";
+            }
+            else if (type == typeof(char) || type == typeof(char?))
+            {
+                return "NCHAR(1)";
+            }
+            else if (type == typeof(short) || type == typeof(short?) || type == typeof(ushort) || type == typeof(ushort?))
+            {
+                return "SMALLINT";
+            }
+            else if (type == typeof(int) || type == typeof(int?) || type == typeof(uint) || type == typeof(uint?))
+            {
+                return "INT";
+            }
+            else if (type == typeof(long) || type == typeof(long?) || type == typeof(ulong) || type == typeof(ulong?))
+            {
+                return "BIGINT";
+            }
+            else if (type == typeof(float) || type == typeof(float?))
+            {
+                return "REAL";
+            }
+            else if (type == typeof(double) || type == typeof(double?))
+            {
+                return "FLOAT";
+            }
+            else if (type == typeof(bool) || type == typeof(bool?))
+            {
+                return "BIT";
+            }
+            else if (type == typeof(decimal) || type == typeof(decimal?))
+            {
+                return "MONEY";
+            }
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                return "DATETIME";
+            }
+            else if (type == typeof(Guid) || type == typeof(Guid?))
+            {
+                return "UNIQUEIDENTIFIER";
+            }
+            else if (type == typeof(byte) || type == typeof(byte?) || type == typeof(sbyte) || type == typeof(sbyte?))
+            {
+                return "TINYINT";
+            }
+            else if (type == typeof(byte[]))
+            {
+                return "VARBINARY";
+            }
+            else
+            {
+                throw new NotSupportedException($"Unable to map type {type.FullName} to {this.GetType().FullName} SQL Type");
+            }
+        }
         private static IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
         {
             using (reader)
@@ -494,7 +599,6 @@ namespace Utilities.SQL
                 }
             }
         }
-
     }
 #if NETSTANDARD2_1
     public partial class DatabaseConnector
@@ -509,11 +613,11 @@ namespace Utilities.SQL
         /// <param name="commandType">Type of SQL Command.</param>
         /// <param name="transaction">Transaction for current execution.</param>
         /// <returns>IEnumerable of POCO</returns>
-        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
+        public virtual async IAsyncEnumerable<T> ExecuteReaderAsyncEnumerable<T>(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text) where T : class, new()
         {
             await using var command = Connection.CreateCommand();
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -521,11 +625,15 @@ namespace Utilities.SQL
                 {
                     var compatibleParameter = command.CreateParameter();
                     compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.ParameterValue;
+                    compatibleParameter.Value = parameter.Value;
+                    compatibleParameter.Direction = parameter.Direction;
+                    parameter.SetBindingRedirection(compatibleParameter);
                     command.Parameters.Add(compatibleParameter);
                 }
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var result = DataReaderBuilderAsync<T>(cursor);
             await foreach (var data in result)
             {
@@ -541,12 +649,13 @@ namespace Utilities.SQL
         /// <param name="transaction"></param>
         /// <param name="commandType">Type of SQL Command.</param>
         /// <returns>IEnumerable of dynamic object</returns>
-        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<DbParameterStruct>? parameters = null, IDbTransaction? transaction = null, CommandType commandType = CommandType.Text)
+
+        public virtual async IAsyncEnumerable<dynamic> ExecuteReaderAsyncEnumerable(string sql, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text)
         {
             await using var command = Connection.CreateCommand();
 
             command.CommandText = sql;
-            command.Transaction = transaction as DbTransaction;
+            command.Transaction = transaction;
             command.CommandType = commandType;
             if (parameters != null)
             {
@@ -555,12 +664,16 @@ namespace Utilities.SQL
                     {
                         var compatibleParameter = command.CreateParameter();
                         compatibleParameter.ParameterName = parameter.ParameterName;
-                        compatibleParameter.Value = parameter.ParameterValue;
+                        compatibleParameter.Value = parameter.Value;
+                        compatibleParameter.Direction = parameter.Direction;
+                        parameter.SetBindingRedirection(compatibleParameter);
                         command.Parameters.Add(compatibleParameter);
                     }
                 }
             }
+            this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
             var result = DataReaderDynamicBuilderAsync(cursor);
             await foreach (var data in result)
             {
@@ -592,4 +705,77 @@ namespace Utilities.SQL
         }
     }
 #endif
+    public partial class DatabaseConnector
+    {
+        /// <summary>
+        /// The event that will trigger when query is ready to execute.
+        /// </summary>
+        public event OnQueryExecutingEventHandler? OnQueryExecuting;
+        /// <summary>
+        /// The event that will trigger when query is executed.
+        /// </summary>
+        public event OnQueryExecutedEventHandler? OnqueryExecuted;
+    }
+    public partial class DatabaseConnector
+    {
+        /// <summary>
+        /// Gets the name of the current database after a connection is opened, or the database
+        /// name specified in the connection string before the connection is opened.
+        /// </summary>
+        public override string Database => Connection.Database;
+        /// <summary>
+        /// The name of the database server to which to connect. The default value is an
+        /// empty string. 
+        /// </summary>
+        public override string DataSource => Connection.DataSource;
+        /// <summary>
+        /// Gets a string that represents the version of the server to which the object is
+        /// connected. 
+        /// </summary>
+        public override string ServerVersion => Connection.ServerVersion;
+        /// <summary>
+        /// Gets a string that describes the state of the connection.
+        /// </summary>
+        public override ConnectionState State => Connection.State;
+        /// <summary>
+        /// Starts a database transaction with the specified isolation level.
+        /// </summary>
+        /// <param name="isolationLevel"></param>
+        /// <returns></returns>
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
+        {
+            return Connection.BeginTransaction(isolationLevel);
+        }
+        /// <summary>
+        /// Changes the current database for an open connection.
+        /// </summary>
+        /// <param name="databaseName"></param>
+        public override void ChangeDatabase(string databaseName)
+        {
+            Connection.ChangeDatabase(databaseName);
+        }
+        /// <summary>
+        /// Closes the connection to the database. This is the preferred method of closing
+        /// any open connection.
+        /// </summary>
+        public override void Close()
+        {
+            Connection?.Close();
+        }
+        /// <summary>
+        /// Creates and returns a System.Data.Common.DbCommand object associated with the
+        /// current connection.
+        /// </summary>
+        protected override DbCommand CreateDbCommand()
+        {
+            return Connection.CreateCommand();
+        }
+        /// <summary>
+        /// Opens a database connection with the settings specified by the System.Data.Common.DbConnection.ConnectionString.
+        /// </summary>
+        public override void Open()
+        {
+            Connection?.Open();
+        }
+    }
 }

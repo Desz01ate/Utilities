@@ -20,3 +20,9 @@ dotnet_diagnostic.CA1720.severity = suggestion
 
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = suggestion
+
+# IDE0011: Add braces
+csharp_prefer_braces = when_multiline:warning
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = suggestion

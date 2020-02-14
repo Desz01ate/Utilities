@@ -240,7 +240,7 @@ namespace Utilities.Shared
         }
     }
 #if !NETSTANDARD2_1
-    // These methods ares available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
+    // These methods are available in System.Linq from .NET Core 3.0 and .NET Standard 2.1 onwards.
     public static partial class EnumerableExtension
     {
         /// <summary>

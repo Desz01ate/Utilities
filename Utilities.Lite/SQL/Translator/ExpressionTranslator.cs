@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Utilities.Classes;
 using Utilities.Enum;
 using Utilities.Shared;
-using Utilities.SQL.Abstract;
-using Utilities.Structs;
 
 namespace Utilities.SQL.Translator
 {
@@ -27,7 +25,7 @@ namespace Utilities.SQL.Translator
         private string _previousVisitField;
         private readonly Func<SqlFunction, string> _compatibleFunctionMap;
         private readonly Dictionary<string, string> _fieldsConfiguration;
-        private readonly List<DbParameterStruct> _sqlParameters;
+        private readonly List<DatabaseParameter> _sqlParameters;
 
         public int? Skip
         {
@@ -65,7 +63,7 @@ namespace Utilities.SQL.Translator
         {
             _compatibleFunctionMap = compatibleFunctionMap;
             _fieldsConfiguration = new Dictionary<string, string>();
-            _sqlParameters = new List<DbParameterStruct>();
+            _sqlParameters = new List<DatabaseParameter>();
             foreach (var property in typeof(TObject).PropertiesBindingFlagsAttributeValidate())
             {
                 var key = property.OriginalName;
@@ -74,7 +72,7 @@ namespace Utilities.SQL.Translator
             }
         }
 
-        public (string Expression, IEnumerable<DbParameterStruct> Parameters) Translate(Expression expression)
+        public (string Expression, IEnumerable<DatabaseParameter> Parameters) Translate(Expression expression)
         {
             this.sb = new StringBuilder();
             this.Visit(expression);
@@ -144,7 +142,7 @@ namespace Utilities.SQL.Translator
                     {
                         var paramName = $@"@cepr{idx}";
                         paramArray[idx] = paramName;
-                        _sqlParameters.Add(new DbParameterStruct(paramName, values[idx]));
+                        _sqlParameters.Add(new DatabaseParameter(paramName, values[idx]));
                     }
                     sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
                     return m;
@@ -159,7 +157,7 @@ namespace Utilities.SQL.Translator
                     {
                         var paramName = $@"@cepr{idx}";
                         paramArray[idx] = paramName;
-                        _sqlParameters.Add(new DbParameterStruct(paramName, values[idx]));
+                        _sqlParameters.Add(new DatabaseParameter(paramName, values[idx]));
                     }
                     sb.Append($@"({field} IN ({string.Join(",", paramArray)}))");
                     return m;
@@ -168,7 +166,7 @@ namespace Utilities.SQL.Translator
                 {
                     var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                     var expression = CompileExpression(m.Arguments[0]);//m.Arguments[0].ToString().Replace("\"", "");
-                    _sqlParameters.Add(new DbParameterStruct(field,expression));
+                    _sqlParameters.Add(new DatabaseParameter(field,expression));
                     sb.Append($@"({field} LIKE '%' + @{field} + '%')");
                     return m;
                 }
@@ -177,7 +175,7 @@ namespace Utilities.SQL.Translator
             {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                 var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
-                _sqlParameters.Add(new DbParameterStruct(field, expression));
+                _sqlParameters.Add(new DatabaseParameter(field, expression));
                 sb.Append($@"({field} LIKE @{field} + '%')");
                 return m;
             }
@@ -185,7 +183,7 @@ namespace Utilities.SQL.Translator
             {
                 var field = _fieldsConfiguration[((MemberExpression)m.Object).Member.Name];
                 var expression = CompileExpression(m.Arguments[0]);//.ToString().Replace("\"", "");
-                _sqlParameters.Add(new DbParameterStruct(field, expression));
+                _sqlParameters.Add(new DatabaseParameter(field, expression));
                 sb.Append($@"({field} LIKE '%' + @{field})");
                 return m;
             }
@@ -327,7 +325,7 @@ namespace Utilities.SQL.Translator
 
                     case TypeCode.DateTime:
                     case TypeCode.String:
-                        _sqlParameters.Add(new DbParameterStruct(_previousVisitField,c.Value));
+                        _sqlParameters.Add(new DatabaseParameter(_previousVisitField,c.Value));
                         sb.Append($"@{_previousVisitField}");
                         //sb.Append("'");
                         //sb.Append(c.Value);
@@ -366,7 +364,7 @@ namespace Utilities.SQL.Translator
                     case ExpressionType.Constant:
                         var constantInvokedValue = CompileExpression(m);
                         if (_previousVisitField == null) _previousVisitField = m.Member.Name;
-                        _sqlParameters.Add(new DbParameterStruct(_previousVisitField, constantInvokedValue));
+                        _sqlParameters.Add(new DatabaseParameter(_previousVisitField, constantInvokedValue));
                         sb.Append($"@{_previousVisitField}");
                         return m;
                     //need more research on this
@@ -382,7 +380,7 @@ namespace Utilities.SQL.Translator
 
                             default:
                                 var value = CompileExpression(m);
-                                _sqlParameters.Add(new DbParameterStruct(_previousVisitField,value));
+                                _sqlParameters.Add(new DatabaseParameter(_previousVisitField,value));
                                 sb.Append($"@{_previousVisitField}");
                                 break;
                         }
