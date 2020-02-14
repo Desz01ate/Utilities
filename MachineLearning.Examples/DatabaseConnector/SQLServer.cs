@@ -3,15 +3,10 @@ using Utilities.SQL;
 
 namespace MachineLearning.Examples.DataConnector
 {
-    class SQLServer : DatabaseConnector<SqlConnection, SqlParameter>
+    class SQLServer : DatabaseConnector
     {
-        public SQLServer(string connectionString) : base(connectionString)
+        public SQLServer(string connectionString) : base(typeof(System.Data.SqlClient.SqlConnection), connectionString)
         {
-            SetFunctions();
-        }
-        private void SetFunctions()
-        {
-            this.SQLFunctionConfiguration.Add(Utilities.Enum.SqlFunction.Length, "LEN");
         }
     }
 }

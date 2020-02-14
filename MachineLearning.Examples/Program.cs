@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Utilities.SQL.Extension;
 namespace MachineLearning.Examples
 {
     class Program
@@ -197,9 +197,9 @@ namespace MachineLearning.Examples
 
             using (var connection = new SQLServer(sqlConnection))
             {
-                testdata = await connection.SelectAsync<TaxiFareTest>(top: 10);
+                testdata = await connection.QueryAsync<TaxiFareTest>(top: 10);
 
-                traindata = await connection.SelectAsync<TaxiFareTrain>();
+                traindata = await connection.QueryAsync<TaxiFareTrain>();
 
                 var context = new MLContext(1);
                 var dataframe = context.Data.LoadFromEnumerable(traindata);

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Util
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning", "MachineLearning\MachineLearning.csproj", "{18D587E6-AE69-4864-B2ED-9FCDDE1F23C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Testing", "Utilities-Testing\Utilities.Testing.csproj", "{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Testing", "Utilities.Testing\Utilities.Testing.csproj", "{8DC17A4E-A343-4F3F-9D6F-66B6E869FCE8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning.Examples", "MachineLearning.Examples\MachineLearning.Examples.csproj", "{375432CC-C34D-49ED-A1FF-D79919F71DC6}"
 EndProject
