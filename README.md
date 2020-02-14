@@ -27,8 +27,8 @@ You can use some exists driver like System.Data.SqlClient, MySql.Data.MySqlClien
 or implement them yourself
 
 ```
-public class SQLServer : DatabaseConnector<SqlConnection,SqlParameter>{
-  public SQLServer(string connectionString) : base(connectionString)
+public class SQLServer : DatabaseConnector {
+  public SQLServer(string connectionString) : base(typeof(Microsoft.Data.SqlClient.SqlConnection),connectionString)
   {
     /** do some custom initialization **/
   }
@@ -37,7 +37,7 @@ public class SQLServer : DatabaseConnector<SqlConnection,SqlParameter>{
 
 and DatabaseConnector also implement IDatabaseConnector which give you an oppotunity to implement the connector yourself like
 ```
-class MyCustomConnector : Utilities.Interfaces.IDatabaseConnector<T1,T2>{
+class MyCustomConnector : Utilities.Interfaces.IDatabaseConnector {
   /** implement the interface down there **/
 }
 ```
