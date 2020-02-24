@@ -31,6 +31,15 @@ namespace Utilities
             this.Client = new HttpClient();
         }
         /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="baseUrl"></param>
+        public HttpRequest(Uri baseUrl)
+        {
+            this.BaseUrl = baseUrl ?? throw new ArgumentNullException(nameof(baseUrl));
+            this.Client = new HttpClient();
+        }
+        /// <summary>
         /// Add default request header value.
         /// </summary>
         /// <param name="key"></param>

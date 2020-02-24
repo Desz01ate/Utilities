@@ -460,6 +460,12 @@
             </summary>
             <param name="baseUrl"></param>
         </member>
+        <member name="M:Utilities.HttpRequest.#ctor(System.Uri)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="baseUrl"></param>
+        </member>
         <member name="M:Utilities.HttpRequest.AddDefaultHeaderValue(System.String,System.String)">
             <summary>
             Add default request header value.
@@ -511,7 +517,45 @@
             </summary>
             <param name="path"></param>
             <returns></returns>
-o build HttpContent from given body as a fallback when body is not HttpContent already.
+        </member>
+        <member name="M:Utilities.HttpRequest.PutAsync``1(System.String,System.Object)">
+            <summary>
+            Request PUT to specific action of current host url and return status code with body.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PatchAsync(System.String,System.Object)">
+            <summary>
+            Request PATCH to specific action of current host url and return status code with body.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.PatchAsync``1(System.String,System.Object)">
+            <summary>
+            Request PATCH to specific action of current host url and return status code with body.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.DeleteAsync(System.String)">
+            <summary>
+            Request DELETE to specific action of current host url and return status code with body.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.DeleteAsync``1(System.String)">
+            <summary>
+            Request DELETE to specific action of current host url and return status code with body.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.HttpRequest.DefaultContentBuilder(System.Object)">
+            <summary>
+            Provide a way to build HttpContent from given body as a fallback when body is not HttpContent already.
             </summary>
             <param name="body"></param>
             <returns></returns>
@@ -610,27 +654,6 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             <param name="commandType">Type of SQL Command.</param>
             <param name="transaction">Transaction for current execution.</param>
             <returns></returns>
-        </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-     urns></returns>
         </member>
         <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReaderAsync``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
             <summary>
@@ -774,7 +797,42 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
         </member>
         <member name="F:Utilities.Numerics.MathExtension.MaxIteration">
             <summary>
-            Max iterations count in Taylor     </returns>
+            Max iterations count in Taylor series
+            </summary>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Exp(System.Decimal)">
+            <summary>
+            Returns e raised to the specified power.
+            </summary>
+            <param name="x">A number specifying a power.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Pow(System.Decimal,System.Decimal)">
+            <summary>
+            Returns a specified number raised to the specified power.
+            </summary>
+            <param name="value">A double-precision floating-point number to be raised to a power.</param>
+            <param name="pow">A double-precision floating-point number that specifies a power.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.PowerN(System.Decimal,System.Int32)">
+            <summary>
+            Power to the integer value
+            </summary>
+            <param name="value"></param>
+            <param name="power"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Numerics.MathExtension.Log10(System.Decimal)">
+            <summary>
+            Returns the base 10 logarithm of a specified number.
+            </summary>
+            <param name="x">A number whose logarithm is to be found.</param>
+            <returns>
+            One of the values in the following table. d parameter Return value Positive The
+            base 10 log of d; that is, log 10d. Zero System.Double.NegativeInfinity Negative
+            System.Double.NaN Equal to System.Double.NaNSystem.Double.NaN Equal to System.Double.PositiveInfinitySystem.Double.PositiveInfinity
+            </returns>
         </member>
         <member name="M:Utilities.Numerics.MathExtension.Log(System.Decimal)">
             <summary>
@@ -1085,6 +1143,38 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             <param name="encryptedBytes">Encrypted byte array</param>
             <returns>Raw data of encrypted byte array</returns>
         </member>
+        <member name="T:Utilities.Security.OneWayHash">
+            <summary>
+            Simple wrapper for one-way hashing specifically for password hashing.
+            </summary>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[],System.Security.Cryptography.DeriveBytes)">
+            <summary>
+            Encrypt text with specified salt, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+            </summary>
+            <param name="text"></param>
+            <param name="salt"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[]@)">
+            <summary>
+            Encrypt text WITHOUT specified salt and let the internal worker generate salt instead, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
+            </summary>
+            <param name="text"></param>
+            <param name="salt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Security.OneWayHash.Verify(System.String,System.String,System.Byte[])">
+            <summary>
+            Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
+            </summary>
+            <param name="text"></param>
+            <param name="hash"></param>
+            <param name="salt"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
         <member name="T:Utilities.Shared.ArrayExtension">
             <summary>
             Collection of Array extension methods
@@ -1208,77 +1298,6 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             <param name="source">base enumerable</param>
             <param name="startIndex">starting index</param>
             <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentOutOfRa="M:Utilities.Shared.DataExtension.RowBuilder(System.Data.IDataReader)">
-            <summary>
-            Convert IDataReader into dynamic object.
-            </summary>
-            <param name="row">data reader to convert to dynamic object</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.DataReaderExtension.GetColumns(System.Data.IDataReader)">
-            <summary>
-            Get underlying column name of the IDataReader.
-            </summary>
-            <param name="dataReader"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Utilities.Shared.DataTableExtension">
-            <summary>
-            Provide extensions for DataTable.
-            </summary>
-        </member>
-        <member name="M:Utilities.Shared.DataTableExtension.ToEnumerable``1(System.Data.DataTable)">
-            <summary>
-            Convert DataTable into IEnumerable of specific type.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="data"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.DataTableExtension.ToEnumerable(System.Data.DataTable)">
-            <summary>
-            Convert DataTable into IEnumerable of dynamic.
-            </summary>
-            <param name="data"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.DataTableExtension.GetColumns(System.Data.DataTable)">
-            <summary>
-            Get columns of DataTable.
-            </summary>
-            <param name="data"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Utilities.Shared.EnumerableExtension">
-            <summary>
-            Collection of Enumerable extension methods
-            </summary>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Merge``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
-            <summary>
-            Combine 2 or more enumerable of the same type into new enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="enumerables">enumerables to combine</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Concat``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0}[])">
-            <summary>
-            Concatenates two to N sequences.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source">The first sequence to concatenate.</param>
-            <param name="elements">The sequence to concatenate to the first sequence.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.SubEnumerable``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
-            <summary>
-            Create new enumerable from given enumerable, start index and count
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="startIndex">starting index</param>
-            <param name="count">count of elements</param>
             <exception cref="T:System.ArgumentOutOfRangeException"/>
             <exception cref="T:System.Exception"/>
             <returns></returns>
@@ -1289,7 +1308,66 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source">A base dataset.</param>
-            <param name="predicate">A function to test each element for a condition.</param> </summary>
+            <param name="predicate">A function to test each element for a condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Zip``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Make an iterator that aggregates elements from each of the iterables.
+            Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument
+            sequences or iterables.The iterator stops when the shortest input iterable is exhausted.With a single
+            iterable argument, it returns an iterator of 1-tuples.
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <param name="source1"></param>
+            <param name="source2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Zip``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2})">
+            <summary>
+            Make an iterator that aggregates elements from each of the iterables.
+            Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument
+            sequences or iterables.The iterator stops when the shortest input iterable is exhausted.With a single
+            iterable argument, it returns an iterator of 1-tuples.
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <param name="source1"></param>
+            <param name="source2"></param>
+            <param name="source3"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Zip``4(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Collections.Generic.IEnumerable{``2},System.Collections.Generic.IEnumerable{``3})">
+            <summary>
+            Make an iterator that aggregates elements from each of the iterables.
+            Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument
+            sequences or iterables.The iterator stops when the shortest input iterable is exhausted.With a single
+            iterable argument, it returns an iterator of 1-tuples.
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <typeparam name="T4"></typeparam>
+            <param name="source1"></param>
+            <param name="source2"></param>
+            <param name="source3"></param>
+            <param name="source4"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.ToStack``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Convert IEnuemrable into Stack.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.ToQueue``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Convert IEnumerable into Queue.
+            </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
             <returns></returns>        
@@ -1317,43 +1395,6 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Take last element out of given enumerable
-            </summary>
-            <typeparam name="T">type of enumerable</typeparam>
-            <param name="source">base enumerable</param>
-            <param name="count">count of elements</param>
-            <exception cref="T:System.ArgumentOutOfRangeException"/>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Append``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Appends a value to the end of the sequence.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source">A sequence of values.</param>
-            <param name="element">The value to append to source.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.Prepend``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Prepends a value to the start of the sequence.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source">A sequence of values.</param>
-            <param name="element">The value to append to source.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Shared.EnumerableExtension.SkipLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Take a sequence of elements from the start and skip N elements from the end.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="source"></param>
-            <param name="count"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.AsList``1(System.Collections.Generic.IEnumerable{``0})">
@@ -1597,6 +1638,27 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             </summary>
             <param name="type">CLR type</param>
             <returns></returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsyncEnumerable``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, supported by async enumerable runtime.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="commandType">Type of SQL Command.</param>
+            <param name="transaction">Transaction for current execution.</param>
+            <returns>IEnumerable of POCO</returns>
+        </member>
+        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsyncEnumerable(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
+            <summary>
+            Execute SELECT SQL query and return IEnumerable of dynamic object, supported by async enumerable runtime.
+            </summary>
+            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
+            <param name="parameters">SQL parameters according to the sql parameter.</param>
+            <param name="transaction"></param>
+            <param name="commandType">Type of SQL Command.</param>
+            <returns>IEnumerable of dynamic object</returns>
         </member>
         <member name="E:Utilities.SQL.DatabaseConnector.OnQueryExecuting">
             <summary>
@@ -1993,59 +2055,6 @@ o build HttpContent from given body as a fallback when body is not HttpContent a
             <returns></returns>
         </member>
         <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Count``1(Utilities.Interfaces.IDatabaseConnector)">
-            <summary>
-            Returns rows count from specified table.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.CountAsync``1(Utilities.Interfaces.IDatabaseConnector)">
-            <summary>
-            Returns rows count from specified table in an asynchronous manner.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Count``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
-            <summary>
-            Returns rows count on specific condition from specified table.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.CountAsync``1(Utilities.Interfaces.IDatabaseConnector,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
-            <summary>
-            Returns rows count on specific condition from specified table in an asynchronous manner.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffset``1(Utilities.Interfaces.IDatabaseConnector,System.Int32,System.Int32,System.Data.Common.DbTransaction,System.Boolean)">
-            <summary>
-            Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connector"></param>
-            <param name="offset">The amount of rows to be offset (skip).</param>
-            <param name="limit">The amount of rows to be take.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <param name="buffered">Whether the data should be cached in memory.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffset``1(Utilities.Interfaces.IDatabaseConnector,System.String,System.Int32,System.Int32,System.Data.Common.DbTransaction,System.Boolean)">
-            <summary>
-            Select rows from table by skipping rows by specified offset and take limit rows (SQL Server syntax).
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="connector"></param>
-            <param name="orderBy">Order by column.</param>
-            <param name="offset">The amount of rows to be offset (skip).</param>
-            <param name="limit">The amount of rows to be take.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <param name="buffered">Whether the data should be cached in memory.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.Extension.DataConnectorExtension.QueryOffsetAsync``1(Utilities.Interfaces.IDatabaseConnect    <member name="M:Utilities.SQL.Extension.DataConnectorExtension.Count``1(Utilities.Interfaces.IDatabaseConnector)">
             <summary>
             Returns rows count from specified table.
             </summary>

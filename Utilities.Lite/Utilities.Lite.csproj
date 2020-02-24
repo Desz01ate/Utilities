@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.1.8</Version>
+    <Version>0.2.2.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
@@ -41,7 +41,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>D:\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

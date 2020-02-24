@@ -27,17 +27,7 @@ namespace Utilities.SQL
         /// <summary>
         /// Connection string of this object.
         /// </summary>
-        public override string ConnectionString
-        {
-            get
-            {
-                return Connection.ConnectionString;
-            }
-            set
-            {
-                Connection.ConnectionString = value;
-            }
-        }
+        public override string ConnectionString => Connection.ConnectionString;
         /// <summary>
         /// Determine whether the connection is open or not.
         /// </summary>
@@ -106,7 +96,7 @@ namespace Utilities.SQL
             this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = command.ExecuteReader();
             this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder<T>(cursor);
+            var deferred = Converter.Convert<T>(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
         }
@@ -142,7 +132,7 @@ namespace Utilities.SQL
             this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = command.ExecuteReader();
             this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderDynamicBuilder(cursor);
+            var deferred = Converter.Convert(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
         }
@@ -252,7 +242,7 @@ namespace Utilities.SQL
             this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
             this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder<T>(cursor);
+            var deferred = Converter.Convert<T>(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
         }
@@ -288,7 +278,7 @@ namespace Utilities.SQL
             this.OnQueryExecuting?.Invoke(sql, parameters);
             var cursor = await command.ExecuteReaderAsync().ConfigureAwait(false);
             this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderDynamicBuilder(cursor);
+            var deferred = Converter.Convert(cursor);
             if (buffered) deferred = deferred.AsList();
             return deferred;
         }
@@ -578,28 +568,6 @@ namespace Utilities.SQL
                 throw new NotSupportedException($"Unable to map type {type.FullName} to {this.GetType().FullName} SQL Type");
             }
         }
-        private static IEnumerable<dynamic> DataReaderDynamicBuilder(DbDataReader reader)
-        {
-            using (reader)
-            {
-                while (reader.Read())
-                {
-                    yield return Shared.DataExtension.RowBuilder(reader);
-                }
-            }
-
-        }
-        private static IEnumerable<T> DataReaderBuilder<T>(DbDataReader reader) where T : class, new()
-        {
-            using (reader)
-            {
-                IDataMapper<T> converter = new Converter<T>(reader);
-                while (reader.Read())
-                {
-                    yield return converter.GenerateObject();
-                }
-            }
-        }
     }
 #if NETSTANDARD2_1
     public partial class DatabaseConnector
@@ -716,373 +684,5 @@ namespace Utilities.SQL
         /// The event that will trigger when query is executed.
         /// </summary>
         public event OnQueryExecutedEventHandler? OnqueryExecuted;
-    }
-    public partial class DatabaseConnector
-    {
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="map">Map function.</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="buffered">Whether to buffered result in memory.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        public IEnumerable<T1> ExecuteReader<T1, T2>(string sql, Func<T1, T2, T1> map, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true)
-            where T1 : class, new()
-            where T2 : class, new()
-        {
-            using var command = Connection.CreateCommand();
-            command.CommandText = sql;
-            command.Transaction = transaction;
-            command.CommandType = commandType;
-            if (parameters != null)
-            {
-                foreach (var parameter in parameters)
-                {
-                    var compatibleParameter = command.CreateParameter();
-                    compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.Value;
-                    compatibleParameter.Direction = parameter.Direction;
-                    parameter.SetBindingRedirection(compatibleParameter);
-                    command.Parameters.Add(compatibleParameter);
-                }
-            }
-            this.OnQueryExecuting?.Invoke(sql, parameters);
-            var cursor = command.ExecuteReader();
-            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder(cursor, map);
-            if (buffered) deferred = deferred.AsList();
-            return deferred;
-        }
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="map">Map function.</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="buffered">Whether to buffered result in memory.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        public IEnumerable<T1> ExecuteReader<T1, T2, T3>(string sql, Func<T1, T2, T3, T1> map, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true)
-            where T1 : class, new()
-            where T2 : class, new()
-            where T3 : class, new()
-        {
-            using var command = Connection.CreateCommand();
-            command.CommandText = sql;
-            command.Transaction = transaction;
-            command.CommandType = commandType;
-            if (parameters != null)
-            {
-                foreach (var parameter in parameters)
-                {
-                    var compatibleParameter = command.CreateParameter();
-                    compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.Value;
-                    compatibleParameter.Direction = parameter.Direction;
-                    parameter.SetBindingRedirection(compatibleParameter);
-                    command.Parameters.Add(compatibleParameter);
-                }
-            }
-            this.OnQueryExecuting?.Invoke(sql, parameters);
-            var cursor = command.ExecuteReader();
-            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder(cursor, map);
-            if (buffered) deferred = deferred.AsList();
-            return deferred;
-        }
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="map">Map function.</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="buffered">Whether to buffered result in memory.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        public IEnumerable<T1> ExecuteReader<T1, T2, T3, T4>(string sql, Func<T1, T2, T3, T4, T1> map, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true)
-            where T1 : class, new()
-            where T2 : class, new()
-            where T3 : class, new()
-            where T4 : class, new()
-        {
-            using var command = Connection.CreateCommand();
-            command.CommandText = sql;
-            command.Transaction = transaction;
-            command.CommandType = commandType;
-            if (parameters != null)
-            {
-                foreach (var parameter in parameters)
-                {
-                    var compatibleParameter = command.CreateParameter();
-                    compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.Value;
-                    compatibleParameter.Direction = parameter.Direction;
-                    parameter.SetBindingRedirection(compatibleParameter);
-                    command.Parameters.Add(compatibleParameter);
-                }
-            }
-            this.OnQueryExecuting?.Invoke(sql, parameters);
-            var cursor = command.ExecuteReader();
-            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder(cursor, map);
-            if (buffered) deferred = deferred.AsList();
-            return deferred;
-        }
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="map">Map function.</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="buffered">Whether to buffered result in memory.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        public async Task<IEnumerable<T1>> ExecuteReaderAsync<T1, T2>(string sql, Func<T1, T2, T1> map, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true)
-            where T1 : class, new()
-            where T2 : class, new()
-        {
-            using var command = Connection.CreateCommand();
-            command.CommandText = sql;
-            command.Transaction = transaction;
-            command.CommandType = commandType;
-            if (parameters != null)
-            {
-                foreach (var parameter in parameters)
-                {
-                    var compatibleParameter = command.CreateParameter();
-                    compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.Value;
-                    compatibleParameter.Direction = parameter.Direction;
-                    parameter.SetBindingRedirection(compatibleParameter);
-                    command.Parameters.Add(compatibleParameter);
-                }
-            }
-            this.OnQueryExecuting?.Invoke(sql, parameters);
-            var cursor = await command.ExecuteReaderAsync();
-            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder(cursor, map);
-            if (buffered) deferred = deferred.AsList();
-            return deferred;
-        }
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="map">Map function.</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="buffered">Whether to buffered result in memory.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        public async Task<IEnumerable<T1>> ExecuteReaderAsync<T1, T2, T3>(string sql, Func<T1, T2, T3, T1> map, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true)
-            where T1 : class, new()
-            where T2 : class, new()
-            where T3 : class, new()
-        {
-            using var command = Connection.CreateCommand();
-            command.CommandText = sql;
-            command.Transaction = transaction;
-            command.CommandType = commandType;
-            if (parameters != null)
-            {
-                foreach (var parameter in parameters)
-                {
-                    var compatibleParameter = command.CreateParameter();
-                    compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.Value;
-                    compatibleParameter.Direction = parameter.Direction;
-                    parameter.SetBindingRedirection(compatibleParameter);
-                    command.Parameters.Add(compatibleParameter);
-                }
-            }
-            this.OnQueryExecuting?.Invoke(sql, parameters);
-            var cursor = await command.ExecuteReaderAsync();
-            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder(cursor, map);
-            if (buffered) deferred = deferred.AsList();
-            return deferred;
-        }
-        /// <summary>
-        /// Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-        /// <param name="map">Map function.</param>
-        /// <param name="parameters">SQL parameters according to the sql parameter.</param>
-        /// <param name="commandType">Type of SQL Command.</param>
-        /// <param name="buffered">Whether to buffered result in memory.</param>
-        /// <param name="transaction">Transaction for current execution.</param>
-        /// <returns>IEnumerable of POCO</returns>
-        public async Task<IEnumerable<T1>> ExecuteReaderAsync<T1, T2, T3, T4>(string sql, Func<T1, T2, T3, T4, T1> map, IEnumerable<DatabaseParameter>? parameters = null, DbTransaction? transaction = null, CommandType commandType = CommandType.Text, bool buffered = true)
-            where T1 : class, new()
-            where T2 : class, new()
-            where T3 : class, new()
-            where T4 : class, new()
-        {
-            using var command = Connection.CreateCommand();
-            command.CommandText = sql;
-            command.Transaction = transaction;
-            command.CommandType = commandType;
-            if (parameters != null)
-            {
-                foreach (var parameter in parameters)
-                {
-                    var compatibleParameter = command.CreateParameter();
-                    compatibleParameter.ParameterName = parameter.ParameterName;
-                    compatibleParameter.Value = parameter.Value;
-                    compatibleParameter.Direction = parameter.Direction;
-                    parameter.SetBindingRedirection(compatibleParameter);
-                    command.Parameters.Add(compatibleParameter);
-                }
-            }
-            this.OnQueryExecuting?.Invoke(sql, parameters);
-            var cursor = await command.ExecuteReaderAsync();
-            this.OnqueryExecuted?.Invoke(cursor.RecordsAffected);
-            var deferred = DataReaderBuilder(cursor, map);
-            if (buffered) deferred = deferred.AsList();
-            return deferred;
-        }
-        private static IEnumerable<T1> DataReaderBuilder<T1, T2>(DbDataReader reader, Func<T1, T2, T1> map)
-        where T1 : class, new()
-        where T2 : class, new()
-        {
-            using (reader)
-            {
-                IDataMapper<T1> converter = new Converter<T1>(reader);
-                IDataMapper<T2> childConverter = new Converter<T2>(reader);
-                while (reader.Read())
-                {
-                    yield return map(converter.GenerateObject(), childConverter.GenerateObject());
-                }
-            }
-        }
-        private static IEnumerable<T1> DataReaderBuilder<T1, T2, T3>(DbDataReader reader, Func<T1, T2, T3, T1> map)
-    where T1 : class, new()
-    where T2 : class, new()
-            where T3 : class, new()
-        {
-            using (reader)
-            {
-                IDataMapper<T1> converter = new Converter<T1>(reader);
-                IDataMapper<T2> converter2 = new Converter<T2>(reader);
-                IDataMapper<T3> converter3 = new Converter<T3>(reader);
-
-                while (reader.Read())
-                {
-                    yield return map(converter.GenerateObject(), converter2.GenerateObject(), converter3.GenerateObject());
-                }
-            }
-        }
-        private static IEnumerable<T1> DataReaderBuilder<T1, T2, T3, T4>(DbDataReader reader, Func<T1, T2, T3, T4, T1> map)
-            where T1 : class, new()
-            where T2 : class, new()
-            where T3 : class, new()
-            where T4 : class, new()
-        {
-            using (reader)
-            {
-                IDataMapper<T1> converter = new Converter<T1>(reader);
-                IDataMapper<T2> converter2 = new Converter<T2>(reader);
-                IDataMapper<T3> converter3 = new Converter<T3>(reader);
-                IDataMapper<T4> converter4 = new Converter<T4>(reader);
-                while (reader.Read())
-                {
-                    yield return map(converter.GenerateObject(), converter2.GenerateObject(), converter3.GenerateObject(), converter4.GenerateObject());
-                }
-            }
-        }
-    }
-    public partial class DatabaseConnector
-    {
-        /// <summary>
-        /// Gets the name of the current database after a connection is opened, or the database
-        /// name specified in the connection string before the connection is opened.
-        /// </summary>
-        public override string Database => Connection.Database;
-        /// <summary>
-        /// The name of the database server to which to connect. The default value is an
-        /// empty string. 
-        /// </summary>
-        public override string DataSource => Connection.DataSource;
-        /// <summary>
-        /// Gets a string that represents the version of the server to which the object is
-        /// connected. 
-        /// </summary>
-        public override string ServerVersion => Connection.ServerVersion;
-        /// <summary>
-        /// Gets a string that describes the state of the connection.
-        /// </summary>
-        public override ConnectionState State => Connection.State;
-        /// <summary>
-        /// Starts a database transaction with the specified isolation level.
-        /// </summary>
-        /// <param name="isolationLevel"></param>
-        /// <returns></returns>
-        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
-        {
-            return Connection.BeginTransaction(isolationLevel);
-        }
-        /// <summary>
-        /// Changes the current database for an open connection.
-        /// </summary>
-        /// <param name="databaseName"></param>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
-        public override void ChangeDatabase(string databaseName)
-        {
-            Connection.ChangeDatabase(databaseName);
-        }
-        /// <summary>
-        /// Closes the connection to the database. This is the preferred method of closing
-        /// any open connection.
-        /// </summary>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public override void Close()
-        {
-            Connection?.Close();
-        }
-        /// <summary>
-        /// Creates and returns a System.Data.Common.DbCommand object associated with the
-        /// current connection.
-        /// </summary>
-        protected override DbCommand CreateDbCommand()
-        {
-            return Connection.CreateCommand();
-        }
-        /// <summary>
-        /// Opens a database connection with the settings specified by the System.Data.Common.DbConnection.ConnectionString.
-        /// </summary>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public override void Open()
-        {
-            Connection?.Open();
-        }
-#if NETSTANDARD2_1
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
-        public override Task ChangeDatabaseAsync(string databaseName, CancellationToken cancellationToken = default)
-        {
-            return base.ChangeDatabaseAsync(databaseName, cancellationToken);
-        }
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public override Task OpenAsync(CancellationToken cancellationToken)
-        {
-            return base.OpenAsync(cancellationToken);
-        }
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public override Task CloseAsync()
-        {
-            return base.CloseAsync();
-        }
-#endif
     }
 }

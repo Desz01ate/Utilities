@@ -13,10 +13,9 @@ namespace Utilities.SQL.Abstracts
     /// <summary>
     /// Abstract class that is contains the higher-abstract level of IDatabaseConnector.
     /// </summary>
-    public abstract class DatabaseConnectorBase : DbConnection, IDatabaseConnector
+    public abstract class DatabaseConnectorBase : IDatabaseConnector
     {
-        //public abstract string ConnectionString { get; }
-
+        public abstract string ConnectionString { get; }
         public virtual bool IsOpen => Connection?.State == ConnectionState.Open;
         public abstract DbConnection Connection { get; }
         internal protected abstract string CompatibleFunctionName(SqlFunction function);

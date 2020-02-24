@@ -17,7 +17,7 @@ namespace Utilities.SQL.Extension
     /// <summary>
     /// Provide extension for SQL generate.
     /// </summary>
-    public static partial class SqlQueryExtension
+    internal static partial class SqlQueryExtension
     {
         /// <summary>
         /// Generate SQL query with sql parameters.

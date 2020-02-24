@@ -100,4 +100,77 @@ namespace Utilities.SQL.Translator
             }
         }
     }
+    internal static class Converter
+    {
+        internal static IEnumerable<dynamic> Convert(IDataReader reader)
+        {
+            using (reader)
+            {
+                while (reader.Read())
+                {
+                    yield return Shared.DataExtension.RowBuilder(reader);
+                }
+            }
+        }
+        internal static IEnumerable<T> Convert<T>(IDataReader reader) where T : class, new()
+        {
+            using (reader)
+            {
+                IDataMapper<T> converter = new Converter<T>(reader);
+                while (reader.Read())
+                {
+                    yield return converter.GenerateObject();
+                }
+            }
+        }
+        internal static IEnumerable<T1> Convert<T1, T2>(IDataReader reader, Func<T1, T2, T1> map)
+where T1 : class, new()
+where T2 : class, new()
+        {
+            using (reader)
+            {
+                IDataMapper<T1> converter = new Converter<T1>(reader);
+                IDataMapper<T2> childConverter = new Converter<T2>(reader);
+                while (reader.Read())
+                {
+                    yield return map(converter.GenerateObject(), childConverter.GenerateObject());
+                }
+            }
+        }
+        internal static IEnumerable<T1> Convert<T1, T2, T3>(IDataReader reader, Func<T1, T2, T3, T1> map)
+    where T1 : class, new()
+    where T2 : class, new()
+            where T3 : class, new()
+        {
+            using (reader)
+            {
+                IDataMapper<T1> converter = new Converter<T1>(reader);
+                IDataMapper<T2> converter2 = new Converter<T2>(reader);
+                IDataMapper<T3> converter3 = new Converter<T3>(reader);
+
+                while (reader.Read())
+                {
+                    yield return map(converter.GenerateObject(), converter2.GenerateObject(), converter3.GenerateObject());
+                }
+            }
+        }
+        internal static IEnumerable<T1> Convert<T1, T2, T3, T4>(IDataReader reader, Func<T1, T2, T3, T4, T1> map)
+            where T1 : class, new()
+            where T2 : class, new()
+            where T3 : class, new()
+            where T4 : class, new()
+        {
+            using (reader)
+            {
+                IDataMapper<T1> converter = new Converter<T1>(reader);
+                IDataMapper<T2> converter2 = new Converter<T2>(reader);
+                IDataMapper<T3> converter3 = new Converter<T3>(reader);
+                IDataMapper<T4> converter4 = new Converter<T4>(reader);
+                while (reader.Read())
+                {
+                    yield return map(converter.GenerateObject(), converter2.GenerateObject(), converter3.GenerateObject(), converter4.GenerateObject());
+                }
+            }
+        }
+    }
 }
