@@ -87,7 +87,7 @@ namespace Utilities.SQL.Extension
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
             var query = con.SelectQueryGenerate<T>(predicate, 1);
-            T result = con.ExecuteReader(query.query, query.parameters, transaction, buffered: buffered).FirstOrDefault();
+            T result = con.ExecuteReader<T>(query.query, query.parameters, transaction, buffered: buffered).FirstOrDefault();
             return result;
         }
         /// <summary>
@@ -241,7 +241,7 @@ namespace Utilities.SQL.Extension
             var con = connector as DatabaseConnectorBase;
             if (con == null) throw new InvalidCastException($"{connector.GetType().FullName} cannot be use with this extension (expected to get instance of {typeof(DatabaseConnectorBase).FullName}");
             var query = con.SelectQueryGenerate<T>(predicate, 1);
-            T result = (await con.ExecuteReaderAsync(query.query, query.parameters, transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
+            T result = (await con.ExecuteReaderAsync<T>(query.query, query.parameters, transaction, buffered: buffered).ConfigureAwait(false)).FirstOrDefault();
             return result;
         }
         /// <summary>

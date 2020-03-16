@@ -100,7 +100,7 @@ namespace Utilities.SQL.Translator
             }
         }
     }
-    internal static class Converter
+    internal class Converter
     {
         internal static IEnumerable<dynamic> Convert(IDataReader reader)
         {

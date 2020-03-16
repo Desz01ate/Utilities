@@ -395,10 +395,25 @@
         </member>
         <member name="M:Utilities.File.ReadCsvAs``1(System.String,System.Boolean)">
             <summary>
-            Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
+            Read csv file / content and transform input into given class (you still need to manually give custom implement via ICSVReader)
             </summary>
             <typeparam name="T"></typeparam>
+            <param name="content"></param>
+            <param name="hasHeader"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadFile(System.String)">
+            <summary>
+            Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
+            </summary>
             <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.File.ReadRaw(System.String)">
+            <summary>
+            Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
+            </summary>
+            <param name="content"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.File.WriteAsJson(System.Object,System.String,System.Text.Encoding)">
@@ -588,28 +603,7 @@
         </member>
         <member name="P:Utilities.Interfaces.IDatabaseConnector.Connection">
             <summary>
-            Connector underlying current connection.
-            </summary>
-        </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReader``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.Interfaces.IDatabaseConnector.ExecuteReader(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object
-            </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
+            Connector underlying current cm>
             <param name="transaction">Transaction for current execution.</param>
             <param name="buffered">Whether to buffered result in memory.</param>
             <returns>IEnumerable of dynamic object</returns>
@@ -1143,38 +1137,6 @@
             <param name="encryptedBytes">Encrypted byte array</param>
             <returns>Raw data of encrypted byte array</returns>
         </member>
-        <member name="T:Utilities.Security.OneWayHash">
-            <summary>
-            Simple wrapper for one-way hashing specifically for password hashing.
-            </summary>
-        </member>
-        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[],System.Security.Cryptography.DeriveBytes)">
-            <summary>
-            Encrypt text with specified salt, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
-            </summary>
-            <param name="text"></param>
-            <param name="salt"></param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException"/>
-        </member>
-        <member name="M:Utilities.Security.OneWayHash.Encrypt(System.String,System.Byte[]@)">
-            <summary>
-            Encrypt text WITHOUT specified salt and let the internal worker generate salt instead, the encrypted text is irreversible but still can be verify using Verify(text,hash,salt) method.
-            </summary>
-            <param name="text"></param>
-            <param name="salt"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.Security.OneWayHash.Verify(System.String,System.String,System.Byte[])">
-            <summary>
-            Verify if given text is the same with the hash by encrypt it and compare it againts the hash.
-            </summary>
-            <param name="text"></param>
-            <param name="hash"></param>
-            <param name="salt"></param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException"/>
-        </member>
         <member name="T:Utilities.Shared.ArrayExtension">
             <summary>
             Collection of Array extension methods
@@ -1395,6 +1357,43 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Take last element out of given enumerable
+            </summary>
+            <typeparam name="T">type of enumerable</typeparam>
+            <param name="source">base enumerable</param>
+            <param name="count">count of elements</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"/>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Append``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Appends a value to the end of the sequence.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source">A sequence of values.</param>
+            <param name="element">The value to append to source.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.Prepend``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Prepends a value to the start of the sequence.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source">A sequence of values.</param>
+            <param name="element">The value to append to source.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.Shared.EnumerableExtension.SkipLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Take a sequence of elements from the start and skip N elements from the end.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="count"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.Shared.EnumerableExtension.AsList``1(System.Collections.Generic.IEnumerable{``0})">
@@ -1639,27 +1638,6 @@
             <param name="type">CLR type</param>
             <returns></returns>
         </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsyncEnumerable``1(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, supported by async enumerable runtime.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsyncEnumerable(System.String,System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of dynamic object, supported by async enumerable runtime.
-            </summary>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="transaction"></param>
-            <param name="commandType">Type of SQL Command.</param>
-            <returns>IEnumerable of dynamic object</returns>
-        </member>
         <member name="E:Utilities.SQL.DatabaseConnector.OnQueryExecuting">
             <summary>
             The event that will trigger when query is ready to execute.
@@ -1668,137 +1646,6 @@
         <member name="E:Utilities.SQL.DatabaseConnector.OnqueryExecuted">
             <summary>
             The event that will trigger when query is executed.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader``2(System.String,System.Func{``0,``1,``0},System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="map">Map function.</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader``3(System.String,System.Func{``0,``1,``2,``0},System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="map">Map function.</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReader``4(System.String,System.Func{``0,``1,``2,``3,``0},System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="map">Map function.</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync``2(System.String,System.Func{``0,``1,``0},System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="map">Map function.</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync``3(System.String,System.Func{``0,``1,``2,``0},System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="map">Map function.</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ExecuteReaderAsync``4(System.String,System.Func{``0,``1,``2,``3,``0},System.Collections.Generic.IEnumerable{Utilities.Classes.DatabaseParameter},System.Data.Common.DbTransaction,System.Data.CommandType,System.Boolean)">
-            <summary>
-            Execute SELECT SQL query and return IEnumerable of specified POCO that is matching with the query columns, this overload is suitable when you perform SELECT-JOIN query.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="sql">Any SELECT SQL that you want to perform with/without parameterized parameters (Do not directly put sql parameter in this parameter).</param>
-            <param name="map">Map function.</param>
-            <param name="parameters">SQL parameters according to the sql parameter.</param>
-            <param name="commandType">Type of SQL Command.</param>
-            <param name="buffered">Whether to buffered result in memory.</param>
-            <param name="transaction">Transaction for current execution.</param>
-            <returns>IEnumerable of POCO</returns>
-        </member>
-        <member name="P:Utilities.SQL.DatabaseConnector.Database">
-            <summary>
-            Gets the name of the current database after a connection is opened, or the database
-            name specified in the connection string before the connection is opened.
-            </summary>
-        </member>
-        <member name="P:Utilities.SQL.DatabaseConnector.DataSource">
-            <summary>
-            The name of the database server to which to connect. The default value is an
-            empty string. 
-            </summary>
-        </member>
-        <member name="P:Utilities.SQL.DatabaseConnector.ServerVersion">
-            <summary>
-            Gets a string that represents the version of the server to which the object is
-            connected. 
-            </summary>
-        </member>
-        <member name="P:Utilities.SQL.DatabaseConnector.State">
-            <summary>
-            Gets a string that describes the state of the connection.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.BeginDbTransaction(System.Data.IsolationLevel)">
-            <summary>
-            Starts a database transaction with the specified isolation level.
-            </summary>
-            <param name="isolationLevel"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.ChangeDatabase(System.String)">
-            <summary>
-            Changes the current database for an open connection.
-            </summary>
-            <param name="databaseName"></param>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.Close">
-            <summary>
-            Closes the connection to the database. This is the preferred method of closing
-            any open connection.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.CreateDbCommand">
-            <summary>
-            Creates and returns a System.Data.Common.DbCommand object associated with the
-            current connection.
-            </summary>
-        </member>
-        <member name="M:Utilities.SQL.DatabaseConnector.Open">
-            <summary>
-            Opens a database connection with the settings specified by the System.Data.Common.DbConnection.ConnectionString.
             </summary>
         </member>
         <member name="T:Utilities.SQL.Events.ExecutionInterceptor">
@@ -2362,6 +2209,69 @@
             Convert base64 string to original string
             </summary>
             <param name="base64String"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Translate(System.String,Utilities.Enum.Language,Utilities.Enum.Language)">
+            <summary>
+            Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
+            </summary>
+            <param name="originalText">Original text.</param>
+            <param name="fromLanguage">From language.</param>
+            <param name="toLanguage">To language.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.Translate(System.String,System.String,System.String)">
+            <summary>
+            Translate original text from given language to target language, supported language can be found in Utilities.Enum.Language.
+            </summary>
+            <param name="originalText">Original text.</param>
+            <param name="fromLanguage">From language.</param>
+            <param name="toLanguage">To language.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Int32,Utilities.Enum.FormatSpecifier)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Double,Utilities.Enum.FormatSpecifier)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Single,Utilities.Enum.FormatSpecifier)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.Decimal,Utilities.Enum.FormatSpecifier)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utilities.String.NumberFormat(System.String,Utilities.Enum.FormatSpecifier)">
+            <summary>
+            Convert given value into a number format.
+            </summary>
+            <param name="value">Value</param>
+            <param name="numericFormat">https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
+      <param name="base64String"></param>
             <returns></returns>
         </member>
         <member name="M:Utilities.String.Translate(System.String,Utilities.Enum.Language,Utilities.Enum.Language)">

@@ -99,27 +99,45 @@ namespace Utilities
         }
 
         /// <summary>
-        /// Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
+        /// Read csv file / content and transform input into given class (you still need to manually give custom implement via ICSVReader)
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <param name="hasHeader"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ReadCsvAs<T>(string path, bool hasHeader = false) where T : class, ICsvReader, new()
+        public static IEnumerable<T> ReadCsvAs<T>(string content, bool hasHeader = false) where T : class, ICsvReader, new()
         {
-            if (string.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(content))
             {
-                throw new ArgumentNullException(nameof(path));
+                throw new ArgumentNullException(nameof(content));
             }
-            IEnumerable<string> content = System.IO.File.ReadAllLines(path);
+            IEnumerable<string> data = System.IO.File.Exists(content) ? ReadFile(content) : ReadRaw(content);
             var skipBy = hasHeader ? 1 : 0;
-            foreach (var line in content.Skip(skipBy))
+            foreach (var line in data.Skip(skipBy))
             {
                 var obj = new T();
                 obj.ReadFromCsv(line);
                 yield return obj;
             }
         }
-
+        /// <summary>
+        /// Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> ReadFile(string path)
+        {
+            return System.IO.File.ReadAllLines(path);
+        }
+        /// <summary>
+        /// Read csv file and transform input into given class (you still need to manually give custom implement via ICSVReader)
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        private static IEnumerable<string> ReadRaw(string content)
+        {
+            return System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
+        }
         /// <summary>
         /// Serialize given object and write to json file.
         /// </summary>

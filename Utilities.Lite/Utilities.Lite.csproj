@@ -10,32 +10,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Desz01ate/Utilities</RepositoryUrl>
-    <Version>0.2.2.0</Version>
+    <Version>1.0.0.0</Version>
     <PackageId>Deszolate.Utilities.Lite</PackageId>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <!-- <Nullable>enable</Nullable> -->
-    <PackageReleaseNotes>[General]
-+ Due to heavily replacement of DbParameterStruct on v0.2.1.6 with DbParameterStruct , the ParameterDirection is missing and some existing code may not working as expected. This version should address those problems already with the introducing of new type to replace DbParameterStruct called [DatabaseParameter].
-[Sql]
-+ New extension method for database connector 'QueryOffset' and 'CreateTable'
-+ New class [DatabaseParameter] for replacement of v0.2.1.6 [DbParameterStruct] which will address 'ParameterDirection'.
-+ Introducing events to DatabaseConnector, [OnQueryExecuting] and [OnQueryExecuted] as a way to intercept command on specific circumstances.
-[HttpRequest]
-+ As an old static HttpRequest is a long time obsolete, this version remove this static class and introducing as a normal class for both performance and usablility concern.
-
-[SQL]
-+ DatabaseConnectorBase now derived from DbConnection, by native derive this DbConnection it's allow the class to works with other existing extensions or frameworks out there such as Dapper, Entity Framework while still maintain characteristic of IDatabaseConnector.
-+ Improve .Insert and .Update correctness and efficiency by optimized internal worker.
-+ PrimaryKey attribute now had an optional parameter autoIncrement.
-+ Add overload for DatabaseConnector's ExecuteReader / ExecuteReaderAsync which designed for SELECT-JOIN query (not part of IDatabaseConnector).
-+ An buffered argument default value has been changed from false to true as most situation the queries will run against small dataset, by buffered small dataset the impact is unnoticable and can help improve performance in some critical area such as prevent database lock, prevent active reader open over network, however if you query against a large dataset you can provide buffered as false to reduce query overhead and increase responsiveness.</PackageReleaseNotes>
+    <PackageReleaseNotes>This is an LTS version which proved to be stable and may not impact by 'experiment' update, due to mostly new features are now implement separated in another library which will be announced in the future.</PackageReleaseNotes>
     <Description>Some heavily repetitive code block packed together as utilities tools. This is a lightweight version with almost none-dependency contain but the definition itself.</Description>
     <RootNamespace>Utilities</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>signkey.pfx</AssemblyOriginatorKeyFile>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>AnyCPU;x86;x64</Platforms>
     <Configurations>Debug;Release;Release-Local-Nuget</Configurations>
   </PropertyGroup>
 
@@ -44,11 +30,24 @@
     <DocumentationFile>D:\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>D:\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Documents\GitHub\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Local-Nuget|AnyCPU'">
+    <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Local-Nuget|x64'">
     <DocumentationFile>C:\Users\kunvu\source\repos\Utilities\Utilities.Lite\Utilities.Lite.xml</DocumentationFile>
   </PropertyGroup>
 
@@ -57,7 +56,17 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|x64'">
+    <Optimize>true</Optimize>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release-Local-Nuget|netstandard2.0|AnyCPU'">
+    <Optimize>true</Optimize>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release-Local-Nuget|netstandard2.0|x64'">
     <Optimize>true</Optimize>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -91,7 +100,7 @@
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
   </ItemGroup>
   <Target Name="CopyPackage" AfterTargets="Pack" Condition="$(Configuration) == 'Release'">
-    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(UserProfile)\Documents\nuget" />
-    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="D:\Documents\nuget" />
+    <!--<Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(UserProfile)\Documents\nuget" />-->
+    <!--<Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="D:\Documents\nuget" />-->
   </Target>
 </Project>

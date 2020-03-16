@@ -327,6 +327,17 @@ namespace Utilities.Shared
         /// <typeparam name="T">The type of element in the list.</typeparam>
         /// <param name="source">The enumerable to return as a list.</param>
         public static List<T> AsList<T>(this IEnumerable<T> source) => (source == null || source is List<T>) ? (List<T>)source : source.ToList();
+        /// <summary>
+        /// Distinct the source data by prefer selector.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> source, Func<T, bool> selector)
+        {
+            return source.GroupBy(selector).Select(x => x.First());
+        }
     }
     #endregion
 }
