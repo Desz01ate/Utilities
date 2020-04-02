@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Utilities.Classes
+namespace Utilities.DataStructures
 {
     /// <summary>
     /// Fixed-size queue which automatically dequeue when elements are going to exceed the limit.
