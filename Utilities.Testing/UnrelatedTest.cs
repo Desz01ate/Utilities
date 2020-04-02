@@ -12,14 +12,28 @@ using Utilities.Testing.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using Utilities.Interfaces;
+using System.Dynamic;
+using Utilities.Shared;
 
 namespace Utilities.Testing
 {
     internal class UnrelatedTest
     {
-        //[Test]
+        [Test]
         public async Task Playground()
         {
+            using var connector = new DatabaseConnector(typeof(DatabaseConnector), "");
+            var data = connector.ExecuteReader($@"SELECT TOP (10) [ID]
+      ,[Activity]
+      ,[Module]
+      ,[ReferenceID]
+      ,[Detail]
+      ,[Username]
+      ,[TimeStamp]
+      ,[ObjJson]
+  FROM[dbo].[ActivityLog]");
+            var dt = data.ToDataTable();
+
         }
     }
 }
