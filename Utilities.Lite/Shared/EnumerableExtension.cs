@@ -185,6 +185,7 @@ namespace Utilities.Shared
         public static DataTable? ToDataTable<T>(this IEnumerable<T> source)
         {
             if (source == null) return default;
+            if (source is IEnumerable<dynamic> src) return ToDataTableForDynamic(src);
             var properties = GenericExtension.CompileGetter<T>();
             if (properties == null) return default;
             var typeName = typeof(T).TableNameAttributeValidate();
@@ -204,7 +205,32 @@ namespace Utilities.Shared
             }
             return dt;
         }
-
+        private static DataTable? ToDataTableForDynamic(IEnumerable<dynamic> source)
+        {
+            var buffered = source.AsList();
+            var firstElement = buffered.FirstOrDefault();
+            if (firstElement == null) return default;
+            if (firstElement is IDictionary<string, object> dict)
+            {
+                var dt = new DataTable("dynamicDt");
+                var properties = dict.Keys;
+                foreach (var property in properties)
+                {
+                    dt.Columns.Add(property);
+                }
+                foreach (IDictionary<string, object> item in buffered)
+                {
+                    var dr = dt.NewRow();
+                    foreach (var property in properties)
+                    {
+                        dr[property] = item[property];
+                    }
+                    dt.Rows.Add(dr);
+                }
+                return dt;
+            }
+            return default;
+        }
         /// <summary>
         /// Shuffle dataset inside source enumerable with each equally chance using Fisher-Yates-Durstenfeld shuffle.
         /// </summary>
